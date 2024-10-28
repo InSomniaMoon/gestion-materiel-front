@@ -1,0 +1,57 @@
+<p-dialog
+  [visible]="visible()"
+  (visibleChange)="visible.set($event)"
+  [modal]="true"
+  [draggable]="false"
+  header="Header"
+>
+  <ng-template pTemplate="header">
+    <h2 class="font-bold white-space-nowrap">Emprunter {{ item().name }}</h2>
+  </ng-template>
+
+  <ng-template pTemplate="content">
+    <form class="p-grid" [formGroup]="form">
+      <div class="form-group">
+        <label for="event">Nom de l'emprunt</label>
+        <input pInputText formControlName="name" id="event" />
+      </div>
+
+      <div class="form-group">
+        <label for="start_date">Début de l'emprunt</label>
+        <p-calendar
+          showIcon
+          iconDisplay="input"
+          [showTime]="true"
+          hourFormat="24"
+          dateFormat="yy-mm-dd"
+          formControlName="start_date"
+          id="start_date"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="end_date">Fin de l'emprunt</label>
+        <p-calendar
+          showIcon
+          iconDisplay="input"
+          [showTime]="true"
+          hourFormat="24"
+          dateFormat="yy-mm-dd"
+          formControlName="end_date"
+          id="end_date"
+        />
+      </div>
+    </form>
+  </ng-template>
+
+  <p-footer>
+    <div class="p-grid p-justify-between">
+      <p-button
+        label="Annuler"
+        severity="secondary"
+        (click)="visible.set(false)"
+      />
+      <p-button label="Emprunter" (onClick)="submit()" />
+    </div>
+  </p-footer>
+</p-dialog>

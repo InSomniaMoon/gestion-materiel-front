@@ -1,0 +1,49 @@
+import { Component, inject, OnDestroy } from '@angular/core';
+import { FormsModule, NgForm } from '@angular/forms';
+
+import { ButtonDirective } from 'primeng/button';
+import { FloatLabelModule } from 'primeng/floatlabel';
+import { AuthService } from '../../../core/services/auth.service';
+
+import { ActivatedRoute, Router } from '@angular/router';
+
+import { Subject, takeUntil } from 'rxjs';
+
+@Component({
+  selector: 'app-login',
+  standalone: true,
+  imports: [FormsModule, FloatLabelModule, ButtonDirective],
+  templateUrl: './login.component.html',
+  styleUrl: './login.component.scss',
+})
+export class LoginComponent implements OnDestroy {
+  private auth$ = inject(AuthService);
+  // get query params
+  private routeSnapshot = inject(ActivatedRoute).snapshot;
+  private router = inject(Router);
+
+  destroy = new Subject<void>();
+
+  submitForm(form: NgForm) {
+    this.auth$
+      .login(form.value)
+      .pipe(takeUntil(this.destroy))
+      .subscribe({
+        next: (res) => {
+          if (this.routeSnapshot.queryParams['redirect']) {
+            this.router.navigate([this.routeSnapshot.queryParams['redirect']]);
+          } else {
+            this.router.navigate(['/items']);
+          }
+        },
+        error: (err) => {
+          console.error(err);
+        },
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy.next();
+    this.destroy.complete();
+  }
+}

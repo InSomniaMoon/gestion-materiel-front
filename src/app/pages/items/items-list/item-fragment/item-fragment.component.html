@@ -1,0 +1,94 @@
+<p-card [header]="item().name">
+  <div class="body">
+    <p>{{ item().description }}</p>
+    <div class="button-group">
+      <p-button
+        label="Emprunter"
+        (click)="displaySubscriptionDialog.set(true)"
+      />
+      <p-button
+        label="Voir les détails"
+        [routerLink]="['/items', item().id]"
+        severity="info"
+      />
+    </div>
+  </div>
+  <div>
+    <p-buttonGroup class="button-group">
+      <p-button
+        label="Mois"
+        [outlined]="viewType() !== CAL_VIEW.Month"
+        (onClick)="viewType.set(CAL_VIEW.Month)"
+      />
+      <p-button
+        label="Semaine"
+        [outlined]="viewType() !== CAL_VIEW.Week"
+        (onClick)="viewType.set(CAL_VIEW.Week)"
+      />
+      <p-button
+        label="Jour"
+        [outlined]="viewType() !== CAL_VIEW.Day"
+        (onClick)="viewType.set(CAL_VIEW.Day)"
+      />
+    </p-buttonGroup>
+    <p-buttonGroup class="button-group">
+      <p-button
+        severity="info"
+        outlined="true"
+        [view]="viewType()"
+        icon="pi pi-calendar-minus"
+        mwlCalendarPreviousView
+        [(viewDate)]="viewDate"
+      />
+      <p-button
+        icon="pi pi-calendar-clock"
+        mwlCalendarToday
+        [(viewDate)]="viewDate"
+        severity="contrast"
+      />
+      <p-button
+        icon="pi pi-calendar-plus"
+        severity="info"
+        outlined="true"
+        mwlCalendarNextView
+        [(viewDate)]="viewDate"
+        [view]="viewType()"
+      />
+    </p-buttonGroup>
+    <h3>{{ viewDate() | calendarDate : viewType() + "ViewTitle" : "fr" }}</h3>
+
+    @switch (viewType()) { @case (CAL_VIEW.Month) {
+    <mwl-calendar-month-view
+      [viewDate]="viewDate()"
+      [weekStartsOn]="weekStartsOn"
+      [events]="events()"
+      [refresh]="refresh"
+      locale="fr"
+      [weekendDays]="weekendDays"
+      (dayClicked)="dayClicked($event)"
+    />
+    } @case (CAL_VIEW.Day) {
+    <mwl-calendar-day-view
+      [viewDate]="viewDate()"
+      [events]="events()"
+      [refresh]="refresh"
+      locale="fr"
+    />
+    } @case (CAL_VIEW.Week) {
+    <mwl-calendar-week-view
+      [viewDate]="viewDate()"
+      [events]="events()"
+      [refresh]="refresh"
+      locale="fr"
+    />
+    } }
+  </div>
+</p-card>
+<div>
+  <app-add-subscription
+    [visible]="displaySubscriptionDialog()"
+    (visibleChange)="displaySubscriptionDialog.set($event)"
+    [item]="item()"
+    (subscriptionChange)="fetchSubscriptions()"
+  />
+</div>

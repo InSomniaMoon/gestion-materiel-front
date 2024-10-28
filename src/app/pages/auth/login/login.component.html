@@ -1,0 +1,31 @@
+<form #loginForm="ngForm" (ngSubmit)="submitForm(loginForm)">
+  <p-floatLabel>
+    <input
+      type="email"
+      pInputText
+      autocomplete="email"
+      ngModel
+      name="email"
+      id="email"
+    />
+    <label for="email">Email</label>
+  </p-floatLabel>
+  <p-floatLabel>
+    <input
+      type="password"
+      autocomplete="current-password"
+      ngModel
+      name="password"
+      id="password"
+      pInputText
+    />
+    <label for="password">Mot de passe</label>
+  </p-floatLabel>
+
+  <button
+    pButton
+    type="submit"
+    label="Se connecter"
+    [disabled]="!loginForm.valid"
+  ></button>
+</form>
