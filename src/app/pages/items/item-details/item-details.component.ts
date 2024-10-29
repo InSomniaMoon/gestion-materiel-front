@@ -60,7 +60,7 @@ export class ItemDetailsComponent implements OnInit {
   private itemId!: number;
 
   ngOnInit(): void {
-    this.itemId = this.routeSnapshot.params['id'];
+    this.itemId = this.routeSnapshot.params['itemId'];
 
     this.getOptions();
     // get itemid from route

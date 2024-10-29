@@ -9,8 +9,14 @@ export const ITEMS_ROUTES: Routes = [
     title: 'Eléments',
   },
   {
-    path: ':id',
+    path: ':itemId',
     component: ItemDetailsComponent,
-    
+  },
+  {
+    path: ':itemId/subscriptions',
+    loadChildren: () =>
+      import('@app/pages/subscriptions/subscriptions.routes').then(
+        (m) => m.SUBSCRIPTIONS_ROUTES
+      ),
   },
 ];

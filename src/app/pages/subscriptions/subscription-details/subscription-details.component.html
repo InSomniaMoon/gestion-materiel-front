@@ -1,0 +1,36 @@
+<h1 class="title-page">
+  <a
+    pButton
+    routerLink="/items"
+    icon="pi pi-arrow-left"
+    [text]="true"
+    size="large"
+  ></a>
+  @if (subscription()) {
+  {{ subscription()?.name }}
+  }@else {
+  <p-skeleton height="2rem" width="70vw" borderRadius="1rem" />
+  }
+</h1>
+@switch (calendarType()) { @case (CAL_TYPE.Day) {
+<mwl-calendar-day-view
+  [viewDate]="viewDate()"
+  [events]="events()"
+  [refresh]="refresh"
+/>
+} @case (CAL_TYPE.Week) {
+<mwl-calendar-week-view
+  [viewDate]="viewDate()"
+  [events]="events()"
+  [refresh]="refresh"
+  [weekStartsOn]="firstDay()"
+/>
+} @case (CAL_TYPE.Month) {
+<mwl-calendar-month-view
+  [viewDate]="viewDate()"
+  [events]="events()"
+  [refresh]="refresh"
+/>
+} }
+
+<pre>{{ subscription() | json }} </pre>

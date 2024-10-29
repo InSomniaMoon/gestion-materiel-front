@@ -114,6 +114,12 @@ export class ItemFragmentComponent implements OnInit {
     event: CalendarEvent;
     sourceEvent: MouseEvent | KeyboardEvent;
   }) {
-    this.router.navigate(['/subscriptions', event.event.id]);
+    
+    this.router.navigate([
+      '/items',
+      this.item().id,
+      'subscriptions',
+      event.event.id,
+    ]);
   }
 }

@@ -5,7 +5,7 @@ import {
   LOCALE_ID,
   provideZoneChangeDetection,
 } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withDebugTracing } from '@angular/router';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 
 import { registerLocaleData } from '@angular/common';
@@ -17,9 +17,7 @@ import {
 } from '@angular/common/http';
 import localeFR from '@angular/common/locales/fr';
 import { provideClientHydration } from '@angular/platform-browser';
-import {
-  provideAnimations
-} from '@angular/platform-browser/animations';
+import { provideAnimations } from '@angular/platform-browser/animations';
 import {
   CalendarDateFormatter,
   CalendarModule,

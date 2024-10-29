@@ -10,6 +10,9 @@ form {
   padding: 1rem;
   border: 1px solid #ccc;
   border-radius: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 input {
