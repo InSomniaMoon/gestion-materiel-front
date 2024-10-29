@@ -1,10 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
 // @import "primeng/resources/themes/lara-light-blue/theme.css";
+@import "./reset.scss";
 @import "./theme.css";
 @import "primeng/resources/primeng.css";
 @import "primeicons/primeicons.css";
 @import "angular-calendar/scss/angular-calendar.scss";
-
 html,
 body,
 app-root {
@@ -24,4 +24,18 @@ input
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+}
+
+.flex {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+h1 {
+  margin: 1rem 0 3rem;
+}
+
+p {
+  margin: 0 0 1rem;
 }

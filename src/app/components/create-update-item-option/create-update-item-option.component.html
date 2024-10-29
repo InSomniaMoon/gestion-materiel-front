@@ -1,0 +1,32 @@
+<form [formGroup]="form">
+  <label for="name">Nom de l'option</label>
+  <input type="text" pInputText formControlName="name" id="name" />
+
+  <label for="description">Description</label>
+  <textarea
+    type="text"
+    pInputText
+    formControlName="description"
+    id="description"
+    rows="6"
+  ></textarea>
+
+  <label for="usable">Utilisable</label>
+  <p-inputSwitch formControlName="usable" id="usable" />
+</form>
+
+<p-footer>
+  <p-button
+    label="Annuler"
+    icon="pi pi-times"
+    iconPos="right"
+    (onClick)="closeDialog()"
+  />
+  <p-button
+    label="Enregistrer"
+    icon="pi pi-check"
+    iconPos="right"
+    [disabled]="!form.valid"
+    (onClick)="save()"
+  />
+</p-footer>

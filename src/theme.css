@@ -2604,6 +2604,9 @@
     background: #f8f9fa;
     transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
   }
+  .p-datatable .p-datatable-thead > tr > th:empty {
+    width: 0;
+  }
   .p-datatable .p-datatable-tfoot > tr > td {
     text-align: left;
     padding: 1rem 1rem;
@@ -2661,6 +2664,7 @@
     border: 1px solid rgba(0, 0, 0, 0.08);
     border-width: 0 0 1px 0;
     padding: 1rem 1rem;
+    align-content: center;
   }
   .p-datatable .p-datatable-tbody > tr > td .p-row-toggler,
   .p-datatable .p-datatable-tbody > tr > td .p-row-editor-init,

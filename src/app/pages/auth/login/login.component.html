@@ -6,12 +6,14 @@
       autocomplete="email"
       ngModel
       name="email"
+      required
       id="email"
     />
     <label for="email">Email</label>
   </p-floatLabel>
   <p-floatLabel>
     <input
+      required
       type="password"
       autocomplete="current-password"
       ngModel
@@ -25,6 +27,7 @@
   <button
     pButton
     type="submit"
+    [loading]="loading()"
     label="Se connecter"
     [disabled]="!loginForm.valid"
   ></button>

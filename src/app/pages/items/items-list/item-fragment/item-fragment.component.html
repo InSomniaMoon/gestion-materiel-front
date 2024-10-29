@@ -1,4 +1,10 @@
-<p-card [header]="item().name">
+<p-card>
+  <ng-template pTemplate="header">
+    <div class="flex">
+      <h2 class="p-card-title">{{ item().name }}</h2>
+      <p-tag severity="secondary"> {{ item().category }} </p-tag>
+    </div>
+  </ng-template>
   <div class="body">
     <p>{{ item().description }}</p>
     <div class="button-group">
@@ -73,6 +79,7 @@
       [events]="events()"
       [refresh]="refresh"
       locale="fr"
+      (eventClicked)="eventClicked($event)"
     />
     } @case (CAL_VIEW.Week) {
     <mwl-calendar-week-view

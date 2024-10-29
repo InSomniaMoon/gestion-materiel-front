@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy } from '@angular/core';
+import { Component, inject, OnDestroy, signal } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 
 import { ButtonDirective } from 'primeng/button';
@@ -23,8 +23,10 @@ export class LoginComponent implements OnDestroy {
   private router = inject(Router);
 
   destroy = new Subject<void>();
+  loading = signal(false);
 
   submitForm(form: NgForm) {
+    this.loading.set(true);
     this.auth$
       .login(form.value)
       .pipe(takeUntil(this.destroy))
@@ -38,6 +40,9 @@ export class LoginComponent implements OnDestroy {
         },
         error: (err) => {
           console.error(err);
+        },
+        complete: () => {
+          this.loading.set(false);
         },
       });
   }

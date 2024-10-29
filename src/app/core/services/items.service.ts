@@ -19,4 +19,7 @@ export class ItemsService {
   getItem(id: number) {
     return this.http.get<Item>(`${this.api_url}/items/${id}`);
   }
+  updateItem(item: Item) {
+    return this.http.put<Item>(`${this.api_url}/items/${item.id}`, item);
+  }
 }

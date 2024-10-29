@@ -3,13 +3,12 @@ import {
   Component,
   computed,
   effect,
-  importProvidersFrom,
   inject,
   input,
   OnInit,
   signal,
 } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AddSubscriptionComponent } from '@components/add-subscription/add-subscription.component';
 import { CalendarEventAdapter } from '@core/adapters/calendar-event.adapter';
 import { SubscriptionService } from '@core/services/subscription.service';
@@ -18,6 +17,7 @@ import { Subscription } from '@core/types/subscription.type';
 import {
   CalendarCommonModule,
   CalendarDayModule,
+  CalendarEvent,
   CalendarMonthModule,
   CalendarMonthViewDay,
   CalendarView,
@@ -28,6 +28,7 @@ import { ButtonModule } from 'primeng/button';
 import { ButtonGroupModule } from 'primeng/buttongroup';
 import { CardModule } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
+import { TagModule } from 'primeng/tag';
 import { Subject } from 'rxjs';
 
 @Component({
@@ -45,6 +46,7 @@ import { Subject } from 'rxjs';
     AddSubscriptionComponent,
     ButtonModule,
     ButtonGroupModule,
+    TagModule,
   ],
   templateUrl: './item-fragment.component.html',
   styleUrl: './item-fragment.component.scss',
@@ -54,6 +56,7 @@ export class ItemFragmentComponent implements OnInit {
   refresh = new Subject<void>();
   item = input.required<Item>();
   subscription$ = inject(SubscriptionService);
+  private readonly router = inject(Router);
 
   CAL_VIEW = CalendarView;
 
@@ -105,5 +108,12 @@ export class ItemFragmentComponent implements OnInit {
   }) {
     this.viewDate.set(day.date);
     this.viewType.set(CalendarView.Day);
+  }
+
+  eventClicked(event: {
+    event: CalendarEvent;
+    sourceEvent: MouseEvent | KeyboardEvent;
+  }) {
+    this.router.navigate(['/subscriptions', event.event.id]);
   }
 }

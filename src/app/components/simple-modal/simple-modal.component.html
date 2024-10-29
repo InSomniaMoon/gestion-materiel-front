@@ -1,0 +1,12 @@
+<p class="modal-content">{{ data().message }}</p>
+
+<p-footer>
+  <p-button
+    [label]="data().cancelText"
+    severity="secondary"
+    (onClick)="closeCancel()"
+  />
+  @if (data().confirm) {
+  <p-button [label]="data().confirmText" (onClick)="closeConfirm()" />
+  }
+</p-footer>

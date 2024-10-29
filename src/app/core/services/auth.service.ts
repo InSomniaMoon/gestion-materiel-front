@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { environment } from '@env/environment';
 import { catchError, map, of, tap } from 'rxjs';
 import { LoginDTO } from '../types/loginDTO.type';
@@ -17,6 +17,13 @@ export class AuthService {
   user = signal<User | null>(null);
 
   isAuth = this._isAuth.asReadonly();
+
+  isAdmin = computed(() => {
+    if (!this.user()) {
+      return false;
+    }
+    return this.user()?.role === 'admin';
+  });
 
   login({ email, password }: { email: string; password: string }) {
     // This is a fake login function, it should be replaced with a real one
