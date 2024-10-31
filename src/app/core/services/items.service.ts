@@ -12,8 +12,12 @@ export class ItemsService {
 
   private api_url = environment.api_url;
 
-  getItems() {
-    return this.http.get<PaginatedData<Item>>(`${this.api_url}/items`);
+  getItems(searchQuery?: string) {
+    let url = `${this.api_url}/items`;
+    if (searchQuery) {
+      url += `?q=${searchQuery}`;
+    }
+    return this.http.get<PaginatedData<Item>>(url);
   }
 
   getItem(id: number) {

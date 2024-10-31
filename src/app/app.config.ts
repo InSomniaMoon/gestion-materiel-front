@@ -19,6 +19,10 @@ import localeFR from '@angular/common/locales/fr';
 import { provideClientHydration } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import {
+  provideQueryClient,
+  QueryClient,
+} from '@tanstack/angular-query-experimental';
+import {
   CalendarDateFormatter,
   CalendarModule,
   DateAdapter,
@@ -36,19 +40,19 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideAnimations(),
     provideClientHydration(),
+    provideQueryClient(new QueryClient()),
     provideHttpClient(withFetch(), withInterceptors([authInterceptor])),
     { provide: LOCALE_ID, useValue: 'fr-FR' },
     importProvidersFrom(
       CalendarModule.forRoot({
         provide: DateAdapter,
         useFactory: adapterFactory,
-      })
+      }),
     ),
     {
       provide: CalendarDateFormatter,
       useClass: CustomDateFormatter,
     },
-
     {
       provide: APP_INITIALIZER,
       useFactory: init,
