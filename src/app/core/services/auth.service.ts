@@ -34,7 +34,7 @@ export class AuthService {
           localStorage.setItem('auth_token', res.token);
           this._isAuth.set(true);
           this.user.set(res.user);
-        })
+        }),
       );
   }
 
@@ -55,8 +55,9 @@ export class AuthService {
         }),
         catchError(() => {
           this._isAuth.set(false);
+          localStorage.removeItem('auth_token');
           return of(false);
-        })
+        }),
       );
     } else {
       this._isAuth.set(false);
