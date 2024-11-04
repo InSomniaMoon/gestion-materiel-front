@@ -3,12 +3,16 @@
 }
 .body {
   flex: 1;
+  display: flex;
+  gap: 1rem;
+  flex-direction: column;
 }
-
+p {
+  margin: 0;
+}
 .button-group {
   display: flex;
   gap: 0.5rem;
-  margin-top: 1rem;
 }
 
 mwl-calendar-month-view {

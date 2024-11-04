@@ -6,17 +6,23 @@ import {
   inject,
   OnInit,
   signal,
+  ViewChild,
 } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { CalendarEventAdapter } from '@app/core/adapters/calendar-event.adapter';
 import { SubscriptionService } from '@app/core/services/subscription.service';
 import { Subscription } from '@app/core/types/subscription.type';
-import { CalendarModule, CalendarView } from 'angular-calendar';
-import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import {
+  FullCalendarComponent,
+  FullCalendarModule,
+} from '@fullcalendar/angular';
+import { CalendarOptions, EventSourceInput } from '@fullcalendar/core/index.js';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import { injectQuery } from '@tanstack/angular-query-experimental';
+import { AccordionModule } from 'primeng/accordion';
 import { ButtonModule } from 'primeng/button';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { SkeletonModule } from 'primeng/skeleton';
-import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-subscription-details',
@@ -27,7 +33,8 @@ import { Subject } from 'rxjs';
     RouterLink,
     SkeletonModule,
     JsonPipe,
-    CalendarModule,
+    AccordionModule,
+    FullCalendarModule,
   ],
   templateUrl: './subscription-details.component.html',
   styleUrl: './subscription-details.component.scss',
@@ -36,24 +43,12 @@ import { Subject } from 'rxjs';
 export class SubscriptionDetailsComponent implements OnInit {
   private readonly subscription$ = inject(SubscriptionService);
   private readonly activatedRoute = inject(ActivatedRoute);
-
+  private readonly issues$: any = inject(SubscriptionService);
   subscription = signal<Subscription | null>(null);
 
-  readonly CAL_TYPE = CalendarView;
-  calendarType = signal<CalendarView>(CalendarView.Day);
   viewDate = signal(new Date());
-  refresh = new Subject<void>();
-
-  events = computed(() => {
-    if (!this.subscription()) {
-      return [];
-    }
-    return [CalendarEventAdapter.adapt(this.subscription()!)];
-  });
 
   firstDay = computed(() => {
-    console.log(this.subscription());
-
     if (!this.subscription()) {
       return 1;
     }
@@ -61,6 +56,48 @@ export class SubscriptionDetailsComponent implements OnInit {
     // return the nth day of week of start date
     return this.subscription()!.start_date.getDay();
   });
+
+  initialView = signal('dayGridMonth');
+
+  // calendar = viewChild<FullCalendarComponent>('calendar');
+  @ViewChild('calendar') calendarComponent!: FullCalendarComponent;
+
+  issuesQuery = injectQuery(() => ({
+    queryKey: ['issues', this.subscription()],
+    enabled: !!this.subscription(),
+    queryFn: () => this.issues$().getIssues(this.subscription()!),
+  }));
+
+  issues = computed(() => {
+    if (!this.issuesQuery.data()) {
+      return [];
+    }
+    return this.issuesQuery.data()!.data;
+  });
+
+  events = computed<EventSourceInput | undefined>(() => {
+    return [
+      {
+        title: this.subscription()?.name,
+        start: this.subscription()?.start_date,
+        end: this.subscription()?.end_date,
+      },
+    ];
+  });
+
+  calendarOptions = computed<CalendarOptions>(() => ({
+    locale: 'fr',
+    initialView: this.initialView(),
+    plugins: [dayGridPlugin, timeGridPlugin],
+    firstDay: this.firstDay(),
+    events: this.events(),
+    initialDate: this.viewDate(),
+    headerToolbar: {
+      left: 'prev,next',
+      center: 'title',
+      right: 'timeGridWeek,dayGridDay', // user can switch between the two
+    },
+  }));
   constructor() {}
 
   ngOnInit(): void {
@@ -68,7 +105,7 @@ export class SubscriptionDetailsComponent implements OnInit {
     this.subscription$
       .getItemSubscription(
         this.activatedRoute.snapshot.params['itemId'],
-        this.activatedRoute.snapshot.params['subscriptionId']
+        this.activatedRoute.snapshot.params['subscriptionId'],
       )
       .subscribe({
         next: (subscription) => {
@@ -77,16 +114,28 @@ export class SubscriptionDetailsComponent implements OnInit {
           this.viewDate.set(subscription.start_date);
 
           if (this.checkEventOneDay(subscription)) {
-            this.calendarType.set(CalendarView.Day);
+            // TODO: set the calendar view to day
+            this.initialView.set('timeGridDay');
             return;
           }
 
           if (this.checkEventOnWeek(subscription)) {
-            this.calendarType.set(CalendarView.Week);
+            // TODO: set the calendar view to week
+            this.initialView.set('timeGridWeek');
+
+            console.log('week');
             return;
           }
 
-          this.calendarType.set(CalendarView.Month);
+          // TODO: set the calendar view to month
+
+          this.initialView.set('dayGridMonth');
+
+          console.log('month');
+        },
+        complete: () => {
+          this.calendarComponent.getApi().changeView(this.initialView());
+          console.log('complete');
         },
       });
   }
@@ -96,13 +145,13 @@ export class SubscriptionDetailsComponent implements OnInit {
     const end = new Date(
       subscription.end_date.getFullYear(),
       subscription.end_date.getMonth(),
-      subscription.end_date.getDate()
+      subscription.end_date.getDate(),
     );
 
     const start = new Date(
       subscription.start_date.getFullYear(),
       subscription.start_date.getMonth(),
-      subscription.start_date.getDate()
+      subscription.start_date.getDate(),
     );
 
     return end.getTime() === start.getTime();
@@ -113,13 +162,13 @@ export class SubscriptionDetailsComponent implements OnInit {
     const end = new Date(
       subscription.end_date.getFullYear(),
       subscription.end_date.getMonth(),
-      subscription.end_date.getDate()
+      subscription.end_date.getDate(),
     );
 
     const start = new Date(
       subscription.start_date.getFullYear(),
       subscription.start_date.getMonth(),
-      subscription.start_date.getDate()
+      subscription.start_date.getDate(),
     );
 
     const diff = end.getTime() - start.getTime();
