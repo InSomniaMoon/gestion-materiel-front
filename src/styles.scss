@@ -4,7 +4,6 @@
 @import "./theme.css";
 @import "primeng/resources/primeng.css";
 @import "primeicons/primeicons.css";
-@import "angular-calendar/scss/angular-calendar.scss";
 html,
 body,
 app-root {
@@ -38,4 +37,11 @@ h1 {
 
 p {
   margin: 0 0 1rem;
+}
+
+.fc .fc-toolbar {
+  @media screen and (max-width: 768px) {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
 }
