@@ -8,12 +8,19 @@ import { AuthService } from '../../../core/services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { InputTextModule } from 'primeng/inputtext';
+import { PasswordModule } from 'primeng/password';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, FloatLabelModule, ButtonDirective, InputTextModule],
+  imports: [
+    FormsModule,
+    FloatLabelModule,
+    ButtonDirective,
+    InputTextModule,
+    PasswordModule,
+  ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })

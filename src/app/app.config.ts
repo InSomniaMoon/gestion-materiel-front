@@ -1,12 +1,10 @@
 import {
   APP_INITIALIZER,
   ApplicationConfig,
-  importProvidersFrom,
   LOCALE_ID,
   provideZoneChangeDetection,
 } from '@angular/core';
-import { provideRouter, withDebugTracing } from '@angular/router';
-import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import { provideRouter } from '@angular/router';
 
 import { registerLocaleData } from '@angular/common';
 import {
@@ -22,13 +20,8 @@ import {
   provideQueryClient,
   QueryClient,
 } from '@tanstack/angular-query-experimental';
-import {
-  CalendarDateFormatter,
-  CalendarModule,
-  DateAdapter,
-} from 'angular-calendar';
+
 import { routes } from './app.routes';
-import { CustomDateFormatter } from './core/adapters/custom-date.adapter';
 import { init } from './core/init';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { AuthService } from './core/services/auth.service';
@@ -43,16 +36,6 @@ export const appConfig: ApplicationConfig = {
     provideQueryClient(new QueryClient()),
     provideHttpClient(withFetch(), withInterceptors([authInterceptor])),
     { provide: LOCALE_ID, useValue: 'fr-FR' },
-    importProvidersFrom(
-      CalendarModule.forRoot({
-        provide: DateAdapter,
-        useFactory: adapterFactory,
-      }),
-    ),
-    {
-      provide: CalendarDateFormatter,
-      useClass: CustomDateFormatter,
-    },
     {
       provide: APP_INITIALIZER,
       useFactory: init,

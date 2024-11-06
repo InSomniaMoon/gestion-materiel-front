@@ -12,15 +12,17 @@
     <label for="email">Email</label>
   </p-floatLabel>
   <p-floatLabel>
-    <input
+    <p-password
       required
       type="password"
       autocomplete="current-password"
       ngModel
       name="password"
       id="password"
-      pInputText
+      [toggleMask]="true"
+      [feedback]="false"
     />
+
     <label for="password">Mot de passe</label>
   </p-floatLabel>
 
