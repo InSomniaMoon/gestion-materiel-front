@@ -1,13 +1,17 @@
 import { JsonPipe } from '@angular/common';
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   computed,
+  DestroyRef,
   inject,
+  OnDestroy,
   OnInit,
   signal,
   ViewChild,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { SubscriptionService } from '@app/core/services/subscription.service';
 import { Subscription } from '@app/core/types/subscription.type';
@@ -40,7 +44,8 @@ import { SkeletonModule } from 'primeng/skeleton';
   styleUrl: './subscription-details.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SubscriptionDetailsComponent implements OnInit {
+export class SubscriptionDetailsComponent implements AfterViewInit {
+  private destroyRef = inject(DestroyRef);
   private readonly subscription$ = inject(SubscriptionService);
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly issues$: any = inject(SubscriptionService);
@@ -100,13 +105,13 @@ export class SubscriptionDetailsComponent implements OnInit {
   }));
   constructor() {}
 
-  ngOnInit(): void {
-    // This method should fetch the item subscription
+  ngAfterViewInit(): void {
     this.subscription$
       .getItemSubscription(
         this.activatedRoute.snapshot.params['itemId'],
         this.activatedRoute.snapshot.params['subscriptionId'],
       )
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (subscription) => {
           this.subscription.set(subscription);
@@ -120,14 +125,11 @@ export class SubscriptionDetailsComponent implements OnInit {
           }
 
           if (this.checkEventOnWeek(subscription)) {
-            // TODO: set the calendar view to week
             this.initialView.set('timeGridWeek');
 
             console.log('week');
             return;
           }
-
-          // TODO: set the calendar view to month
 
           this.initialView.set('dayGridMonth');
 
@@ -135,7 +137,6 @@ export class SubscriptionDetailsComponent implements OnInit {
         },
         complete: () => {
           this.calendarComponent.getApi().changeView(this.initialView());
-          console.log('complete');
         },
       });
   }

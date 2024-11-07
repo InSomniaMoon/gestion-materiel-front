@@ -22,7 +22,6 @@ export class SubscriptionService {
     const url = `${this.api_url}/items/${item.id}/uses`;
 
     const cache = this.cache.get<Subscription[]>(url);
-    console.log(cache);
 
     if (cache) {
       return of(cache);

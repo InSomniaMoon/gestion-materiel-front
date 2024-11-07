@@ -41,7 +41,19 @@ p {
 
 .fc .fc-toolbar {
   @media screen and (max-width: 768px) {
-    flex-direction: column;
+    flex-wrap: wrap;
     gap: 0.5rem;
   }
+}
+
+.fc-daygrid-body,
+.fc-col-header {
+  width: 100% !important;
+  table {
+    width: 100% !important;
+  }
+}
+
+.small {
+  font-size: 0.8rem;
 }

@@ -10,7 +10,8 @@
     <div class="button-group">
       <p-button
         label="Emprunter"
-        (click)="displaySubscriptionDialog.set(true)"
+        [disabled]="!item().usable"
+        (click)="openAddSubscriptionDialog()"
       />
       <p-button
         label="Voir les détails"
@@ -21,10 +22,3 @@
     <full-calendar #calendar [options]="calendarOptions()" />
   </div>
 </p-card>
-
-<app-add-subscription
-  [visible]="displaySubscriptionDialog()"
-  (visibleChange)="displaySubscriptionDialog.set($event)"
-  [item]="item()"
-  (subscriptionChange)="fetchSubscriptions()"
-/>

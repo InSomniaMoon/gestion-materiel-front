@@ -3,16 +3,18 @@ import {
   Component,
   inject,
   input,
-  model,
+  OnInit,
   output,
 } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { SubscriptionService } from '@app/core/services/subscription.service';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Item } from '@app/core/types/item.type';
 import { ButtonModule } from 'primeng/button';
 import { CalendarModule } from 'primeng/calendar';
 import { DialogModule } from 'primeng/dialog';
+import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { InputTextModule } from 'primeng/inputtext';
+import { fromEvent, map, startWith } from 'rxjs';
 
 @Component({
   selector: 'app-add-subscription',
@@ -28,46 +30,68 @@ import { InputTextModule } from 'primeng/inputtext';
   styleUrl: './add-subscription.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AddSubscriptionComponent {
-  private readonly subscriptionService = inject(SubscriptionService);
-
+export class AddSubscriptionComponent implements OnInit {
   subscriptionChange = output<void>();
 
-  visible = model.required<boolean>();
-  item = input.required<Item>();
+  private ref = inject(DynamicDialogRef);
+
+  // check if screen is a mobile device from event
+  isMobile = toSignal(
+    fromEvent(window, 'resize').pipe(
+      map(() => window.innerWidth <= 768),
+      startWith(window.innerWidth <= 768),
+    ),
+  );
 
   fb = inject(FormBuilder);
 
+  curDate = new Date();
   form = this.fb.group({
-    name: this.fb.control('', { nonNullable: true }),
-    start_date: this.fb.control('', { nonNullable: true }),
-    end_date: this.fb.control('', { nonNullable: true }),
+    name: this.fb.control('', {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
+    start_date: this.fb.control('', {
+      nonNullable: true,
+    }),
+    end_date: this.fb.control('', {
+      nonNullable: true,
+    }),
   });
+
+  ngOnInit(): void {
+    this.curDate.setMinutes(0, 0, 0);
+
+    this.form.valueChanges.subscribe((value) => {
+      console.log(value);
+    });
+
+    // format :2024-11-13 16:01
+    this.form.patchValue({
+      start_date: this.formatDate(this.curDate),
+      end_date: this.formatDate(this.curDate),
+    });
+  }
+
+  close() {
+    this.ref.close();
+  }
 
   submit() {
     if (this.form.invalid) {
       return;
     }
 
-    this.subscriptionService
-      .addSubscription(this.item(), {
-        name: this.form.value.name!,
-        start_date: new Date(this.form.value.start_date!),
-        end_date: new Date(this.form.value.end_date!),
-        item_id: this.item().id,
-        status: 'active',
-        id: 0,
-        user_id: 0,
-      })
-      .subscribe({
-        next: () => {
-          this.visible.set(false);
-          this.subscriptionChange.emit();
-        },
+    this.ref.close(this.form.value);
+  }
 
-        error: (error) => {
-          console.error(error);
-        },
-      });
+  private formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+
+    return `${year}-${month}-${day} ${hours}:${minutes}`;
   }
 }

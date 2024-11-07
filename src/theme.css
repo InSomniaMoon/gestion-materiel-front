@@ -276,8 +276,10 @@
     background-color: rgba(0, 0, 0, 0.4);
     transition-duration: 0.2s;
   }
-  .p-disabled, .p-component:disabled {
+  .p-disabled,
+  .p-component:disabled {
     opacity: 0.8;
+    cursor: not-allowed;
   }
   .p-error {
     color: #e4677e;
@@ -3807,6 +3809,10 @@
   }
   .p-card .p-card-footer {
     padding: 1rem 0 0 0;
+    display: flex;
+    /* flex-direction: row-reverse; */
+    justify-content: flex-end;
+    gap: 1rem;
   }
   .p-divider .p-divider-content {
     background-color: #ffffff;

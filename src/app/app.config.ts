@@ -21,6 +21,7 @@ import {
   QueryClient,
 } from '@tanstack/angular-query-experimental';
 
+import { DialogService } from 'primeng/dynamicdialog';
 import { routes } from './app.routes';
 import { init } from './core/init';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
@@ -29,6 +30,7 @@ registerLocaleData(localeFR);
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    DialogService,
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideAnimations(),

@@ -1,0 +1,17 @@
+:host {
+  display: block;
+}
+
+.options {
+  // les elements font 50% de la largeur de leur parent max, avec un wrap
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: space-between;
+  > * {
+    width: 100%;
+    @media (min-width: 768px) {
+      width: calc(50% - 0.5rem);
+    }
+  }
+}

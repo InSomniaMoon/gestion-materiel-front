@@ -16,6 +16,7 @@ import { ItemOptionService } from '@app/core/services/item-option.service';
 import { ItemsService } from '@app/core/services/items.service';
 import { Item } from '@app/core/types/item.type';
 import { ItemOption } from '@app/core/types/itemOption.type';
+import { injectQuery } from '@tanstack/angular-query-experimental';
 import { ButtonModule } from 'primeng/button';
 import { DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
 import { InputSwitchModule } from 'primeng/inputswitch';
@@ -23,6 +24,9 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { ToggleButtonModule } from 'primeng/togglebutton';
+import { lastValueFrom } from 'rxjs';
+import { OpenedIssuesComponent } from './opened-issues/opened-issues.component';
+import { OptionsTableComponent } from './options-table/options-table.component';
 
 @Component({
   selector: 'app-item-details',
@@ -38,8 +42,9 @@ import { ToggleButtonModule } from 'primeng/togglebutton';
     ToggleButtonModule,
     FormsModule,
     RouterLink,
+    OptionsTableComponent,
+    OpenedIssuesComponent,
   ],
-  providers: [DialogService],
   templateUrl: './item-details.component.html',
   styleUrl: './item-details.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -47,66 +52,25 @@ import { ToggleButtonModule } from 'primeng/togglebutton';
 export class ItemDetailsComponent implements OnInit {
   private readonly routeSnapshot = inject(ActivatedRoute).snapshot;
   private readonly itemService = inject(ItemsService);
-  private readonly itemOptionService = inject(ItemOptionService);
   // title service to change the title of the page
   private readonly titleService = inject(Title);
   private readonly auth$ = inject(AuthService);
-  private readonly dialogService = inject(DialogService);
+  private readonly itemOptionService = inject(ItemOptionService);
 
   item = signal<Item | null>(null);
-  options = signal<ItemOption[]>([]);
 
   userAdmin = this.auth$.isAdmin;
-  private itemId!: number;
+  itemId!: number;
 
   ngOnInit(): void {
     this.itemId = this.routeSnapshot.params['itemId'];
 
-    this.getOptions();
     // get itemid from route
     this.itemService.getItem(this.itemId).subscribe({
       next: (item) => {
         this.item.set(item);
         this.titleService.setTitle(item.name);
       },
-    });
-  }
-
-  getOptions(): void {
-    this.itemOptionService.getItemOptions(this.itemId).subscribe({
-      next: (options) => {
-        console.log(options);
-
-        this.options.set(options);
-      },
-    });
-  }
-
-  openAddOptionDialog(): void {
-    const dialog = this.dialogService.open(CreateUpdateItemOptionComponent, {
-      header: 'Ajouter une option',
-      width: '70%',
-    });
-    dialog.onClose.subscribe((option: ItemOption) => {
-      if (!option) {
-        return;
-      }
-      this.itemOptionService.addItemOption(this.item()!.id, option).subscribe({
-        next: (item) => {
-          this.options.update((options) => [...options, item]);
-        },
-      });
-    });
-  }
-
-  openEditOptionDialog(option: ItemOption): void {
-    const dialog = this.dialogService.open(CreateUpdateItemOptionComponent, {
-      header: 'Modifier une option',
-      width: '70%',
-      data: option,
-    });
-    dialog.onClose.subscribe((option: ItemOption) => {
-      this.getOptions();
     });
   }
 
@@ -121,31 +85,14 @@ export class ItemDetailsComponent implements OnInit {
     });
   }
 
-  deleteOption(option: ItemOption) {
-    this.dialogService
-      .open(SimpleModalComponent, {
-        header: `Supprimer l'option ${option.name}`,
-        width: '70%',
-        height: 'auto',
-        data: {
-          message: `Voulez-vous vraiment supprimer l'option ${option.name} ?`,
-          confirm: true,
-          confirmText: 'Supprimer',
-          cancelText: 'Annuler',
-        },
-      })
-      .onClose.subscribe((confirm) => {
-        if (!confirm) {
-          return;
-        }
-
-        this.itemOptionService
-          .deleteItemOption(this.item()!.id, option.id)
-          .subscribe({
-            next: () => {
-              this.getOptions();
-            },
-          });
-      });
-  }
+  optionsQuery = injectQuery(() => ({
+    enabled: this.userAdmin(),
+    queryKey: ['options', this.itemId],
+    queryFn: () =>
+      lastValueFrom(
+        this.itemOptionService.getItemOptions(this.itemId, {
+          withIssues: true,
+        }),
+      ),
+  }));
 }

@@ -12,29 +12,30 @@ export class ItemOptionService {
   private api_url = environment.api_url;
   constructor() {}
 
-  getItemOptions(itemId: number) {
+  getItemOptions(itemId: number, options?: { withIssues: boolean }) {
+    const withIssues = options?.withIssues ?? false;
     return this.http.get<ItemOption[]>(
-      `${this.api_url}/items/${itemId}/options`
+      `${this.api_url}/items/${itemId}/options${withIssues ? '/issues' : ''}`,
     );
   }
 
   addItemOption(itemId: number, option: ItemOption) {
     return this.http.post<ItemOption>(
       `${this.api_url}/items/${itemId}/options`,
-      option
+      option,
     );
   }
 
   updateItemOption(itemId: number, option: ItemOption) {
     return this.http.put<ItemOption>(
       `${this.api_url}/items/${itemId}/options/${option.id}`,
-      option
+      option,
     );
   }
 
   deleteItemOption(itemId: number, optionId: number) {
     return this.http.delete<ItemOption>(
-      `${this.api_url}/items/${itemId}/options/${optionId}`
+      `${this.api_url}/items/${itemId}/options/${optionId}`,
     );
   }
 }

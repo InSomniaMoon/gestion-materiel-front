@@ -1,87 +1,49 @@
 @if (item()) {
-<h1>
-  <a
-    pButton
-    routerLink="/items"
-    icon="pi pi-arrow-left"
-    [text]="true"
-    size="large"
-  ></a>
-  {{ item()?.name }}
-</h1>
+  <header>
+    <h1>
+      <a
+        pButton
+        routerLink="/items"
+        icon="pi pi-arrow-left"
+        [text]="true"
+        size="large"
+      ></a>
+      {{ item()?.name }}
+    </h1>
+  </header>
+  <section>
+    <p>{{ item()?.description }}</p>
+    <div class="flex">
+      <label for="usable"> Utilisable: </label>
+      <p-toggleButton
+        onLabel="Oui"
+        offLabel="Non"
+        [disabled]="!userAdmin()"
+        role="button"
+        [onIcon]="'pi pi-check'"
+        offIcon="pi pi-times"
+        (click)="$event.stopImmediatePropagation(); updateItem()"
+        [ngModel]="item()?.usable"
+      />
+    </div>
+  </section>
 
-<p>{{ item()?.description }}</p>
-<div class="flex">
-  <label for="usable"> Utilisable: </label>
-  <p-toggleButton
-    onLabel="Oui"
-    offLabel="Non"
-    [disabled]="!userAdmin()"
-    [onIcon]="'pi pi-check'"
-    offIcon="pi pi-times"
-    (click)="$event.stopImmediatePropagation(); updateItem()"
-    [ngModel]="item()?.usable"
-  />
-</div>
-
-<div class="title">
-  <h2>Options</h2>
-  @if (userAdmin()) {
-  <p-button
-    outlined
-    label="Ajouter"
-    icon="pi pi-plus"
-    iconPos="right"
-    (onClick)="openAddOptionDialog()"
-  />
-  }
-</div>
-
-<p-table [value]="options()" [tableStyle]="{ width: '100%' }">
-  <ng-template pTemplate="header">
-    <tr>
-      <th>Nom</th>
-      <th>Description</th>
-      <th>Utilisable</th>
-      @if (userAdmin()) {
-      <th></th>
-      }
-    </tr>
-  </ng-template>
-  <ng-template pTemplate="body" let-product>
-    <tr>
-      <td>{{ product.name }}</td>
-      <td>{{ product.description }}</td>
-
-      <td>
-        <p-tag
-          [icon]="product.usable ? 'pi pi-check' : 'pi pi-times'"
-          [severity]="product.usable ? 'success' : 'danger'"
-        />
-      </td>
-      @if (userAdmin()) {
-      <td style="display: flex; gap: 0.5rem">
-        <p-button
-          type="button"
-          icon="pi pi-pencil"
-          rounded
-          severity="secondary"
-          size="small"
-          (onClick)="openEditOptionDialog(product)"
-        ></p-button>
-        <p-button
-          type="button"
-          icon="pi pi-trash"
-          rounded
-          size="small"
-          severity="danger"
-          (onClick)="deleteOption(product)"
-        ></p-button>
-      </td>
-      }
-    </tr>
-  </ng-template>
-</p-table>
+  <section>
+    <app-options-table
+      [options]="optionsQuery.data() ?? []"
+      [itemId]="itemId"
+      (optionsChange)="optionsQuery.refetch()"
+    />
+  </section>
 } @else {
-<p-progressSpinner ariaLabel="loading" />
+  <p-progressSpinner ariaLabel="loading" />
+}
+@if (userAdmin()) {
+  <section>
+    <app-opened-issues
+      [itemId]="itemId"
+      [options]="optionsQuery.data() ?? []"
+      (optionsChange)="optionsQuery.refetch()"
+    />
+  </section>
 }

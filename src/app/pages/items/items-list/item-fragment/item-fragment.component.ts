@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   computed,
@@ -6,23 +7,27 @@ import {
   input,
   OnInit,
   signal,
+  viewChild,
 } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { AddSubscriptionComponent } from '@components/add-subscription/add-subscription.component';
 import { SubscriptionService } from '@core/services/subscription.service';
 import { Item } from '@core/types/item.type';
 import { Subscription } from '@core/types/subscription.type';
-import { FullCalendarModule } from '@fullcalendar/angular';
-import { CalendarOptions, EventSourceInput } from '@fullcalendar/core/index.js';
+import {
+  FullCalendarComponent,
+  FullCalendarModule,
+} from '@fullcalendar/angular';
+import { CalendarOptions } from '@fullcalendar/core/index.js';
 import { ButtonModule } from 'primeng/button';
 import { ButtonGroupModule } from 'primeng/buttongroup';
 import { CardModule } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
 import { TagModule } from 'primeng/tag';
-import { Subject } from 'rxjs';
 
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
+import { DialogService } from 'primeng/dynamicdialog';
 
 @Component({
   selector: 'app-item-fragment',
@@ -42,15 +47,20 @@ import timeGridPlugin from '@fullcalendar/timegrid';
   styleUrl: './item-fragment.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ItemFragmentComponent implements OnInit {
-  refresh = new Subject<void>();
+export class ItemFragmentComponent implements OnInit, AfterViewInit {
   item = input.required<Item>();
   subscription$ = inject(SubscriptionService);
+  private readonly subscriptionService = inject(SubscriptionService);
+
   private readonly router = inject(Router);
+  private readonly dialog = inject(DialogService);
+
+  calendar = viewChild.required<FullCalendarComponent>('calendar');
 
   calendarOptions = computed<CalendarOptions>(() => ({
     locale: 'fr',
     initialView: 'dayGridMonth',
+    eventMinWidth: 100,
     headerToolbar: {
       left: 'prev,next today',
       center: 'title',
@@ -61,6 +71,7 @@ export class ItemFragmentComponent implements OnInit {
     eventClick: (event) => {
       this.eventClicked(event);
     },
+    handleWindowResize: true,
   }));
 
   uses = signal<Subscription[]>([]);
@@ -71,6 +82,40 @@ export class ItemFragmentComponent implements OnInit {
 
   ngOnInit(): void {
     this.fetchSubscriptions();
+  }
+  ngAfterViewInit(): void {
+    this.calendar().getApi().updateSize();
+  }
+
+  openAddSubscriptionDialog() {
+    this.dialog
+      .open(AddSubscriptionComponent, {
+        header: `Emprunter ${this.item().name}`,
+      })
+      .onClose.subscribe((value) => {
+        if (!value) {
+          return;
+        }
+        this.subscriptionService
+          .addSubscription(this.item(), {
+            name: value.name!,
+            start_date: new Date(value.start_date!),
+            end_date: new Date(value.end_date!),
+            item_id: this.item().id,
+            status: 'active',
+            id: 0,
+            user_id: 0,
+          })
+          .subscribe({
+            next: () => {
+              this.fetchSubscriptions();
+            },
+
+            error: (error) => {
+              console.error(error);
+            },
+          });
+      });
   }
 
   events = computed(() => {
@@ -100,7 +145,6 @@ export class ItemFragmentComponent implements OnInit {
   }
 
   eventClicked(event: any) {
-
     this.router.navigate([
       '/items',
       this.item().id,

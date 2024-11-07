@@ -51,6 +51,7 @@ export class ItemsService {
     return this.http.put<Item>(`${this.api_url}/items/${item.id}`, item).pipe(
       tap(() => {
         this.cache.clear(`${this.api_url}/items/${item.id}`);
+        this.cache.clear(`${this.api_url}/items`);
       }),
     );
   }
