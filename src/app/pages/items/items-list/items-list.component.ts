@@ -11,7 +11,6 @@ import { ItemsService } from '../../../core/services/items.service';
 import { Item } from '../../../core/types/item.type';
 import { PaginatedData } from '../../../core/types/paginatedData.type';
 
-import { JsonPipe } from '@angular/common';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { SearchBarComponent } from '@app/components/search-bar/search-bar.component';
 import { ItemFragmentComponent } from './item-fragment/item-fragment.component';
@@ -27,7 +26,6 @@ import { lastValueFrom } from 'rxjs';
   standalone: true,
   imports: [
     ItemFragmentComponent,
-    JsonPipe,
     SearchBarComponent,
     ProgressSpinnerModule,
     ButtonModule,

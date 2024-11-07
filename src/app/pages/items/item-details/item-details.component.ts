@@ -2,6 +2,7 @@ import { JsonPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  effect,
   inject,
   OnInit,
   signal,
@@ -29,7 +30,6 @@ import { OptionsTableComponent } from './options-table/options-table.component';
   selector: 'app-item-details',
   standalone: true,
   imports: [
-    JsonPipe,
     ProgressSpinnerModule,
     TableModule,
     TagModule,
@@ -57,13 +57,13 @@ export class ItemDetailsComponent implements OnInit {
   item = signal<Item | null>(null);
 
   userAdmin = this.auth$.isAdmin;
-  itemId!: number;
+  itemId = signal<number | undefined>(undefined);
 
   ngOnInit(): void {
-    this.itemId = this.routeSnapshot.params['itemId'];
+    this.itemId.set(this.routeSnapshot.params['itemId']);
 
     // get itemid from route
-    this.itemService.getItem(this.itemId).subscribe({
+    this.itemService.getItem(this.itemId()!).subscribe({
       next: (item) => {
         this.item.set(item);
         this.titleService.setTitle(item.name);
@@ -85,10 +85,10 @@ export class ItemDetailsComponent implements OnInit {
   optionsQuery = injectQuery(() => ({
     // enabled: this.userAdmin(),
     queryKey: ['options', this.itemId],
-    enabled: this.itemId !== undefined,
+    enabled: this.itemId() !== undefined,
     queryFn: () =>
       lastValueFrom(
-        this.itemOptionService.getItemOptions(this.itemId, {
+        this.itemOptionService.getItemOptions(this.itemId()!, {
           withIssues: this.userAdmin(),
         }),
       ),
