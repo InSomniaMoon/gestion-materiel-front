@@ -9,16 +9,13 @@ import {
 import { FormsModule } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { CreateUpdateItemOptionComponent } from '@app/components/create-update-item-option/create-update-item-option.component';
-import { SimpleModalComponent } from '@app/components/simple-modal/simple-modal.component';
 import { AuthService } from '@app/core/services/auth.service';
 import { ItemOptionService } from '@app/core/services/item-option.service';
 import { ItemsService } from '@app/core/services/items.service';
 import { Item } from '@app/core/types/item.type';
-import { ItemOption } from '@app/core/types/itemOption.type';
 import { injectQuery } from '@tanstack/angular-query-experimental';
 import { ButtonModule } from 'primeng/button';
-import { DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
+import { DynamicDialogModule } from 'primeng/dynamicdialog';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TableModule } from 'primeng/table';
@@ -86,12 +83,13 @@ export class ItemDetailsComponent implements OnInit {
   }
 
   optionsQuery = injectQuery(() => ({
-    enabled: this.userAdmin(),
+    // enabled: this.userAdmin(),
     queryKey: ['options', this.itemId],
+    enabled: this.itemId !== undefined,
     queryFn: () =>
       lastValueFrom(
         this.itemOptionService.getItemOptions(this.itemId, {
-          withIssues: true,
+          withIssues: this.userAdmin(),
         }),
       ),
   }));

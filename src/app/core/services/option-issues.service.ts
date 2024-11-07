@@ -27,4 +27,13 @@ export class OptionIssuesService {
       }),
     );
   }
+
+  resolve(issue: OptionIssue) {
+    return this.http
+      .patch<OptionIssue>(
+        `${this.api_url}/options/${issue.item_option_id}/issues/${issue.id}/resolve`,
+        {},
+      )
+      .pipe();
+  }
 }

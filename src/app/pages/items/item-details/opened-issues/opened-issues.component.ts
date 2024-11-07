@@ -6,10 +6,13 @@ import {
   input,
   output,
 } from '@angular/core';
+import { IssueDetailsComponent } from '@app/components/issue-details/issue-details.component';
 import { AuthService } from '@app/core/services/auth.service';
 import { ItemOption } from '@app/core/types/itemOption.type';
+import { OptionIssue } from '@app/core/types/optionIssue.type';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
+import { DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
 
 @Component({
   selector: 'app-opened-issues',
@@ -29,6 +32,7 @@ import { CardModule } from 'primeng/card';
               label="Voir les details"
               severity="secondary"
               outlined="true"
+              (onClick)="openIssueDetailsModal(issue)"
             />
           </ng-template>
         </p-card>
@@ -42,7 +46,22 @@ import { CardModule } from 'primeng/card';
 export class OpenedIssuesComponent {
   readonly userAdmin = inject(AuthService).isAdmin;
 
+  readonly dialogService = inject(DialogService);
+
   options = input<ItemOption[]>([]);
   optionsChange = output<void>();
   itemId = input.required<number>();
+  openIssueDetailsModal(issue: OptionIssue) {
+    this.dialogService
+      .open(IssueDetailsComponent, {
+        data: { issue },
+        header: 'Détails du problème',
+        width: 'auto',
+      })
+      .onClose.subscribe((event) => {
+        if (event) {
+          this.optionsChange.emit();
+        }
+      });
+  }
 }
