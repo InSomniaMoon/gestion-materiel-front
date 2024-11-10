@@ -15,6 +15,14 @@ export class ItemsService {
 
   private api_url = environment.api_url;
 
+  createItem(item: Item) {
+    return this.http.post<Item>(`${this.api_url}/items`, item).pipe(
+      tap(() => {
+        this.cache.clear(`${this.api_url}/items`);
+      }),
+    );
+  }
+
   getItems(searchQuery?: string) {
     let url = `${this.api_url}/items`;
     if (searchQuery) {
@@ -52,6 +60,20 @@ export class ItemsService {
       tap(() => {
         this.cache.clear(`${this.api_url}/items/${item.id}`);
         this.cache.clear(`${this.api_url}/items`);
+      }),
+    );
+  }
+
+  getCategories() {
+    const url = `${this.api_url}/items/categories`;
+    const cache = this.cache.get<string[]>(url);
+    if (cache) {
+      return of(cache);
+    }
+
+    return this.http.get<string[]>(url).pipe(
+      tap((categories) => {
+        this.cache.set(url, categories);
       }),
     );
   }

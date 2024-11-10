@@ -54,6 +54,13 @@ export class ItemDetailsComponent implements OnInit {
   private readonly auth$ = inject(AuthService);
   private readonly itemOptionService = inject(ItemOptionService);
 
+  constructor() {
+    effect(() => {
+      console.log(this.optionsQuery.data());
+      console.log(this.optionsQuery.fetchStatus());
+    });
+  }
+
   item = signal<Item | null>(null);
 
   userAdmin = this.auth$.isAdmin;

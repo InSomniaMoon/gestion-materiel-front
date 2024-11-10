@@ -163,7 +163,9 @@ export class OptionsTableComponent {
       }
 
       this.itemOptionService.addItemOption(this.item()!.id, option).subscribe({
-        next: (item) => {},
+        next: (item) => {
+          this.optionsChange.emit();
+        },
       });
     });
   }

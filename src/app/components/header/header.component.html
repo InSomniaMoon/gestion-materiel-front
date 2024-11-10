@@ -1,9 +1,6 @@
 <p-menubar [model]="menuItems">
   <ng-template pTemplate="item" let-item let-root="root">
-    <a
-      class="flex p-menuitem-link"
-      [routerLink]="item.routerLink"
-    >
+    <a class="flex p-menuitem-link" [routerLink]="item.routerLink">
       <span [class]="item.icon"></span>
       <span>{{ item.label }}</span>
     </a>

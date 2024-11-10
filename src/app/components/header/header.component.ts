@@ -28,7 +28,7 @@ export class HeaderComponent implements OnInit {
       this.user()
         ?.name.split(' ')
         .map((n) => n[0])
-        .join('') ?? ''
+        .join('') ?? '',
   );
 
   authItems: MenuItem[] = [
@@ -55,6 +55,11 @@ export class HeaderComponent implements OnInit {
       label: 'Mon compte',
       icon: 'pi pi-user',
       routerLink: '/account',
+    },
+    {
+      label: 'Administration',
+      icon: 'pi pi-cog',
+      routerLink: '/admin',
     },
   ];
   ngOnInit(): void {}
