@@ -1,6 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { PrimeNGConfig } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 
 @Component({
@@ -11,9 +10,5 @@ import { ToastModule } from 'primeng/toast';
   styleUrl: './app.component.scss',
 })
 export class AppComponent implements OnInit {
-  private primengConfig = inject(PrimeNGConfig);
-
-  ngOnInit(): void {
-    this.primengConfig.ripple = true;
-  }
+  ngOnInit(): void {}
 }

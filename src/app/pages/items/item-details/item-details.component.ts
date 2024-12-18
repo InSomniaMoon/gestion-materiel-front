@@ -1,4 +1,3 @@
-import { JsonPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -17,7 +16,6 @@ import { Item } from '@app/core/types/item.type';
 import { injectQuery } from '@tanstack/angular-query-experimental';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
-import { DynamicDialogModule } from 'primeng/dynamicdialog';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TableModule } from 'primeng/table';
@@ -35,7 +33,6 @@ import { OptionsTableComponent } from './options-table/options-table.component';
     TableModule,
     TagModule,
     ButtonModule,
-    DynamicDialogModule,
     InputSwitchModule,
     ToggleButtonModule,
     FormsModule,

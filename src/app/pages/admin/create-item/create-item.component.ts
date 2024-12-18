@@ -21,7 +21,7 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
 import { ButtonModule } from 'primeng/button';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
-import { InputTextareaModule } from 'primeng/inputtextarea';
+import { Textarea } from 'primeng/inputtextarea';
 @Component({
   selector: 'app-create-item',
   standalone: true,
@@ -29,10 +29,10 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
     CommonModule,
     InputTextModule,
     FloatLabelModule,
-    InputTextareaModule,
     ButtonModule,
     ReactiveFormsModule,
     AutoCompleteModule,
+    Textarea,
   ],
   template: `
     <h1>Créer un item</h1>

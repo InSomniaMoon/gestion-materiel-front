@@ -12,7 +12,7 @@ import { ItemOption } from '@app/core/types/itemOption.type';
 import { OptionIssue } from '@app/core/types/optionIssue.type';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
-import { DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
+import { DialogService } from 'primeng/dynamicdialog';
 
 @Component({
   selector: 'app-opened-issues',

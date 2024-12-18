@@ -21,7 +21,9 @@ import {
   QueryClient,
 } from '@tanstack/angular-query-experimental';
 
+import Lara from '@primeng/themes/lara';
 import { MessageService } from 'primeng/api';
+import { providePrimeNG } from 'primeng/config';
 import { DialogService } from 'primeng/dynamicdialog';
 import { routes } from './app.routes';
 import { init } from './core/init';
@@ -46,5 +48,9 @@ export const appConfig: ApplicationConfig = {
       deps: [AuthService, HttpClient],
       multi: true,
     },
+    providePrimeNG({
+      ripple: true,
+      theme: Lara,
+    }),
   ],
 };

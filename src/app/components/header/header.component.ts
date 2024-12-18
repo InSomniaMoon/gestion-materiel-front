@@ -5,6 +5,7 @@ import {
   inject,
   OnInit,
 } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { AuthService } from '@app/core/services/auth.service';
 import { MenuItem } from 'primeng/api';
 import { AvatarModule } from 'primeng/avatar';
@@ -14,7 +15,7 @@ import { TieredMenuModule } from 'primeng/tieredmenu';
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [AvatarModule, TieredMenuModule, MenubarModule],
+  imports: [AvatarModule, TieredMenuModule, MenubarModule, RouterLink],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
