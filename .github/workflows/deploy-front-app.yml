@@ -39,6 +39,6 @@ jobs:
 
       - name: sync code to server
         run:
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ~/gestion_materiel/front && \
-          git pull && \
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ~/gestion_materiel/front &&\
+          git pull &&\
           docker-compose up -d --remove-orphans"
