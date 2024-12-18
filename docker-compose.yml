@@ -18,12 +18,13 @@ services:
       - traefik.enable=true
       - traefik.docker.network=web
 
-      - traefik.http.routers.laravel-matos-front.rule=Host(`matos.pierreleroyer.fr`)
-      - traefik.http.routers.laravel-matos-front.entrypoints=websecure
-      - traefik.http.routers.laravel-matos-front.tls=true
-      - traefik.http.routers.laravel-matos-front.tls.certresolver=letsencrypt
+      - traefik.http.routers.front-matos.rule=Host(`matos.pierreleroyer.fr`)
+      - traefik.http.routers.front-matos.entrypoints=websecure
+      - traefik.http.routers.front-front.tls=true
+      - traefik.http.routers.front-front.tls.certresolver=letsencrypt
 
-      - traefik.http.services.laravel-matos-front.loadbalancer.server.port=80
+      - traefik.http.services.front-matos.loadbalancer.server.port=80
+
 
 networks:
   web:
