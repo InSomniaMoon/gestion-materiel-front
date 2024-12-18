@@ -15,6 +15,7 @@ import { ItemOptionService } from '@app/core/services/item-option.service';
 import { ItemsService } from '@app/core/services/items.service';
 import { Item } from '@app/core/types/item.type';
 import { injectQuery } from '@tanstack/angular-query-experimental';
+import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { DynamicDialogModule } from 'primeng/dynamicdialog';
 import { InputSwitchModule } from 'primeng/inputswitch';
@@ -53,6 +54,7 @@ export class ItemDetailsComponent implements OnInit {
   private readonly titleService = inject(Title);
   private readonly auth$ = inject(AuthService);
   private readonly itemOptionService = inject(ItemOptionService);
+  private readonly message = inject(MessageService);
 
   constructor() {
     effect(() => {
@@ -75,6 +77,13 @@ export class ItemDetailsComponent implements OnInit {
         this.item.set(item);
         this.titleService.setTitle(item.name);
       },
+      error: (error) => {
+        this.message.add({
+          severity: 'error',
+          summary: 'Erreur',
+          detail: "Une erreur est survenue lors de la récupération de l'objet",
+        });
+      },
     });
   }
 
@@ -85,6 +94,11 @@ export class ItemDetailsComponent implements OnInit {
     this.itemService.updateItem(item).subscribe({
       next: (item) => {
         this.item.set(item);
+        this.message.add({
+          severity: 'success',
+          summary: 'Objet mis à jour',
+          detail: `${item.name} a été mis à jour avec succès`,
+        });
       },
     });
   }

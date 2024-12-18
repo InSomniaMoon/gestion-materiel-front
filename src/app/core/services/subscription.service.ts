@@ -36,9 +36,12 @@ export class SubscriptionService {
 
   addSubscription(item: Item, subscription: Subscription) {
     // This method should add a subscription
-    return this.http.post<Subscription>(
-      `${this.api_url}/items/${item.id}/uses`,
-      subscription,
+    const url = `${this.api_url}/items/${item.id}/uses`;
+
+    return this.http.post<Subscription>(url, subscription).pipe(
+      tap(() => {
+        this.cache.clear(url);
+      }),
     );
   }
 
@@ -51,19 +54,15 @@ export class SubscriptionService {
       return of(cache);
     }
     // This method should return an observable of the item subscription
-    return this.http
-      .get<Subscription>(
-        `${this.api_url}/items/${itemId}/uses/${subscriptionId}`,
-      )
-      .pipe(
-        map((subscription: Subscription) => {
-          subscription.start_date = new Date(subscription.start_date);
-          subscription.end_date = new Date(subscription.end_date);
-          return subscription;
-        }),
-        tap((subscription) => {
-          this.cache.set(url, subscription);
-        }),
-      );
+    return this.http.get<Subscription>(url).pipe(
+      map((subscription: Subscription) => {
+        subscription.start_date = new Date(subscription.start_date);
+        subscription.end_date = new Date(subscription.end_date);
+        return subscription;
+      }),
+      tap((subscription) => {
+        this.cache.set(url, subscription);
+      }),
+    );
   }
 }

@@ -4,9 +4,7 @@ import {
   Component,
   inject,
   input,
-  OnInit,
   output,
-  signal,
 } from '@angular/core';
 import { CreateUpdateItemOptionComponent } from '@app/components/create-update-item-option/create-update-item-option.component';
 import { SimpleModalComponent } from '@app/components/simple-modal/simple-modal.component';
@@ -14,7 +12,7 @@ import { AuthService } from '@app/core/services/auth.service';
 import { ItemOptionService } from '@app/core/services/item-option.service';
 import { Item } from '@app/core/types/item.type';
 import { ItemOption } from '@app/core/types/itemOption.type';
-import { options } from '@fullcalendar/core/preact.js';
+import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { DialogService } from 'primeng/dynamicdialog';
@@ -117,6 +115,7 @@ import { TagModule } from 'primeng/tag';
 export class OptionsTableComponent {
   private readonly dialogService = inject(DialogService);
   private readonly itemOptionService = inject(ItemOptionService);
+  private readonly message = inject(MessageService);
   userAdmin = inject(AuthService).isAdmin;
 
   item = input<Item | null>(null);
@@ -147,7 +146,16 @@ export class OptionsTableComponent {
           .subscribe({
             next: () => {
               this.optionsChange.emit();
+              this.message.add({
+                severity: 'success',
+                summary: 'Option supprimée',
+                detail: `L'option ${option.name} a bien été supprimée`,
+              });
             },
+            error: () =>
+              this.handleError(
+                "Une erreur est survenue dans la suppression de l'option",
+              ),
           });
       });
   }
@@ -163,9 +171,18 @@ export class OptionsTableComponent {
       }
 
       this.itemOptionService.addItemOption(this.item()!.id, option).subscribe({
-        next: (item) => {
+        next: () => {
           this.optionsChange.emit();
+          this.message.add({
+            severity: 'success',
+            summary: 'Option Créée',
+            detail: `L'option ${option.name} a bien été créée`,
+          });
         },
+        error: (error) =>
+          this.handleError(
+            "Une erreur est survenue dans la création de l'option",
+          ),
       });
     });
   }
@@ -187,8 +204,25 @@ export class OptionsTableComponent {
           .subscribe({
             next: (_) => {
               this.optionsChange.emit();
+              this.message.add({
+                severity: 'success',
+                summary: 'Option Modifiée',
+                detail: `L'option ${option.name} a bien été modifiée`,
+              });
             },
+            error: (error) =>
+              this.handleError(
+                "Une erreur est survenue dans la modification de l'option",
+              ),
           });
       });
+  }
+
+  private handleError(error: string) {
+    this.message.add({
+      severity: 'error',
+      summary: 'Erreur',
+      detail: error,
+    });
   }
 }

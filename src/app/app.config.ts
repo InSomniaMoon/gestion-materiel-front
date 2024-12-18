@@ -21,6 +21,7 @@ import {
   QueryClient,
 } from '@tanstack/angular-query-experimental';
 
+import { MessageService } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
 import { routes } from './app.routes';
 import { init } from './core/init';
@@ -31,6 +32,7 @@ registerLocaleData(localeFR);
 export const appConfig: ApplicationConfig = {
   providers: [
     DialogService,
+    MessageService,
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideAnimations(),

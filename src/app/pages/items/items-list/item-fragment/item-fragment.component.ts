@@ -27,6 +27,7 @@ import { TagModule } from 'primeng/tag';
 
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
+import { MessageService } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
 
 @Component({
@@ -51,6 +52,8 @@ export class ItemFragmentComponent implements OnInit, AfterViewInit {
   item = input.required<Item>();
   subscription$ = inject(SubscriptionService);
   private readonly subscriptionService = inject(SubscriptionService);
+
+  toast = inject(MessageService);
 
   private readonly router = inject(Router);
   private readonly dialog = inject(DialogService);
@@ -109,10 +112,20 @@ export class ItemFragmentComponent implements OnInit, AfterViewInit {
           .subscribe({
             next: () => {
               this.fetchSubscriptions();
+              this.toast.add({
+                key: 'success',
+                severity: 'success',
+                summary: 'Emprunt ajouté',
+              });
             },
-
             error: (error) => {
               console.error(error);
+              this.toast.add({
+                key: 'error',
+                severity: 'error',
+                summary: 'Erreur',
+                detail: 'Une erreur est survenue',
+              });
             },
           });
       });
@@ -127,7 +140,7 @@ export class ItemFragmentComponent implements OnInit, AfterViewInit {
       start: use.start_date,
       end: use.end_date,
       id: `${use.id}`,
-    })); // TODO: Implement this
+    }));
   });
 
   fetchSubscriptions() {
@@ -141,6 +154,8 @@ export class ItemFragmentComponent implements OnInit, AfterViewInit {
   displaySubscriptionDialog = signal(false);
 
   dayClicked(event: any) {
+    console.log(event);
+    this.calendar().getApi().changeView('timeGridDay', event.dateStr);
     // TODO: Implement this
   }
 
