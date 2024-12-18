@@ -26,7 +26,8 @@ jobs:
       - run: npm ci --legacy-peer-deps
       - run: npm run build
       # - run: npm test
-  prepare-SSH:
+
+  deploy-app:
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -39,9 +40,6 @@ jobs:
           chmod 600 ~/.ssh/id_rsa.pub
           ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
           cat ~/.ssh/known_hosts
-  deploy-app:
-    needs: prepare-SSH
-    runs-on: ubuntu-latest
-    steps:
+
       - name: sync code to server
-        run: ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ~/gestion_materiel/front && git pull && npm ci --legacy-peer-deps && npm run build && composer-compose up -d --remove-orphans"
+        run: ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ~/gestion_materiel/front && git pull && npm ci --legacy-peer-deps && npm run build && docker-compose up -d --remove-orphans"
