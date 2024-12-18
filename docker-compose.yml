@@ -1,0 +1,17 @@
+# service : nginx for built version of the front app, based in dist/frontend/browser/ folder
+# volumes: mount the dist/frontend/browser/ folder to /usr/share/nginx/html
+# networks: connect to frontend network
+services:
+  nginx:
+    image: nginx:1.17.6
+    container_name: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./dist/frontend/browser:/usr/share/nginx/html
+    networks:
+      - web
+
+networks:
+  web:
+    external: true
