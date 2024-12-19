@@ -22,3 +22,8 @@ input {
   border: 1px solid #ccc;
   border-radius: 0.5rem;
 }
+
+p-password {
+  display: flex;
+  flex-direction: column;
+}
