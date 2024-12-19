@@ -22,24 +22,25 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { lastValueFrom } from 'rxjs';
 
 @Component({
-    selector: 'app-items-list',
-    imports: [
-        ItemFragmentComponent,
-        SearchBarComponent,
-        ProgressSpinnerModule,
-        ButtonModule,
-        RouterLink,
-    ],
-    styleUrl: './items-list.component.scss',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    template: `
-    <a
-      pButton
-      label="Ajouter un objet"
-      icon="pi pi-plus"
-      iconPos="right"
-      routerLink="/admin/items/create"
-    ></a>
+  selector: 'app-items-list',
+  imports: [
+    ItemFragmentComponent,
+    SearchBarComponent,
+    ProgressSpinnerModule,
+    ButtonModule,
+    RouterLink,
+  ],
+  styleUrl: './items-list.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `
+    <div>
+      <p-button
+        label="Ajouter un objet"
+        icon="pi pi-plus"
+        iconPos="right"
+        routerLink="/admin/items/create"
+      />
+    </div>
     <app-search-bar (queryChange)="searchQuery.set($event)" />
     @if (itemsQuery.isLoading()) {
       <p-progressSpinner [style]="{ margin: 'auto' }" />
@@ -49,7 +50,7 @@ import { lastValueFrom } from 'rxjs';
         <app-item-fragment [item]="item" />
       }
     }
-  `
+  `,
 })
 export class ItemsListComponent implements OnDestroy {
   private readonly items$ = inject(ItemsService);

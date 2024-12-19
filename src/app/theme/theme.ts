@@ -1,44 +1,36 @@
 import { definePreset, palette } from '@primeng/themes';
-import Lara from '@primeng/themes/lara';
+import ThemeBase from '@primeng/themes/lara';
 import {
-  PaletteDesignToken,
   PrimitiveDesignTokens,
+  SemanticDesignTokens,
 } from '@primeng/themes/types';
-import { PasswordDesignTokens } from '@primeng/themes/types/password';
+import { ButtonDesignTokens } from '@primeng/themes/types/button';
+import { MenubarDesignTokens } from '@primeng/themes/types/menubar';
 
-export const whitePalette: PaletteDesignToken = {
-  '500': '#ffffff',
-};
-
-export const bluePalette = palette('#00395c');
-
-// green based on #007254
-export const greenPalette: PaletteDesignToken = {
-  '500': '#007254',
-  '300': '#004c36',
-  '100': '#00271a',
-};
-
-// orange based on #ff8300
-export const orangePalette: PaletteDesignToken = {
-  '500': '#ff8300',
-  '300': '#b35900',
-  '100': '#662c00',
-};
-
-// red based on #d03f15
-export const redPalette: PaletteDesignToken = {
-  '500': '#d03f15',
-  '300': '#8c2f0f',
-  '100': '#471807',
-};
-
+const whitePalette = palette('#ffffff');
 export const primitives: PrimitiveDesignTokens = {
+  cyan: palette('#0077b3'),
+  blue: palette('#003a5d'),
+  green: palette('#007254'),
+  orange: palette('#ff8300'),
+  red: palette('#d03f15'),
+  violet: palette('#6e74aa'),
   amber: whitePalette,
-  blue: bluePalette,
-  green: greenPalette,
-  orange: orangePalette,
-  red: redPalette,
+  emerald: whitePalette,
+  fuchsia: whitePalette,
+  yellow: whitePalette,
+  indigo: whitePalette,
+  lime: whitePalette,
+  pink: whitePalette,
+  purple: whitePalette,
+  rose: whitePalette,
+  sky: whitePalette,
+  // gray: whitePalette,
+  // zinc: whitePalette,
+  // neutral: whitePalette,
+  // slate: whitePalette,
+  // stone: whitePalette,
+  // teal: whitePalette,
   borderRadius: {
     none: '0',
     xs: '0.125rem',
@@ -49,14 +41,39 @@ export const primitives: PrimitiveDesignTokens = {
   },
 };
 
-export const SgdfPresetTheme = definePreset(Lara, {
+export const SgdfPresetTheme = definePreset(ThemeBase, {
+  primitive: primitives,
   semantic: {
-    primary: bluePalette,
+    primary: primitives.blue,
+    formField: {
+      paddingX: '1rem',
+      paddingY: '0.5rem',
+      sm: {
+        fontSize: '0.875rem',
+        paddingX: '0.625rem',
+        paddingY: '0.375rem',
+      },
+      lg: {
+        fontSize: '1.125rem',
+        paddingX: '0.875rem',
+        paddingY: '0.625rem',
+      },
+      borderRadius: '{border.radius.md}',
+      focusRing: {
+        width: '0',
+        style: 'none',
+        color: 'transparent',
+        offset: '0',
+        shadow: 'none',
+      },
+      transitionDuration: '{transition.duration}',
+    },
+
     colorScheme: {
       light: {
         surface: {
           0: '#ffffff',
-          50: '{zinc.50}',
+          50: '{primary.500}',
           100: '{zinc.100}',
           200: '{zinc.200}',
           300: '{zinc.300}',
@@ -68,27 +85,86 @@ export const SgdfPresetTheme = definePreset(Lara, {
           900: '{zinc.900}',
           950: '{zinc.950}',
         },
-      },
-      dark: {
-        surface: {
-          0: '#ffffff',
-          50: '{slate.50}',
-          100: '{slate.100}',
-          200: '{slate.200}',
-          300: '{slate.300}',
-          400: '{slate.400}',
-          500: '{slate.500}',
-          600: '{slate.600}',
-          700: '{slate.700}',
-          800: '{slate.800}',
-          900: '{slate.900}',
-          950: '{slate.950}',
+        primary: {
+          color: '{primary.500}',
+          contrastColor: '#fff',
+          hoverColor: '{primary.600}',
+          activeColor: '{primary.700}',
+        },
+        highlight: {
+          background: '{primary.50}',
+          focusBackground: '{primary.100}',
+          color: '{primary.700}',
+          focusColor: '{primary.800}',
+        },
+        mask: {
+          background: 'rgba(0,0,0,0.4)',
+          color: '{surface.200}',
+        },
+        navigation: {
+          item: {
+            focusBackground: '{surface.100}',
+            activeBackground: '{surface.100}',
+            color: '{priamry.contrastColor}',
+            focusColor: '{text.hover.color}',
+            activeColor: '{text.hover.color}',
+            icon: {
+              color: '{surface.400}',
+              focusColor: '{surface.500}',
+              activeColor: '{surface.500}',
+            },
+          },
+          submenuLabel: {
+            background: 'transparent',
+            color: '{surface.0}',
+          },
+          submenuIcon: {
+            color: '{surface.400}',
+            focusColor: '{surface.500}',
+            activeColor: '{surface.500}',
+          },
         },
       },
-
-      password: {
-        width: '100%',
-      } as PasswordDesignTokens,
     },
+  } as SemanticDesignTokens,
+  components: {
+    menubar: {
+      colorScheme: {
+        light: {
+          root: {
+            borderColor: '{primary.color}',
+            borderRadius: '{border.radius.none}',
+            gap: '0.5rem',
+            padding: '0.5rem 0.75rem',
+            transitionDuration: '{transition.duration}',
+          },
+          item: {
+            color: '{primary.contrastColor}',
+          },
+          submenu: {
+            background: `${primitives!.blue?.[500]}`,
+            borderColor: '{primary.color}',
+          },
+        },
+      },
+    } as MenubarDesignTokens,
+    button: {
+      colorScheme: {
+        light: {
+          root: {
+            info: {
+              background: '{cyan.500}',
+              hoverBackground: '{cyan.600}',
+              activeBackground: '{cyan.700}',
+            },
+            danger: {
+              background: '{red.500}',
+              hoverBackground: '{red.600}',
+              activeBackground: '{red.700}',
+            },
+          },
+        },
+      },
+    } as ButtonDesignTokens,
   },
 });
