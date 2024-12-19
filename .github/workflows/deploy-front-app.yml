@@ -38,4 +38,4 @@ jobs:
 
       - name: sync code to server
         run:
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ~/gestion_materiel/front && git pull && npm ci --leagcy-peer-deps && npm run build && docker-compose up -d --remove-orphans"
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ~/gestion_materiel/front && git pull && npm ci --legacy-peer-deps && npm run build && docker-compose up -d --remove-orphans"
