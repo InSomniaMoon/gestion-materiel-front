@@ -3,11 +3,8 @@
 # networks: connect to frontend network
 services:
   nginx:
-    image: nginx:1.17.6
+    image: nginx:1.27.3-alpine
     container_name: nginx
-    build:
-      dockerfile: Dockerfile
-      context: .
 
     volumes:
       - ./dist/frontend/browser:/usr/share/nginx/html
