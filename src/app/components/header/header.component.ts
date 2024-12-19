@@ -13,12 +13,11 @@ import { MenubarModule } from 'primeng/menubar';
 import { TieredMenuModule } from 'primeng/tieredmenu';
 
 @Component({
-  selector: 'app-header',
-  standalone: true,
-  imports: [AvatarModule, TieredMenuModule, MenubarModule, RouterLink],
-  templateUrl: './header.component.html',
-  styleUrl: './header.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-header',
+    imports: [AvatarModule, TieredMenuModule, MenubarModule, RouterLink],
+    templateUrl: './header.component.html',
+    styleUrl: './header.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HeaderComponent implements OnInit {
   private readonly auth$ = inject(AuthService);

@@ -26,23 +26,22 @@ import { OpenedIssuesComponent } from './opened-issues/opened-issues.component';
 import { OptionsTableComponent } from './options-table/options-table.component';
 
 @Component({
-  selector: 'app-item-details',
-  standalone: true,
-  imports: [
-    ProgressSpinnerModule,
-    TableModule,
-    TagModule,
-    ButtonModule,
-    InputSwitchModule,
-    ToggleButtonModule,
-    FormsModule,
-    RouterLink,
-    OptionsTableComponent,
-    OpenedIssuesComponent,
-  ],
-  templateUrl: './item-details.component.html',
-  styleUrl: './item-details.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-item-details',
+    imports: [
+        ProgressSpinnerModule,
+        TableModule,
+        TagModule,
+        ButtonModule,
+        InputSwitchModule,
+        ToggleButtonModule,
+        FormsModule,
+        RouterLink,
+        OptionsTableComponent,
+        OpenedIssuesComponent,
+    ],
+    templateUrl: './item-details.component.html',
+    styleUrl: './item-details.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ItemDetailsComponent implements OnInit {
   private readonly routeSnapshot = inject(ActivatedRoute).snapshot;

@@ -31,22 +31,21 @@ import { MessageService } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
 
 @Component({
-  selector: 'app-item-fragment',
-  standalone: true,
-  imports: [
-    RouterLink,
-    CardModule,
-    ButtonModule,
-    DialogModule,
-    AddSubscriptionComponent,
-    ButtonModule,
-    ButtonGroupModule,
-    TagModule,
-    FullCalendarModule,
-  ],
-  templateUrl: './item-fragment.component.html',
-  styleUrl: './item-fragment.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-item-fragment',
+    imports: [
+        RouterLink,
+        CardModule,
+        ButtonModule,
+        DialogModule,
+        AddSubscriptionComponent,
+        ButtonModule,
+        ButtonGroupModule,
+        TagModule,
+        FullCalendarModule,
+    ],
+    templateUrl: './item-fragment.component.html',
+    styleUrl: './item-fragment.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ItemFragmentComponent implements OnInit, AfterViewInit {
   item = input.required<Item>();

@@ -12,11 +12,10 @@ import { Password } from 'primeng/password';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
-  selector: 'app-login',
-  standalone: true,
-  imports: [FormsModule, FloatLabel, ButtonDirective, InputText, Password],
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.scss',
+    selector: 'app-login',
+    imports: [FormsModule, FloatLabel, ButtonDirective, InputText, Password],
+    templateUrl: './login.component.html',
+    styleUrl: './login.component.scss'
 })
 export class LoginComponent implements OnDestroy {
   private auth$ = inject(AuthService);

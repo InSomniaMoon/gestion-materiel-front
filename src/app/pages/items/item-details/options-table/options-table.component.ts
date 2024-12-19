@@ -20,10 +20,9 @@ import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 
 @Component({
-  selector: 'app-options-table',
-  standalone: true,
-  imports: [CommonModule, TagModule, TableModule, ButtonModule, CardModule],
-  template: `<div class="title">
+    selector: 'app-options-table',
+    imports: [CommonModule, TagModule, TableModule, ButtonModule, CardModule],
+    template: `<div class="title">
       <h2>Options</h2>
       @if (userAdmin()) {
         <p-button
@@ -109,8 +108,8 @@ import { TagModule } from 'primeng/tag';
       </ng-template>
     </p-table>
     --> `,
-  styleUrl: './options-table.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    styleUrl: './options-table.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OptionsTableComponent {
   private readonly dialogService = inject(DialogService);

@@ -32,19 +32,18 @@ type IssueDetailsComponentData = {
 };
 
 @Component({
-  selector: 'app-issue-details',
-  standalone: true,
-  imports: [
-    JsonPipe,
-    DatePipe,
-    DialogModule,
-    ButtonModule,
-    InplaceModule,
-    FormsModule,
-  ],
-  templateUrl: './issue-details.component.html',
-  styleUrl: './issue-details.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-issue-details',
+    imports: [
+        JsonPipe,
+        DatePipe,
+        DialogModule,
+        ButtonModule,
+        InplaceModule,
+        FormsModule,
+    ],
+    templateUrl: './issue-details.component.html',
+    styleUrl: './issue-details.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class IssueDetailsComponent implements OnInit {
   ref = inject(DynamicDialogRef);

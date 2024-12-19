@@ -15,10 +15,9 @@ import { CardModule } from 'primeng/card';
 import { DialogService } from 'primeng/dynamicdialog';
 
 @Component({
-  selector: 'app-opened-issues',
-  standalone: true,
-  imports: [ButtonModule, CardModule, DatePipe],
-  template: `<div class="title">
+    selector: 'app-opened-issues',
+    imports: [ButtonModule, CardModule, DatePipe],
+    template: `<div class="title">
       <h2>Problèmes non résolus</h2>
       <!-- <p-button outlined icon="pi pi-plus" iconPos="right" label="" /> -->
     </div>
@@ -40,8 +39,8 @@ import { DialogService } from 'primeng/dynamicdialog';
         <!-- <pre>{{ issue | json }}</pre> -->
       }
     }`,
-  styleUrl: './opened-issues.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    styleUrl: './opened-issues.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OpenedIssuesComponent {
   readonly userAdmin = inject(AuthService).isAdmin;

@@ -17,18 +17,17 @@ import { InputSwitchModule } from 'primeng/inputswitch';
 import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
-  selector: 'app-create-update-item-option',
-  standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    InputTextModule,
-    InputSwitchModule,
-    DialogModule,
-    ButtonModule,
-  ],
-  templateUrl: './create-update-item-option.component.html',
-  styleUrl: './create-update-item-option.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-create-update-item-option',
+    imports: [
+        ReactiveFormsModule,
+        InputTextModule,
+        InputSwitchModule,
+        DialogModule,
+        ButtonModule,
+    ],
+    templateUrl: './create-update-item-option.component.html',
+    styleUrl: './create-update-item-option.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CreateUpdateItemOptionComponent implements OnInit {
   private ref = inject(DynamicDialogRef);

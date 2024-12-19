@@ -29,20 +29,19 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { SkeletonModule } from 'primeng/skeleton';
 
 @Component({
-  selector: 'app-subscription-details',
-  standalone: true,
-  imports: [
-    ProgressSpinnerModule,
-    ButtonModule,
-    RouterLink,
-    SkeletonModule,
-    JsonPipe,
-    AccordionModule,
-    FullCalendarModule,
-  ],
-  templateUrl: './subscription-details.component.html',
-  styleUrl: './subscription-details.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-subscription-details',
+    imports: [
+        ProgressSpinnerModule,
+        ButtonModule,
+        RouterLink,
+        SkeletonModule,
+        JsonPipe,
+        AccordionModule,
+        FullCalendarModule,
+    ],
+    templateUrl: './subscription-details.component.html',
+    styleUrl: './subscription-details.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubscriptionDetailsComponent implements AfterViewInit {
   private destroyRef = inject(DestroyRef);

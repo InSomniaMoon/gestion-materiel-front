@@ -1,7 +1,8 @@
 import {
-  APP_INITIALIZER,
   ApplicationConfig,
+  inject,
   LOCALE_ID,
+  provideAppInitializer,
   provideZoneChangeDetection,
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
@@ -21,7 +22,6 @@ import {
   QueryClient,
 } from '@tanstack/angular-query-experimental';
 
-import PrimengTheme from '@primeng/themes/aura';
 import { MessageService } from 'primeng/api';
 import { providePrimeNG } from 'primeng/config';
 import { DialogService } from 'primeng/dynamicdialog';
@@ -44,12 +44,10 @@ export const appConfig: ApplicationConfig = {
     provideQueryClient(new QueryClient()),
     provideHttpClient(withFetch(), withInterceptors([authInterceptor])),
     { provide: LOCALE_ID, useValue: 'fr-FR' },
-    {
-      provide: APP_INITIALIZER,
-      useFactory: init,
-      deps: [AuthService, HttpClient],
-      multi: true,
-    },
+    provideAppInitializer(() => {
+      const initializerFn = init(inject(AuthService), inject(HttpClient));
+      return initializerFn();
+    }),
     providePrimeNG({
       ripple: true,
       theme: {

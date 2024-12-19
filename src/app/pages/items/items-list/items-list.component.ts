@@ -22,18 +22,17 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { lastValueFrom } from 'rxjs';
 
 @Component({
-  selector: 'app-items-list',
-  standalone: true,
-  imports: [
-    ItemFragmentComponent,
-    SearchBarComponent,
-    ProgressSpinnerModule,
-    ButtonModule,
-    RouterLink,
-  ],
-  styleUrl: './items-list.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `
+    selector: 'app-items-list',
+    imports: [
+        ItemFragmentComponent,
+        SearchBarComponent,
+        ProgressSpinnerModule,
+        ButtonModule,
+        RouterLink,
+    ],
+    styleUrl: './items-list.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    template: `
     <a
       pButton
       label="Ajouter un objet"
@@ -50,7 +49,7 @@ import { lastValueFrom } from 'rxjs';
         <app-item-fragment [item]="item" />
       }
     }
-  `,
+  `
 })
 export class ItemsListComponent implements OnDestroy {
   private readonly items$ = inject(ItemsService);

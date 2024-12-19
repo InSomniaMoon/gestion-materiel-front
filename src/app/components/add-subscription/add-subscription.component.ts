@@ -17,18 +17,17 @@ import { InputTextModule } from 'primeng/inputtext';
 import { fromEvent, map, startWith } from 'rxjs';
 
 @Component({
-  selector: 'app-add-subscription',
-  standalone: true,
-  imports: [
-    DialogModule,
-    ButtonModule,
-    CalendarModule,
-    ReactiveFormsModule,
-    InputTextModule,
-  ],
-  templateUrl: './add-subscription.component.html',
-  styleUrl: './add-subscription.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-add-subscription',
+    imports: [
+        DialogModule,
+        ButtonModule,
+        CalendarModule,
+        ReactiveFormsModule,
+        InputTextModule,
+    ],
+    templateUrl: './add-subscription.component.html',
+    styleUrl: './add-subscription.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AddSubscriptionComponent implements OnInit {
   subscriptionChange = output<void>();

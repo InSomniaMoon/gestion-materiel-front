@@ -23,18 +23,17 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { Textarea } from 'primeng/inputtextarea';
 @Component({
-  selector: 'app-create-item',
-  standalone: true,
-  imports: [
-    CommonModule,
-    InputTextModule,
-    FloatLabelModule,
-    ButtonModule,
-    ReactiveFormsModule,
-    AutoCompleteModule,
-    Textarea,
-  ],
-  template: `
+    selector: 'app-create-item',
+    imports: [
+        CommonModule,
+        InputTextModule,
+        FloatLabelModule,
+        ButtonModule,
+        ReactiveFormsModule,
+        AutoCompleteModule,
+        Textarea,
+    ],
+    template: `
     <h1>Créer un item</h1>
     <form [formGroup]="form">
       <p-floatLabel>
@@ -115,8 +114,8 @@ import { Textarea } from 'primeng/inputtextarea';
       </button>
     </form>
   `,
-  styleUrl: './create-item.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    styleUrl: './create-item.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CreateItemComponent implements OnInit {
   itemService = inject(ItemsService);
