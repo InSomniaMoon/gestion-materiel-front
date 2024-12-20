@@ -61,10 +61,6 @@ export class HeaderComponent implements OnInit {
       icon: 'pi pi-cog',
       routerLink: '/admin',
     },
-    {
-      label: 'coucou',
-      icon: 'pi pi-user',
-    },
   ];
   ngOnInit(): void {}
 }

@@ -5,6 +5,7 @@ import {
   SemanticDesignTokens,
 } from '@primeng/themes/types';
 import { ButtonDesignTokens } from '@primeng/themes/types/button';
+import { DataTableDesignTokens } from '@primeng/themes/types/datatable';
 import { MenubarDesignTokens } from '@primeng/themes/types/menubar';
 
 const whitePalette = palette('#ffffff');
@@ -73,7 +74,7 @@ export const SgdfPresetTheme = definePreset(ThemeBase, {
       light: {
         surface: {
           0: '#ffffff',
-          50: '{primary.500}',
+          50: '{zinc.50}',
           100: '{zinc.100}',
           200: '{zinc.200}',
           300: '{zinc.300}',
@@ -137,6 +138,7 @@ export const SgdfPresetTheme = definePreset(ThemeBase, {
             gap: '0.5rem',
             padding: '0.5rem 0.75rem',
             transitionDuration: '{transition.duration}',
+            background: '{primary.color}',
           },
           item: {
             color: '{primary.contrastColor}',
@@ -166,5 +168,39 @@ export const SgdfPresetTheme = definePreset(ThemeBase, {
         },
       },
     } as ButtonDesignTokens,
+    datatable: {
+      root: {
+        background: '{surface.50}',
+        color: '{text.color}',
+        borderColor: '{surface.200}',
+        transitionDuration: '{transition.duration}',
+      },
+      colorScheme: {
+        light: {
+          root: {
+            background: '{surface.50}',
+            color: '{text.color}',
+            borderColor: '{surface.200}',
+            transitionDuration: '{transition.duration}',
+          },
+          header: {
+            background: '{surface.200}',
+            color: '{text.color}',
+          },
+          row: {
+            background: '{surface.0}',
+            hoverBackground: '{surface.500}',
+            selectedBackground: '{surface.300}',
+            stripedBackground: '{surface.100}',
+          },
+          headerCell: {
+            padding: '0.75rem 0.5rem',
+          },
+          bodyCell: {
+            padding: '0.75rem 0.25rem',
+          },
+        },
+      },
+    } as DataTableDesignTokens,
   },
 });

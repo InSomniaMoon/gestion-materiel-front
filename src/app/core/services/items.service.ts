@@ -23,10 +23,27 @@ export class ItemsService {
     );
   }
 
-  getItems(searchQuery?: string) {
+  getItems(
+    opt: {
+      searchQuery?: string;
+      size?: number;
+      page?: number;
+      orderBy?: string;
+    } = {
+      page: 1,
+      size: 25,
+    },
+  ) {
     let url = `${this.api_url}/items`;
-    if (searchQuery) {
-      url += `?q=${searchQuery}`;
+    url += `?page=${opt.page}`;
+
+    url += `&size=${opt.size}`;
+
+    if (opt.orderBy) {
+      url += `&order_by=${opt.orderBy}`;
+    }
+    if (opt.searchQuery) {
+      url += `?q=${opt.searchQuery}`;
     }
 
     const cache = this.cache.get<PaginatedData<Item>>(url);

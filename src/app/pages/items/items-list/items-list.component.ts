@@ -60,7 +60,14 @@ export class ItemsListComponent implements OnDestroy {
 
   itemsQuery = injectQuery(() => ({
     queryKey: ['searchItems', this.searchQuery()],
-    queryFn: () => lastValueFrom(this.items$.getItems(this.searchQuery())),
+    queryFn: () =>
+      lastValueFrom(
+        this.items$.getItems({
+          page: 1,
+          size: 25,
+          searchQuery: this.searchQuery(),
+        }),
+      ),
   }));
   constructor() {
     this.paginated = toSignal(
