@@ -3,7 +3,7 @@ import {
   inject,
   LOCALE_ID,
   provideAppInitializer,
-  provideZoneChangeDetection,
+  provideExperimentalZonelessChangeDetection,
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
@@ -37,7 +37,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     DialogService,
     MessageService,
-    provideZoneChangeDetection({ eventCoalescing: true }),
+    provideExperimentalZonelessChangeDetection(),
     provideRouter(routes),
     provideAnimations(),
     provideClientHydration(),
