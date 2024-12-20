@@ -1,6 +1,25 @@
 :host {
   display: flex;
+  flex-direction: column;
   width: 100%;
+  margin: 2rem;
+
+  @media (max-width: 768px) {
+    margin: 0
+
+  }
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  border-bottom: 1px solid hwb(120 55% 44%);
+
+  > .flex {
+    gap: 1rem;
+  }
 }
 
 .paginator {

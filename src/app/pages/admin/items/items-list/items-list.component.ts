@@ -6,24 +6,61 @@ import {
   signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { ItemsService } from '@app/core/services/items.service';
+import { AgroditTable } from '@components/ui/table/table.component';
+import { Button } from 'primeng/button';
+import { DropdownModule } from 'primeng/dropdown';
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 import { Select } from 'primeng/select';
 import { TableModule } from 'primeng/table';
 import { lastValueFrom } from 'rxjs';
-import { AgroditTable } from '../../../../components/ui/table/table.component';
 
 @Component({
   selector: 'app-items-list',
-  imports: [TableModule, PaginatorModule, Select, FormsModule, AgroditTable],
-
+  imports: [
+    TableModule,
+    PaginatorModule,
+    Select,
+    FormsModule,
+    AgroditTable,
+    DropdownModule,
+    Button,
+    RouterLink,
+  ],
   template: `
+    <div class="header">
+      <div class="flex">
+        <h1>Items</h1>
+        <p-dropdown
+          dropdownIcon="pi pi-filter"
+          [checkmark]="true"
+          [options]="[
+            { label: 'Nom', value: 'name' },
+            { label: 'Categorie', value: 'category' },
+          ]"
+          [(ngModel)]="orderBy"
+        />
+      </div>
+      <p-button
+        icon="pi pi-plus"
+        label="Ajouter"
+        routerLink="/admin/items/create"
+      />
+    </div>
     <matos-table [status]="items.status()">
-      <p-table [value]="items.value()?.data ?? []">
+      <p-table
+        [value]="items.value()?.data ?? []"
+        stripedRows
+        [sortField]="orderBy()"
+        (onSort)="orderBy.set($event.field)"
+      >
         <ng-template #header>
           <tr>
-            <th>Nom</th>
-            <th>Categorie</th>
+            <th pSortableColumn="name">Nom <p-sortIcon field="name" /></th>
+            <th pSortableColumn="category">
+              Categorie <p-sortIcon field="category" />
+            </th>
           </tr>
         </ng-template>
         <ng-template #body let-product>
@@ -85,5 +122,9 @@ export class ItemsListComponent {
   onPageChange(event: PaginatorState) {
     this.page.set(event.page! + 1);
     this.size.set(event.rows!);
+  }
+
+  log(loggable: any) {
+    console.log(loggable);
   }
 }

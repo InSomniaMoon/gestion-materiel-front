@@ -7,6 +7,7 @@ import {
 import { ButtonDesignTokens } from '@primeng/themes/types/button';
 import { DataTableDesignTokens } from '@primeng/themes/types/datatable';
 import { MenubarDesignTokens } from '@primeng/themes/types/menubar';
+import { TieredMenuDesignTokens } from '@primeng/themes/types/tieredmenu';
 
 const whitePalette = palette('#ffffff');
 export const primitives: PrimitiveDesignTokens = {
@@ -46,6 +47,16 @@ export const SgdfPresetTheme = definePreset(ThemeBase, {
   primitive: primitives,
   semantic: {
     primary: primitives.blue,
+    focusRing: {
+      width: '1px',
+      style: 'solid',
+      color: '{primary.color}',
+      offset: '2px',
+      shadow: 'none',
+    },
+    iconSize: '1rem',
+    transitionDuration: '0.2s',
+    anchorGutter: '2rem',
     formField: {
       paddingX: '1rem',
       paddingY: '0.5rem',
@@ -60,16 +71,15 @@ export const SgdfPresetTheme = definePreset(ThemeBase, {
         paddingY: '0.625rem',
       },
       borderRadius: '{border.radius.md}',
-      focusRing: {
-        width: '0',
-        style: 'none',
-        color: 'transparent',
-        offset: '0',
-        shadow: 'none',
-      },
+      // focusRing: {
+      //   width: '0',
+      //   style: 'none',
+      //   color: 'transparent',
+      //   offset: '0',
+      //   shadow: 'none',
+      // },
       transitionDuration: '{transition.duration}',
     },
-
     colorScheme: {
       light: {
         surface: {
@@ -170,29 +180,32 @@ export const SgdfPresetTheme = definePreset(ThemeBase, {
     } as ButtonDesignTokens,
     datatable: {
       root: {
-        background: '{surface.50}',
-        color: '{text.color}',
         borderColor: '{surface.200}',
         transitionDuration: '{transition.duration}',
       },
+      row: {
+        background: '{surface.0}',
+        hoverBackground: '{primary.500}',
+      },
+
       colorScheme: {
         light: {
           root: {
-            background: '{surface.50}',
-            color: '{text.color}',
             borderColor: '{surface.200}',
             transitionDuration: '{transition.duration}',
           },
           header: {
-            background: '{surface.200}',
+            background: '{surface.400}',
             color: '{text.color}',
           },
+
           row: {
             background: '{surface.0}',
-            hoverBackground: '{surface.500}',
+            hoverBackground: '{primary.500}',
             selectedBackground: '{surface.300}',
             stripedBackground: '{surface.100}',
           },
+
           headerCell: {
             padding: '0.75rem 0.5rem',
           },
@@ -202,5 +215,8 @@ export const SgdfPresetTheme = definePreset(ThemeBase, {
         },
       },
     } as DataTableDesignTokens,
+    tieredmenu: {
+      css: 'margin-top: 0rem;',
+    } as TieredMenuDesignTokens,
   },
 });

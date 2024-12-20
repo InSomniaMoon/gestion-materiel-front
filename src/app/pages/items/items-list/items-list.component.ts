@@ -28,19 +28,10 @@ import { lastValueFrom } from 'rxjs';
     SearchBarComponent,
     ProgressSpinnerModule,
     ButtonModule,
-    RouterLink,
   ],
   styleUrl: './items-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div>
-      <p-button
-        label="Ajouter un objet"
-        icon="pi pi-plus"
-        iconPos="right"
-        routerLink="/admin/items/create"
-      />
-    </div>
     <app-search-bar (queryChange)="searchQuery.set($event)" />
     @if (itemsQuery.isLoading()) {
       <p-progressSpinner [style]="{ margin: 'auto' }" />

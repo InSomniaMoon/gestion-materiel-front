@@ -23,24 +23,24 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { Textarea } from 'primeng/inputtextarea';
 @Component({
-    selector: 'app-create-item',
-    imports: [
-        CommonModule,
-        InputTextModule,
-        FloatLabelModule,
-        ButtonModule,
-        ReactiveFormsModule,
-        AutoCompleteModule,
-        Textarea,
-    ],
-    template: `
+  selector: 'app-create-item',
+  imports: [
+    CommonModule,
+    InputTextModule,
+    FloatLabelModule,
+    ButtonModule,
+    ReactiveFormsModule,
+    AutoCompleteModule,
+    Textarea,
+  ],
+  template: `
     <h1>Créer un item</h1>
     <form [formGroup]="form">
-      <p-floatLabel>
+      <p-floatLabel variant="on">
         <input pInputText type="text" id="name" formControlName="name" />
         <label for="name">Nom</label>
       </p-floatLabel>
-      <p-floatLabel>
+      <p-floatLabel variant="on">
         <textarea
           pInputTextarea
           id="description"
@@ -51,7 +51,7 @@ import { Textarea } from 'primeng/inputtextarea';
 
         <label for="description">Description</label>
       </p-floatLabel>
-      <p-floatLabel>
+      <p-floatLabel variant="on">
         <p-autoComplete
           id="category"
           formControlName="category"
@@ -66,7 +66,7 @@ import { Textarea } from 'primeng/inputtextarea';
           <h3 class="option-title">Option {{ $index + 1 }}</h3>
           <div [formGroup]="item" class="option">
             <div class="option-form">
-              <p-floatLabel>
+              <p-floatLabel variant="on">
                 <input
                   pInputText
                   type="text"
@@ -75,7 +75,7 @@ import { Textarea } from 'primeng/inputtextarea';
                 />
                 <label for="option-name-{{ $index }}">Nom</label>
               </p-floatLabel>
-              <p-floatLabel>
+              <p-floatLabel variant="on">
                 <textarea
                   pInputTextarea
                   id="option-description-{{ $index }}"
@@ -114,8 +114,8 @@ import { Textarea } from 'primeng/inputtextarea';
       </button>
     </form>
   `,
-    styleUrl: './create-item.component.scss',
-    changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrl: './create-item.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreateItemComponent implements OnInit {
   itemService = inject(ItemsService);

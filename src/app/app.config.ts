@@ -53,7 +53,7 @@ export const appConfig: ApplicationConfig = {
       theme: {
         preset: SgdfPresetTheme,
         options: {
-          darkModeSelector: '.my-app-dark',
+          darkModeSelector: false,
         },
       },
     }),

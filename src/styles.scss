@@ -34,10 +34,6 @@ input
   align-items: center;
 }
 
-h1 {
-  margin: 1rem 0 3rem;
-}
-
 p {
   margin: 0 0 1rem;
 }
@@ -63,4 +59,8 @@ p {
 
 a[pButton] {
   text-decoration: none;
+}
+
+.p-tieredmenu-mobile {
+  position: absolute !important;
 }

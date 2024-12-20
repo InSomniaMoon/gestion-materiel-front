@@ -41,7 +41,6 @@ export class HeaderComponent implements OnInit {
       label: 'Déconnexion',
       icon: 'pi pi-sign-out',
       routerLink: '/auth/login',
-      // command: () => this.auth$.logout(),
     },
   ];
 
