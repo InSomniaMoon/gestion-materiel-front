@@ -20,8 +20,15 @@ jobs:
           node-version: 22.x
           cache: "npm"
       - run: npm ci --legacy-peer-deps
-      - run: npm run build
+      - run: npm run build -c production
       # - run: npm test
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: |
+            dist
+          retention-days: 1
 
   deploy-app:
     needs: build
@@ -35,7 +42,10 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa.pub
           ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
-
+      - name: Download a single artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
       - name: sync code to server
-        run: rsync -rt --remove-source-files dist/frontend/browser ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:~/gestion_materiel/front/dist/frontend/browser
-        # run: ssh -o StrictHostKeyChecking=no -x ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} 'cd ~/gestion_materiel/front && git pull && npm ci --legacy-peer-deps && npm run build && docker-compose up -d --remove-orphans'
+        run: rsync -rt --delete frontend/browser/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:~/gestion_materiel/front/dist/frontend/browser/
+      # run: ssh -o StrictHostKeyChecking=no -x ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} 'cd ~/gestion_materiel/front && git pull && npm ci --legacy-peer-deps && npm run build && docker-compose up -d --remove-orphans'
