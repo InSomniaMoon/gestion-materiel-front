@@ -15,7 +15,6 @@ import {
   withInterceptors,
 } from '@angular/common/http';
 import localeFR from '@angular/common/locales/fr';
-import { provideClientHydration } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import {
   provideQueryClient,
@@ -40,7 +39,6 @@ export const appConfig: ApplicationConfig = {
     provideExperimentalZonelessChangeDetection(),
     provideRouter(routes),
     provideAnimations(),
-    provideClientHydration(),
     provideQueryClient(new QueryClient()),
     provideHttpClient(withFetch(), withInterceptors([authInterceptor])),
     { provide: LOCALE_ID, useValue: 'fr-FR' },
@@ -50,6 +48,14 @@ export const appConfig: ApplicationConfig = {
     }),
     providePrimeNG({
       ripple: true,
+      inputStyle: 'outlined',
+      overlayOptions: {
+        hideOnEscape: true,
+        responsive: {
+          breakpoint: '768px',
+          direction: 'bottom',
+        },
+      },
       theme: {
         preset: SgdfPresetTheme,
         options: {

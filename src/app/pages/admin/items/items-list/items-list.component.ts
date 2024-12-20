@@ -8,11 +8,11 @@ import {
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { ItemsService } from '@app/core/services/items.service';
-import { AgroditTable } from '@components/ui/table/table.component';
+import { AppTable } from '@components/ui/table/table.component';
+import { OverlayOptions } from 'primeng/api';
 import { Button } from 'primeng/button';
-import { DropdownModule } from 'primeng/dropdown';
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
-import { Select } from 'primeng/select';
+import { Select, SelectModule } from 'primeng/select';
 import { TableModule } from 'primeng/table';
 import { lastValueFrom } from 'rxjs';
 
@@ -23,8 +23,8 @@ import { lastValueFrom } from 'rxjs';
     PaginatorModule,
     Select,
     FormsModule,
-    AgroditTable,
-    DropdownModule,
+    AppTable,
+    SelectModule,
     Button,
     RouterLink,
   ],
@@ -32,7 +32,7 @@ import { lastValueFrom } from 'rxjs';
     <div class="header">
       <div class="flex">
         <h1>Items</h1>
-        <p-dropdown
+        <p-select
           dropdownIcon="pi pi-filter"
           [checkmark]="true"
           [options]="[
@@ -71,13 +71,14 @@ import { lastValueFrom } from 'rxjs';
         </ng-template>
       </p-table>
       <div class="paginator">
-        <span class="mx-1 text-color">Items per page: </span>
+        <span>Items par page: </span>
         <p-select
           [options]="options"
           optionLabel="label"
           optionValue="value"
           [ngModel]="size()"
           (ngModelChange)="page.set(0); size.set($event)"
+          (listener)="log($event)"
         />
         <p-paginator
           [first]="page()"

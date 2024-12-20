@@ -7,7 +7,6 @@ import {
   OnInit,
   signal,
 } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import {
   FormArray,
   FormBuilder,
@@ -21,7 +20,7 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
 import { ButtonModule } from 'primeng/button';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
-import { Textarea } from 'primeng/inputtextarea';
+import { Textarea } from 'primeng/textarea';
 @Component({
   selector: 'app-create-item',
   imports: [
@@ -42,7 +41,7 @@ import { Textarea } from 'primeng/inputtextarea';
       </p-floatLabel>
       <p-floatLabel variant="on">
         <textarea
-          pInputTextarea
+          pTextarea
           id="description"
           autoResize
           formControlName="description"
@@ -55,9 +54,13 @@ import { Textarea } from 'primeng/inputtextarea';
         <p-autoComplete
           id="category"
           formControlName="category"
-          [dropdown]="true"
           [suggestions]="filteredCategories()"
+          fluid
           (completeMethod)="categoryQuery.set($event.query)"
+          (onHide)="categoryQuery.set('')"
+          (onSelect)="categoryQuery.set('')"
+          (onUnselect)="categoryQuery.set('')"
+          [delay]="10"
         />
         <label for="category">Catégorie</label>
       </p-floatLabel>
@@ -122,11 +125,11 @@ export class CreateItemComponent implements OnInit {
   router = inject(Router);
 
   categoryQuery = signal('');
-  categories = toSignal(this.itemService.getCategories(), { initialValue: [] });
+  categories = signal<string[]>([]);
 
   filteredCategories = computed(() =>
     this.categories().filter((cat) =>
-      cat.toLowerCase().includes(this.categoryQuery().toLowerCase()),
+      cat.toUpperCase().includes(this.categoryQuery().toUpperCase()),
     ),
   );
   fb = inject(FormBuilder);
@@ -149,7 +152,11 @@ export class CreateItemComponent implements OnInit {
   get options() {
     return this.form.controls['options'];
   }
-  // type of the return value of the function newOption
+  ngOnInit(): void {
+    this.itemService
+      .getCategories()
+      .subscribe((categories) => this.categories.set(categories));
+  }
 
   newOption() {
     return this.fb.group({
@@ -173,10 +180,6 @@ export class CreateItemComponent implements OnInit {
     options.removeAt(index);
   }
 
-  ngOnInit(): void {
-    this.form.valueChanges.subscribe(console.log);
-  }
-
   onSubmit() {
     if (this.form.valid) {
       const item: Item = {
@@ -191,5 +194,9 @@ export class CreateItemComponent implements OnInit {
         },
       });
     }
+  }
+
+  log(laggabel: any) {
+    console.log(laggabel);
   }
 }

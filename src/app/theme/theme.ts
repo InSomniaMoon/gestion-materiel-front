@@ -56,7 +56,7 @@ export const SgdfPresetTheme = definePreset(ThemeBase, {
     },
     iconSize: '1rem',
     transitionDuration: '0.2s',
-    anchorGutter: '2rem',
+    anchorGutter: '2px',
     formField: {
       paddingX: '1rem',
       paddingY: '0.5rem',

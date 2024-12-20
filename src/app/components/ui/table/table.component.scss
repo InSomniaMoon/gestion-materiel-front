@@ -1,8 +1,9 @@
 :host ::ng-deep {
   display: flex;
   flex-direction: column;
-  overflow: auto;
+  overflow: hidden;
   flex: 1;
+  height: 100%;
 }
 .loading {
   display: flex;

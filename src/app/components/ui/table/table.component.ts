@@ -33,7 +33,7 @@ import {
   styleUrl: './table.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AgroditTable {
+export class AppTable {
   isLoading = computed(
     () =>
       this.status() === 'pending' || this.status() === ResourceStatus.Loading,
