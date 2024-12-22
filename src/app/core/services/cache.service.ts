@@ -22,11 +22,11 @@ export class CacheService {
         `Data already exists for key '${key}'. Use a different key or delete the existing one first.`,
       );
     }
-    const date = new Date();
-    date.setMinutes(date.getMinutes() + 20);
+    const expires = new Date();
+    expires.setMinutes(expires.getMinutes() + 10);
 
     // If there is no data for this key, we store it in the cache and update the BehaviorSubject.
-    this.cache.set(key, { expires: date, data });
+    this.cache.set(key, { expires, data });
   }
 
   // The 'get' method for retrieving data from the cache.
@@ -45,5 +45,9 @@ export class CacheService {
   clear(key: string): void {
     // We remove the data from the cache and update the BehaviorSubject.
     this.cache.delete(key);
+  }
+
+  clearAll() {
+    this.cache.clear();
   }
 }

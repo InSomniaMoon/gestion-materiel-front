@@ -4,12 +4,14 @@ import { environment } from '@env/environment';
 import { catchError, map, of, tap } from 'rxjs';
 import { LoginDTO } from '../types/loginDTO.type';
 import { User } from '../types/user.type';
+import { CacheService } from './cache.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   private http = inject(HttpClient);
+  private cache = inject(CacheService);
 
   private api_url = environment.api_url;
   private _isAuth = signal(false);
@@ -42,6 +44,8 @@ export class AuthService {
     // Remove the token from the local storage
     localStorage.removeItem('auth_token');
     this._isAuth.set(false);
+    this.cache.clearAll();
+    return true;
   }
 
   load(localStorage: Storage, http: HttpClient) {
