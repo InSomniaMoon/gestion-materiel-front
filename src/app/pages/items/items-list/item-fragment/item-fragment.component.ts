@@ -1,6 +1,5 @@
 import {
   AfterViewInit,
-  ChangeDetectionStrategy,
   Component,
   computed,
   inject,
@@ -27,6 +26,7 @@ import { TagModule } from 'primeng/tag';
 
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
+
 import { MessageService } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
 
@@ -44,7 +44,7 @@ import { DialogService } from 'primeng/dynamicdialog';
   ],
   templateUrl: './item-fragment.component.html',
   styleUrl: './item-fragment.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  // changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ItemFragmentComponent implements OnInit, AfterViewInit {
   item = input.required<Item>();
@@ -92,6 +92,14 @@ export class ItemFragmentComponent implements OnInit, AfterViewInit {
     this.dialog
       .open(AddSubscriptionComponent, {
         header: `Emprunter ${this.item().name}`,
+        width: '70%',
+        height: '70%',
+        modal: true,
+        // reponsive dialog
+        breakpoints: {
+          '960px': '80vw',
+          '640px': '90vw',
+        },
       })
       .onClose.subscribe((value) => {
         if (!value) {

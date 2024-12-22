@@ -10,7 +10,6 @@
       showIcon
       iconDisplay="input"
       [showTime]="true"
-      [touchUI]="isMobile()"
       hourFormat="24"
       dateFormat="yy-mm-dd"
       formControlName="start_date"
@@ -36,15 +35,16 @@
       showIcon
       iconDisplay="input"
       [showTime]="true"
-      [touchUI]="isMobile()"
       hourFormat="24"
       dateFormat="yy-mm-dd"
       stepMinute="30"
       formControlName="end_date"
       id="end_date"
       readonlyInput
+      [minDate]="date(form.get('start_date')?.getRawValue())"
       #end_date
     >
+      <!-- [minDate]="date(form.get('start_date')?.getRawValue())" -->
       <ng-template pTemplate="footer">
         <button
           pButton

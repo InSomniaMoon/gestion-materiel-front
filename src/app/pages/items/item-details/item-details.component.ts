@@ -1,7 +1,6 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  effect,
   inject,
   OnInit,
   signal,
@@ -26,38 +25,33 @@ import { OpenedIssuesComponent } from './opened-issues/opened-issues.component';
 import { OptionsTableComponent } from './options-table/options-table.component';
 
 @Component({
-    selector: 'app-item-details',
-    imports: [
-        ProgressSpinnerModule,
-        TableModule,
-        TagModule,
-        ButtonModule,
-        InputSwitchModule,
-        ToggleButtonModule,
-        FormsModule,
-        RouterLink,
-        OptionsTableComponent,
-        OpenedIssuesComponent,
-    ],
-    templateUrl: './item-details.component.html',
-    styleUrl: './item-details.component.scss',
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-item-details',
+  imports: [
+    ProgressSpinnerModule,
+    TableModule,
+    TagModule,
+    ButtonModule,
+    InputSwitchModule,
+    ToggleButtonModule,
+    FormsModule,
+    RouterLink,
+    OptionsTableComponent,
+    OpenedIssuesComponent,
+  ],
+  templateUrl: './item-details.component.html',
+  styleUrl: './item-details.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ItemDetailsComponent implements OnInit {
   private readonly routeSnapshot = inject(ActivatedRoute).snapshot;
   private readonly itemService = inject(ItemsService);
-  // title service to change the title of the page
+
   private readonly titleService = inject(Title);
   private readonly auth$ = inject(AuthService);
   private readonly itemOptionService = inject(ItemOptionService);
   private readonly message = inject(MessageService);
 
-  constructor() {
-    effect(() => {
-      console.log(this.optionsQuery.data());
-      console.log(this.optionsQuery.fetchStatus());
-    });
-  }
+  constructor() {}
 
   item = signal<Item | null>(null);
 

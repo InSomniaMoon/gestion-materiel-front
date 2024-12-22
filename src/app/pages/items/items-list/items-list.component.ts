@@ -34,8 +34,9 @@ import { lastValueFrom } from 'rxjs';
   template: `
     <app-search-bar (queryChange)="searchQuery.set($event)" />
     @if (itemsQuery.isLoading()) {
-      <p-progressSpinner [style]="{ margin: 'auto' }" />
+      <p-progressSpinner />
     }
+
     @if (itemsQuery.isFetched()) {
       @for (item of items(); track $index) {
         <app-item-fragment [item]="item" />

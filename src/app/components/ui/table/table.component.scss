@@ -4,6 +4,11 @@
   overflow: hidden;
   flex: 1;
   height: 100%;
+
+  .actions {
+    display: flex;
+    gap: 0.5rem;
+  }
 }
 .loading {
   display: flex;

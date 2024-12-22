@@ -62,6 +62,7 @@ export class HeaderComponent implements OnInit {
       label: 'Administration',
       icon: 'pi pi-cog',
       routerLink: '/admin',
+      style: { display: this.user()?.role === 'admin' ? 'block' : 'none' },
     },
   ];
   ngOnInit(): void {}

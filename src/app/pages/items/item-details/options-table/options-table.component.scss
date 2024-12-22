@@ -1,5 +1,10 @@
-:host {
+:host ::ng-deep {
   display: block;
+  .p-card-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 }
 
 .options {

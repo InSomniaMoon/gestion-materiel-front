@@ -7,6 +7,7 @@ import {
 import { ButtonDesignTokens } from '@primeng/themes/types/button';
 import { DataTableDesignTokens } from '@primeng/themes/types/datatable';
 import { MenubarDesignTokens } from '@primeng/themes/types/menubar';
+import { ProgressSpinnerDesignTokens } from '@primeng/themes/types/progressspinner';
 import { TieredMenuDesignTokens } from '@primeng/themes/types/tieredmenu';
 
 const whitePalette = palette('#ffffff');
@@ -218,5 +219,17 @@ export const SgdfPresetTheme = definePreset(ThemeBase, {
     tieredmenu: {
       css: 'margin-top: 0rem;',
     } as TieredMenuDesignTokens,
+    progressspinner: {
+      colorScheme: {
+        light: {
+          root: {
+            'color.1': '{primary.500}',
+            'color.2': '{primary.500}',
+            'color.3': '{primary.500}',
+            'color.4': '{primary.500}',
+          },
+        },
+      },
+    } as ProgressSpinnerDesignTokens,
   },
 });

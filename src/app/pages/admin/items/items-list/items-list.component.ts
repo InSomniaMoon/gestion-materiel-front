@@ -61,12 +61,28 @@ import { lastValueFrom } from 'rxjs';
             <th pSortableColumn="category">
               Categorie <p-sortIcon field="category" />
             </th>
+            <th>Avaries</th>
+            <th></th>
           </tr>
         </ng-template>
         <ng-template #body let-product>
           <tr>
             <td>{{ product.name }}</td>
             <td>{{ product.category }}</td>
+            <td></td>
+            <td class="actions">
+              <p-button
+                icon="pi pi-pencil"
+                routerLink="/admin/items/{{ product.id }}"
+                size="small"
+              />
+              <p-button
+                size="small"
+                icon="pi pi-trash"
+                severity="danger"
+                (click)="log(product)"
+              />
+            </td>
           </tr>
         </ng-template>
       </p-table>
@@ -78,7 +94,6 @@ import { lastValueFrom } from 'rxjs';
           optionValue="value"
           [ngModel]="size()"
           (ngModelChange)="page.set(0); size.set($event)"
-          (listener)="log($event)"
         />
         <p-paginator
           [first]="page()"
@@ -86,7 +101,7 @@ import { lastValueFrom } from 'rxjs';
           [totalRecords]="items.value()?.total ?? 0"
           (onPageChange)="onPageChange($event)"
           [showCurrentPageReport]="true"
-          currentPageReportTemplate="{first} - {last} of {totalRecords}"
+          currentPageReportTemplate="{first} - {last} sur {totalRecords}"
           [showPageLinks]="false"
           [showFirstLastIcon]="false"
         />

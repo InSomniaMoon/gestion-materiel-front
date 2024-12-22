@@ -17,17 +17,17 @@ import { InputTextModule } from 'primeng/inputtext';
 import { fromEvent, map, startWith } from 'rxjs';
 
 @Component({
-    selector: 'app-add-subscription',
-    imports: [
-        DialogModule,
-        ButtonModule,
-        CalendarModule,
-        ReactiveFormsModule,
-        InputTextModule,
-    ],
-    templateUrl: './add-subscription.component.html',
-    styleUrl: './add-subscription.component.scss',
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-add-subscription',
+  imports: [
+    DialogModule,
+    ButtonModule,
+    CalendarModule,
+    ReactiveFormsModule,
+    InputTextModule,
+  ],
+  templateUrl: './add-subscription.component.html',
+  styleUrl: './add-subscription.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddSubscriptionComponent implements OnInit {
   subscriptionChange = output<void>();
@@ -60,11 +60,6 @@ export class AddSubscriptionComponent implements OnInit {
 
   ngOnInit(): void {
     this.curDate.setMinutes(0, 0, 0);
-
-    this.form.valueChanges.subscribe((value) => {
-      console.log(value);
-    });
-
     // format :2024-11-13 16:01
     this.form.patchValue({
       start_date: this.formatDate(this.curDate),
@@ -74,6 +69,10 @@ export class AddSubscriptionComponent implements OnInit {
 
   close() {
     this.ref.close();
+  }
+
+  date(str: string): Date {
+    return new Date(str);
   }
 
   submit() {

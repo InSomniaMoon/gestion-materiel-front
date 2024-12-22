@@ -18,11 +18,12 @@ import { CardModule } from 'primeng/card';
 import { DialogService } from 'primeng/dynamicdialog';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
+import { DeclareOptionIssueComponent } from './declareOptionIssue/declareOptionIssue.component';
 
 @Component({
-    selector: 'app-options-table',
-    imports: [CommonModule, TagModule, TableModule, ButtonModule, CardModule],
-    template: `<div class="title">
+  selector: 'app-options-table',
+  imports: [CommonModule, TagModule, TableModule, ButtonModule, CardModule],
+  template: `<div class="title">
       <h2>Options</h2>
       @if (userAdmin()) {
         <p-button
@@ -40,6 +41,12 @@ import { TagModule } from 'primeng/tag';
           <p-tag
             [icon]="option.usable ? 'pi pi-check' : 'pi pi-times'"
             [severity]="option.usable ? 'success' : 'danger'"
+          />
+          <p-button
+            label="Avarie"
+            [outlined]="true"
+            icon="pi pi-plus"
+            (onClick)="createAvarie(option)"
           />
           <ng-template pTemplate="footer">
             @if (userAdmin()) {
@@ -61,55 +68,9 @@ import { TagModule } from 'primeng/tag';
           </ng-template>
         </p-card>
       }
-    </section>
-    <!-- <p-table [value]="options()" [tableStyle]="{ width: '100%' }">
-      <ng-template pTemplate="header">
-        <tr>
-          <th>Nom</th>
-          <th>Description</th>
-          <th>Utilisable</th>
-          @if (userAdmin()) {
-            <th></th>
-          }
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="body" let-product>
-        <tr>
-          <td>{{ product.name }}</td>
-          <td>{{ product.description }}</td>
-
-          <td>
-            <p-tag
-              [icon]="product.usable ? 'pi pi-check' : 'pi pi-times'"
-              [severity]="product.usable ? 'success' : 'danger'"
-            />
-          </td>
-          @if (userAdmin()) {
-            <td style="display: flex; gap: 0.5rem">
-              <p-button
-                type="button"
-                icon="pi pi-pencil"
-                rounded
-                severity="secondary"
-                size="small"
-                (onClick)="openEditOptionDialog(product)"
-              ></p-button>
-              <p-button
-                type="button"
-                icon="pi pi-trash"
-                rounded
-                size="small"
-                severity="danger"
-                (onClick)="deleteOption(product)"
-              ></p-button>
-            </td>
-          }
-        </tr>
-      </ng-template>
-    </p-table>
-    --> `,
-    styleUrl: './options-table.component.scss',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    </section> `,
+  styleUrl: './options-table.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OptionsTableComponent {
   private readonly dialogService = inject(DialogService);
@@ -190,10 +151,12 @@ export class OptionsTableComponent {
       .open(CreateUpdateItemOptionComponent, {
         header: 'Modifier ' + option.name,
         width: 'auto',
+
         data: option,
+        appendTo: 'body',
       })
       .onClose.subscribe((opt: ItemOption) => {
-        if (!option) {
+        if (!opt) {
           return;
         }
 
@@ -215,6 +178,29 @@ export class OptionsTableComponent {
               ),
           });
       });
+  }
+
+  createAvarie(option: ItemOption) {
+    this.dialogService
+      .open(DeclareOptionIssueComponent, {
+        header: 'Déclarer une avarie sur ' + option.name,
+        data: {
+          itemId: this.itemId(),
+          optionId: option.id,
+        },
+      })
+      .onClose.subscribe((success) => {
+        if (!success) {
+          return;
+        }
+        this.optionsChange.emit();
+      });
+
+    this.message.add({
+      severity: 'info',
+      summary: 'Fonctionnalité à venir',
+      detail: 'La fonctionnalité est en cours de développement',
+    });
   }
 
   private handleError(error: string) {

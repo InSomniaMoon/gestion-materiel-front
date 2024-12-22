@@ -28,6 +28,15 @@ export class OptionIssuesService {
     );
   }
 
+  create(issue: string, itemId: number, optionId: number) {
+    return this.http.post<OptionIssue>(
+      `${this.api_url}/items/${itemId}/options/${optionId}/issues`,
+      {
+        value: issue,
+      },
+    );
+  }
+
   resolve(issue: OptionIssue) {
     return this.http
       .patch<OptionIssue>(

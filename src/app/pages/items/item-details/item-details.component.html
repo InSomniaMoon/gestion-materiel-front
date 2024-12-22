@@ -18,11 +18,10 @@
       <p-toggleButton
         onLabel="Oui"
         offLabel="Non"
-        [disabled]="!userAdmin()"
+        [disabled]="true"
         role="button"
         [onIcon]="'pi pi-check'"
         offIcon="pi pi-times"
-        (click)="$event.stopImmediatePropagation(); updateItem()"
         [ngModel]="item()?.usable"
       />
     </div>
