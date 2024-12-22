@@ -30,6 +30,8 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import { MessageService } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
 
+import locale from '@fullcalendar/core/locales/fr';
+
 @Component({
   selector: 'app-item-fragment',
   imports: [
@@ -59,7 +61,7 @@ export class ItemFragmentComponent implements OnInit, AfterViewInit {
   calendar = viewChild.required<FullCalendarComponent>('calendar');
 
   calendarOptions = computed<CalendarOptions>(() => ({
-    locale: 'fr',
+    locale,
     initialView: 'dayGridMonth',
     eventMinWidth: 100,
     headerToolbar: {

@@ -28,20 +28,22 @@ import { ButtonModule } from 'primeng/button';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { SkeletonModule } from 'primeng/skeleton';
 
+import locale from '@fullcalendar/core/locales/fr';
+
 @Component({
-    selector: 'app-subscription-details',
-    imports: [
-        ProgressSpinnerModule,
-        ButtonModule,
-        RouterLink,
-        SkeletonModule,
-        JsonPipe,
-        AccordionModule,
-        FullCalendarModule,
-    ],
-    templateUrl: './subscription-details.component.html',
-    styleUrl: './subscription-details.component.scss',
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-subscription-details',
+  imports: [
+    ProgressSpinnerModule,
+    ButtonModule,
+    RouterLink,
+    SkeletonModule,
+    JsonPipe,
+    AccordionModule,
+    FullCalendarModule,
+  ],
+  templateUrl: './subscription-details.component.html',
+  styleUrl: './subscription-details.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SubscriptionDetailsComponent implements AfterViewInit {
   private destroyRef = inject(DestroyRef);
@@ -90,7 +92,7 @@ export class SubscriptionDetailsComponent implements AfterViewInit {
   });
 
   calendarOptions = computed<CalendarOptions>(() => ({
-    locale: 'fr',
+    locale,
     initialView: this.initialView(),
     plugins: [dayGridPlugin, timeGridPlugin],
     firstDay: this.firstDay(),
