@@ -1,5 +1,5 @@
 <form #loginForm="ngForm" (ngSubmit)="submitForm(loginForm)">
-  <p-float-label>
+  <p-float-label variant="on">
     <input
       type="email"
       pInputText
@@ -11,7 +11,7 @@
     />
     <label for="email">Email</label>
   </p-float-label>
-  <p-float-label>
+  <p-float-label variant="on">
     <p-password
       required
       type="password"
@@ -25,7 +25,9 @@
 
     <label for="password">Mot de passe</label>
   </p-float-label>
-
+  @if (error()) {
+    <div class="invalid">{{ error() }}</div>
+  }
   <button
     pButton
     type="submit"

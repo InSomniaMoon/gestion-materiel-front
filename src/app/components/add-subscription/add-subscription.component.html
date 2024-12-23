@@ -6,7 +6,7 @@
 
   <div class="form-group">
     <label for="start_date">Début de l'emprunt</label>
-    <p-calendar
+    <p-date-picker
       showIcon
       iconDisplay="input"
       [showTime]="true"
@@ -17,6 +17,7 @@
       stepMinute="30"
       readonlyInput
       #start_date
+      (ngModelChange)="resetEndDate()"
     >
       <ng-template pTemplate="footer">
         <button
@@ -26,12 +27,12 @@
           (click)="start_date.toggle()"
         ></button>
       </ng-template>
-    </p-calendar>
+    </p-date-picker>
   </div>
 
   <div class="form-group">
     <label for="end_date">Fin de l'emprunt</label>
-    <p-calendar
+    <p-date-picker
       showIcon
       iconDisplay="input"
       [showTime]="true"
@@ -41,10 +42,10 @@
       formControlName="end_date"
       id="end_date"
       readonlyInput
-      [minDate]="date(form.get('start_date')?.getRawValue())"
+      [responsiveOptions]="responsiveOptions"
+      [minDate]="minDate()"
       #end_date
     >
-      <!-- [minDate]="date(form.get('start_date')?.getRawValue())" -->
       <ng-template pTemplate="footer">
         <button
           pButton
@@ -53,7 +54,8 @@
           (click)="end_date.toggle()"
         ></button>
       </ng-template>
-    </p-calendar>
+    </p-date-picker>
+    {{ date(form.get("start_date")?.getRawValue()) }}
   </div>
 </form>
 

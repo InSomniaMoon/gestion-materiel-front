@@ -95,7 +95,7 @@ export class ItemFragmentComponent implements OnInit, AfterViewInit {
       .open(AddSubscriptionComponent, {
         header: `Emprunter ${this.item().name}`,
         width: '70%',
-        height: '70%',
+        height: '90%',
         modal: true,
         // reponsive dialog
         breakpoints: {

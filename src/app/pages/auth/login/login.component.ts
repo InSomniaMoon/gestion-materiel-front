@@ -12,16 +12,18 @@ import { Password } from 'primeng/password';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
-    selector: 'app-login',
-    imports: [FormsModule, FloatLabel, ButtonDirective, InputText, Password],
-    templateUrl: './login.component.html',
-    styleUrl: './login.component.scss'
+  selector: 'app-login',
+  imports: [FormsModule, FloatLabel, ButtonDirective, InputText, Password],
+  templateUrl: './login.component.html',
+  styleUrl: './login.component.scss',
 })
 export class LoginComponent implements OnDestroy {
   private auth$ = inject(AuthService);
   // get query params
   private routeSnapshot = inject(ActivatedRoute).snapshot;
   private router = inject(Router);
+
+  error = signal('');
 
   destroy = new Subject<void>();
   loading = signal(false);
@@ -41,6 +43,7 @@ export class LoginComponent implements OnDestroy {
         },
         error: (err) => {
           console.error(err);
+          this.error.set(err.error.error);
           this.loading.set(false);
         },
         complete: () => {

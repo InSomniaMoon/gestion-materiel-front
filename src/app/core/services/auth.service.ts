@@ -1,9 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
+import { Group } from '@core/types/group.type';
+import { LoginDTO } from '@core/types/loginDTO.type';
+import { User } from '@core/types/user.type';
 import { environment } from '@env/environment';
 import { catchError, map, of, tap } from 'rxjs';
-import { LoginDTO } from '../types/loginDTO.type';
-import { User } from '../types/user.type';
 import { CacheService } from './cache.service';
 
 @Injectable({
@@ -17,6 +18,7 @@ export class AuthService {
   private _isAuth = signal(false);
 
   user = signal<User | null>(null);
+  groups = signal<Group[]>([]);
 
   isAuth = this._isAuth.asReadonly();
 
@@ -36,6 +38,7 @@ export class AuthService {
           localStorage.setItem('auth_token', res.token);
           this._isAuth.set(true);
           this.user.set(res.user);
+          this.groups.set(res.groups.map((group) => group.group!));
         }),
       );
   }
@@ -51,9 +54,10 @@ export class AuthService {
   load(localStorage: Storage, http: HttpClient) {
     const token = localStorage.getItem('auth_token');
     if (token) {
-      return http.get<User>(`${this.api_url}/auth/whoami`).pipe(
+      return http.get<LoginDTO>(`${this.api_url}/auth/whoami`).pipe(
         map((DTO) => {
-          this.user.set(DTO);
+          this.user.set(DTO.user);
+          this.groups.set(DTO.groups.map((group) => group.group!));
           this._isAuth.set(true);
           return of(true);
         }),

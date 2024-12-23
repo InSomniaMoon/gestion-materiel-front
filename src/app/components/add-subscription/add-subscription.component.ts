@@ -2,15 +2,15 @@ import {
   ChangeDetectionStrategy,
   Component,
   inject,
-  input,
   OnInit,
   output,
+  signal,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Item } from '@app/core/types/item.type';
+import { ResponsiveOverlayOptions } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
-import { CalendarModule } from 'primeng/calendar';
+import { DatePicker } from 'primeng/datepicker';
 import { DialogModule } from 'primeng/dialog';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { InputTextModule } from 'primeng/inputtext';
@@ -21,7 +21,7 @@ import { fromEvent, map, startWith } from 'rxjs';
   imports: [
     DialogModule,
     ButtonModule,
-    CalendarModule,
+    DatePicker,
     ReactiveFormsModule,
     InputTextModule,
   ],
@@ -30,8 +30,7 @@ import { fromEvent, map, startWith } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddSubscriptionComponent implements OnInit {
-  subscriptionChange = output<void>();
-
+  fb = inject(FormBuilder);
   private ref = inject(DynamicDialogRef);
 
   // check if screen is a mobile device from event
@@ -41,29 +40,59 @@ export class AddSubscriptionComponent implements OnInit {
       startWith(window.innerWidth <= 768),
     ),
   );
+  minDate = signal(new Date());
+  subscriptionChange = output<void>();
 
-  fb = inject(FormBuilder);
+  form = this.fb.group(
+    {
+      name: this.fb.control('', {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
+      start_date: this.fb.control('', {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
+      end_date: this.fb.control('', {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
+    },
+    {
+      validators: [
+        (form) => {
+          if (form.get('start_date')?.value > form.get('end_date')?.value) {
+            return { invalidDate: true };
+          }
+          if (form.get('start_date')?.value === form.get('end_date')?.value) {
+            return { invalidDate: true };
+          }
+          return null;
+        },
+      ],
+    },
+  );
 
-  curDate = new Date();
-  form = this.fb.group({
-    name: this.fb.control('', {
-      nonNullable: true,
-      validators: [Validators.required],
-    }),
-    start_date: this.fb.control('', {
-      nonNullable: true,
-    }),
-    end_date: this.fb.control('', {
-      nonNullable: true,
-    }),
-  });
+  responsiveOptions: ResponsiveOverlayOptions[] = [
+    {
+      breakpoint: '768px',
+    },
+  ];
+
+  constructor() {
+    this.form.valueChanges.subscribe((value) => {
+      this.minDate.set(this.date(value.start_date!));
+    });
+  }
 
   ngOnInit(): void {
-    this.curDate.setMinutes(0, 0, 0);
+    let curDate = new Date();
+    curDate.setMinutes(0, 0, 0);
     // format :2024-11-13 16:01
+
     this.form.patchValue({
-      start_date: this.formatDate(this.curDate),
-      end_date: this.formatDate(this.curDate),
+      start_date: this.formatDate(curDate),
+      end_date: this.formatDate(curDate),
     });
   }
 
@@ -81,6 +110,12 @@ export class AddSubscriptionComponent implements OnInit {
     }
 
     this.ref.close(this.form.value);
+  }
+
+  resetEndDate() {
+    this.form.patchValue({
+      end_date: this.form.get('start_date')?.value,
+    });
   }
 
   private formatDate(date: Date): string {

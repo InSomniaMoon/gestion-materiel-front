@@ -4,6 +4,7 @@ import { Item } from '@app/core/types/item.type';
 import { PaginatedData } from '@app/core/types/paginatedData.type';
 import { environment } from '@env/environment';
 import { of, tap } from 'rxjs';
+import { AuthService } from './auth.service';
 import { CacheService } from './cache.service';
 
 @Injectable({
@@ -12,6 +13,7 @@ import { CacheService } from './cache.service';
 export class ItemsService {
   private readonly http = inject(HttpClient);
   private readonly cache = inject(CacheService);
+  private readonly authService = inject(AuthService);
 
   private api_url = environment.api_url;
 
@@ -35,7 +37,9 @@ export class ItemsService {
     },
   ) {
     let url = `${this.api_url}/items`;
-    url += `?page=${opt.page}`;
+
+    url += `?group_id=${this.authService.groups()[0].id}`;
+    url += `&page=${opt.page}`;
 
     url += `&size=${opt.size}`;
 
