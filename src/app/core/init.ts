@@ -6,7 +6,7 @@ import { AuthService } from './services/auth.service';
 
 export function init(auth$: AuthService, httpClient: HttpClient) {
   if (isPlatformBrowser(inject(PLATFORM_ID))) {
-    return () => lastValueFrom(auth$.load(localStorage, httpClient));
+    return lastValueFrom(auth$.load(localStorage, httpClient));
   }
-  return () => lastValueFrom(of(null));
+  return lastValueFrom(of(null));
 }

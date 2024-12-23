@@ -42,10 +42,7 @@ export const appConfig: ApplicationConfig = {
     provideQueryClient(new QueryClient()),
     provideHttpClient(withFetch(), withInterceptors([authInterceptor])),
     { provide: LOCALE_ID, useValue: 'fr-FR' },
-    provideAppInitializer(() => {
-      const initializerFn = init(inject(AuthService), inject(HttpClient));
-      return initializerFn();
-    }),
+    provideAppInitializer(() => init(inject(AuthService), inject(HttpClient))),
     providePrimeNG({
       ripple: true,
       inputStyle: 'outlined',
