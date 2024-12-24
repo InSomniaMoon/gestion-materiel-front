@@ -28,10 +28,12 @@ export class AuthService {
   isAuth = this._isAuth.asReadonly();
 
   isAdmin = computed(() => {
+    console.log('isAdmin');
+
     if (!this.user()) {
       return false;
     }
-    return this.user()?.role === 'admin';
+    return this.selectedGroup()?.role == ('admin' as string);
   });
 
   login({ email, password }: { email: string; password: string }) {

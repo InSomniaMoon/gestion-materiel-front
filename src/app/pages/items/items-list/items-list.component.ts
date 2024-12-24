@@ -7,15 +7,14 @@ import {
   signal,
   Signal,
 } from '@angular/core';
-import { ItemsService } from '../../../core/services/items.service';
-import { Item } from '../../../core/types/item.type';
-import { PaginatedData } from '../../../core/types/paginatedData.type';
+import { Item } from '@core/types/item.type';
+import { PaginatedData } from '@core/types/paginatedData.type';
+import { ItemsService } from '@services/items.service';
 
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { SearchBarComponent } from '@app/components/search-bar/search-bar.component';
 import { ItemFragmentComponent } from './item-fragment/item-fragment.component';
 
-import { RouterLink } from '@angular/router';
 import { injectQuery } from '@tanstack/angular-query-experimental';
 import { ButtonModule } from 'primeng/button';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
@@ -38,9 +37,11 @@ import { lastValueFrom } from 'rxjs';
     }
 
     @if (itemsQuery.isFetched()) {
-      @for (item of items(); track $index) {
-        <app-item-fragment [item]="item" />
-      }
+      <div class="items-list">
+        @for (item of items(); track $index) {
+          <app-item-fragment [item]="item" />
+        }
+      </div>
     }
   `,
 })
