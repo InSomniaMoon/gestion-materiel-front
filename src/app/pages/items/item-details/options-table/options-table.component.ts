@@ -195,12 +195,6 @@ export class OptionsTableComponent {
         }
         this.optionsChange.emit();
       });
-
-    this.message.add({
-      severity: 'info',
-      summary: 'Fonctionnalité à venir',
-      detail: 'La fonctionnalité est en cours de développement',
-    });
   }
 
   private handleError(error: string) {

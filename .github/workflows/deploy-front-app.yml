@@ -48,4 +48,4 @@ jobs:
           name: dist
       - name: sync code to server
         run: rsync -rt --delete frontend/browser/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:~/gestion_materiel/front/dist/frontend/browser/
-      # run: ssh -o StrictHostKeyChecking=no -x ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} 'cd ~/gestion_materiel/front && git pull && npm ci --legacy-peer-deps && npm run build && docker-compose up -d --remove-orphans'
+      - run: ssh -o StrictHostKeyChecking=no -x ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} 'cd ~/gestion_materiel/front && git pull'

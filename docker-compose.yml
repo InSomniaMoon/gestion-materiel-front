@@ -18,11 +18,10 @@ services:
       - traefik.http.routers.front-matos.rule=Host(`matos.pierreleroyer.fr`)
       - traefik.http.routers.front-matos.entrypoints=websecure
       - traefik.http.routers.front-matos.tls=true
-      - traefik.http.routers.front-matos.tls.certresolver=letsencrypt
+      - traefik.http.routers.front-matos.tls.certresolver=tlsresolver
       - traefik.http.routers.front-matos.priority=1
 
       - traefik.http.services.front-matos.loadbalancer.server.port=80
-
 
 networks:
   web:

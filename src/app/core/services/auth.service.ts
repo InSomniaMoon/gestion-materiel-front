@@ -5,6 +5,7 @@ import { LoginDTO } from '@core/types/loginDTO.type';
 import { User } from '@core/types/user.type';
 import { environment } from '@env/environment';
 import { catchError, map, of, tap } from 'rxjs';
+import { UserGroup } from '../types/userGroup.type';
 import { CacheService } from './cache.service';
 
 @Injectable({
@@ -19,6 +20,10 @@ export class AuthService {
 
   user = signal<User | null>(null);
   groups = signal<Group[]>([]);
+
+  private _selectedGroup = signal<UserGroup | null>(null);
+
+  selectedGroup = this._selectedGroup.asReadonly();
 
   isAuth = this._isAuth.asReadonly();
 
@@ -36,9 +41,7 @@ export class AuthService {
       .pipe(
         tap((res) => {
           localStorage.setItem('auth_token', res.token);
-          this._isAuth.set(true);
-          this.user.set(res.user);
-          this.groups.set(res.groups.map((group) => group.group!));
+          this.processLoginDTO(res);
         }),
       );
   }
@@ -56,9 +59,8 @@ export class AuthService {
     if (token) {
       return http.get<LoginDTO>(`${this.api_url}/auth/whoami`).pipe(
         map((DTO) => {
-          this.user.set(DTO.user);
-          this.groups.set(DTO.groups.map((group) => group.group!));
-          this._isAuth.set(true);
+          this.processLoginDTO(DTO);
+
           return of(true);
         }),
         catchError(() => {
@@ -71,5 +73,16 @@ export class AuthService {
       this._isAuth.set(false);
       return of(null);
     }
+  }
+
+  setSelectedGroup(group: UserGroup) {
+    this._selectedGroup.set(group);
+  }
+
+  private processLoginDTO(DTO: LoginDTO) {
+    this.user.set(DTO.user);
+    this.groups.set(DTO.groups.map((group) => group.group!));
+    this._isAuth.set(true);
+    this._selectedGroup.set(DTO.groups[0]);
   }
 }

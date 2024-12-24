@@ -38,7 +38,7 @@ export class ItemsService {
   ) {
     let url = `${this.api_url}/items`;
 
-    url += `?group_id=${this.authService.groups()[0].id}`;
+    url += `?group_id=${this.authService.selectedGroup()?.group_id}`;
     url += `&page=${opt.page}`;
 
     url += `&size=${opt.size}`;

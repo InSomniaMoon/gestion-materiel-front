@@ -4,13 +4,16 @@ import {
   computed,
   inject,
   OnInit,
+  SimpleChange,
 } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '@app/core/services/auth.service';
 import { MenuItem } from 'primeng/api';
 import { AvatarModule } from 'primeng/avatar';
+import { DialogService } from 'primeng/dynamicdialog';
 import { MenubarModule } from 'primeng/menubar';
 import { TieredMenuModule } from 'primeng/tieredmenu';
+import { ChangeActiveGroupComponent } from './changeActiveGroup/changeActiveGroup.component';
 
 @Component({
   selector: 'app-header',
@@ -21,7 +24,11 @@ import { TieredMenuModule } from 'primeng/tieredmenu';
 })
 export class HeaderComponent implements OnInit {
   private readonly auth$ = inject(AuthService);
-  readonly user = this.auth$.user!;
+  private readonly dialogService = inject(DialogService);
+
+  readonly user = this.auth$.user;
+  readonly groups = this.auth$.groups;
+  readonly selectedGroup = this.auth$.selectedGroup;
   private readonly router = inject(Router);
 
   lettres = computed(
@@ -62,8 +69,27 @@ export class HeaderComponent implements OnInit {
       label: 'Administration',
       icon: 'pi pi-cog',
       routerLink: '/admin',
-      style: { display: this.user()?.role === 'admin' ? 'block' : 'none' },
+      style: {
+        display:
+          this.selectedGroup()!.role == ('admin' as string) ? 'block' : 'none',
+      },
+    },
+    {
+      label: 'Changer de Groupe actif',
+      icon: 'pi pi-users',
+      style: { display: this.groups().length > 1 ? 'block' : 'none' },
+      command: () => this.showChangeActiveGroup(),
     },
   ];
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    console.log(this.groups());
+  }
+
+  showChangeActiveGroup() {
+    this.dialogService.open(ChangeActiveGroupComponent, {
+      header: 'Changer de groupe actif',
+      width: '70%',
+      appendTo: 'body',
+    });
+  }
 }
