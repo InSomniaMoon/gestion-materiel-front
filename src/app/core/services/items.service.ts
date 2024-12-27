@@ -31,6 +31,7 @@ export class ItemsService {
       size?: number;
       page?: number;
       orderBy?: string;
+      category?: string;
     } = {
       page: 1,
       size: 25,
@@ -48,6 +49,12 @@ export class ItemsService {
     }
     if (opt.searchQuery) {
       url += `?q=${opt.searchQuery}`;
+    }
+
+    if (opt.category) {
+      console.log(opt.category);
+
+      url += `&category=${opt.category}`;
     }
 
     const cache = this.cache.get<PaginatedData<Item>>(url);

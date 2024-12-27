@@ -18,6 +18,7 @@ import { ItemFragmentComponent } from './item-fragment/item-fragment.component';
 import { injectQuery } from '@tanstack/angular-query-experimental';
 import { ButtonModule } from 'primeng/button';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { Select } from 'primeng/select';
 import { lastValueFrom } from 'rxjs';
 
 @Component({
@@ -27,11 +28,24 @@ import { lastValueFrom } from 'rxjs';
     SearchBarComponent,
     ProgressSpinnerModule,
     ButtonModule,
+    Select,
   ],
   styleUrl: './items-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <app-search-bar (queryChange)="searchQuery.set($event)" />
+    <div class="flex">
+      <app-search-bar
+        (queryChange)="searchQuery.set($event)"
+        style="flex: 1;"
+      />
+
+      <p-select
+        [options]="categories()"
+        (onChange)="categoryFilter.set($event.value)"
+        dropdownIcon="pi pi-filter"
+        [focusOnHover]="true"
+      />
+    </div>
     @if (itemsQuery.isLoading()) {
       <p-progressSpinner />
     }
@@ -51,24 +65,49 @@ export class ItemsListComponent implements OnDestroy {
 
   searchQuery = signal('');
 
+  categoryFilter = signal<string | undefined>(undefined);
+
+  private readonly cats!: Signal<string[]>;
+
+  categories = computed(() => [
+    { label: 'Categories', value: null },
+    ...this.cats().map((cat) => ({
+      label: this.upperCaseFirstLetter(cat),
+      value: cat,
+    })),
+  ]);
+
   itemsQuery = injectQuery(() => ({
-    queryKey: ['searchItems', this.searchQuery()],
+    queryKey: ['searchItems', this.searchQuery(), this.categoryFilter()],
     queryFn: () =>
       lastValueFrom(
         this.items$.getItems({
           page: 1,
           size: 25,
           searchQuery: this.searchQuery(),
+          category: this.categoryFilter(),
         }),
       ),
   }));
+
   constructor() {
     this.paginated = toSignal(
       this.items$.getItems().pipe(takeUntilDestroyed()),
+    );
+
+    this.cats = toSignal(
+      this.items$.getCategories().pipe(takeUntilDestroyed()),
+      {
+        initialValue: [],
+      },
     );
   }
 
   items = computed(() => this.itemsQuery.data()?.data ?? []);
 
   ngOnDestroy() {}
+
+  private upperCaseFirstLetter(str: string) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
 }
