@@ -91,12 +91,13 @@ export class ItemFragmentComponent implements OnInit, AfterViewInit {
   }
 
   openAddSubscriptionDialog() {
-    this.dialog
+    let d = this.dialog
       .open(AddSubscriptionComponent, {
-        header: `Emprunter ${this.item().name}`,
+        header: `Take ${this.item().name}`,
         width: '70%',
         height: '90%',
         modal: true,
+        data: { item: this.item() },
         // reponsive dialog
         breakpoints: {
           '960px': '80vw',
@@ -104,38 +105,13 @@ export class ItemFragmentComponent implements OnInit, AfterViewInit {
         },
       })
       .onClose.subscribe((value) => {
-        if (!value) {
-          return;
-        }
-        this.subscriptionService
-          .addSubscription(this.item(), {
-            name: value.name!,
-            start_date: new Date(value.start_date!),
-            end_date: new Date(value.end_date!),
-            item_id: this.item().id,
-            status: 'active',
-            id: 0,
-            user_id: 0,
-          })
-          .subscribe({
-            next: () => {
-              this.fetchSubscriptions();
-              this.toast.add({
-                key: 'success',
-                severity: 'success',
-                summary: 'Emprunt ajouté',
-              });
-            },
-            error: (error) => {
-              console.error(error);
-              this.toast.add({
-                key: 'error',
-                severity: 'error',
-                summary: 'Erreur',
-                detail: 'Une erreur est survenue',
-              });
-            },
-          });
+        if (!value) return;
+        this.fetchSubscriptions();
+        this.toast.add({
+          key: 'success',
+          severity: 'success',
+          summary: 'Emprunt ajouté',
+        });
       });
   }
 

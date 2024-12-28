@@ -8,12 +8,14 @@ import {
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ResponsiveOverlayOptions } from 'primeng/api';
+import { SubscriptionService } from '@app/core/services/subscription.service';
+import { MessageService, ResponsiveOverlayOptions } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { DatePicker } from 'primeng/datepicker';
 import { DialogModule } from 'primeng/dialog';
-import { DynamicDialogRef } from 'primeng/dynamicdialog';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { InputTextModule } from 'primeng/inputtext';
+import { Toast } from 'primeng/toast';
 import { fromEvent, map, startWith } from 'rxjs';
 
 @Component({
@@ -31,7 +33,12 @@ import { fromEvent, map, startWith } from 'rxjs';
 })
 export class AddSubscriptionComponent implements OnInit {
   fb = inject(FormBuilder);
-  private ref = inject(DynamicDialogRef);
+  private readonly ref = inject(DynamicDialogRef);
+  private readonly dialogRef = inject(DialogService);
+  private readonly toast = inject(MessageService);
+
+  private readonly subscriptionService = inject(SubscriptionService);
+  private data = this.dialogRef.getInstance(this.ref).data;
 
   // check if screen is a mobile device from event
   isMobile = toSignal(
@@ -108,8 +115,30 @@ export class AddSubscriptionComponent implements OnInit {
     if (this.form.invalid) {
       return;
     }
-
-    this.ref.close(this.form.value);
+    const value = this.form.value;
+    this.subscriptionService
+      .addSubscription(this.data.item, {
+        name: value.name!,
+        start_date: new Date(value.start_date!),
+        end_date: new Date(value.end_date!),
+        item_id: this.data.item.id,
+        status: 'active',
+        id: 0,
+        user_id: 0,
+      })
+      .subscribe({
+        next: () => {
+          this.ref.close(true);
+        },
+        error: (error) => {
+          console.warn(error.error);
+          this.toast.add({
+            severity: 'error',
+            summary: 'Erreur',
+            detail: error.error.message ?? 'Une erreur est survenue',
+          });
+        },
+      });
   }
 
   resetEndDate() {
