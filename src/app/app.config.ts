@@ -27,6 +27,7 @@ import { DialogService } from 'primeng/dynamicdialog';
 import { routes } from './app.routes';
 import { init } from './core/init';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
+import { cacheInterceptor } from './core/interceptors/cache.interceptor';
 import { groupInterceptor } from './core/interceptors/group.interceptor';
 import { AuthService } from './core/services/auth.service';
 import { SgdfPresetTheme } from './theme/theme';
@@ -43,7 +44,7 @@ export const appConfig: ApplicationConfig = {
     provideQueryClient(new QueryClient()),
     provideHttpClient(
       withFetch(),
-      withInterceptors([authInterceptor, groupInterceptor]),
+      withInterceptors([authInterceptor, groupInterceptor, cacheInterceptor]),
     ),
     { provide: LOCALE_ID, useValue: 'fr-FR' },
     provideAppInitializer(() => init(inject(AuthService), inject(HttpClient))),

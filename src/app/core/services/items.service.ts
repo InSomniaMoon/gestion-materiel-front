@@ -57,32 +57,15 @@ export class ItemsService {
       url += `&category=${opt.category}`;
     }
 
-    const cache = this.cache.get<PaginatedData<Item>>(url);
-
-    if (cache) {
-      return of(cache);
-    }
-
-    return this.http.get<PaginatedData<Item>>(url).pipe(
-      tap((items) => {
-        this.cache.set(url, items);
-      }),
-    );
+    return this.http.get<PaginatedData<Item>>(url);
   }
 
   getItem(id: number) {
     const url = `${this.api_url}/items/${id}`;
-    const cache = this.cache.get(url);
-    if (cache) {
-      return of(cache as Item);
-    }
 
-    return this.http.get<Item>(url).pipe(
-      tap((item) => {
-        this.cache.set(url, item);
-      }),
-    );
+    return this.http.get<Item>(url);
   }
+
   updateItem(item: Item) {
     return this.http.put<Item>(`${this.api_url}/items/${item.id}`, item).pipe(
       tap(() => {
@@ -94,15 +77,7 @@ export class ItemsService {
 
   getCategories() {
     const url = `${this.api_url}/items/categories`;
-    const cache = this.cache.get<string[]>(url);
-    if (cache) {
-      return of(cache);
-    }
 
-    return this.http.get<string[]>(url).pipe(
-      tap((categories) => {
-        this.cache.set(url, categories);
-      }),
-    );
+    return this.http.get<string[]>(url);
   }
 }

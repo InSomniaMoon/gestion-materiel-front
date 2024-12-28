@@ -3,13 +3,16 @@ import { inject } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 
 export const groupInterceptor: HttpInterceptorFn = (req, next) => {
-  if (req.body) {
+  const authService = inject(AuthService);
+
+  if (authService.isAuth() && authService.selectedGroup()) {
     req = req.clone({
-      body: {
-        ...req.body,
-        group_id: inject(AuthService).selectedGroup()?.group_id,
-      },
+      params: req.params.append(
+        'group_id',
+        authService.selectedGroup()!.group_id,
+      ),
     });
   }
+
   return next(req);
 };

@@ -15,26 +15,23 @@ export class OptionIssuesService {
 
   getOptionIssues(itemId: number) {
     const url = `/items/${itemId}/options/issues`;
-    const cache = this.cache.get<OptionIssue[]>(url);
 
-    if (cache) {
-      return of(cache);
-    }
-
-    return this.http.get<OptionIssue[]>(this.api_url + url).pipe(
-      tap((issues) => {
-        this.cache.set(url, issues);
-      }),
-    );
+    return this.http.get<OptionIssue[]>(this.api_url + url);
   }
 
   create(issue: string, itemId: number, optionId: number) {
-    return this.http.post<OptionIssue>(
-      `${this.api_url}/items/${itemId}/options/${optionId}/issues`,
-      {
-        value: issue,
-      },
-    );
+    return this.http
+      .post<OptionIssue>(
+        `${this.api_url}/items/${itemId}/options/${optionId}/issues`,
+        {
+          value: issue,
+        },
+      )
+      .pipe(
+        tap(() => {
+          this.cache.clear(`${this.api_url}/items/${itemId}/options/issues`);
+        }),
+      );
   }
 
   resolve(issue: OptionIssue) {

@@ -81,9 +81,7 @@ export class HeaderComponent implements OnInit {
       command: () => this.showChangeActiveGroup(),
     },
   ];
-  ngOnInit(): void {
-    console.log(this.groups());
-  }
+  ngOnInit(): void {}
 
   showChangeActiveGroup() {
     this.dialogService.open(ChangeActiveGroupComponent, {
