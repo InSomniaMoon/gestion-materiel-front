@@ -4,6 +4,7 @@ import { Item } from '@app/core/types/item.type';
 import { PaginatedData } from '@app/core/types/paginatedData.type';
 import { environment } from '@env/environment';
 import { of, tap } from 'rxjs';
+import { CLEAR_CACHE_CONTEXT_OPTIONS } from '../utils/injectionToken';
 import { AuthService } from './auth.service';
 import { CacheService } from './cache.service';
 
@@ -18,10 +19,10 @@ export class ItemsService {
   private api_url = environment.api_url;
 
   createItem(item: Item) {
-    return this.http.post<Item>(`${this.api_url}/items`, item).pipe(
-      tap(() => {
-        this.cache.clear(`${this.api_url}/items`);
-      }),
+    return this.http.post<Item>(
+      `${this.api_url}/items`,
+      item,
+      CLEAR_CACHE_CONTEXT_OPTIONS,
     );
   }
 
@@ -39,8 +40,7 @@ export class ItemsService {
   ) {
     let url = `${this.api_url}/items`;
 
-    url += `?group_id=${this.authService.selectedGroup()?.group_id}`;
-    url += `&page=${opt.page}`;
+    url += `?page=${opt.page}`;
 
     url += `&size=${opt.size}`;
 
@@ -48,12 +48,10 @@ export class ItemsService {
       url += `&order_by=${opt.orderBy}`;
     }
     if (opt.searchQuery) {
-      url += `?q=${opt.searchQuery}`;
+      url += `&q=${opt.searchQuery}`;
     }
 
     if (opt.category) {
-      console.log(opt.category);
-
       url += `&category=${opt.category}`;
     }
 
@@ -69,8 +67,10 @@ export class ItemsService {
   updateItem(item: Item) {
     return this.http.put<Item>(`${this.api_url}/items/${item.id}`, item).pipe(
       tap(() => {
-        this.cache.clear(`${this.api_url}/items/${item.id}`);
-        this.cache.clear(`${this.api_url}/items`);
+        this.cache.clearAll(new RegExp(`${this.api_url}/items/${item.id}.*`));
+        // regexp that starts with `${this.api_url}/items` and anything going after
+        const regex = new RegExp(`${this.api_url}/items.*`);
+        this.cache.clearAll(regex);
       }),
     );
   }

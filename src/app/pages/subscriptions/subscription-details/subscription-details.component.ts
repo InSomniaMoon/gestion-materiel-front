@@ -28,6 +28,7 @@ import { ButtonModule } from 'primeng/button';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { SkeletonModule } from 'primeng/skeleton';
 
+import { FeatureClickService } from '@app/core/services/feature-click.service';
 import locale from '@fullcalendar/core/locales/fr';
 
 @Component({
@@ -177,5 +178,10 @@ export class SubscriptionDetailsComponent implements AfterViewInit {
     const diffDays = Math.ceil(diff / (1000 * 3600 * 24));
 
     return diffDays <= 7;
+  }
+
+  featureService = inject(FeatureClickService);
+  featureClicked(id: number) {
+    this.featureService.clickFeature(id).subscribe();
   }
 }

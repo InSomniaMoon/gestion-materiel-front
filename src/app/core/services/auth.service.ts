@@ -49,6 +49,8 @@ export class AuthService {
   }
 
   logout() {
+    console.log('logout');
+
     // Remove the token from the local storage
     localStorage.removeItem('auth_token');
     this._isAuth.set(false);

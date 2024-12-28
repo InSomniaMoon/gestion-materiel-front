@@ -1,11 +1,15 @@
 import {
+  AfterViewChecked,
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   computed,
+  ElementRef,
   inject,
   OnDestroy,
   signal,
   Signal,
+  viewChild,
 } from '@angular/core';
 import { Item } from '@core/types/item.type';
 import { PaginatedData } from '@core/types/paginatedData.type';
@@ -19,7 +23,7 @@ import { injectQuery } from '@tanstack/angular-query-experimental';
 import { ButtonModule } from 'primeng/button';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { Select } from 'primeng/select';
-import { lastValueFrom } from 'rxjs';
+import { fromEvent, lastValueFrom, map, tap } from 'rxjs';
 
 @Component({
   selector: 'app-items-list',
@@ -46,28 +50,35 @@ import { lastValueFrom } from 'rxjs';
         [focusOnHover]="true"
       />
     </div>
-    @if (itemsQuery.isLoading()) {
-      <p-progressSpinner />
-    }
 
-    @if (itemsQuery.isFetched()) {
-      <div class="items-list">
-        @for (item of items(); track $index) {
-          <app-item-fragment [item]="item" />
-        }
-      </div>
-    }
+    <div class="items-list" #scroll>
+      @for (item of items(); track $index) {
+        <app-item-fragment [item]="item" />
+      }
+      @if (itemsQuery.isLoading()) {
+        <p-progressSpinner />
+      }
+    </div>
   `,
 })
-export class ItemsListComponent implements OnDestroy {
+export class ItemsListComponent implements OnDestroy, AfterViewInit {
   private readonly items$ = inject(ItemsService);
   readonly paginated!: Signal<PaginatedData<Item> | undefined>;
 
+  private readonly scrollContent =
+    viewChild.required<ElementRef<HTMLDivElement>>('scroll');
+
   searchQuery = signal('');
+
+  page = signal(1);
+
+  noMoreData = signal(false);
 
   categoryFilter = signal<string | undefined>(undefined);
 
   private readonly cats!: Signal<string[]>;
+
+  items = signal<Item[]>([]);
 
   categories = computed(() => [
     { label: 'Categories', value: null },
@@ -78,23 +89,33 @@ export class ItemsListComponent implements OnDestroy {
   ]);
 
   itemsQuery = injectQuery(() => ({
-    queryKey: ['searchItems', this.searchQuery(), this.categoryFilter()],
+    queryKey: [
+      'searchItems',
+      this.page(),
+      this.searchQuery(),
+      this.categoryFilter(),
+    ],
+    enabled: !this.noMoreData(),
     queryFn: () =>
       lastValueFrom(
-        this.items$.getItems({
-          page: 1,
-          size: 25,
-          searchQuery: this.searchQuery(),
-          category: this.categoryFilter(),
-        }),
+        this.items$
+          .getItems({
+            page: this.page(),
+            size: 10,
+            searchQuery: this.searchQuery(),
+            category: this.categoryFilter(),
+          })
+          .pipe(
+            tap((data) => {
+              this.items.update((d) => [...d, ...data.data]);
+              if (data.last_page == data.current_page)
+                this.noMoreData.set(true);
+            }),
+          ),
       ),
   }));
 
   constructor() {
-    this.paginated = toSignal(
-      this.items$.getItems().pipe(takeUntilDestroyed()),
-    );
-
     this.cats = toSignal(
       this.items$.getCategories().pipe(takeUntilDestroyed()),
       {
@@ -103,11 +124,33 @@ export class ItemsListComponent implements OnDestroy {
     );
   }
 
-  items = computed(() => this.itemsQuery.data()?.data ?? []);
-
+  ngAfterViewInit(): void {
+    fromEvent(this.scrollContent().nativeElement!, 'scroll')
+      .pipe(
+        map(() => {
+          return this.scrollContent().nativeElement.scrollTop;
+        }),
+      )
+      .subscribe((scrollPos) => {
+        let limit =
+          this.scrollContent().nativeElement.scrollHeight -
+          this.scrollContent().nativeElement.clientHeight;
+        if (scrollPos > limit - 20) {
+          if (this.itemsQuery.isLoading()) return;
+          if (this.noMoreData()) return;
+          this.page.set(this.page() + 1);
+        }
+      });
+  }
   ngOnDestroy() {}
 
   private upperCaseFirstLetter(str: string) {
     return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
+  onScroll(event: any) {
+    console.log(event);
+
+    // this.page.set($event + 1);
   }
 }

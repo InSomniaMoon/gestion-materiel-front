@@ -2,7 +2,7 @@ import { HttpInterceptorFn, HttpResponse } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { from, of, tap } from 'rxjs';
 import { CacheService } from '../services/cache.service';
-import { CACHING_DISABLED } from '../utils/injectionToken';
+import { CACHING_DISABLED, CLEAR_CACHE } from '../utils/injectionToken';
 
 export const cacheInterceptor: HttpInterceptorFn = (req, next) => {
   if (req.method !== 'GET') {
@@ -28,6 +28,9 @@ export const cacheInterceptor: HttpInterceptorFn = (req, next) => {
         }
         if (req.method !== 'GET') {
           return;
+        }
+        if (req.context.get(CLEAR_CACHE)) {
+          cacheService.clearAll(new RegExp(`${req.url}.*`));
         }
         console.log('Cache miss', req.urlWithParams);
         cacheService.set(req.urlWithParams, event.body);

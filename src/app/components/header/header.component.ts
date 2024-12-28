@@ -71,7 +71,7 @@ export class HeaderComponent implements OnInit {
       routerLink: '/admin',
       style: {
         display:
-          this.selectedGroup()!.role == ('admin' as string) ? 'block' : 'none',
+          this.selectedGroup()?.role == ('admin' as string) ? 'block' : 'none',
       },
     },
     {

@@ -4,6 +4,7 @@ import { environment } from '@env/environment';
 import { map, of, tap } from 'rxjs';
 import { Item } from '../types/item.type';
 import { Subscription } from '../types/subscription.type';
+import { CLEAR_CACHE_CONTEXT_OPTIONS } from '../utils/injectionToken';
 import { CacheService } from './cache.service';
 
 @Injectable({
@@ -27,21 +28,17 @@ export class SubscriptionService {
       return of(cache);
     }
     // This method should return an observable of the item subscriptions
-    return this.http.get<Subscription[]>(url).pipe(
-      tap((subscriptions) => {
-        this.cache.set(url, subscriptions);
-      }),
-    );
+    return this.http.get<Subscription[]>(url);
   }
 
   addSubscription(item: Item, subscription: Subscription) {
     // This method should add a subscription
     const url = `${this.api_url}/items/${item.id}/uses`;
 
-    return this.http.post<Subscription>(url, subscription).pipe(
-      tap(() => {
-        this.cache.clear(url);
-      }),
+    return this.http.post<Subscription>(
+      url,
+      subscription,
+      CLEAR_CACHE_CONTEXT_OPTIONS,
     );
   }
 
@@ -59,9 +56,6 @@ export class SubscriptionService {
         subscription.start_date = new Date(subscription.start_date);
         subscription.end_date = new Date(subscription.end_date);
         return subscription;
-      }),
-      tap((subscription) => {
-        this.cache.set(url, subscription);
       }),
     );
   }

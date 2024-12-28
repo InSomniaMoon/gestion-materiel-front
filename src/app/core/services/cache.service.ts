@@ -47,7 +47,17 @@ export class CacheService {
     this.cache.delete(key);
   }
 
-  clearAll() {
+  clearAll(): void;
+  clearAll(regex: RegExp): void;
+  clearAll(param?: RegExp): void {
+    if (param instanceof RegExp) {
+      for (const key of this.cache.keys()) {
+        if (param.test(key)) {
+          this.cache.delete(key);
+        }
+      }
+      return;
+    }
     this.cache.clear();
   }
 }

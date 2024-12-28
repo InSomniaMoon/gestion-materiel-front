@@ -25,7 +25,13 @@
 
 <div class="title">
   <h2>Anomalies</h2>
-  <p-button label="Déclarer" icon="pi pi-plus" iconPos="right" size="large" />
+  <p-button
+    label="Déclarer"
+    icon="pi pi-plus"
+    iconPos="right"
+    size="large"
+    (onClick)="featureClicked(1)"
+  />
 </div>
 
 @for (issue of issues() ?? []; track $index) {}

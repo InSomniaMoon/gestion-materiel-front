@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { environment } from '@env/environment';
 import { of, tap } from 'rxjs';
 import { OptionIssue } from '../types/optionIssue.type';
+import { CLEAR_CACHE_CONTEXT_OPTIONS } from '../utils/injectionToken';
 import { CacheService } from './cache.service';
 
 @Injectable({
@@ -26,6 +27,7 @@ export class OptionIssuesService {
         {
           value: issue,
         },
+        CLEAR_CACHE_CONTEXT_OPTIONS,
       )
       .pipe(
         tap(() => {
@@ -39,6 +41,7 @@ export class OptionIssuesService {
       .patch<OptionIssue>(
         `${this.api_url}/options/${issue.item_option_id}/issues/${issue.id}/resolve`,
         {},
+        CLEAR_CACHE_CONTEXT_OPTIONS,
       )
       .pipe();
   }
