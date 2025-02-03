@@ -7,7 +7,8 @@
     "build": "ng build -c production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:frontend": "node dist/frontend/server/server.mjs"
+    "serve:ssr:frontend": "node dist/frontend/server/server.mjs",
+    "analyze-bundle": "ng build --configuration=analyze-bundle && npx source-map-explorer dist/**/*.js --no-border-checks"
   },
   "private": true,
   "dependencies": {
