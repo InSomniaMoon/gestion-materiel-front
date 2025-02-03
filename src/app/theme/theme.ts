@@ -1,8 +1,10 @@
 import { definePreset, palette } from '@primeng/themes';
 import ThemeBase from '@primeng/themes/lara';
 import {
-  PrimitiveDesignTokens,
-  SemanticDesignTokens,
+  ColorSchemeDesignToken,
+  ComponentsDesignTokens,
+  DesignTokens,
+  PaletteDesignToken,
 } from '@primeng/themes/types';
 import { ButtonDesignTokens } from '@primeng/themes/types/button';
 import { DataTableDesignTokens } from '@primeng/themes/types/datatable';
@@ -11,7 +13,7 @@ import { ProgressSpinnerDesignTokens } from '@primeng/themes/types/progressspinn
 import { TieredMenuDesignTokens } from '@primeng/themes/types/tieredmenu';
 
 const whitePalette = palette('#ffffff');
-export const primitives: PrimitiveDesignTokens = {
+export const primitives = {
   cyan: palette('#0077b3'),
   blue: palette('#003a5d'),
   green: palette('#007254'),
@@ -138,7 +140,7 @@ export const SgdfPresetTheme = definePreset(ThemeBase, {
         },
       },
     },
-  } as SemanticDesignTokens,
+  },
   components: {
     menubar: {
       colorScheme: {

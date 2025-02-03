@@ -1,11 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { Group } from '@core/types/group.type';
 import { LoginDTO } from '@core/types/loginDTO.type';
 import { User } from '@core/types/user.type';
 import { environment } from '@env/environment';
 import { catchError, map, of, tap } from 'rxjs';
 import { UserGroup } from '../types/userGroup.type';
+import { REFRESH_TOKEN_KEY } from '../utils/constants';
 import { CacheService } from './cache.service';
 
 @Injectable({
@@ -17,7 +17,7 @@ export class AuthService {
 
   private api_url = environment.api_url;
   private _isAuth = signal(false);
-
+  jwt = signal<string | null>(null);
   user = signal<User | null>(null);
   groups = computed(() => this._userGroups().map((g) => g.group!));
   private _userGroups = signal<UserGroup[]>([]);
@@ -29,8 +29,6 @@ export class AuthService {
   isAuth = this._isAuth.asReadonly();
 
   isAdmin = computed(() => {
-    console.log('isAdmin');
-
     if (!this.user()) {
       return false;
     }
@@ -43,39 +41,45 @@ export class AuthService {
       .post<LoginDTO>(`${this.api_url}/auth/login`, { email, password })
       .pipe(
         tap((res) => {
-          localStorage.setItem('auth_token', res.token);
           this.processLoginDTO(res);
         }),
       );
   }
 
   logout() {
-    console.log('logout');
-
     // Remove the token from the local storage
-    localStorage.removeItem('auth_token');
+    localStorage.removeItem(REFRESH_TOKEN_KEY);
     this._isAuth.set(false);
     this.cache.clearAll();
     return true;
   }
 
   load(localStorage: Storage, http: HttpClient) {
-    const token = localStorage.getItem('auth_token');
-    if (token) {
-      return http.get<LoginDTO>(`${this.api_url}/auth/whoami`).pipe(
-        map((DTO) => {
-          this.processLoginDTO(DTO);
+    const refresh_token = localStorage.getItem(REFRESH_TOKEN_KEY);
 
-          return of(true);
-        }),
-        catchError(() => {
-          this._isAuth.set(false);
-          localStorage.removeItem('auth_token');
-          return of(false);
-        }),
-      );
+    if (refresh_token) {
+      return http
+        .post<LoginDTO>(
+          `${this.api_url}/auth/whoami`,
+          {
+            refresh_token,
+          },
+          {
+            withCredentials: false,
+          },
+        )
+        .pipe(
+          map((DTO) => {
+            this.processLoginDTO(DTO);
+            return of(true);
+          }),
+          catchError(() => {
+            this.logout();
+            return of(false);
+          }),
+        );
     } else {
-      this._isAuth.set(false);
+      this.logout();
       return of(null);
     }
   }
@@ -93,5 +97,7 @@ export class AuthService {
     this._userGroups.set(DTO.groups);
     this._isAuth.set(true);
     this._selectedGroup.set(DTO.groups[0]);
+    this.jwt.set(DTO.token);
+    localStorage.setItem(REFRESH_TOKEN_KEY, DTO.refresh_token);
   }
 }

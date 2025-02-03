@@ -4,7 +4,6 @@ import {
   computed,
   inject,
   OnInit,
-  SimpleChange,
 } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '@app/core/services/auth.service';

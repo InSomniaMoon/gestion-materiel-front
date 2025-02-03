@@ -16,10 +16,9 @@ export const cacheInterceptor: HttpInterceptorFn = (req, next) => {
   const cachedResponse = cacheService.get<any>(req.urlWithParams);
 
   if (cachedResponse) {
-    console.log('Cache hit', req.urlWithParams);
-
     return of(new HttpResponse({ body: cachedResponse }));
   }
+
   return next(req).pipe(
     tap({
       next: (event) => {
@@ -32,7 +31,6 @@ export const cacheInterceptor: HttpInterceptorFn = (req, next) => {
         if (req.context.get(CLEAR_CACHE)) {
           cacheService.clearAll(new RegExp(`${req.url}.*`));
         }
-        console.log('Cache miss', req.urlWithParams);
         cacheService.set(req.urlWithParams, event.body);
       },
     }),

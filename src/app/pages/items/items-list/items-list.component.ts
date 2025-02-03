@@ -41,13 +41,13 @@ import { fromEvent, lastValueFrom, map, tap } from 'rxjs';
   template: `
     <div class="flex">
       <app-search-bar
-        (queryChange)="searchQuery.set($event)"
+        (queryChange)="searchQuery.set($event); resetPagination()"
         style="flex: 1;"
       />
 
       <p-select
         [options]="categories()"
-        (onChange)="categoryFilter.set($event.value)"
+        (onChange)="categoryFilter.set($event.value); resetPagination()"
         dropdownIcon="pi pi-filter"
         [focusOnHover]="true"
       />
@@ -78,12 +78,12 @@ export class ItemsListComponent implements OnDestroy, AfterViewInit {
 
   categoryFilter = signal<string | undefined>(undefined);
 
-  queryKey = [
+  queryKey = computed(() => [
     'searchItems',
     this.page(),
     this.searchQuery(),
     this.categoryFilter(),
-  ];
+  ]);
 
   private readonly cats!: Signal<string[]>;
 
@@ -98,7 +98,7 @@ export class ItemsListComponent implements OnDestroy, AfterViewInit {
   ]);
 
   itemsQuery = injectQuery(() => ({
-    queryKey: this.queryKey,
+    queryKey: this.queryKey(),
     enabled: !this.noMoreData(),
     queryFn: () =>
       lastValueFrom(
@@ -129,12 +129,17 @@ export class ItemsListComponent implements OnDestroy, AfterViewInit {
         initialValue: [],
       },
     );
-    effect(() => {
-      console.log('selected group changed');
+    effect(
+      () => {
+        console.log('selected group changed');
 
-      this.authService.selectedGroup();
-      this.queryClient.invalidateQueries({ queryKey: this.queryKey });
-    });
+        this.authService.selectedGroup();
+
+        this.resetPagination();
+        this.queryClient.refetchQueries({ queryKey: ['searchItems'] });
+      },
+      { debugName: 'selectedGroupChanged' },
+    );
   }
 
   ngAfterViewInit(): void {
@@ -159,6 +164,12 @@ export class ItemsListComponent implements OnDestroy, AfterViewInit {
 
   private upperCaseFirstLetter(str: string) {
     return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
+  resetPagination() {
+    this.page.set(1);
+    this.items.set([]);
+    this.noMoreData.set(false);
   }
 
   onScroll(event: any) {

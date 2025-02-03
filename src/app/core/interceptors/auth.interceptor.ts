@@ -11,9 +11,9 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
   const authService = inject(AuthService);
   if (isPlatformBrowser(platform)) {
-    const token = localStorage.getItem('auth_token');
+    const token = authService.jwt();
 
-    if (token) {
+    if (token || !req.withCredentials) {
       req = req.clone({
         setHeaders: {
           Authorization: `Bearer ${token}`,
