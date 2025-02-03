@@ -19,7 +19,8 @@ export class AuthService {
   private _isAuth = signal(false);
 
   user = signal<User | null>(null);
-  groups = signal<Group[]>([]);
+  groups = computed(() => this._userGroups().map((g) => g.group!));
+  private _userGroups = signal<UserGroup[]>([]);
 
   private _selectedGroup = signal<UserGroup | null>(null);
 
@@ -83,9 +84,13 @@ export class AuthService {
     this._selectedGroup.set(group);
   }
 
+  setSelectGroupById(id: number) {
+    this._selectedGroup.set(this._userGroups().find((g) => g.group_id == id)!);
+  }
+
   private processLoginDTO(DTO: LoginDTO) {
     this.user.set(DTO.user);
-    this.groups.set(DTO.groups.map((group) => group.group!));
+    this._userGroups.set(DTO.groups);
     this._isAuth.set(true);
     this._selectedGroup.set(DTO.groups[0]);
   }

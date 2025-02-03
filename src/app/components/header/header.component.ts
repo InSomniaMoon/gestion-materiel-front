@@ -84,10 +84,17 @@ export class HeaderComponent implements OnInit {
   ngOnInit(): void {}
 
   showChangeActiveGroup() {
-    this.dialogService.open(ChangeActiveGroupComponent, {
-      header: 'Changer de groupe actif',
-      width: '70%',
-      appendTo: 'body',
-    });
+    this.dialogService
+      .open(ChangeActiveGroupComponent, {
+        header: 'Changer de groupe actif',
+        width: '70%',
+        height: '70%',
+        appendTo: 'body',
+      })
+      .onClose.subscribe((data) => {
+        if (data) {
+          this.auth$.setSelectedGroup(data);
+        }
+      });
   }
 }

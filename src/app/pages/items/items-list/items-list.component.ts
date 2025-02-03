@@ -4,6 +4,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  effect,
   ElementRef,
   inject,
   OnDestroy,
@@ -19,7 +20,8 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { SearchBarComponent } from '@app/components/search-bar/search-bar.component';
 import { ItemFragmentComponent } from './item-fragment/item-fragment.component';
 
-import { injectQuery } from '@tanstack/angular-query-experimental';
+import { AuthService } from '@app/core/services/auth.service';
+import { injectQuery, QueryClient } from '@tanstack/angular-query-experimental';
 import { ButtonModule } from 'primeng/button';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { Select } from 'primeng/select';
@@ -76,6 +78,13 @@ export class ItemsListComponent implements OnDestroy, AfterViewInit {
 
   categoryFilter = signal<string | undefined>(undefined);
 
+  queryKey = [
+    'searchItems',
+    this.page(),
+    this.searchQuery(),
+    this.categoryFilter(),
+  ];
+
   private readonly cats!: Signal<string[]>;
 
   items = signal<Item[]>([]);
@@ -89,12 +98,7 @@ export class ItemsListComponent implements OnDestroy, AfterViewInit {
   ]);
 
   itemsQuery = injectQuery(() => ({
-    queryKey: [
-      'searchItems',
-      this.page(),
-      this.searchQuery(),
-      this.categoryFilter(),
-    ],
+    queryKey: this.queryKey,
     enabled: !this.noMoreData(),
     queryFn: () =>
       lastValueFrom(
@@ -115,6 +119,9 @@ export class ItemsListComponent implements OnDestroy, AfterViewInit {
       ),
   }));
 
+  private readonly authService = inject(AuthService);
+  private readonly queryClient = inject(QueryClient);
+
   constructor() {
     this.cats = toSignal(
       this.items$.getCategories().pipe(takeUntilDestroyed()),
@@ -122,6 +129,12 @@ export class ItemsListComponent implements OnDestroy, AfterViewInit {
         initialValue: [],
       },
     );
+    effect(() => {
+      console.log('selected group changed');
+
+      this.authService.selectedGroup();
+      this.queryClient.invalidateQueries({ queryKey: this.queryKey });
+    });
   }
 
   ngAfterViewInit(): void {
