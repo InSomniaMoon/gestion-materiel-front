@@ -36,7 +36,9 @@ export class LoginComponent implements OnDestroy {
       .subscribe({
         next: (res) => {
           if (this.routeSnapshot.queryParams['redirect']) {
-            this.router.navigate([this.routeSnapshot.queryParams['redirect']]);
+            this.router.navigateByUrl(
+              this.routeSnapshot.queryParams['redirect'],
+            );
           } else {
             this.router.navigate(['/items']);
           }

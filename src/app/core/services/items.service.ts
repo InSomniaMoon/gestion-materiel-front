@@ -19,11 +19,9 @@ export class ItemsService {
   private api_url = environment.api_url;
 
   createItem(item: Item) {
-    return this.http.post<Item>(
-      `${this.api_url}/items`,
-      item,
-      CLEAR_CACHE_CONTEXT_OPTIONS,
-    );
+    return this.http.post<Item>(`${this.api_url}/items`, item, {
+      ...CLEAR_CACHE_CONTEXT_OPTIONS(),
+    });
   }
 
   getItems(

@@ -21,6 +21,13 @@ export const routes: Routes = [
           import('./pages/items/items.routes').then((m) => m.ITEMS_ROUTES),
       },
       {
+        path: 'app-admin',
+        loadChildren: () =>
+          import('./pages/app-admin/app-admin.routes').then(
+            (m) => m.APP_ADMIN_ROUTES,
+          ),
+      },
+      {
         path: 'admin',
         canMatch: [adminGuard],
         loadChildren: () =>

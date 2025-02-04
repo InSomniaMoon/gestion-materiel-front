@@ -1,0 +1,13 @@
+:host {
+  display: block;
+}
+
+.caption {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  p-iconfield {
+    flex: 1;
+  }
+}

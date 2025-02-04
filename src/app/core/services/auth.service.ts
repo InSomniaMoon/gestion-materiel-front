@@ -15,18 +15,20 @@ export class AuthService {
   private http = inject(HttpClient);
   private cache = inject(CacheService);
 
-  private api_url = environment.api_url;
   private _isAuth = signal(false);
   jwt = signal<string | null>(null);
   user = signal<User | null>(null);
   groups = computed(() => this._userGroups().map((g) => g.group!));
-  private _userGroups = signal<UserGroup[]>([]);
 
+  private _userGroups = signal<UserGroup[]>([]);
   private _selectedGroup = signal<UserGroup | null>(null);
+  private _isAppAdmin = signal(false);
 
   selectedGroup = this._selectedGroup.asReadonly();
-
   isAuth = this._isAuth.asReadonly();
+  isAppAdmin = computed(
+    () => JSON.parse(atob(this.jwt()?.split('.')[1] || '{}')).role == 'admin',
+  );
 
   isAdmin = computed(() => {
     if (!this.user()) {
@@ -34,6 +36,8 @@ export class AuthService {
     }
     return this.selectedGroup()?.role == ('admin' as string);
   });
+
+  private api_url = environment.api_url;
 
   login({ email, password }: { email: string; password: string }) {
     // This is a fake login function, it should be replaced with a real one
@@ -82,6 +86,14 @@ export class AuthService {
       this.logout();
       return of(null);
     }
+  }
+
+  resetPassword(dto: {
+    password: string;
+    token: string;
+    password_confirmation: string;
+  }) {
+    return this.http.post(`${this.api_url}/auth/reset-password`, dto);
   }
 
   setSelectedGroup(group: UserGroup) {

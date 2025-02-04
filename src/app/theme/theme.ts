@@ -1,11 +1,5 @@
 import { definePreset, palette } from '@primeng/themes';
 import ThemeBase from '@primeng/themes/lara';
-import {
-  ColorSchemeDesignToken,
-  ComponentsDesignTokens,
-  DesignTokens,
-  PaletteDesignToken,
-} from '@primeng/themes/types';
 import { ButtonDesignTokens } from '@primeng/themes/types/button';
 import { DataTableDesignTokens } from '@primeng/themes/types/datatable';
 import { MenubarDesignTokens } from '@primeng/themes/types/menubar';
@@ -198,7 +192,7 @@ export const SgdfPresetTheme = definePreset(ThemeBase, {
             transitionDuration: '{transition.duration}',
           },
           header: {
-            background: '{surface.400}',
+            background: '{highlight.background}',
             color: '{text.color}',
           },
 

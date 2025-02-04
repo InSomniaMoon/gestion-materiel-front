@@ -79,6 +79,14 @@ export class HeaderComponent implements OnInit {
       style: { display: this.groups().length > 1 ? 'block' : 'none' },
       command: () => this.showChangeActiveGroup(),
     },
+    {
+      label: 'App Admininistration',
+      icon: 'pi pi-cog',
+      routerLink: '/app-admin',
+      style: {
+        display: this.auth$.isAppAdmin() ? 'block' : 'none',
+      },
+    },
   ];
   ngOnInit(): void {}
 

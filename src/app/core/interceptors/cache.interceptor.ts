@@ -1,18 +1,24 @@
-import { HttpInterceptorFn, HttpResponse } from '@angular/common/http';
+import {
+  HttpInterceptorFn,
+  HttpRequest,
+  HttpResponse,
+} from '@angular/common/http';
 import { inject } from '@angular/core';
-import { from, of, tap } from 'rxjs';
+import { of, tap } from 'rxjs';
 import { CacheService } from '../services/cache.service';
 import { CACHING_DISABLED, CLEAR_CACHE } from '../utils/injectionToken';
 
 export const cacheInterceptor: HttpInterceptorFn = (req, next) => {
+  const cacheService = inject(CacheService);
+
   if (req.method !== 'GET') {
+    checkClearCache(req, cacheService);
     return next(req);
   }
   if (req.context.get(CACHING_DISABLED)) {
     return next(req);
   }
 
-  const cacheService = inject(CacheService);
   const cachedResponse = cacheService.get<any>(req.urlWithParams);
 
   if (cachedResponse) {
@@ -22,17 +28,25 @@ export const cacheInterceptor: HttpInterceptorFn = (req, next) => {
   return next(req).pipe(
     tap({
       next: (event) => {
+        checkClearCache(req, cacheService);
+
         if (!(event instanceof HttpResponse)) {
           return;
         }
         if (req.method !== 'GET') {
           return;
         }
-        if (req.context.get(CLEAR_CACHE)) {
-          cacheService.clearAll(new RegExp(`${req.url}.*`));
-        }
         cacheService.set(req.urlWithParams, event.body);
       },
     }),
   );
+};
+
+const checkClearCache = (
+  req: HttpRequest<unknown>,
+  cacheService: CacheService,
+) => {
+  if (req.context.get(CLEAR_CACHE)) {
+    cacheService.clearAll(new RegExp(`${req.url}.*`));
+  }
 };

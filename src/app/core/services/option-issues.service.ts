@@ -27,7 +27,9 @@ export class OptionIssuesService {
         {
           value: issue,
         },
-        CLEAR_CACHE_CONTEXT_OPTIONS,
+        {
+          ...CLEAR_CACHE_CONTEXT_OPTIONS(),
+        },
       )
       .pipe(
         tap(() => {
@@ -41,7 +43,9 @@ export class OptionIssuesService {
       .patch<OptionIssue>(
         `${this.api_url}/options/${issue.item_option_id}/issues/${issue.id}/resolve`,
         {},
-        CLEAR_CACHE_CONTEXT_OPTIONS,
+        {
+          ...CLEAR_CACHE_CONTEXT_OPTIONS(),
+        },
       )
       .pipe();
   }

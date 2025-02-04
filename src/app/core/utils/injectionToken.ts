@@ -7,6 +7,6 @@ export const NO_CACHE_CONTEXT_OPTIONS = {
   context: new HttpContext().set(CACHING_DISABLED, true),
 };
 
-export const CLEAR_CACHE_CONTEXT_OPTIONS = {
+export const CLEAR_CACHE_CONTEXT_OPTIONS = () => ({
   context: new HttpContext().set(CLEAR_CACHE, true),
-};
+});

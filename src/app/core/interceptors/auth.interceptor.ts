@@ -25,7 +25,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   return next(req).pipe(
     tap({
       error: (error) => {
-        console.warn(error.error.error);
+        console.warn(error.error.error ?? error.message);
 
         if (error.error.error == 'Token not valid') {
           authService.logout();

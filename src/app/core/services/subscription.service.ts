@@ -35,11 +35,9 @@ export class SubscriptionService {
     // This method should add a subscription
     const url = `${this.api_url}/items/${item.id}/uses`;
 
-    return this.http.post<Subscription>(
-      url,
-      subscription,
-      CLEAR_CACHE_CONTEXT_OPTIONS,
-    );
+    return this.http.post<Subscription>(url, subscription, {
+      ...CLEAR_CACHE_CONTEXT_OPTIONS(),
+    });
   }
 
   getItemSubscription(itemId: number, subscriptionId: number) {

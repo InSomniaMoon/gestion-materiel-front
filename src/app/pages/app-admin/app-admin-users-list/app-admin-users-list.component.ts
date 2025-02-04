@@ -1,0 +1,138 @@
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  Inject,
+  inject,
+  signal,
+} from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { injectQuery, QueryClient } from '@tanstack/angular-query-experimental';
+import { Button } from 'primeng/button';
+import { DialogService } from 'primeng/dynamicdialog';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIcon } from 'primeng/inputicon';
+import { InputTextModule } from 'primeng/inputtext';
+import { TableModule, TablePageEvent } from 'primeng/table';
+import { lastValueFrom } from 'rxjs';
+import { BackofficeService } from '../services/backoffice.service';
+import { CreateUserModalComponent } from './create-user-modal/create-user-modal.component';
+
+@Component({
+  selector: 'app-app-admin-users-list',
+  imports: [
+    TableModule,
+    FormsModule,
+    IconFieldModule,
+    InputTextModule,
+    InputIcon,
+    Button,
+  ],
+  template: `
+    <p-table
+      [value]="users()"
+      [paginator]="true"
+      [rows]="size()"
+      [rowsPerPageOptions]="[10, 25, 50]"
+      [sortField]="orderBy()"
+      [sortOrder]="sortOrder()"
+      (onPage)="pageChange($event)"
+    >
+      <ng-template #caption>
+        <div class="caption">
+          <p-iconfield iconPosition="left">
+            <p-inputicon>
+              <i class="pi pi-search"></i>
+            </p-inputicon>
+            <input
+              pInputText
+              type="text"
+              (ngModelChange)="q.set($event)"
+              ngModel
+              placeholder="Rechercher un utilisateur"
+            />
+          </p-iconfield>
+
+          <p-button
+            label="Ajouter"
+            icon="pi pi-plus"
+            (onClick)="openAddUserDialog()"
+          />
+        </div>
+      </ng-template>
+      <ng-template #header>
+        <tr>
+          <th>Nom</th>
+          <th>Mail</th>
+          <th>Role</th>
+        </tr>
+      </ng-template>
+      <ng-template #body let-user>
+        <tr>
+          <td>{{ user.name }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.role }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  `,
+  styleUrl: './app-admin-users-list.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class AppAdminUsersListComponent {
+  private readonly backofficeService = inject(BackofficeService);
+  private readonly dialogService = inject(DialogService);
+
+  page = signal(1);
+  size = signal(25);
+  orderBy = signal('name');
+  sortBy = signal('asc');
+  sortOrder = computed(() => (this.sortBy() === 'asc' ? 1 : -1));
+  q = signal('');
+
+  usersQuery = injectQuery(() => ({
+    queryKey: [
+      'users',
+      {
+        page: this.page(),
+        q: this.q(),
+        size: this.size(),
+        orderBy: this.orderBy(),
+        sortBy: this.sortBy(),
+      },
+    ],
+    queryFn: () =>
+      lastValueFrom(
+        this.backofficeService.getUsers({
+          orderBy: this.orderBy(),
+          page: this.page(),
+          q: this.q(),
+          size: this.size(),
+          sortBy: this.sortBy(),
+        }),
+      ),
+  }));
+
+  users = computed(() => this.usersQuery.data()?.data || []);
+
+  pageChange(event: TablePageEvent) {
+    console.log(event);
+    this.size.set(event.rows);
+
+    this.page.set(Math.floor(event.first / event.rows) + 1);
+  }
+
+  openAddUserDialog() {
+    this.dialogService
+      .open(CreateUserModalComponent, {
+        header: 'Ajouter un utilisateur',
+        width: '50%',
+        modal: true,
+        dismissableMask: true,
+      })
+      .onClose.subscribe((value) => {
+        if (!value) return;
+        this.usersQuery.refetch();
+      });
+  }
+}
