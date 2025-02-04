@@ -41,11 +41,11 @@ jobs:
           echo "${{ secrets.SSH_PUB_KEY }}" > ~/.ssh/id_rsa.pub
           chmod 600 ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa.pub
-          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+          ssh-keyscan -p 2222 -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
       - name: Download a single artifact
         uses: actions/download-artifact@v4
         with:
           name: dist
       - name: sync code to server
-        run: rsync -rt --delete frontend/browser/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:~/gestion_materiel/front/dist/frontend/browser/
-      - run: ssh -o StrictHostKeyChecking=no -x ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} 'cd ~/gestion_materiel/front && git pull'
+        run: rsync -e 'ssh -p 2222' -rt --delete frontend/browser/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:~/gestion_materiel/front/dist/frontend/browser/
+      - run: ssh -p 2222 -o StrictHostKeyChecking=no -x ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} 'cd ~/gestion_materiel/front && git pull'
