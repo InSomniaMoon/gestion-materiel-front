@@ -15,10 +15,10 @@ import { InputTextModule } from 'primeng/inputtext';
 import { TableModule, TablePageEvent } from 'primeng/table';
 import { lastValueFrom } from 'rxjs';
 import { BackofficeService } from '../services/backoffice.service';
-import { CreateUserModalComponent } from './create-user-modal/create-user-modal.component';
+import { AppAdminCreateGroupComponent } from './app-admin-create-group/app-admin-create-group.component';
 
 @Component({
-  selector: 'app-app-admin-users-list',
+  selector: 'app-app-admin-groups-list',
   imports: [
     TableModule,
     FormsModule,
@@ -29,7 +29,7 @@ import { CreateUserModalComponent } from './create-user-modal/create-user-modal.
   ],
   template: `
     <p-table
-      [value]="users()"
+      [value]="groups()"
       [paginator]="true"
       [rows]="size()"
       [rowsPerPageOptions]="[10, 25, 50]"
@@ -55,7 +55,7 @@ import { CreateUserModalComponent } from './create-user-modal/create-user-modal.
           <p-button
             label="Ajouter"
             icon="pi pi-plus"
-            (onClick)="openAddUserDialog()"
+            (onClick)="openCreateGroupDialog()"
           />
         </div>
       </ng-template>
@@ -75,10 +75,11 @@ import { CreateUserModalComponent } from './create-user-modal/create-user-modal.
       </ng-template>
     </p-table>
   `,
-  styleUrl: './app-admin-users-list.component.scss',
+
+  styleUrl: './app-admin-groups-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppAdminUsersListComponent {
+export class AppAdminGroupsListComponent {
   private readonly backofficeService = inject(BackofficeService);
   private readonly dialogService = inject(DialogService);
 
@@ -89,9 +90,9 @@ export class AppAdminUsersListComponent {
   sortOrder = computed(() => (this.sortBy() === 'asc' ? 1 : -1));
   q = signal('');
 
-  usersQuery = injectQuery(() => ({
+  groupsQuery = injectQuery(() => ({
     queryKey: [
-      'users',
+      'groups',
       {
         page: this.page(),
         q: this.q(),
@@ -102,7 +103,7 @@ export class AppAdminUsersListComponent {
     ],
     queryFn: () =>
       lastValueFrom(
-        this.backofficeService.getUsers({
+        this.backofficeService.getGroups({
           orderBy: this.orderBy(),
           page: this.page(),
           q: this.q(),
@@ -112,26 +113,27 @@ export class AppAdminUsersListComponent {
       ),
   }));
 
-  users = computed(() => this.usersQuery.data()?.data || []);
+  groups = computed(() => this.groupsQuery.data()?.data || []);
+
+  openCreateGroupDialog() {
+    this.dialogService
+      .open(AppAdminCreateGroupComponent, {
+        header: 'Créer un groupe',
+        width: '70%',
+        modal: true,
+        dismissableMask: true,
+      })
+      .onClose.subscribe((created) => {
+        if (created) {
+          this.groupsQuery.refetch();
+        }
+      });
+  }
 
   pageChange(event: TablePageEvent) {
     console.log(event);
     this.size.set(event.rows);
 
     this.page.set(Math.floor(event.first / event.rows) + 1);
-  }
-
-  openAddUserDialog() {
-    this.dialogService
-      .open(CreateUserModalComponent, {
-        header: 'Ajouter un utilisateur',
-        width: '50%',
-        modal: true,
-        dismissableMask: true,
-      })
-      .onClose.subscribe((value) => {
-        if (!value) return;
-        this.usersQuery.refetch();
-      });
   }
 }

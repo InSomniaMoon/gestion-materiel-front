@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  resource,
+} from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { Button } from 'primeng/button';
@@ -7,7 +13,7 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { FloatLabel } from 'primeng/floatlabel';
 import { InputText } from 'primeng/inputtext';
 import { Select } from 'primeng/select';
-import { delay } from 'rxjs';
+import { delay, lastValueFrom } from 'rxjs';
 import { BackofficeService } from '../../services/backoffice.service';
 
 @Component({
@@ -21,22 +27,41 @@ import { BackofficeService } from '../../services/backoffice.service';
     InputText,
   ],
   template: `<form [formGroup]="form">
+      <div class="row">
+        <p-floatlabel>
+          <p-select
+            [options]="groups()"
+            optionLabel="name"
+            optionValue="code"
+            placeholder="Groupe"
+            formControlName="group_id"
+          />
+          <label for="role">Groupe</label>
+        </p-floatlabel>
+        <p-floatlabel>
+          <p-select
+            [options]="roles"
+            optionLabel="name"
+            optionValue="code"
+            placeholder="Rôle"
+            formControlName="role"
+          />
+          <label for="role">Role</label>
+        </p-floatlabel>
+      </div>
+      <p-floatlabel>
+        <input id="username" pInputText formControlName="name" />
+        <label for="username">Prénom et nom</label>
+      </p-floatlabel>
       <p-floatlabel>
         <p-select
           [options]="roles"
           optionLabel="name"
           optionValue="code"
-          placeholder="Rôle"
-          [showClear]="true"
-          formControlName="role"
+          formControlName="app_role"
         />
-        <label for="role">Role</label>
+        <label for="role">Rôle appli</label>
       </p-floatlabel>
-      <p-floatlabel>
-        <input id="username" pInputText formControlName="name" />
-        <label for="username">Prénom et nom</label>
-      </p-floatlabel>
-
       <p-floatlabel>
         <input id="email" type="email" pInputText formControlName="email" />
         <label for="emial">E-mail</label>
@@ -63,43 +88,58 @@ export class CreateUserModalComponent {
   private readonly toast = inject(MessageService);
 
   roles = [
+    { name: 'Selectionner un rôle', code: '' },
     { name: 'Utilisateur', code: 'user' },
     { name: 'Administrateur', code: 'admin' },
   ];
 
+  private groupsResource = resource({
+    loader: () => lastValueFrom(this.backofficeService.getGroups()),
+  });
+
+  groups = computed(() =>
+    (this.groupsResource.value() ?? []).map((group) => ({
+      name: group.name,
+      code: group.id,
+    })),
+  );
+
   form = this.fb.nonNullable.group({
-    name: this.fb.nonNullable.control('test create', {
+    name: this.fb.nonNullable.control('', {
       validators: [Validators.required],
     }),
-    email: this.fb.nonNullable.control('pierreleroyer69@gmail.com', {
+    email: this.fb.nonNullable.control('', {
       validators: [Validators.required, Validators.email],
     }),
-    role: this.fb.nonNullable.control<string>('user', {
+    app_role: this.fb.nonNullable.control<string>('', {
+      validators: [Validators.required],
+    }),
+    role: this.fb.nonNullable.control<string>('', {
+      validators: [Validators.required],
+    }),
+    group_id: this.fb.nonNullable.control('', {
       validators: [Validators.required],
     }),
     phone: this.fb.control('', {}),
   });
 
   save() {
-    this.backofficeService
-      .createUser(this.form.getRawValue())
-      // .pipe(delay(5000))
-      .subscribe({
-        next: (val) => {
-          console.log(val);
-          this.toast.add({
-            detail: 'Utilisateur ajouté avec succès',
-            severity: 'success',
-          });
-          this.ref.close(true);
-        },
-        error: (error) => {
-          this.toast.add({
-            detail: error.error.message,
-            severity: 'error',
-          });
-          console.error(error.error.message);
-        },
-      });
+    this.backofficeService.createUser(this.form.getRawValue()).subscribe({
+      next: (val) => {
+        console.log(val);
+        this.toast.add({
+          detail: 'Utilisateur ajouté avec succès',
+          severity: 'success',
+        });
+        this.ref.close(true);
+      },
+      error: (error) => {
+        this.toast.add({
+          detail: error.error.message,
+          severity: 'error',
+        });
+        console.error(error.error.message);
+      },
+    });
   }
 }
