@@ -4,6 +4,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  DestroyRef,
   effect,
   ElementRef,
   inject,
@@ -65,6 +66,8 @@ import { fromEvent, lastValueFrom, map, tap } from 'rxjs';
 })
 export class ItemsListComponent implements OnDestroy, AfterViewInit {
   private readonly items$ = inject(ItemsService);
+  private readonly destroyRef = inject(DestroyRef);
+
   readonly paginated!: Signal<PaginatedData<Item> | undefined>;
 
   private readonly scrollContent =
@@ -124,7 +127,7 @@ export class ItemsListComponent implements OnDestroy, AfterViewInit {
 
   constructor() {
     this.cats = toSignal(
-      this.items$.getCategories().pipe(takeUntilDestroyed()),
+      this.items$.getCategories().pipe(takeUntilDestroyed(this.destroyRef)),
       {
         initialValue: [],
       },
@@ -149,6 +152,7 @@ export class ItemsListComponent implements OnDestroy, AfterViewInit {
           return this.scrollContent().nativeElement.scrollTop;
         }),
       )
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((scrollPos) => {
         let limit =
           this.scrollContent().nativeElement.scrollHeight -

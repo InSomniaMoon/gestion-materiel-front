@@ -1,12 +1,13 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   inject,
   OnInit,
   output,
   signal,
 } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SubscriptionService } from '@app/core/services/subscription.service';
 import { MessageService, ResponsiveOverlayOptions } from 'primeng/api';
@@ -15,7 +16,6 @@ import { DatePicker } from 'primeng/datepicker';
 import { DialogModule } from 'primeng/dialog';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { InputTextModule } from 'primeng/inputtext';
-import { Toast } from 'primeng/toast';
 import { fromEvent, map, startWith } from 'rxjs';
 
 @Component({
@@ -36,6 +36,7 @@ export class AddSubscriptionComponent implements OnInit {
   private readonly ref = inject(DynamicDialogRef);
   private readonly dialogRef = inject(DialogService);
   private readonly toast = inject(MessageService);
+  private readonly destroyRef = inject(DestroyRef);
 
   private readonly subscriptionService = inject(SubscriptionService);
   private data = this.dialogRef.getInstance(this.ref).data;
@@ -87,9 +88,11 @@ export class AddSubscriptionComponent implements OnInit {
   ];
 
   constructor() {
-    this.form.valueChanges.subscribe((value) => {
-      this.minDate.set(this.date(value.start_date!));
-    });
+    this.form.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((value) => {
+        this.minDate.set(this.date(value.start_date!));
+      });
   }
 
   ngOnInit(): void {
@@ -126,6 +129,7 @@ export class AddSubscriptionComponent implements OnInit {
         id: 0,
         user_id: 0,
       })
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
           this.ref.close(true);

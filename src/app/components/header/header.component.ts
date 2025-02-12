@@ -53,7 +53,7 @@ export class HeaderComponent implements OnInit {
     },
   ];
 
-  menuItems: MenuItem[] = [
+  menuItems = computed<MenuItem[]>(() => [
     {
       label: 'Accueil',
       routerLink: '/items',
@@ -87,7 +87,7 @@ export class HeaderComponent implements OnInit {
         display: this.auth$.isAppAdmin() ? 'block' : 'none',
       },
     },
-  ];
+  ]);
   ngOnInit(): void {}
 
   showChangeActiveGroup() {
@@ -100,7 +100,7 @@ export class HeaderComponent implements OnInit {
       })
       .onClose.subscribe((data) => {
         if (data) {
-          this.auth$.setSelectedGroup(data);
+          this.auth$.setSelectGroupById(data.group_id);
         }
       });
   }

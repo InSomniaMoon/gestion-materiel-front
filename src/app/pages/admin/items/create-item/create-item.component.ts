@@ -3,10 +3,12 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  DestroyRef,
   inject,
   OnInit,
   signal,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   FormArray,
   FormBuilder,
@@ -121,8 +123,9 @@ import { Textarea } from 'primeng/textarea';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreateItemComponent implements OnInit {
-  itemService = inject(ItemsService);
-  router = inject(Router);
+  private readonly itemService = inject(ItemsService);
+  private readonly router = inject(Router);
+  private readonly destroyRef = inject(DestroyRef);
 
   categoryQuery = signal('');
   categories = signal<string[]>([]);
@@ -155,6 +158,7 @@ export class CreateItemComponent implements OnInit {
   ngOnInit(): void {
     this.itemService
       .getCategories()
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((categories) => this.categories.set(categories));
   }
 
@@ -187,12 +191,15 @@ export class CreateItemComponent implements OnInit {
         id: 0,
         usable: true,
       };
-      this.itemService.createItem(item).subscribe({
-        next: (newitem) => {
-          // navigate to the item page
-          this.router.navigate(['/items', newitem.id]);
-        },
-      });
+      this.itemService
+        .createItem(item)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe({
+          next: (newitem) => {
+            // navigate to the item page
+            this.router.navigate(['/items', newitem.id]);
+          },
+        });
     }
   }
 

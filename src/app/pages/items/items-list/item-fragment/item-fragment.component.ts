@@ -2,6 +2,7 @@ import {
   AfterViewInit,
   Component,
   computed,
+  DestroyRef,
   inject,
   input,
   OnInit,
@@ -30,6 +31,7 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import { MessageService } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
 
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import locale from '@fullcalendar/core/locales/fr';
 
 @Component({
@@ -49,9 +51,10 @@ import locale from '@fullcalendar/core/locales/fr';
   // changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ItemFragmentComponent implements OnInit, AfterViewInit {
+  private readonly subscriptionService = inject(SubscriptionService);
+  private readonly destroyRef = inject(DestroyRef);
   item = input.required<Item>();
   subscription$ = inject(SubscriptionService);
-  private readonly subscriptionService = inject(SubscriptionService);
 
   toast = inject(MessageService);
 
@@ -130,6 +133,7 @@ export class ItemFragmentComponent implements OnInit, AfterViewInit {
   fetchSubscriptions() {
     this.subscription$
       .getItemSubscriptions(this.item())
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((subscriptions) => {
         this.uses.set(subscriptions);
       });

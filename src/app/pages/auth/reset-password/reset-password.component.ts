@@ -1,9 +1,11 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   inject,
   OnInit,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   AbstractControl,
   FormBuilder,
@@ -66,6 +68,7 @@ export class ResetPasswordComponent implements OnInit {
 
   private readonly fb = inject(FormBuilder);
   private readonly activatedRoute = inject(ActivatedRoute);
+  private readonly destroyRef = inject(DestroyRef);
 
   passwordMatchValidator: ValidatorFn = (form: AbstractControl) =>
     form.get('password')?.value === form.get('password_confirmation')?.value
@@ -99,27 +102,30 @@ export class ResetPasswordComponent implements OnInit {
   private readonly toast = inject(MessageService);
   private readonly router = inject(Router);
   resetPassword() {
-    this.authService.resetPassword(this.form.getRawValue()).subscribe({
-      next: () => {
-        console.log('Password reset');
-        this.toast.add({
-          severity: 'success',
-          summary: 'Succès',
-          detail:
-            'Votre mot de passe a été réinitialisé avec succès. vous pouvez maintenant vous connecter.',
-        });
-        this.router.navigate(['auth', 'login']);
-      },
-      error: (err) => {
-        console.error(err);
-        this.toast.add({
-          severity: 'error',
-          summary: 'Erreur',
-          detail:
-            'Erreur lors de la réinitialisation du mot de passe.\n' +
-            err.error.message,
-        });
-      },
-    });
+    this.authService
+      .resetPassword(this.form.getRawValue())
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          console.log('Password reset');
+          this.toast.add({
+            severity: 'success',
+            summary: 'Succès',
+            detail:
+              'Votre mot de passe a été réinitialisé avec succès. vous pouvez maintenant vous connecter.',
+          });
+          this.router.navigate(['auth', 'login']);
+        },
+        error: (err) => {
+          console.error(err);
+          this.toast.add({
+            severity: 'error',
+            summary: 'Erreur',
+            detail:
+              'Erreur lors de la réinitialisation du mot de passe.\n' +
+              err.error.message,
+          });
+        },
+      });
   }
 }

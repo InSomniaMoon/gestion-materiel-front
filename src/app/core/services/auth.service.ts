@@ -22,7 +22,6 @@ export class AuthService {
 
   private _userGroups = signal<UserGroup[]>([]);
   private _selectedGroup = signal<UserGroup | null>(null);
-  private _isAppAdmin = signal(false);
 
   selectedGroup = this._selectedGroup.asReadonly();
   isAuth = this._isAuth.asReadonly();

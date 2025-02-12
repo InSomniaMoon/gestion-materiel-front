@@ -30,6 +30,7 @@ import { SkeletonModule } from 'primeng/skeleton';
 
 import { FeatureClickService } from '@app/core/services/feature-click.service';
 import locale from '@fullcalendar/core/locales/fr';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-subscription-details',
@@ -180,8 +181,13 @@ export class SubscriptionDetailsComponent implements AfterViewInit {
     return diffDays <= 7;
   }
 
-  featureService = inject(FeatureClickService);
-  featureClicked(id: number) {
-    this.featureService.clickFeature(id).subscribe();
+  private readonly featureService = inject(FeatureClickService);
+  private readonly message = inject(MessageService);
+
+  featureClicked(slug: string) {
+    this.featureService
+      .clickFeature(slug)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe();
   }
 }

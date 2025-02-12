@@ -12,8 +12,8 @@ export class FeatureClickService {
   private api_url = environment.api_url;
   toast = inject(MessageService);
 
-  clickFeature(id: number) {
-    return this.http.post(`${this.api_url}/features/${id}/click`, {}).pipe(
+  clickFeature(slug: string) {
+    return this.http.post(`${this.api_url}/features/${slug}/click`, {}).pipe(
       tap((value) => {
         console.log(value);
 

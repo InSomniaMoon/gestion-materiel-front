@@ -20,9 +20,9 @@ import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
-    selector: 'app-search-bar',
-    imports: [InputTextModule, InputIconModule, IconFieldModule],
-    template: `
+  selector: 'app-search-bar',
+  imports: [InputTextModule, InputIconModule, IconFieldModule],
+  template: `
     <p-iconField iconPosition="left">
       <p-inputIcon [styleClass]="icon()" />
       <input
@@ -33,7 +33,7 @@ import { InputTextModule } from 'primeng/inputtext';
       />
     </p-iconField>
   `,
-    changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchBarComponent implements OnInit {
   queryChange = output<string>();

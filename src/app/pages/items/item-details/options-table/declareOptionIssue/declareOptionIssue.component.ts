@@ -1,5 +1,11 @@
 import { JsonPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  inject,
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { OptionIssuesService } from '@app/core/services/option-issues.service';
 import { Button } from 'primeng/button';
@@ -34,6 +40,7 @@ export class DeclareOptionIssueComponent {
   ref = inject(DynamicDialogRef);
   dialogService = inject(DialogService);
   private readonly optionIssuesService = inject(OptionIssuesService);
+  private readonly destroyRef = inject(DestroyRef);
 
   fb = inject(FormBuilder);
   form = this.fb.group({
@@ -52,6 +59,7 @@ export class DeclareOptionIssueComponent {
         this.dialogService.getInstance(this.ref).data.itemId,
         this.dialogService.getInstance(this.ref).data.optionId,
       )
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.ref.close(true);
       });

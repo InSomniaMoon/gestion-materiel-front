@@ -2,9 +2,11 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  DestroyRef,
   inject,
   resource,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { Button } from 'primeng/button';
@@ -86,6 +88,7 @@ export class CreateUserModalComponent {
   private readonly fb = inject(FormBuilder);
   private readonly backofficeService = inject(BackofficeService);
   private readonly toast = inject(MessageService);
+  private readonly destroyRef = inject(DestroyRef);
 
   roles = [
     { name: 'Selectionner un rôle', code: '' },
@@ -124,22 +127,25 @@ export class CreateUserModalComponent {
   });
 
   save() {
-    this.backofficeService.createUser(this.form.getRawValue()).subscribe({
-      next: (val) => {
-        console.log(val);
-        this.toast.add({
-          detail: 'Utilisateur ajouté avec succès',
-          severity: 'success',
-        });
-        this.ref.close(true);
-      },
-      error: (error) => {
-        this.toast.add({
-          detail: error.error.message,
-          severity: 'error',
-        });
-        console.error(error.error.message);
-      },
-    });
+    this.backofficeService
+      .createUser(this.form.getRawValue())
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (val) => {
+          console.log(val);
+          this.toast.add({
+            detail: 'Utilisateur ajouté avec succès',
+            severity: 'success',
+          });
+          this.ref.close(true);
+        },
+        error: (error) => {
+          this.toast.add({
+            detail: error.error.message,
+            severity: 'error',
+          });
+          console.error(error.error.message);
+        },
+      });
   }
 }

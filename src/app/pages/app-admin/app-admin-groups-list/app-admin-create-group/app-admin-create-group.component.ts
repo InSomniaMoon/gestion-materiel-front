@@ -1,9 +1,11 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   inject,
   signal,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { Button } from 'primeng/button';
@@ -57,6 +59,7 @@ export class AppAdminCreateGroupComponent {
   private readonly fb = inject(FormBuilder);
   private readonly backofficeService = inject(BackofficeService);
   private readonly toast = inject(MessageService);
+  private readonly destroyRef = inject(DestroyRef);
 
   saveClicked = signal(false);
 
@@ -69,26 +72,29 @@ export class AppAdminCreateGroupComponent {
 
   save() {
     this.saveClicked.set(true);
-    this.backofficeService.createGroup(this.form.getRawValue()).subscribe({
-      next: () => {
-        this.toast.add({
-          severity: 'success',
-          summary: 'Groupe créé',
-          detail: 'Le groupe a été créé avec succès',
-        });
+    this.backofficeService
+      .createGroup(this.form.getRawValue())
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.toast.add({
+            severity: 'success',
+            summary: 'Groupe créé',
+            detail: 'Le groupe a été créé avec succès',
+          });
 
-        this.ref.close(true);
-      },
-      error: () => {
-        this.toast.add({
-          severity: 'error',
-          summary: 'Erreur',
-          detail: 'Une erreur est survenue lors de la création du groupe',
-        });
-      },
-      complete: () => {
-        this.saveClicked.set(false);
-      },
-    });
+          this.ref.close(true);
+        },
+        error: () => {
+          this.toast.add({
+            severity: 'error',
+            summary: 'Erreur',
+            detail: 'Une erreur est survenue lors de la création du groupe',
+          });
+        },
+        complete: () => {
+          this.saveClicked.set(false);
+        },
+      });
   }
 }

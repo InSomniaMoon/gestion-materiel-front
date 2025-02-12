@@ -2,10 +2,12 @@ import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   inject,
   input,
   output,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CreateUpdateItemOptionComponent } from '@app/components/create-update-item-option/create-update-item-option.component';
 import { SimpleModalComponent } from '@app/components/simple-modal/simple-modal.component';
 import { AuthService } from '@app/core/services/auth.service';
@@ -76,6 +78,8 @@ export class OptionsTableComponent {
   private readonly dialogService = inject(DialogService);
   private readonly itemOptionService = inject(ItemOptionService);
   private readonly message = inject(MessageService);
+  private readonly destroyRef = inject(DestroyRef);
+
   userAdmin = inject(AuthService).isAdmin;
 
   item = input<Item | null>(null);
@@ -103,6 +107,7 @@ export class OptionsTableComponent {
 
         this.itemOptionService
           .deleteItemOption(this.item()!.id, option.id)
+          .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe({
             next: () => {
               this.optionsChange.emit();
@@ -130,20 +135,23 @@ export class OptionsTableComponent {
         return;
       }
 
-      this.itemOptionService.addItemOption(this.item()!.id, option).subscribe({
-        next: () => {
-          this.optionsChange.emit();
-          this.message.add({
-            severity: 'success',
-            summary: 'Option Créée',
-            detail: `L'option ${option.name} a bien été créée`,
-          });
-        },
-        error: (error) =>
-          this.handleError(
-            "Une erreur est survenue dans la création de l'option",
-          ),
-      });
+      this.itemOptionService
+        .addItemOption(this.item()!.id, option)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe({
+          next: () => {
+            this.optionsChange.emit();
+            this.message.add({
+              severity: 'success',
+              summary: 'Option Créée',
+              detail: `L'option ${option.name} a bien été créée`,
+            });
+          },
+          error: (error) =>
+            this.handleError(
+              "Une erreur est survenue dans la création de l'option",
+            ),
+        });
     });
   }
   openEditOptionDialog(option: ItemOption): void {
@@ -163,6 +171,7 @@ export class OptionsTableComponent {
         option = { ...option, ...opt };
         this.itemOptionService
           .updateItemOption(this.item()!.id, option)
+          .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe({
             next: (_) => {
               this.optionsChange.emit();

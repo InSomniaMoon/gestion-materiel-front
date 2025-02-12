@@ -14,8 +14,8 @@
 </h1>
 
 <p-accordion>
-  <p-accordionTab header="Calendrier"
-    ><full-calendar
+  <p-accordionTab header="Calendrier">
+    <full-calendar
       #calendar
       [deepChangeDetection]="true"
       [options]="calendarOptions()"
@@ -30,7 +30,7 @@
     icon="pi pi-plus"
     iconPos="right"
     size="large"
-    (onClick)="featureClicked(1)"
+    (onClick)="featureClicked('declare_ano_subscription')"
   />
 </div>
 
