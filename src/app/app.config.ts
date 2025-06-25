@@ -17,6 +17,12 @@ import {
 import localeFR from '@angular/common/locales/fr';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import {
+  popperVariation,
+  provideTippyConfig,
+  provideTippyLoader,
+  tooltipVariation,
+} from '@ngneat/helipopper/config';
+import {
   provideQueryClient,
   QueryClient,
 } from '@tanstack/angular-query-experimental';
@@ -63,6 +69,21 @@ export const appConfig: ApplicationConfig = {
         options: {
           darkModeSelector: false,
         },
+      },
+    }),
+
+    provideTippyLoader(() => import('tippy.js')),
+    provideTippyConfig({
+      defaultVariation: 'tooltip',
+      variations: {
+        tooltip: {
+          ...tooltipVariation,
+          arrow: true,
+          theme: 'light',
+          placement: 'bottom',
+          inertia: true,
+        },
+        popper: { ...popperVariation },
       },
     }),
   ],

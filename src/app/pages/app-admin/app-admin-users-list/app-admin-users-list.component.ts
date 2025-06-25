@@ -17,6 +17,10 @@ import { lastValueFrom } from 'rxjs';
 import { BackofficeService } from '../services/backoffice.service';
 import { CreateUserModalComponent } from './create-user-modal/create-user-modal.component';
 
+import { User } from '@app/core/types/user.type';
+import { TippyDirective } from '@ngneat/helipopper';
+import { AppAdminUserEditGroupsComponent } from './app-admin-user-edit-groups/app-admin-user-edit-groups.component';
+
 @Component({
   selector: 'app-app-admin-users-list',
   imports: [
@@ -26,7 +30,9 @@ import { CreateUserModalComponent } from './create-user-modal/create-user-modal.
     InputTextModule,
     InputIcon,
     Button,
+    TippyDirective,
   ],
+
   template: `
     <p-table
       [value]="users()"
@@ -64,6 +70,7 @@ import { CreateUserModalComponent } from './create-user-modal/create-user-modal.
           <th>Nom</th>
           <th>Mail</th>
           <th>Role</th>
+          <th></th>
         </tr>
       </ng-template>
       <ng-template #body let-user>
@@ -71,6 +78,16 @@ import { CreateUserModalComponent } from './create-user-modal/create-user-modal.
           <td>{{ user.name }}</td>
           <td>{{ user.email }}</td>
           <td>{{ user.role }}</td>
+          <td class="actions">
+            <p-button
+              icon="pi pi-users"
+              text
+              rounded
+              aria-label="Editer les groupes de l'utilisateur"
+              tp="Editer les groupes de l'utilisateur"
+              (onClick)="openEditGroupsDialog(user)"
+            />
+          </td>
         </tr>
       </ng-template>
     </p-table>
@@ -128,6 +145,21 @@ export class AppAdminUsersListComponent {
         width: '50%',
         modal: true,
         dismissableMask: true,
+      })
+      .onClose.subscribe((value) => {
+        if (!value) return;
+        this.usersQuery.refetch();
+      });
+  }
+
+  openEditGroupsDialog(user: User) {
+    this.dialogService
+      .open(AppAdminUserEditGroupsComponent, {
+        header: 'Editer les groupes de ' + user.name,
+        // width: '80%',
+        modal: true,
+        dismissableMask: true,
+        data: { userId: user.id },
       })
       .onClose.subscribe((value) => {
         if (!value) return;

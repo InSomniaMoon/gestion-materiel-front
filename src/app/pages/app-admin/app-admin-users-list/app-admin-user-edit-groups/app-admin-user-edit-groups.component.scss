@@ -1,0 +1,36 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding-top: 0.2rem;
+}
+
+form {
+  display: flex;
+  gap: 1rem;
+}
+
+p-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.group {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.groups-to-add {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.groups-to-add,
+.added-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}

@@ -27,6 +27,7 @@
     "@fullcalendar/daygrid": "^6.1.15",
     "@fullcalendar/interaction": "^6.1.15",
     "@fullcalendar/timegrid": "^6.1.15",
+    "@ngneat/helipopper": "^10.2.0-alpha.2",
     "@primeng/themes": "^19.0.10",
     "@tanstack/angular-query-experimental": "^5.69.0",
     "express": "^4.21.2",

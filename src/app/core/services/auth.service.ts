@@ -51,14 +51,14 @@ export class AuthService {
 
   logout() {
     // Remove the token from the local storage
-    localStorage.removeItem(REFRESH_TOKEN_KEY);
+    document.cookie = `${REFRESH_TOKEN_KEY}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; Secure; HttpOnly; SameSite=Strict;`;
     this._isAuth.set(false);
     this.cache.clearAll();
     return true;
   }
 
   load(localStorage: Storage, http: HttpClient) {
-    const refresh_token = localStorage.getItem(REFRESH_TOKEN_KEY);
+    const refresh_token = this.getCookie(`${REFRESH_TOKEN_KEY}`);
 
     if (refresh_token) {
       return http
@@ -109,6 +109,38 @@ export class AuthService {
     this._isAuth.set(true);
     this._selectedGroup.set(DTO.groups[0]);
     this.jwt.set(DTO.token);
-    localStorage.setItem(REFRESH_TOKEN_KEY, DTO.refresh_token);
+
+    this.removeCookie(REFRESH_TOKEN_KEY);
+    this.setCookie(REFRESH_TOKEN_KEY, DTO.refresh_token, 14);
+  }
+
+  private setCookie(c_name: string, value: string, exdays: number) {
+    var exdate = new Date();
+    exdate.setDate(exdate.getDate() + exdays);
+    var c_value =
+      value +
+      //'; Secure; HttpOnly; SameSite=Strict; path=/' +
+      (exdays == null ? '' : '; expires=' + exdate.toUTCString()); //
+    console.log('adding cookie', c_name + '=' + c_value);
+
+    document.cookie = c_name + '=' + c_value;
+  }
+
+  private getCookie(c_name: string) {
+    var i,
+      x,
+      y,
+      ARRcookies = document.cookie.split(';');
+    for (i = 0; i < ARRcookies.length; i++) {
+      x = ARRcookies[i].substring(0, ARRcookies[i].indexOf('='));
+      y = ARRcookies[i].substring(ARRcookies[i].indexOf('=') + 1);
+      x = x.replace(/^\s+|\s+$/g, '');
+      if (x == c_name) return y;
+    }
+    return '';
+  }
+
+  removeCookie(c_name: string) {
+    document.cookie = `${c_name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; Secure; HttpOnly; SameSite=Strict;`;
   }
 }

@@ -1,10 +1,12 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, httpResource } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Group } from '@app/core/types/group.type';
 import { PaginatedData } from '@app/core/types/paginatedData.type';
 import { User } from '@app/core/types/user.type';
+import { UserGroup } from '@app/core/types/userGroup.type';
 import { CLEAR_CACHE_CONTEXT_OPTIONS } from '@app/core/utils/injectionToken';
 import { environment } from '@env/environment';
+import { resourceUsage } from 'process';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -52,6 +54,33 @@ export class BackofficeService {
       ...CLEAR_CACHE_CONTEXT_OPTIONS(),
     });
   }
+
+  getUserGroups(userId: string) {
+    return httpResource<UserGroup[]>(`${this.apiUrl}/users/${userId}/groups`, {
+      defaultValue: [],
+    });
+    // return this.http.get<Group[]>(`${this.apiUrl}/users/${userId}/groups`);
+  }
+
+  updateUserGroups(
+    userId: string,
+    groups_to_add: { id: number; role: string }[],
+    groups_to_update: { id: number; role: string }[],
+    groups_to_remove: number[],
+  ) {
+    return this.http.put(
+      `${this.apiUrl}/users/${userId}/groups`,
+      {
+        groups_to_add,
+        groups_to_update,
+        groups_to_remove,
+      },
+      {
+        ...CLEAR_CACHE_CONTEXT_OPTIONS(),
+      },
+    );
+  }
+
   getGroups(): Observable<Group[]>;
   getGroups(params?: {
     size?: number;
