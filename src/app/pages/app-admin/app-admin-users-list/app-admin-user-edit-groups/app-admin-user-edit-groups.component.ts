@@ -21,13 +21,13 @@ import { BackofficeService } from '../../services/backoffice.service';
       <div class="groups-to-add">
         <h3>Groupes disponibles</h3>
         @for (group of groups(); track $index) {
-          <p-button
-            [label]="group.name"
-            icon="pi pi-plus"
-            severity="secondary"
-            iconPos="right"
-            (onClick)="addGroup(group)"
-          />
+        <p-button
+          [label]="group.name"
+          icon="pi pi-plus"
+          severity="secondary"
+          iconPos="right"
+          (onClick)="addGroup(group)"
+        />
         }
       </div>
 
@@ -35,18 +35,18 @@ import { BackofficeService } from '../../services/backoffice.service';
         <h3>Groupes ajoutés</h3>
 
         @for (group of userGroups.value(); track $index) {
-          <div class="group">
-            <span [class.changed]="hasGroupChanged(group.group!)">{{
-              group.group?.name
-            }}</span>
-            <p-select
-              [options]="rolesOptions"
-              (onChange)="groupChanged(group.group!, $event)"
-              optionLabel="label"
-              optionValue="value"
-            />
-            <p-button icon="pi pi-times" severity="danger" iconPos="right" />
-          </div>
+        <div class="group">
+          <span [class.changed]="hasGroupChanged(group.group!)">{{
+            group.group?.name
+          }}</span>
+          <p-select
+            [options]="rolesOptions"
+            (onChange)="groupChanged(group.group!, $event)"
+            optionLabel="label"
+            optionValue="value"
+          />
+          <p-button icon="pi pi-times" severity="danger" iconPos="right" />
+        </div>
         }
       </div>
 
@@ -87,17 +87,25 @@ export class AppAdminUserEditGroupsComponent {
           !this.userGroups
             .value()
             .map((ug) => ug.group_id)
-            .includes(group.id),
+            .includes(group.id)
       )
       .filter(
-        (group) => !this.form.get('groups_to_add')!.value.includes(group.id),
+        (group) =>
+          !this.form
+            .get('groups_to_add')!
+            .value.map((g) => g.id)
+            .includes(group.id)
       )
       .filter(
-        (group) => !this.form.get('groups_to_update')!.value.includes(group.id),
+        (group) =>
+          !this.form
+            .get('groups_to_update')!
+            .value.map((g) => g.id)
+            .includes(group.id)
       )
       .filter(
-        (group) => !this.form.get('groups_to_remove')!.value.includes(group.id),
-      ),
+        (group) => !this.form.get('groups_to_remove')!.value.includes(group.id)
+      )
   );
 
   readonly rolesOptions = [
@@ -113,7 +121,7 @@ export class AppAdminUserEditGroupsComponent {
 
   form = this.fb.nonNullable.group({
     groups_to_add: this.fb.nonNullable.control<{ id: number; role: string }[]>(
-      [],
+      []
     ),
     groups_to_update: this.fb.nonNullable.control<
       { id: number; role: string }[]
@@ -131,21 +139,21 @@ export class AppAdminUserEditGroupsComponent {
 
   hasGroupChanged(group: Group) {
     const groupsToUpdate = this.form.get('groups_to_update')!;
-    return groupsToUpdate.value.includes(group.id);
+    return groupsToUpdate.value.map((g) => g.id).includes(group.id);
   }
 
   addGroup(group: Group) {
     const groups = this.form.get('groups_to_add')!;
-    if (groups.value.includes(group.id)) {
+    if (groups.value.map((g) => g.id).includes(group.id)) {
       return;
     }
     console.log(groups.value);
-    groups.setValue([...groups.value, group.id]);
+    groups.setValue([...groups.value, { id: group.id, role: 'user' }]);
   }
 
   groupChanged(group: Group, event: SelectChangeEvent) {
     const groups_to_update = this.form.get('groups_to_update')!;
-    if (groups_to_update.value.includes(group.id)) {
+    if (groups_to_update.value.map((g) => g.id).includes(group.id)) {
       return;
     }
     console.log(groups_to_update.value);

@@ -1,49 +1,48 @@
 @if (item()) {
-  <header>
-    <h1>
-      <a
-        pButton
-        routerLink="/items"
-        icon="pi pi-arrow-left"
-        [text]="true"
-        size="large"
-      ></a>
-      {{ item()?.name }}
-    </h1>
-  </header>
-  <section>
-    <p>{{ item()?.description }}</p>
-    <div class="flex">
-      <label for="usable"> Utilisable: </label>
-      <p-toggleButton
-        onLabel="Oui"
-        offLabel="Non"
-        [disabled]="true"
-        role="button"
-        [onIcon]="'pi pi-check'"
-        offIcon="pi pi-times"
-        [ngModel]="item()?.usable"
-      />
-    </div>
-  </section>
+<header>
+  <h1>
+    <a
+      pButton
+      routerLink="/items"
+      icon="pi pi-arrow-left"
+      [text]="true"
+      size="large"
+    ></a>
+    {{ item()?.name }}
+  </h1>
+</header>
+<section>
+  <p>{{ item()?.description }}</p>
+  <div class="flex">
+    <label for="usable"> Utilisable: </label>
+    <p-toggleButton
+      onLabel="Oui"
+      offLabel="Non"
+      [disabled]="true"
+      role="button"
+      [onIcon]="'pi pi-check'"
+      offIcon="pi pi-times"
+      [ngModel]="item()?.usable"
+    />
+  </div>
+</section>
 
-  <section>
-    <app-options-table
-      [options]="optionsQuery.data() ?? []"
-      [itemId]="itemId()!"
-      [item]="item()"
-      (optionsChange)="optionsQuery.refetch()"
-    />
-  </section>
+<section>
+  <app-options-table
+    [options]="optionsQuery.data() ?? []"
+    [itemId]="itemId()!"
+    [item]="item()"
+    (optionsChange)="optionsQuery.refetch()"
+  />
+</section>
 } @else {
-  <p-progressSpinner ariaLabel="loading" />
-}
-@if (userAdmin()) {
-  <section>
-    <app-opened-issues
-      [itemId]="itemId()!"
-      [options]="optionsQuery.data() ?? []"
-      (optionsChange)="optionsQuery.refetch()"
-    />
-  </section>
+<p-progressSpinner ariaLabel="loading" />
+} @if (userAdmin()) {
+<section>
+  <app-opened-issues
+    [itemId]="itemId()!"
+    [options]="optionsQuery.data() ?? []"
+    (optionsChange)="optionsQuery.refetch()"
+  />
+</section>
 }

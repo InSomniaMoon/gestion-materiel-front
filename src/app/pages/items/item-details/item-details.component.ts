@@ -111,7 +111,7 @@ export class ItemDetailsComponent implements OnInit {
       lastValueFrom(
         this.itemOptionService.getItemOptions(this.itemId()!, {
           withIssues: this.userAdmin(),
-        }),
+        })
       ),
   }));
 }

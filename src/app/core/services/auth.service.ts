@@ -26,7 +26,7 @@ export class AuthService {
   selectedGroup = this._selectedGroup.asReadonly();
   isAuth = this._isAuth.asReadonly();
   isAppAdmin = computed(
-    () => JSON.parse(atob(this.jwt()?.split('.')[1] || '{}')).role == 'admin',
+    () => JSON.parse(atob(this.jwt()?.split('.')[1] || '{}')).role == 'admin'
   );
 
   isAdmin = computed(() => {
@@ -45,7 +45,7 @@ export class AuthService {
       .pipe(
         tap((res) => {
           this.processLoginDTO(res);
-        }),
+        })
       );
   }
 
@@ -57,7 +57,7 @@ export class AuthService {
     return true;
   }
 
-  load(localStorage: Storage, http: HttpClient) {
+  load(http: HttpClient) {
     const refresh_token = this.getCookie(`${REFRESH_TOKEN_KEY}`);
 
     if (refresh_token) {
@@ -69,7 +69,7 @@ export class AuthService {
           },
           {
             withCredentials: false,
-          },
+          }
         )
         .pipe(
           map((DTO) => {
@@ -79,7 +79,7 @@ export class AuthService {
           catchError(() => {
             this.logout();
             return of(false);
-          }),
+          })
         );
     } else {
       this.logout();
@@ -119,7 +119,7 @@ export class AuthService {
     exdate.setDate(exdate.getDate() + exdays);
     var c_value =
       value +
-      //'; Secure; HttpOnly; SameSite=Strict; path=/' +
+      '; SameSite=Strict; path=/' +
       (exdays == null ? '' : '; expires=' + exdate.toUTCString()); //
     console.log('adding cookie', c_name + '=' + c_value);
 

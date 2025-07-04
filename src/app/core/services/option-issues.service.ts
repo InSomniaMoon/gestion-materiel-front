@@ -20,21 +20,26 @@ export class OptionIssuesService {
     return this.http.get<OptionIssue[]>(this.api_url + url);
   }
 
-  create(issue: string, itemId: number, optionId: number) {
+  create(
+    { issue, usable }: { issue: string; usable: boolean },
+    itemId: number,
+    optionId: number
+  ) {
     return this.http
       .post<OptionIssue>(
         `${this.api_url}/items/${itemId}/options/${optionId}/issues`,
         {
           value: issue,
+          usable,
         },
         {
           ...CLEAR_CACHE_CONTEXT_OPTIONS(),
-        },
+        }
       )
       .pipe(
         tap(() => {
           this.cache.clear(`${this.api_url}/items/${itemId}/options/issues`);
-        }),
+        })
       );
   }
 
@@ -45,7 +50,7 @@ export class OptionIssuesService {
         {},
         {
           ...CLEAR_CACHE_CONTEXT_OPTIONS(),
-        },
+        }
       )
       .pipe();
   }

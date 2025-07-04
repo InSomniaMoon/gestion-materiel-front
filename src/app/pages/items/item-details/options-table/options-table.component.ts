@@ -28,47 +28,47 @@ import { DeclareOptionIssueComponent } from './declareOptionIssue/declareOptionI
   template: `<div class="title">
       <h2>Options</h2>
       @if (userAdmin()) {
-        <p-button
-          outlined
-          label="Ajouter"
-          icon="pi pi-plus"
-          iconPos="right"
-          (onClick)="openAddOptionDialog()"
-        />
+      <p-button
+        outlined
+        label="Ajouter"
+        icon="pi pi-plus"
+        iconPos="right"
+        (onClick)="openAddOptionDialog()"
+      />
       }
     </div>
     <section class="options">
       @for (option of options(); track $index) {
-        <p-card [header]="option.name" [subheader]="option.description">
-          <p-tag
-            [icon]="option.usable ? 'pi pi-check' : 'pi pi-times'"
-            [severity]="option.usable ? 'success' : 'danger'"
-          />
+      <p-card [header]="option.name" [subheader]="option.description">
+        <p-tag
+          [icon]="option.usable ? 'pi pi-check' : 'pi pi-times'"
+          [severity]="option.usable ? 'success' : 'danger'"
+        />
+        <p-button
+          label="Avarie"
+          [outlined]="true"
+          icon="pi pi-plus"
+          (onClick)="createAvarie(option)"
+        />
+        <ng-template pTemplate="footer">
+          @if (userAdmin()) {
           <p-button
-            label="Avarie"
-            [outlined]="true"
-            icon="pi pi-plus"
-            (onClick)="createAvarie(option)"
-          />
-          <ng-template pTemplate="footer">
-            @if (userAdmin()) {
-              <p-button
-                type="button"
-                icon="pi pi-pencil"
-                severity="secondary"
-                size="small"
-                (onClick)="openEditOptionDialog(option)"
-              ></p-button>
-              <p-button
-                type="button"
-                icon="pi pi-trash"
-                size="small"
-                severity="danger"
-                (onClick)="deleteOption(option)"
-              ></p-button>
-            }
-          </ng-template>
-        </p-card>
+            type="button"
+            icon="pi pi-pencil"
+            severity="secondary"
+            size="small"
+            (onClick)="openEditOptionDialog(option)"
+          ></p-button>
+          <p-button
+            type="button"
+            icon="pi pi-trash"
+            size="small"
+            severity="danger"
+            (onClick)="deleteOption(option)"
+          ></p-button>
+          }
+        </ng-template>
+      </p-card>
       }
     </section> `,
   styleUrl: './options-table.component.scss',
@@ -119,7 +119,7 @@ export class OptionsTableComponent {
             },
             error: () =>
               this.handleError(
-                "Une erreur est survenue dans la suppression de l'option",
+                "Une erreur est survenue dans la suppression de l'option"
               ),
           });
       });
@@ -149,7 +149,7 @@ export class OptionsTableComponent {
           },
           error: (error) =>
             this.handleError(
-              "Une erreur est survenue dans la création de l'option",
+              "Une erreur est survenue dans la création de l'option"
             ),
         });
     });
@@ -183,7 +183,7 @@ export class OptionsTableComponent {
             },
             error: (error) =>
               this.handleError(
-                "Une erreur est survenue dans la modification de l'option",
+                "Une erreur est survenue dans la modification de l'option"
               ),
           });
       });
@@ -197,6 +197,7 @@ export class OptionsTableComponent {
           itemId: this.itemId(),
           optionId: option.id,
         },
+        dismissableMask: true,
       })
       .onClose.subscribe((success) => {
         if (!success) {
