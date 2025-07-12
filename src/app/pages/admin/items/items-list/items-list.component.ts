@@ -37,7 +37,7 @@ import { lastValueFrom } from 'rxjs';
           [checkmark]="true"
           [options]="[
             { label: 'Nom', value: 'name' },
-            { label: 'Categorie', value: 'category' },
+            { label: 'Categorie', value: 'category' }
           ]"
           [(ngModel)]="orderBy"
         />
@@ -130,8 +130,8 @@ export class ItemsListComponent {
     request: () => ({
       page: this.page(),
       size: this.size(),
-      searchQuery: this.searchQuery(),
-      orderBy: this.orderBy(),
+      q: this.searchQuery(),
+      order_by: this.orderBy(),
     }),
   });
 

@@ -35,10 +35,24 @@ export class HeaderComponent implements OnInit {
       this.user()
         ?.name.split(' ')
         .map((n) => n[0])
-        .join('') ?? '',
+        .join('') ?? ''
   );
 
   authItems: MenuItem[] = [
+    {
+      label: this.selectedGroup()?.group?.name ?? 'Groupe Actif',
+      icon: 'pi pi-users',
+      command: undefined,
+      items:
+        this.groups().length > 1
+          ? this.groups().map((group) => ({
+              label: group.name,
+              icon: 'pi pi-users',
+              command: () => this.auth$.setSelectGroupById(group.id),
+            }))
+          : undefined,
+    },
+    {},
     {
       label: 'Mon compte',
       routerLink: '/account',
@@ -72,12 +86,6 @@ export class HeaderComponent implements OnInit {
         display:
           this.selectedGroup()?.role == ('admin' as string) ? 'block' : 'none',
       },
-    },
-    {
-      label: 'Changer de Groupe actif',
-      icon: 'pi pi-users',
-      style: { display: this.groups().length > 1 ? 'block' : 'none' },
-      command: () => this.showChangeActiveGroup(),
     },
     {
       label: 'App Admininistration',

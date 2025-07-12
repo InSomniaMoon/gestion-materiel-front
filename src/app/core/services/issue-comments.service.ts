@@ -14,25 +14,25 @@ export class IssueCommentsService {
 
   getComments(optionId: number, issueId: number) {
     return this.http
-      .get<
-        IssueComment[]
-      >(`${this.api_url}/options/${optionId}/issues/${issueId}/comments`)
+      .get<IssueComment[]>(
+        `${this.api_url}/admin/options/${optionId}/issues/${issueId}/comments`
+      )
       .pipe(
         map((comments) =>
           comments.map((comment) => {
             comment.created_at = new Date(comment.created_at);
             return comment;
-          }),
-        ),
+          })
+        )
       );
   }
 
   addComment(optionId: number, issueId: number, comment: string) {
     return this.http.post<IssueComment>(
-      `${this.api_url}/options/${optionId}/issues/${issueId}/comments`,
+      `${this.api_url}/admin/options/${optionId}/issues/${issueId}/comments`,
       {
         comment,
-      },
+      }
     );
   }
 }

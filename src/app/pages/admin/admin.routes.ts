@@ -14,12 +14,24 @@ export const ADMIN_ROUTES: Routes = [
         path: '',
         loadComponent: () =>
           import('./items/items-list/items-list.component').then(
-            (m) => m.ItemsListComponent,
+            (m) => m.ItemsListComponent
           ),
       },
       {
         path: 'create',
         component: CreateItemComponent,
+      },
+    ],
+  },
+  {
+    path: 'units',
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('./units/units-list/units-list.component').then(
+            (m) => m.UnitsListComponent
+          ),
       },
     ],
   },

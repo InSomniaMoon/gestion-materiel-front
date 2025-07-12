@@ -3,9 +3,9 @@ import { inject, Injectable } from '@angular/core';
 import { Item } from '@app/core/types/item.type';
 import { PaginatedData } from '@app/core/types/paginatedData.type';
 import { environment } from '@env/environment';
-import { of, tap } from 'rxjs';
+import { tap } from 'rxjs';
+import { queryParams } from '../utils/http.utils';
 import { CLEAR_CACHE_CONTEXT_OPTIONS } from '../utils/injectionToken';
-import { AuthService } from './auth.service';
 import { CacheService } from './cache.service';
 
 @Injectable({
@@ -14,46 +14,32 @@ import { CacheService } from './cache.service';
 export class ItemsService {
   private readonly http = inject(HttpClient);
   private readonly cache = inject(CacheService);
-  private readonly authService = inject(AuthService);
 
   private api_url = environment.api_url;
 
   createItem(item: Item) {
-    return this.http.post<Item>(`${this.api_url}/items`, item, {
+    return this.http.post<Item>(`${this.api_url}/admin/items`, item, {
       ...CLEAR_CACHE_CONTEXT_OPTIONS(),
     });
   }
 
   getItems(
     opt: {
-      searchQuery?: string;
+      q?: string;
       size?: number;
       page?: number;
-      orderBy?: string;
+      order_by?: string;
       category?: string;
     } = {
       page: 1,
       size: 25,
-    },
+    }
   ) {
     let url = `${this.api_url}/items`;
 
-    url += `?page=${opt.page}`;
-
-    url += `&size=${opt.size}`;
-
-    if (opt.orderBy) {
-      url += `&order_by=${opt.orderBy}`;
-    }
-    if (opt.searchQuery) {
-      url += `&q=${opt.searchQuery}`;
-    }
-
-    if (opt.category) {
-      url += `&category=${opt.category}`;
-    }
-
-    return this.http.get<PaginatedData<Item>>(url);
+    return this.http.get<PaginatedData<Item>>(url, {
+      params: queryParams(opt),
+    });
   }
 
   getItem(id: number) {
@@ -69,7 +55,7 @@ export class ItemsService {
         // regexp that starts with `${this.api_url}/items` and anything going after
         const regex = new RegExp(`${this.api_url}/items.*`);
         this.cache.clearAll(regex);
-      }),
+      })
     );
   }
 
