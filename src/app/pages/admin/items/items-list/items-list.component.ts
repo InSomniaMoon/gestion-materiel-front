@@ -17,6 +17,7 @@ import { lastValueFrom } from 'rxjs';
 import { IconField } from 'primeng/iconfield';
 import { InputIcon } from 'primeng/inputicon';
 import { SearchBarComponent } from '@app/components/search-bar/search-bar.component';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-items-list',
@@ -30,6 +31,7 @@ import { SearchBarComponent } from '@app/components/search-bar/search-bar.compon
     Button,
     RouterLink,
     SearchBarComponent,
+    DatePipe,
   ],
   template: `
     <div class="header">
@@ -56,6 +58,7 @@ import { SearchBarComponent } from '@app/components/search-bar/search-bar.compon
             <th pSortableColumn="category_id">
               Categorie <p-sortIcon field="category_id" />
             </th>
+            <th>Date d'achat</th>
             <th>Avaries</th>
             <th></th>
           </tr>
@@ -64,6 +67,7 @@ import { SearchBarComponent } from '@app/components/search-bar/search-bar.compon
           <tr>
             <td>{{ product.name }}</td>
             <td>{{ product.category.name }}</td>
+            <td>{{ product.date_of_buy | date }}</td>
             <td></td>
             <td class="actions">
               <p-button
