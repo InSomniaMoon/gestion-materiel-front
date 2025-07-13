@@ -27,6 +27,7 @@ export const ADMIN_ROUTES: Routes = [
     path: 'units',
     children: [
       {
+        title: 'Unités',
         path: '',
         loadComponent: () =>
           import('./units/units-list/units-list.component').then(

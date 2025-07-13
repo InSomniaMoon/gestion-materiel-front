@@ -6,7 +6,7 @@
     </a>
   </ng-template>
   <ng-template pTemplate="end">
-    <p-tieredMenu #userMenu [popup]="true" [model]="authItems" />
+    <p-tieredMenu #userMenu [popup]="true" [model]="authItems()" />
     <p-avatar
       (click)="userMenu.toggle($event)"
       [label]="lettres()"

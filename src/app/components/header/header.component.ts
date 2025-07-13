@@ -38,7 +38,7 @@ export class HeaderComponent implements OnInit {
         .join('') ?? ''
   );
 
-  authItems: MenuItem[] = [
+  authItems = computed<MenuItem[]>(() => [
     {
       label: this.selectedGroup()?.name ?? 'Groupe Actif',
       icon: 'pi pi-users',
@@ -52,7 +52,6 @@ export class HeaderComponent implements OnInit {
             }))
           : undefined,
     },
-    {},
     {
       label: 'Mon compte',
       routerLink: '/account',
@@ -65,7 +64,7 @@ export class HeaderComponent implements OnInit {
       command: () =>
         this.auth$.logout() && this.router.navigate(['/auth/login']),
     },
-  ];
+  ]);
 
   menuItems = computed<MenuItem[]>(() => [
     {
