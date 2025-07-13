@@ -15,7 +15,7 @@ export class OptionIssuesService {
   private api_url = environment.api_url;
 
   getOptionIssues(itemId: number) {
-    const url = `/items/${itemId}/options/issues`;
+    const url = `/admin/items/${itemId}/options/issues`;
 
     return this.http.get<OptionIssue[]>(this.api_url + url);
   }
@@ -38,7 +38,9 @@ export class OptionIssuesService {
       )
       .pipe(
         tap(() => {
-          this.cache.clear(`${this.api_url}/items/${itemId}/options/issues`);
+          this.cache.clear(
+            `${this.api_url}/admin/items/${itemId}/options/issues`
+          );
         })
       );
   }

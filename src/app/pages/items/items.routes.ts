@@ -6,7 +6,7 @@ export const ITEMS_ROUTES: Routes = [
   {
     path: '',
     component: ItemsListComponent,
-    title: 'Eléments',
+    title: 'Objets',
   },
   {
     path: ':itemId',

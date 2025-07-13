@@ -68,45 +68,40 @@ import { Textarea } from 'primeng/textarea';
       </p-floatLabel>
       <div formArray="options">
         @for (item of options.controls; track $index) {
-          <h3 class="option-title">Option {{ $index + 1 }}</h3>
-          <div [formGroup]="item" class="option">
-            <div class="option-form">
-              <p-floatLabel variant="on">
-                <input
-                  pInputText
-                  type="text"
-                  id="option-name-{{ $index }}"
-                  formControlName="name"
-                />
-                <label for="option-name-{{ $index }}">Nom</label>
-              </p-floatLabel>
-              <p-floatLabel variant="on">
-                <textarea
-                  pInputTextarea
-                  id="option-description-{{ $index }}"
-                  autoResize
-                  formControlName="description"
-                  rows="5"
-                ></textarea>
-                <label for="option-description-{{ $index }}">Description</label>
-              </p-floatLabel>
-            </div>
-            <p-button
-              type="button"
-              (click)="removeOption($index)"
-              icon="pi pi-trash"
-              severity="danger"
-              outlined
-            />
+        <h3 class="option-title">Option {{ $index + 1 }}</h3>
+        <div [formGroup]="item" class="option">
+          <div class="option-form">
+            <p-floatLabel variant="on">
+              <input
+                pInputText
+                type="text"
+                id="option-name-{{ $index }}"
+                formControlName="name"
+              />
+              <label for="option-name-{{ $index }}">Nom</label>
+            </p-floatLabel>
+            <p-floatLabel variant="on">
+              <textarea
+                pInputTextarea
+                id="option-description-{{ $index }}"
+                autoResize
+                formControlName="description"
+                rows="5"
+              ></textarea>
+              <label for="option-description-{{ $index }}">Description</label>
+            </p-floatLabel>
           </div>
-          @if ($last) {
-            <p-button
-              label="Option"
-              icon="pi pi-plus"
-              (onClick)="addOption()"
-            />
-          }
-        }
+          <p-button
+            type="button"
+            (click)="removeOption($index)"
+            icon="pi pi-trash"
+            severity="danger"
+            outlined
+          />
+        </div>
+        @if ($last) {
+        <p-button label="Option" icon="pi pi-plus" (onClick)="addOption()" />
+        } }
       </div>
 
       <button
@@ -132,8 +127,8 @@ export class CreateItemComponent implements OnInit {
 
   filteredCategories = computed(() =>
     this.categories().filter((cat) =>
-      cat.toUpperCase().includes(this.categoryQuery().toUpperCase()),
-    ),
+      cat.toUpperCase().includes(this.categoryQuery().toUpperCase())
+    )
   );
   fb = inject(FormBuilder);
   form = this.fb.group({
@@ -191,15 +186,11 @@ export class CreateItemComponent implements OnInit {
         id: 0,
         usable: true,
       };
-      this.itemService
-        .createItem(item)
-        .pipe(takeUntilDestroyed(this.destroyRef))
-        .subscribe({
-          next: (newitem) => {
-            // navigate to the item page
-            this.router.navigate(['/items', newitem.id]);
-          },
-        });
+      this.itemService.createItem(item).subscribe({
+        next: () => {
+          this.router.navigate(['/admin', 'items']);
+        },
+      });
     }
   }
 

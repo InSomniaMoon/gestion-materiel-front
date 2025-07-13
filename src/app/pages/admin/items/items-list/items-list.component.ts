@@ -9,7 +9,6 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { ItemsService } from '@app/core/services/items.service';
 import { AppTable } from '@components/ui/table/table.component';
-import { OverlayOptions } from 'primeng/api';
 import { Button } from 'primeng/button';
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 import { Select, SelectModule } from 'primeng/select';
@@ -31,13 +30,13 @@ import { lastValueFrom } from 'rxjs';
   template: `
     <div class="header">
       <div class="flex">
-        <h1>Items</h1>
+        <h1>Objets</h1>
         <p-select
           dropdownIcon="pi pi-filter"
           [checkmark]="true"
           [options]="[
             { label: 'Nom', value: 'name' },
-            { label: 'Categorie', value: 'category' },
+            { label: 'Categorie', value: 'category' }
           ]"
           [(ngModel)]="orderBy"
         />
@@ -130,8 +129,8 @@ export class ItemsListComponent {
     request: () => ({
       page: this.page(),
       size: this.size(),
-      searchQuery: this.searchQuery(),
-      orderBy: this.orderBy(),
+      q: this.searchQuery(),
+      order_by: this.orderBy(),
     }),
   });
 

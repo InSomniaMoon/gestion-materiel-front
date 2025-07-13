@@ -7,10 +7,7 @@ export const groupInterceptor: HttpInterceptorFn = (req, next) => {
 
   if (authService.isAuth() && authService.selectedGroup()) {
     req = req.clone({
-      params: req.params.append(
-        'group_id',
-        authService.selectedGroup()!.group_id,
-      ),
+      params: req.params.append('group_id', authService.selectedGroup()!.id),
     });
   }
 

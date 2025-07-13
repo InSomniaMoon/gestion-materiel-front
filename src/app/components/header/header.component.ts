@@ -35,10 +35,23 @@ export class HeaderComponent implements OnInit {
       this.user()
         ?.name.split(' ')
         .map((n) => n[0])
-        .join('') ?? '',
+        .join('') ?? ''
   );
 
-  authItems: MenuItem[] = [
+  authItems = computed<MenuItem[]>(() => [
+    {
+      label: this.selectedGroup()?.name ?? 'Groupe Actif',
+      icon: 'pi pi-users',
+      command: undefined,
+      items:
+        this.groups().length > 1
+          ? this.groups().map((group) => ({
+              label: group.name,
+              icon: 'pi pi-users',
+              command: () => this.auth$.setSelectGroupById(group.id),
+            }))
+          : undefined,
+    },
     {
       label: 'Mon compte',
       routerLink: '/account',
@@ -51,7 +64,7 @@ export class HeaderComponent implements OnInit {
       command: () =>
         this.auth$.logout() && this.router.navigate(['/auth/login']),
     },
-  ];
+  ]);
 
   menuItems = computed<MenuItem[]>(() => [
     {
@@ -70,14 +83,10 @@ export class HeaderComponent implements OnInit {
       routerLink: '/admin',
       style: {
         display:
-          this.selectedGroup()?.role == ('admin' as string) ? 'block' : 'none',
+          this.selectedGroup()?.pivot.role == ('admin' as string)
+            ? 'block'
+            : 'none',
       },
-    },
-    {
-      label: 'Changer de Groupe actif',
-      icon: 'pi pi-users',
-      style: { display: this.groups().length > 1 ? 'block' : 'none' },
-      command: () => this.showChangeActiveGroup(),
     },
     {
       label: 'App Admininistration',

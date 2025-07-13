@@ -66,7 +66,7 @@ export class BackofficeService {
     userId: string,
     groups_to_add: { id: number; role: string }[],
     groups_to_update: { id: number; role: string }[],
-    groups_to_remove: number[],
+    groups_to_remove: number[]
   ) {
     return this.http.put(
       `${this.apiUrl}/users/${userId}/groups`,
@@ -77,7 +77,7 @@ export class BackofficeService {
       },
       {
         ...CLEAR_CACHE_CONTEXT_OPTIONS(),
-      },
+      }
     );
   }
 

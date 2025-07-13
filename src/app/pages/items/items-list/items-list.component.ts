@@ -56,10 +56,9 @@ import { fromEvent, lastValueFrom, map, tap } from 'rxjs';
 
     <div class="items-list" #scroll>
       @for (item of items(); track $index) {
-        <app-item-fragment [item]="item" />
-      }
-      @if (itemsQuery.isLoading()) {
-        <p-progressSpinner />
+      <app-item-fragment [item]="item" />
+      } @if (itemsQuery.isLoading()) {
+      <p-progressSpinner />
       }
     </div>
   `,
@@ -109,7 +108,7 @@ export class ItemsListComponent implements OnDestroy, AfterViewInit {
           .getItems({
             page: this.page(),
             size: 10,
-            searchQuery: this.searchQuery(),
+            q: this.searchQuery(),
             category: this.categoryFilter(),
           })
           .pipe(
@@ -117,8 +116,8 @@ export class ItemsListComponent implements OnDestroy, AfterViewInit {
               this.items.update((d) => [...d, ...data.data]);
               if (data.last_page == data.current_page)
                 this.noMoreData.set(true);
-            }),
-          ),
+            })
+          )
       ),
   }));
 
@@ -130,7 +129,7 @@ export class ItemsListComponent implements OnDestroy, AfterViewInit {
       this.items$.getCategories().pipe(takeUntilDestroyed(this.destroyRef)),
       {
         initialValue: [],
-      },
+      }
     );
     effect(
       () => {
@@ -141,7 +140,7 @@ export class ItemsListComponent implements OnDestroy, AfterViewInit {
         this.resetPagination();
         this.queryClient.refetchQueries({ queryKey: ['searchItems'] });
       },
-      { debugName: 'selectedGroupChanged' },
+      { debugName: 'selectedGroupChanged' }
     );
   }
 
@@ -150,7 +149,7 @@ export class ItemsListComponent implements OnDestroy, AfterViewInit {
       .pipe(
         map(() => {
           return this.scrollContent().nativeElement.scrollTop;
-        }),
+        })
       )
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((scrollPos) => {

@@ -6,4 +6,5 @@ export type Subscription = {
   end_date: Date;
   name: string;
   status: 'active' | 'inactive';
+  unit_id: number;
 };

@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { url } from 'inspector';
 
 export interface CacheData<T> {
   expires: Date;
@@ -19,7 +20,7 @@ export class CacheService {
     if (this.cache.has(key)) {
       // If it already exists, we throw an exception to prevent overwriting the data.
       throw new Error(
-        `Data already exists for key '${key}'. Use a different key or delete the existing one first.`,
+        `Data already exists for key '${key}'. Use a different key or delete the existing one first.`
       );
     }
     const expires = new Date();
@@ -49,13 +50,22 @@ export class CacheService {
 
   clearAll(): void;
   clearAll(regex: RegExp): void;
-  clearAll(param?: RegExp): void {
+  clearAll(urls: RegExp[]): void;
+  clearAll(param?: RegExp | RegExp[]): void {
     if (param instanceof RegExp) {
       for (const key of this.cache.keys()) {
         if (param.test(key)) {
+          console.log(`Clearing cache for key: ${key}`);
+
           this.cache.delete(key);
         }
       }
+      return;
+    }
+    if (param instanceof Array) {
+      param.forEach((url) => {
+        this.clearAll(url);
+      });
       return;
     }
     this.cache.clear();

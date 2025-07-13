@@ -11,15 +11,29 @@ export const ADMIN_ROUTES: Routes = [
     path: 'items',
     children: [
       {
+        title: 'Objets',
         path: '',
         loadComponent: () =>
           import('./items/items-list/items-list.component').then(
-            (m) => m.ItemsListComponent,
+            (m) => m.ItemsListComponent
           ),
       },
       {
         path: 'create',
         component: CreateItemComponent,
+      },
+    ],
+  },
+  {
+    path: 'units',
+    children: [
+      {
+        title: 'Unités',
+        path: '',
+        loadComponent: () =>
+          import('./units/units-list/units-list.component').then(
+            (m) => m.UnitsListComponent
+          ),
       },
     ],
   },

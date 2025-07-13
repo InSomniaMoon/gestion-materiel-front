@@ -4,7 +4,7 @@ import {
   computed,
   inject,
 } from '@angular/core';
-import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '@app/core/services/auth.service';
 import { Button } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
@@ -35,11 +35,11 @@ export class ChangeActiveGroupComponent {
   selectedGroup = this.authService.selectedGroup;
 
   form = this.fb.group({
-    group_id: [this.selectedGroup()?.group_id],
+    group_id: [this.selectedGroup()?.id],
   });
 
   opt = computed(() =>
-    this.authService.groups().map((g) => ({ label: g.name, value: g.id })),
+    this.authService.groups().map((g) => ({ label: g.name, value: g.id }))
   );
 
   onResolve() {
