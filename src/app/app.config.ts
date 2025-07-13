@@ -37,6 +37,7 @@ import { cacheInterceptor } from './core/interceptors/cache.interceptor';
 import { groupInterceptor } from './core/interceptors/group.interceptor';
 import { AuthService } from './core/services/auth.service';
 import { SgdfPresetTheme } from './theme/theme';
+import { FRENCH_TRANSLATIONS } from './fr.translation';
 
 registerLocaleData(localeFR);
 
@@ -50,7 +51,7 @@ export const appConfig: ApplicationConfig = {
     provideQueryClient(new QueryClient()),
     provideHttpClient(
       withFetch(),
-      withInterceptors([authInterceptor, groupInterceptor, cacheInterceptor]),
+      withInterceptors([authInterceptor, groupInterceptor, cacheInterceptor])
     ),
     { provide: LOCALE_ID, useValue: 'fr-FR' },
     provideAppInitializer(() => init(inject(AuthService), inject(HttpClient))),
@@ -70,6 +71,7 @@ export const appConfig: ApplicationConfig = {
           darkModeSelector: false,
         },
       },
+      translation: FRENCH_TRANSLATIONS,
     }),
 
     provideTippyLoader(() => import('tippy.js')),

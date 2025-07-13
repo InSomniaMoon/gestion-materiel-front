@@ -118,4 +118,17 @@ export class BackofficeService {
       ...CLEAR_CACHE_CONTEXT_OPTIONS(),
     });
   }
+
+  uploadGroupImage(file: File) {
+    const formData = new FormData();
+    formData.append('image', file);
+
+    return this.http.post<{ path: string }>(
+      `${this.apiUrl}/groups/image`,
+      formData,
+      {
+        ...CLEAR_CACHE_CONTEXT_OPTIONS(),
+      }
+    );
+  }
 }
