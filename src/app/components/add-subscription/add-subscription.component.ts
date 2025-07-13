@@ -17,6 +17,10 @@ import { DialogModule } from 'primeng/dialog';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { fromEvent, map, startWith } from 'rxjs';
+import { FloatLabel } from 'primeng/floatlabel';
+import { AuthService } from '@app/core/services/auth.service';
+import { Select } from 'primeng/select';
+import { Unit } from '@app/core/types/unit.type';
 
 @Component({
   selector: 'app-add-subscription',
@@ -26,6 +30,8 @@ import { fromEvent, map, startWith } from 'rxjs';
     DatePicker,
     ReactiveFormsModule,
     InputTextModule,
+    FloatLabel,
+    Select,
   ],
   templateUrl: './add-subscription.component.html',
   styleUrl: './add-subscription.component.scss',
@@ -37,16 +43,19 @@ export class AddSubscriptionComponent implements OnInit {
   private readonly dialogRef = inject(DialogService);
   private readonly toast = inject(MessageService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly authService = inject(AuthService);
 
   private readonly subscriptionService = inject(SubscriptionService);
   private data = this.dialogRef.getInstance(this.ref).data;
+
+  readonly units = this.authService.userUnits;
 
   // check if screen is a mobile device from event
   isMobile = toSignal(
     fromEvent(window, 'resize').pipe(
       map(() => window.innerWidth <= 768),
-      startWith(window.innerWidth <= 768),
-    ),
+      startWith(window.innerWidth <= 768)
+    )
   );
   minDate = signal(new Date());
   subscriptionChange = output<void>();
@@ -65,6 +74,10 @@ export class AddSubscriptionComponent implements OnInit {
         nonNullable: true,
         validators: [Validators.required],
       }),
+      unit: this.fb.control<Unit | null>(null, {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
     },
     {
       validators: [
@@ -78,7 +91,7 @@ export class AddSubscriptionComponent implements OnInit {
           return null;
         },
       ],
-    },
+    }
   );
 
   responsiveOptions: ResponsiveOverlayOptions[] = [
@@ -103,6 +116,7 @@ export class AddSubscriptionComponent implements OnInit {
     this.form.patchValue({
       start_date: this.formatDate(curDate),
       end_date: this.formatDate(curDate),
+      unit: this.units()[0] ?? null,
     });
   }
 
@@ -128,6 +142,7 @@ export class AddSubscriptionComponent implements OnInit {
         status: 'active',
         id: 0,
         user_id: 0,
+        unit_id: value.unit!.id,
       })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({

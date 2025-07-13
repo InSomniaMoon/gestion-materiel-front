@@ -1,4 +1,5 @@
 import { GroupWithPivot } from './group.type';
+import { Unit } from './unit.type';
 import { User } from './user.type';
 
 export type LoginDTO = {
@@ -6,4 +7,5 @@ export type LoginDTO = {
   refresh_token: string;
   user: User;
   groups: GroupWithPivot[];
+  units: Unit[];
 };

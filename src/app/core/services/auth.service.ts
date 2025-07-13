@@ -8,6 +8,7 @@ import { UserGroup } from '../types/userGroup.type';
 import { REFRESH_TOKEN_KEY } from '../utils/constants';
 import { CacheService } from './cache.service';
 import { Group, GroupWithPivot } from '../types/group.type';
+import { Unit } from '../types/unit.type';
 
 @Injectable({
   providedIn: 'root',
@@ -23,6 +24,19 @@ export class AuthService {
 
   private _userGroups = signal<GroupWithPivot[]>([]);
   private _selectedGroup = signal<GroupWithPivot | null>(null);
+
+  private _userUnits = signal<Unit[]>([]);
+  private _groupUnits = computed(() => {
+    if (!this.selectedGroup()) {
+      return [];
+    }
+    return this._userUnits().filter(
+      (unit) => unit.group_id == this.selectedGroup()?.id
+    );
+  });
+  private _selectedUnit = signal<Unit | null>(null);
+
+  userUnits = this._groupUnits;
 
   selectedGroup = this._selectedGroup.asReadonly();
   isAuth = this._isAuth.asReadonly();
@@ -100,6 +114,8 @@ export class AuthService {
     this._isAuth.set(true);
     this._selectedGroup.set(DTO.groups[0]);
     this.jwt.set(DTO.token);
+
+    this._userUnits.set(DTO.units);
 
     this.removeCookie(REFRESH_TOKEN_KEY);
     this.setCookie(REFRESH_TOKEN_KEY, DTO.refresh_token, 14);

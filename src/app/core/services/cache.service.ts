@@ -53,9 +53,6 @@ export class CacheService {
   clearAll(urls: RegExp[]): void;
   clearAll(param?: RegExp | RegExp[]): void {
     if (param instanceof RegExp) {
-      console.log(`Clearing cache for regex:`, param);
-      console.log(this.cache.keys());
-
       for (const key of this.cache.keys()) {
         if (param.test(key)) {
           console.log(`Clearing cache for key: ${key}`);
