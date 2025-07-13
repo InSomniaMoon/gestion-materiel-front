@@ -38,15 +38,22 @@ export const cacheInterceptor: HttpInterceptorFn = (req, next) => {
         }
         cacheService.set(req.urlWithParams, event.body);
       },
-    }),
+    })
   );
 };
 
 const checkClearCache = (
   req: HttpRequest<unknown>,
-  cacheService: CacheService,
+  cacheService: CacheService
 ) => {
   if (req.context.get(CLEAR_CACHE)) {
-    cacheService.clearAll(new RegExp(`${req.url}.*`));
+    const exploededUrl = req.url.split('/');
+
+    // check if the last part of the URL is a number (e.g., an ID)
+    if (Number.isInteger(+exploededUrl[exploededUrl.length - 1])) {
+      exploededUrl.pop(); // remove the last part if it's an ID
+    }
+
+    cacheService.clearAll(new RegExp(`${exploededUrl.join('/')}.*`));
   }
 };

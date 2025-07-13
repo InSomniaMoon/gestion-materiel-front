@@ -38,11 +38,6 @@ export class UnitsListComponent {
         closable: true,
         width: '50%',
         height: '80%',
-        data: {
-          onCreate: () => {
-            this.units.reload();
-          },
-        },
       })
       .onClose.subscribe((result) => {
         if (!result) {
@@ -84,6 +79,25 @@ export class UnitsListComponent {
         if (!result) {
           return;
         }
+
+        this.unitsService
+          .updateUnit(unit.id, {
+            color: result.color,
+            name: result.name,
+            chiefs: result.chiefs,
+            responsible: result.responsible,
+          })
+          .subscribe({
+            next: () => {
+              this.units.reload();
+            },
+            error: (error) => {
+              console.error(
+                "Erreur pendant la mise à jour de l'unité :",
+                error
+              );
+            },
+          });
       });
   }
 }

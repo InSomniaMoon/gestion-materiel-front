@@ -19,6 +19,7 @@ import { UsersService } from '@app/core/services/users.service';
 import { debounceTimeSignal } from '@app/core/utils/signals.utils';
 import { Select } from 'primeng/select';
 import { JsonPipe } from '@angular/common';
+import { User } from '@app/core/types/user.type';
 @Component({
   selector: 'app-create-unit',
   imports: [
@@ -41,14 +42,13 @@ export class CreateUnitComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private dialog$ = inject(DialogService);
 
+  validateLabel = signal('Créer');
+
   form = this.fb.nonNullable.group({
     name: ['', [Validators.required]],
     color: ['#000000', [Validators.required]],
-    chiefs: this.fb.nonNullable.control<{ value: string; code: string }[]>([]),
-    responsible: this.fb.nonNullable.control<{ value: string; code: string }>({
-      value: '',
-      code: '',
-    }),
+    chiefs: this.fb.nonNullable.control<{ name: string; code: number }[]>([]),
+    responsible: this.fb.control<{ name: string; code: number } | null>(null),
   });
 
   get chiefsControl() {
@@ -60,21 +60,32 @@ export class CreateUnitComponent implements OnInit {
     console.log(data);
 
     if (data) {
+      this.validateLabel.set('Modifier');
       this.form.patchValue({
         name: data.name || '',
         color: data.color || '#000000',
-        chiefs: data.chiefs || [],
+        chiefs:
+          (data.chiefs as User[]).map((c) => ({
+            code: c.id,
+            name: c.name,
+          })) || [],
         responsible: data.responsible
-          ? { value: data.responsible.name, code: data.responsible.id }
-          : { value: '', code: '' },
+          ? { name: data.responsible.name, code: data.responsible.id }
+          : null,
       });
     }
+
+    this.form.get('chiefs')?.valueChanges.subscribe((value) => {
+      if (value.length == 0) {
+        this.form.get('responsible')!.setValue(null);
+      }
+    });
   }
 
   closeConfirm() {
     const value = this.form.getRawValue();
     const chiefs = value.chiefs.map((chief) => chief.code);
-    const resp = value.responsible.code;
+    const resp = value.responsible?.code;
     this.ref.close({
       ...value,
       chiefs: chiefs,
@@ -103,7 +114,7 @@ export class CreateUnitComponent implements OnInit {
               }))
             )
           )
-      ), // Replace with actual service call to fetch chiefs
+      ),
     defaultValue: [],
   });
 }

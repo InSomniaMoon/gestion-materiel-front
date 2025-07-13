@@ -16,7 +16,7 @@
       [filter]="true"
       (onFilter)="chiefsFilter.set($event.filter)"
       [style]="{ width: '100%' }"
-      [selectAll]="false"
+      [showToggleAll]="false"
       display="chip"
       formControlName="chiefs"
       optionLabel="name"
@@ -41,7 +41,7 @@
 <p-footer>
   <p-button label="Annuler" severity="secondary" (onClick)="closeCancel()" />
   <p-button
-    label="Créer"
+    [label]="validateLabel()"
     [disabled]="form.invalid"
     (onClick)="closeConfirm()"
   />
