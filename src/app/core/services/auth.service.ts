@@ -7,6 +7,7 @@ import { catchError, map, of, tap } from 'rxjs';
 import { UserGroup } from '../types/userGroup.type';
 import { REFRESH_TOKEN_KEY } from '../utils/constants';
 import { CacheService } from './cache.service';
+import { Group, GroupWithPivot } from '../types/group.type';
 
 @Injectable({
   providedIn: 'root',
@@ -18,10 +19,10 @@ export class AuthService {
   private _isAuth = signal(false);
   jwt = signal<string | null>(null);
   user = signal<User | null>(null);
-  groups = computed(() => this._userGroups().map((g) => g.group!));
+  groups = computed(() => this._userGroups());
 
-  private _userGroups = signal<UserGroup[]>([]);
-  private _selectedGroup = signal<UserGroup | null>(null);
+  private _userGroups = signal<GroupWithPivot[]>([]);
+  private _selectedGroup = signal<GroupWithPivot | null>(null);
 
   selectedGroup = this._selectedGroup.asReadonly();
   isAuth = this._isAuth.asReadonly();
@@ -33,7 +34,7 @@ export class AuthService {
     if (!this.user()) {
       return false;
     }
-    return this.selectedGroup()?.role == ('admin' as string);
+    return this.selectedGroup()?.pivot.role == ('admin' as string);
   });
 
   private api_url = environment.api_url;
@@ -62,15 +63,9 @@ export class AuthService {
 
     if (refresh_token) {
       return http
-        .post<LoginDTO>(
-          `${this.api_url}/auth/whoami`,
-          {
-            refresh_token,
-          },
-          {
-            withCredentials: false,
-          }
-        )
+        .post<LoginDTO>(`${this.api_url}/auth/whoami`, {
+          refresh_token,
+        })
         .pipe(
           map((DTO) => {
             this.processLoginDTO(DTO);
@@ -95,12 +90,8 @@ export class AuthService {
     return this.http.post(`${this.api_url}/auth/reset-password`, dto);
   }
 
-  setSelectedGroup(group: UserGroup) {
-    this._selectedGroup.set(group);
-  }
-
   setSelectGroupById(id: number) {
-    this._selectedGroup.set(this._userGroups().find((g) => g.group_id == id)!);
+    this._selectedGroup.set(this._userGroups().find((g) => g.id == id)!);
   }
 
   private processLoginDTO(DTO: LoginDTO) {

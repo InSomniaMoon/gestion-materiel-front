@@ -40,7 +40,7 @@ export class HeaderComponent implements OnInit {
 
   authItems: MenuItem[] = [
     {
-      label: this.selectedGroup()?.group?.name ?? 'Groupe Actif',
+      label: this.selectedGroup()?.name ?? 'Groupe Actif',
       icon: 'pi pi-users',
       command: undefined,
       items:
@@ -84,7 +84,9 @@ export class HeaderComponent implements OnInit {
       routerLink: '/admin',
       style: {
         display:
-          this.selectedGroup()?.role == ('admin' as string) ? 'block' : 'none',
+          this.selectedGroup()?.pivot.role == ('admin' as string)
+            ? 'block'
+            : 'none',
       },
     },
     {
