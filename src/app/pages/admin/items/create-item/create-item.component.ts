@@ -24,6 +24,7 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { Textarea } from 'primeng/textarea';
 import { Select } from 'primeng/select';
+import { DatePicker } from 'primeng/datepicker';
 @Component({
   selector: 'app-create-item',
   imports: [
@@ -35,6 +36,7 @@ import { Select } from 'primeng/select';
     AutoCompleteModule,
     Textarea,
     Select,
+    DatePicker,
   ],
   template: `
     <h1>Créer un item</h1>
@@ -46,13 +48,22 @@ import { Select } from 'primeng/select';
         </p-floatLabel>
         <p-floatLabel variant="on">
           <p-select
+            id="category"
+            placeholder="Catégorie"
             [options]="categories()"
             [filter]="true"
             optionLabel="name"
             optionValue="id"
+            filterBy="'name'"
+            [virtualScroll]="true"
+            [scrollHeight]="'200px'"
             formControlName="category_id"
           />
           <label for="category">Catégorie</label>
+        </p-floatLabel>
+        <p-floatLabel variant="on">
+          <p-date-picker id="date_of_buy" />
+          <label for="date_of_buy">Date d'achat (optionnel)</label>
         </p-floatLabel>
       </div>
       <p-floatLabel variant="on">
@@ -125,7 +136,6 @@ export class CreateItemComponent implements OnInit {
 
   categoryQuery = signal('');
   categories = signal<ItemCategory[]>([]);
-
   fb = inject(FormBuilder);
   form = this.fb.group({
     name: this.fb.control('', {
@@ -137,6 +147,9 @@ export class CreateItemComponent implements OnInit {
       validators: [Validators.required],
     }),
     options: this.fb.array([this.newOption()]),
+    date_of_buy: this.fb.nonNullable.control<Date | undefined>(undefined, {
+      validators: [],
+    }),
   });
 
   get options() {
@@ -146,7 +159,12 @@ export class CreateItemComponent implements OnInit {
     this.itemService
       .getCategories()
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((categories) => this.categories.set(categories));
+      .subscribe((categories) => {
+        this.categories.set(categories);
+        this.form.patchValue({
+          category_id: categories[0]?.id,
+        });
+      });
   }
 
   newOption() {
@@ -179,6 +197,7 @@ export class CreateItemComponent implements OnInit {
         name: this.form.value.name!,
         description: this.form.value.description,
         category_id: this.form.value.category_id!,
+        date_of_buy: this.form.value.date_of_buy,
       };
       this.itemService.createItem(item).subscribe({
         next: () => {
@@ -186,9 +205,5 @@ export class CreateItemComponent implements OnInit {
         },
       });
     }
-  }
-
-  log(laggabel: any) {
-    console.log(laggabel);
   }
 }

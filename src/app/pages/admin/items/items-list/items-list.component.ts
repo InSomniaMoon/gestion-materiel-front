@@ -14,6 +14,9 @@ import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 import { Select, SelectModule } from 'primeng/select';
 import { TableModule } from 'primeng/table';
 import { lastValueFrom } from 'rxjs';
+import { IconField } from 'primeng/iconfield';
+import { InputIcon } from 'primeng/inputicon';
+import { SearchBarComponent } from '@app/components/search-bar/search-bar.component';
 
 @Component({
   selector: 'app-items-list',
@@ -26,20 +29,13 @@ import { lastValueFrom } from 'rxjs';
     SelectModule,
     Button,
     RouterLink,
+    SearchBarComponent,
   ],
   template: `
     <div class="header">
       <div class="flex">
         <h1>Objets</h1>
-        <p-select
-          dropdownIcon="pi pi-filter"
-          [checkmark]="true"
-          [options]="[
-            { label: 'Nom', value: 'name' },
-            { label: 'Categorie', value: 'category' }
-          ]"
-          [(ngModel)]="orderBy"
-        />
+        <app-search-bar (queryChange)="searchQuery.set($event)" />
       </div>
       <p-button
         icon="pi pi-plus"
@@ -57,8 +53,8 @@ import { lastValueFrom } from 'rxjs';
         <ng-template #header>
           <tr>
             <th pSortableColumn="name">Nom <p-sortIcon field="name" /></th>
-            <th pSortableColumn="category">
-              Categorie <p-sortIcon field="category" />
+            <th pSortableColumn="category_id">
+              Categorie <p-sortIcon field="category_id" />
             </th>
             <th>Avaries</th>
             <th></th>
@@ -74,12 +70,6 @@ import { lastValueFrom } from 'rxjs';
                 icon="pi pi-pencil"
                 routerLink="/admin/items/{{ product.id }}"
                 size="small"
-              />
-              <p-button
-                size="small"
-                icon="pi pi-trash"
-                severity="danger"
-                (click)="log(product)"
               />
             </td>
           </tr>
@@ -137,9 +127,5 @@ export class ItemsListComponent {
   onPageChange(event: PaginatorState) {
     this.page.set(event.page! + 1);
     this.size.set(event.rows!);
-  }
-
-  log(loggable: any) {
-    console.log(loggable);
   }
 }

@@ -13,6 +13,7 @@ export type Item = {
   category?: ItemCategory;
   category_id: number;
   usable: boolean;
+  date_of_buy?: Date;
 };
 
 export type ItemCategory = {
