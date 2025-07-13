@@ -7,13 +7,7 @@ import {
   output,
   viewChild,
 } from '@angular/core';
-import {
-  debounceTime,
-  distinctUntilChanged,
-  filter,
-  fromEvent,
-  map,
-} from 'rxjs';
+import { debounceTime, distinctUntilChanged, fromEvent, map } from 'rxjs';
 
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
@@ -48,7 +42,7 @@ export class SearchBarComponent implements OnInit {
       .pipe(
         map((e: Event) => (e.target as HTMLInputElement).value),
         debounceTime(500),
-        distinctUntilChanged(),
+        distinctUntilChanged()
       )
       .subscribe((query) => this.queryChange.emit(query));
   }

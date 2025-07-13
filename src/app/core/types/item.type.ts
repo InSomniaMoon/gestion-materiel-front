@@ -9,7 +9,15 @@
 export type Item = {
   id: number;
   name: string;
-  description: string;
-  category: string;
+  description?: string;
+  category?: ItemCategory;
+  category_id: number;
   usable: boolean;
+  date_of_buy?: Date;
+};
+
+export type ItemCategory = {
+  id: number;
+  name: string;
+  group_id: number;
 };

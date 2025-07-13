@@ -2,7 +2,7 @@
   <ng-template pTemplate="header">
     <div class="flex">
       <h2 class="p-card-title">{{ item().name }}</h2>
-      <p-tag severity="secondary"> {{ item().category }} </p-tag>
+      <p-tag severity="secondary"> {{ item().category!.name }} </p-tag>
     </div>
   </ng-template>
   <div class="body">
@@ -19,6 +19,10 @@
         severity="info"
       />
     </div>
-    <full-calendar #calendar [options]="calendarOptions()"  style="max-height: 80vh;" />
+    <full-calendar
+      #calendar
+      [options]="calendarOptions()"
+      style="max-height: 80vh"
+    />
   </div>
 </p-card>

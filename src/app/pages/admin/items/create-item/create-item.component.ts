@@ -17,12 +17,14 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ItemsService } from '@app/core/services/items.service';
-import { Item } from '@app/core/types/item.type';
+import { Item, ItemCategory } from '@app/core/types/item.type';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { ButtonModule } from 'primeng/button';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { Textarea } from 'primeng/textarea';
+import { Select } from 'primeng/select';
+import { DatePicker } from 'primeng/datepicker';
 @Component({
   selector: 'app-create-item',
   imports: [
@@ -33,14 +35,37 @@ import { Textarea } from 'primeng/textarea';
     ReactiveFormsModule,
     AutoCompleteModule,
     Textarea,
+    Select,
+    DatePicker,
   ],
   template: `
     <h1>Créer un item</h1>
     <form [formGroup]="form">
-      <p-floatLabel variant="on">
-        <input pInputText type="text" id="name" formControlName="name" />
-        <label for="name">Nom</label>
-      </p-floatLabel>
+      <div class="flex">
+        <p-floatLabel variant="on">
+          <input pInputText type="text" id="name" formControlName="name" />
+          <label for="name">Nom</label>
+        </p-floatLabel>
+        <p-floatLabel variant="on">
+          <p-select
+            id="category"
+            placeholder="Catégorie"
+            [options]="categories()"
+            [filter]="true"
+            optionLabel="name"
+            optionValue="id"
+            filterBy="'name'"
+            [virtualScroll]="true"
+            [scrollHeight]="'200px'"
+            formControlName="category_id"
+          />
+          <label for="category">Catégorie</label>
+        </p-floatLabel>
+        <p-floatLabel variant="on">
+          <p-date-picker id="date_of_buy" />
+          <label for="date_of_buy">Date d'achat (optionnel)</label>
+        </p-floatLabel>
+      </div>
       <p-floatLabel variant="on">
         <textarea
           pTextarea
@@ -50,21 +75,7 @@ import { Textarea } from 'primeng/textarea';
           rows="5"
         ></textarea>
 
-        <label for="description">Description</label>
-      </p-floatLabel>
-      <p-floatLabel variant="on">
-        <p-autoComplete
-          id="category"
-          formControlName="category"
-          [suggestions]="filteredCategories()"
-          fluid
-          (completeMethod)="categoryQuery.set($event.query)"
-          (onHide)="categoryQuery.set('')"
-          (onSelect)="categoryQuery.set('')"
-          (onUnselect)="categoryQuery.set('')"
-          [delay]="10"
-        />
-        <label for="category">Catégorie</label>
+        <label for="description">Description (optionnel)</label>
       </p-floatLabel>
       <div formArray="options">
         @for (item of options.controls; track $index) {
@@ -88,7 +99,9 @@ import { Textarea } from 'primeng/textarea';
                 formControlName="description"
                 rows="5"
               ></textarea>
-              <label for="option-description-{{ $index }}">Description</label>
+              <label for="option-description-{{ $index }}"
+                >Description (optionnel)</label
+              >
             </p-floatLabel>
           </div>
           <p-button
@@ -99,9 +112,8 @@ import { Textarea } from 'primeng/textarea';
             outlined
           />
         </div>
-        @if ($last) {
+        }
         <p-button label="Option" icon="pi pi-plus" (onClick)="addOption()" />
-        } }
       </div>
 
       <button
@@ -123,28 +135,21 @@ export class CreateItemComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
 
   categoryQuery = signal('');
-  categories = signal<string[]>([]);
-
-  filteredCategories = computed(() =>
-    this.categories().filter((cat) =>
-      cat.toUpperCase().includes(this.categoryQuery().toUpperCase())
-    )
-  );
+  categories = signal<ItemCategory[]>([]);
   fb = inject(FormBuilder);
   form = this.fb.group({
     name: this.fb.control('', {
       nonNullable: true,
       validators: [Validators.required],
     }),
-    description: this.fb.control('', {
-      nonNullable: true,
-      validators: [Validators.required],
-    }),
-    category: this.fb.control('', {
-      nonNullable: true,
+    description: this.fb.nonNullable.control(''),
+    category_id: this.fb.nonNullable.control<number | undefined>(undefined, {
       validators: [Validators.required],
     }),
     options: this.fb.array([this.newOption()]),
+    date_of_buy: this.fb.nonNullable.control<Date | undefined>(undefined, {
+      validators: [],
+    }),
   });
 
   get options() {
@@ -154,7 +159,12 @@ export class CreateItemComponent implements OnInit {
     this.itemService
       .getCategories()
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((categories) => this.categories.set(categories));
+      .subscribe((categories) => {
+        this.categories.set(categories);
+        this.form.patchValue({
+          category_id: categories[0]?.id,
+        });
+      });
   }
 
   newOption() {
@@ -182,9 +192,12 @@ export class CreateItemComponent implements OnInit {
   onSubmit() {
     if (this.form.valid) {
       const item: Item = {
-        ...this.form.getRawValue(),
         id: 0,
         usable: true,
+        name: this.form.value.name!,
+        description: this.form.value.description,
+        category_id: this.form.value.category_id!,
+        date_of_buy: this.form.value.date_of_buy,
       };
       this.itemService.createItem(item).subscribe({
         next: () => {
@@ -192,9 +205,5 @@ export class CreateItemComponent implements OnInit {
         },
       });
     }
-  }
-
-  log(laggabel: any) {
-    console.log(laggabel);
   }
 }
