@@ -39,10 +39,22 @@ import { Select } from 'primeng/select';
   template: `
     <h1>Créer un item</h1>
     <form [formGroup]="form">
-      <p-floatLabel variant="on">
-        <input pInputText type="text" id="name" formControlName="name" />
-        <label for="name">Nom</label>
-      </p-floatLabel>
+      <div class="flex">
+        <p-floatLabel variant="on">
+          <input pInputText type="text" id="name" formControlName="name" />
+          <label for="name">Nom</label>
+        </p-floatLabel>
+        <p-floatLabel variant="on">
+          <p-select
+            [options]="categories()"
+            [filter]="true"
+            optionLabel="name"
+            optionValue="id"
+            formControlName="category_id"
+          />
+          <label for="category">Catégorie</label>
+        </p-floatLabel>
+      </div>
       <p-floatLabel variant="on">
         <textarea
           pTextarea
@@ -52,11 +64,7 @@ import { Select } from 'primeng/select';
           rows="5"
         ></textarea>
 
-        <label for="description">Description</label>
-      </p-floatLabel>
-      <p-floatLabel variant="on">
-        <p-select [options]="categories()" formControlName="category" />
-        <label for="category">Catégorie</label>
+        <label for="description">Description (optionnel)</label>
       </p-floatLabel>
       <div formArray="options">
         @for (item of options.controls; track $index) {
@@ -80,7 +88,9 @@ import { Select } from 'primeng/select';
                 formControlName="description"
                 rows="5"
               ></textarea>
-              <label for="option-description-{{ $index }}">Description</label>
+              <label for="option-description-{{ $index }}"
+                >Description (optionnel)</label
+              >
             </p-floatLabel>
           </div>
           <p-button
@@ -91,9 +101,8 @@ import { Select } from 'primeng/select';
             outlined
           />
         </div>
-        @if ($last) {
+        }
         <p-button label="Option" icon="pi pi-plus" (onClick)="addOption()" />
-        } }
       </div>
 
       <button
@@ -123,12 +132,8 @@ export class CreateItemComponent implements OnInit {
       nonNullable: true,
       validators: [Validators.required],
     }),
-    description: this.fb.control('', {
-      nonNullable: true,
-      validators: [Validators.required],
-    }),
-    category: this.fb.control('', {
-      nonNullable: true,
+    description: this.fb.nonNullable.control(''),
+    category_id: this.fb.nonNullable.control<number | undefined>(undefined, {
       validators: [Validators.required],
     }),
     options: this.fb.array([this.newOption()]),
@@ -169,9 +174,11 @@ export class CreateItemComponent implements OnInit {
   onSubmit() {
     if (this.form.valid) {
       const item: Item = {
-        ...this.form.getRawValue(),
         id: 0,
         usable: true,
+        name: this.form.value.name!,
+        description: this.form.value.description,
+        category_id: this.form.value.category_id!,
       };
       this.itemService.createItem(item).subscribe({
         next: () => {

@@ -38,7 +38,7 @@ import { BackofficeService } from '../../services/backoffice.service';
           rows="6"
           formControlName="description"
         ></textarea>
-        <label>Description</label>
+        <label>Description (optionnel)</label>
       </p-float-label>
     </form>
     <p-footer>
@@ -67,7 +67,7 @@ export class AppAdminCreateGroupComponent {
     name: this.fb.nonNullable.control('', {
       validators: [Validators.required],
     }),
-    description: this.fb.control('', {}),
+    description: this.fb.control(''),
   });
 
   save() {

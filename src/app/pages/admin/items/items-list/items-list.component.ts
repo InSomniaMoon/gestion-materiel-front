@@ -67,7 +67,7 @@ import { lastValueFrom } from 'rxjs';
         <ng-template #body let-product>
           <tr>
             <td>{{ product.name }}</td>
-            <td>{{ product.category }}</td>
+            <td>{{ product.category.name }}</td>
             <td></td>
             <td class="actions">
               <p-button

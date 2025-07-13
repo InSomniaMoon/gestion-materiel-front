@@ -9,8 +9,9 @@
 export type Item = {
   id: number;
   name: string;
-  description: string;
-  category: string;
+  description?: string;
+  category?: ItemCategory;
+  category_id: number;
   usable: boolean;
 };
 

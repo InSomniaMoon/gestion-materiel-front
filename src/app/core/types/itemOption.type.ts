@@ -12,7 +12,7 @@ export type ItemOption = {
   id: number;
   item_id: number;
   name: string;
-  description: string;
+  description?: string;
   usable: boolean;
   option_issues?: OptionIssue[];
 };

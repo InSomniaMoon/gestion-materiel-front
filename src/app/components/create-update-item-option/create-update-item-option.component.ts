@@ -17,17 +17,17 @@ import { InputSwitchModule } from 'primeng/inputswitch';
 import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
-    selector: 'app-create-update-item-option',
-    imports: [
-        ReactiveFormsModule,
-        InputTextModule,
-        InputSwitchModule,
-        DialogModule,
-        ButtonModule,
-    ],
-    templateUrl: './create-update-item-option.component.html',
-    styleUrl: './create-update-item-option.component.scss',
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-create-update-item-option',
+  imports: [
+    ReactiveFormsModule,
+    InputTextModule,
+    InputSwitchModule,
+    DialogModule,
+    ButtonModule,
+  ],
+  templateUrl: './create-update-item-option.component.html',
+  styleUrl: './create-update-item-option.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreateUpdateItemOptionComponent implements OnInit {
   private ref = inject(DynamicDialogRef);
@@ -50,7 +50,7 @@ export class CreateUpdateItemOptionComponent implements OnInit {
   form = new FormGroup({
     name: new FormControl('', Validators.required),
     usable: new FormControl(true, Validators.required),
-    description: new FormControl('', Validators.required),
+    description: new FormControl(''),
   });
 
   closeDialog() {
