@@ -19,7 +19,7 @@ export class ItemsService {
 
   createItem(item: Item) {
     return this.http.post<Item>(`${this.api_url}/admin/items`, item, {
-      ...CLEAR_CACHE_CONTEXT_OPTIONS(),
+      ...CLEAR_CACHE_CONTEXT_OPTIONS(new Set([`${this.api_url}/items`])),
     });
   }
 
@@ -49,14 +49,7 @@ export class ItemsService {
   }
 
   updateItem(item: Item) {
-    return this.http.put<Item>(`${this.api_url}/items/${item.id}`, item).pipe(
-      tap(() => {
-        this.cache.clearAll(new RegExp(`${this.api_url}/items/${item.id}.*`));
-        // regexp that starts with `${this.api_url}/items` and anything going after
-        const regex = new RegExp(`${this.api_url}/items.*`);
-        this.cache.clearAll(regex);
-      })
-    );
+    return this.http.put<Item>(`${this.api_url}/items/${item.id}`, item);
   }
 
   getCategories() {

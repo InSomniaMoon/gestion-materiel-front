@@ -11,6 +11,7 @@ export const ADMIN_ROUTES: Routes = [
     path: 'items',
     children: [
       {
+        title: 'Objets',
         path: '',
         loadComponent: () =>
           import('./items/items-list/items-list.component').then(

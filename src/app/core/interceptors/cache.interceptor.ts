@@ -6,7 +6,11 @@ import {
 import { inject } from '@angular/core';
 import { of, tap } from 'rxjs';
 import { CacheService } from '../services/cache.service';
-import { CACHING_DISABLED, CLEAR_CACHE } from '../utils/injectionToken';
+import {
+  CACHING_DISABLED,
+  CLEAR_CACHE,
+  URLS_TO_CLEAR,
+} from '../utils/injectionToken';
 
 export const cacheInterceptor: HttpInterceptorFn = (req, next) => {
   const cacheService = inject(CacheService);
@@ -55,5 +59,9 @@ const checkClearCache = (
     }
 
     cacheService.clearAll(new RegExp(`${exploededUrl.join('/')}.*`));
+    if (!req.context.get(URLS_TO_CLEAR)) {
+      return;
+    }
+    cacheService.clearAll(Array.from(req.context.get(URLS_TO_CLEAR)));
   }
 };
