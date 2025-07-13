@@ -13,7 +13,7 @@ import {
   Signal,
   viewChild,
 } from '@angular/core';
-import { Item } from '@core/types/item.type';
+import { Item, ItemCategory } from '@core/types/item.type';
 import { PaginatedData } from '@core/types/paginatedData.type';
 import { ItemsService } from '@services/items.service';
 
@@ -78,7 +78,7 @@ export class ItemsListComponent implements OnDestroy, AfterViewInit {
 
   noMoreData = signal(false);
 
-  categoryFilter = signal<string | undefined>(undefined);
+  categoryFilter = signal<number | undefined>(undefined);
 
   queryKey = computed(() => [
     'searchItems',
@@ -87,15 +87,15 @@ export class ItemsListComponent implements OnDestroy, AfterViewInit {
     this.categoryFilter(),
   ]);
 
-  private readonly cats!: Signal<string[]>;
+  private readonly cats!: Signal<ItemCategory[]>;
 
   items = signal<Item[]>([]);
 
   categories = computed(() => [
     { label: 'Categories', value: null },
     ...this.cats().map((cat) => ({
-      label: this.upperCaseFirstLetter(cat),
-      value: cat,
+      label: this.upperCaseFirstLetter(cat.name),
+      value: cat.id,
     })),
   ]);
 
@@ -109,7 +109,7 @@ export class ItemsListComponent implements OnDestroy, AfterViewInit {
             page: this.page(),
             size: 10,
             q: this.searchQuery(),
-            category: this.categoryFilter(),
+            category_id: this.categoryFilter(),
           })
           .pipe(
             tap((data) => {

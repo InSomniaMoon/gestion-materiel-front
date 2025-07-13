@@ -1,9 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Item } from '@app/core/types/item.type';
+import { Item, ItemCategory } from '@app/core/types/item.type';
 import { PaginatedData } from '@app/core/types/paginatedData.type';
 import { environment } from '@env/environment';
-import { tap } from 'rxjs';
 import { queryParams } from '../utils/http.utils';
 import { CLEAR_CACHE_CONTEXT_OPTIONS } from '../utils/injectionToken';
 import { CacheService } from './cache.service';
@@ -29,7 +28,7 @@ export class ItemsService {
       size?: number;
       page?: number;
       order_by?: string;
-      category?: string;
+      category_id?: number;
     } = {
       page: 1,
       size: 25,
@@ -54,7 +53,6 @@ export class ItemsService {
 
   getCategories() {
     const url = `${this.api_url}/items/categories`;
-
-    return this.http.get<string[]>(url);
+    return this.http.get<ItemCategory[]>(url);
   }
 }

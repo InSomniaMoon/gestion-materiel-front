@@ -13,3 +13,8 @@ export type Item = {
   category: string;
   usable: boolean;
 };
+
+export type ItemCategory = {
+  id: number;
+  name: string;
+};

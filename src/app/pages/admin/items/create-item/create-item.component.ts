@@ -17,12 +17,13 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ItemsService } from '@app/core/services/items.service';
-import { Item } from '@app/core/types/item.type';
+import { Item, ItemCategory } from '@app/core/types/item.type';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { ButtonModule } from 'primeng/button';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { Textarea } from 'primeng/textarea';
+import { Select } from 'primeng/select';
 @Component({
   selector: 'app-create-item',
   imports: [
@@ -33,6 +34,7 @@ import { Textarea } from 'primeng/textarea';
     ReactiveFormsModule,
     AutoCompleteModule,
     Textarea,
+    Select,
   ],
   template: `
     <h1>Créer un item</h1>
@@ -53,17 +55,7 @@ import { Textarea } from 'primeng/textarea';
         <label for="description">Description</label>
       </p-floatLabel>
       <p-floatLabel variant="on">
-        <p-autoComplete
-          id="category"
-          formControlName="category"
-          [suggestions]="filteredCategories()"
-          fluid
-          (completeMethod)="categoryQuery.set($event.query)"
-          (onHide)="categoryQuery.set('')"
-          (onSelect)="categoryQuery.set('')"
-          (onUnselect)="categoryQuery.set('')"
-          [delay]="10"
-        />
+        <p-select [options]="categories()" formControlName="category" />
         <label for="category">Catégorie</label>
       </p-floatLabel>
       <div formArray="options">
@@ -123,13 +115,8 @@ export class CreateItemComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
 
   categoryQuery = signal('');
-  categories = signal<string[]>([]);
+  categories = signal<ItemCategory[]>([]);
 
-  filteredCategories = computed(() =>
-    this.categories().filter((cat) =>
-      cat.toUpperCase().includes(this.categoryQuery().toUpperCase())
-    )
-  );
   fb = inject(FormBuilder);
   form = this.fb.group({
     name: this.fb.control('', {
