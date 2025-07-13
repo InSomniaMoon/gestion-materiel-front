@@ -25,6 +25,19 @@ export const ADMIN_ROUTES: Routes = [
     ],
   },
   {
+    path: 'categories',
+    children: [
+      {
+        path: '',
+        title: 'Catégories',
+        loadComponent: () =>
+          import('./categories/categories-list/categories-list.component').then(
+            (m) => m.CategoriesListComponent
+          ),
+      },
+    ],
+  },
+  {
     path: 'units',
     children: [
       {

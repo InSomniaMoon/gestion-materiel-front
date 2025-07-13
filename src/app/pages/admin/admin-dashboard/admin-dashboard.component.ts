@@ -33,7 +33,8 @@ import { Card } from 'primeng/card';
 })
 export class AdminDashboardComponent {
   items = [
-    { label: 'Objets', link: '/admin/items' },
+    { label: 'Mes Objets', link: '/admin/items' },
+    { label: "Mes catégories d'objets", link: '/admin/categories' },
     { label: 'Mes unités', link: '/admin/units' },
   ];
 }

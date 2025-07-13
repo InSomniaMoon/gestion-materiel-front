@@ -1,0 +1,11 @@
+<form [formGroup]="form">
+  <p-floatlabel variant="on">
+    <input id="name" pInputText formControlName="name" />
+    <label for="name">Titre de la catégorie</label>
+  </p-floatlabel>
+</form>
+
+<p-footer>
+  <p-button label="Fermer" severity="secondary" (onClick)="ref.close()" />
+  <p-button [label]="saveType()" [disabled]="!form.valid" (onClick)="save()" />
+</p-footer>

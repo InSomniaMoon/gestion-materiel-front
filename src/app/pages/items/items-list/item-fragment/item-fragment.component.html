@@ -2,7 +2,7 @@
   <ng-template pTemplate="header">
     <div class="flex">
       <h2 class="p-card-title">{{ item().name }}</h2>
-      <p-tag severity="secondary"> {{ item().category.name }} </p-tag>
+      <p-tag severity="secondary"> {{ item().category!.name }} </p-tag>
     </div>
   </ng-template>
   <div class="body">

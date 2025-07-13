@@ -18,4 +18,5 @@ export type Item = {
 export type ItemCategory = {
   id: number;
   name: string;
+  group_id: number;
 };
