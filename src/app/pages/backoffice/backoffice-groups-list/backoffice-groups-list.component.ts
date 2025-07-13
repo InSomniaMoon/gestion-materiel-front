@@ -15,10 +15,10 @@ import { InputTextModule } from 'primeng/inputtext';
 import { TableModule, TablePageEvent } from 'primeng/table';
 import { lastValueFrom } from 'rxjs';
 import { BackofficeService } from '../services/backoffice.service';
-import { AppAdminCreateGroupComponent } from './app-admin-create-group/app-admin-create-group.component';
+import { AppAdminCreateGroupComponent } from './backoffice-create-group/backoffice-create-group.component';
 
 @Component({
-  selector: 'app-app-admin-groups-list',
+  selector: 'app-backoffice-groups-list',
   imports: [
     TableModule,
     FormsModule,
@@ -76,7 +76,7 @@ import { AppAdminCreateGroupComponent } from './app-admin-create-group/app-admin
     </p-table>
   `,
 
-  styleUrl: './app-admin-groups-list.component.scss',
+  styleUrl: './backoffice-groups-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppAdminGroupsListComponent {
@@ -109,7 +109,7 @@ export class AppAdminGroupsListComponent {
           q: this.q(),
           size: this.size(),
           sortBy: this.sortBy(),
-        }),
+        })
       ),
   }));
 

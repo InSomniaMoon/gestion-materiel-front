@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
-import { AppAdminDashboardComponent } from './app-admin-dashboard/app-admin-dashboard.component';
-import { AppAdminGroupsListComponent } from './app-admin-groups-list/app-admin-groups-list.component';
-import { AppAdminUsersListComponent } from './app-admin-users-list/app-admin-users-list.component';
-import { AppAdminShellComponent } from './app-admin.shell';
+import { AppAdminDashboardComponent } from './backoffice-dashboard/backoffice-dashboard.component';
+import { AppAdminGroupsListComponent } from './backoffice-groups-list/backoffice-groups-list.component';
+import { AppAdminUsersListComponent } from './backoffice-users-list/backoffice-users-list.component';
+import { AppAdminShellComponent } from './backoffice.shell';
 
 export const APP_ADMIN_ROUTES: Routes = [
   {

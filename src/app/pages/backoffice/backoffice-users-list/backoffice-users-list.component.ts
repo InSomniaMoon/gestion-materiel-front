@@ -19,10 +19,10 @@ import { CreateUserModalComponent } from './create-user-modal/create-user-modal.
 
 import { User } from '@app/core/types/user.type';
 import { TippyDirective } from '@ngneat/helipopper';
-import { AppAdminUserEditGroupsComponent } from './app-admin-user-edit-groups/app-admin-user-edit-groups.component';
+import { AppAdminUserEditGroupsComponent } from './backoffice-user-edit-groups/backoffice-user-edit-groups.component';
 
 @Component({
-  selector: 'app-app-admin-users-list',
+  selector: 'app-backoffice-users-list',
   imports: [
     TableModule,
     FormsModule,
@@ -92,7 +92,7 @@ import { AppAdminUserEditGroupsComponent } from './app-admin-user-edit-groups/ap
       </ng-template>
     </p-table>
   `,
-  styleUrl: './app-admin-users-list.component.scss',
+  styleUrl: './backoffice-users-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppAdminUsersListComponent {
@@ -125,7 +125,7 @@ export class AppAdminUsersListComponent {
           q: this.q(),
           size: this.size(),
           sortBy: this.sortBy(),
-        }),
+        })
       ),
   }));
 

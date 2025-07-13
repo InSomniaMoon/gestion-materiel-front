@@ -91,7 +91,7 @@ export class HeaderComponent implements OnInit {
     {
       label: 'App Admininistration',
       icon: 'pi pi-cog',
-      routerLink: '/app-admin',
+      routerLink: '/backoffice',
       style: {
         display: this.auth$.isAppAdmin() ? 'block' : 'none',
       },

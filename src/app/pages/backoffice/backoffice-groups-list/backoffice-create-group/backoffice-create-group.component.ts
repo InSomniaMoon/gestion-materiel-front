@@ -17,7 +17,7 @@ import { Textarea } from 'primeng/textarea';
 import { BackofficeService } from '../../services/backoffice.service';
 
 @Component({
-  selector: 'app-app-admin-create-group',
+  selector: 'app-backoffice-create-group',
   imports: [
     DialogModule,
     Button,
@@ -50,7 +50,7 @@ import { BackofficeService } from '../../services/backoffice.service';
         [loading]="saveClicked()"
       />
     </p-footer>`,
-  styleUrl: './app-admin-create-group.component.scss',
+  styleUrl: './backoffice-create-group.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppAdminCreateGroupComponent {

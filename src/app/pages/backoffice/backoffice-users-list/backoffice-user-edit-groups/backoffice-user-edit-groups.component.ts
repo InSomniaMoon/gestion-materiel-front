@@ -15,7 +15,7 @@ import { Select, SelectChangeEvent } from 'primeng/select';
 import { BackofficeService } from '../../services/backoffice.service';
 
 @Component({
-  selector: 'app-app-admin-user-edit-groups',
+  selector: 'app-backoffice-user-edit-groups',
   imports: [DialogModule, Button, ReactiveFormsModule, Select, JsonPipe],
   template: ` <form [formGroup]="form">
       <div class="groups-to-add">
@@ -64,7 +64,7 @@ import { BackofficeService } from '../../services/backoffice.service';
         (onClick)="save()"
       />
     </p-footer>`,
-  styleUrl: './app-admin-user-edit-groups.component.scss',
+  styleUrl: './backoffice-user-edit-groups.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppAdminUserEditGroupsComponent {

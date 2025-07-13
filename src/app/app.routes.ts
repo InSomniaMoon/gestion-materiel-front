@@ -21,10 +21,10 @@ export const routes: Routes = [
           import('./pages/items/items.routes').then((m) => m.ITEMS_ROUTES),
       },
       {
-        path: 'app-admin',
+        path: 'backoffice',
         loadChildren: () =>
-          import('./pages/app-admin/app-admin.routes').then(
-            (m) => m.APP_ADMIN_ROUTES,
+          import('./pages/backoffice/backoffice.routes').then(
+            (m) => m.APP_ADMIN_ROUTES
           ),
       },
       {
