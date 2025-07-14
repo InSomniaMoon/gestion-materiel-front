@@ -91,7 +91,8 @@ export class UploadFileComponent {
       next: (res) => {
         this.file.set(file);
         this.fileUrl.set(URL.createObjectURL(file));
-        this.progress.set(100); // Simulate progress completion
+        this.fileUploader().progress = 100; // Simulate progress completion
+        this.fileUploader().clear();
         this.fileUploaded.emit(res.path);
         this.messageService.add({
           severity: 'info',

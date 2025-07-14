@@ -59,4 +59,17 @@ export class ItemsService {
     const url = `${this.api_url}/items/categories`;
     return this.http.get<ItemCategory[]>(url);
   }
+
+  uploadImage = (file: File) => {
+    const formData = new FormData();
+    formData.append('image', file);
+
+    return this.http.post<{ path: string }>(
+      `${this.api_url}/admin/items/images`,
+      formData,
+      {
+        ...CLEAR_CACHE_CONTEXT_OPTIONS(),
+      }
+    );
+  };
 }

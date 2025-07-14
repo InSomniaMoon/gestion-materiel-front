@@ -23,6 +23,7 @@ import {
   SimpleModalComponent,
   SimpleModalData,
 } from '@app/components/simple-modal/simple-modal.component';
+import { environment } from '@env/environment';
 
 @Component({
   selector: 'app-items-list',
@@ -58,6 +59,7 @@ import {
       >
         <ng-template #header>
           <tr>
+            <th></th>
             <th pSortableColumn="name">Nom <p-sortIcon field="name" /></th>
             <th pSortableColumn="category_id">
               Categorie <p-sortIcon field="category_id" />
@@ -69,6 +71,11 @@ import {
         </ng-template>
         <ng-template #body let-product>
           <tr>
+            <td class="image">
+              @if (product.image) {
+              <img [src]="baseUrl + product.image" alt="" />
+              }
+            </td>
             <td>{{ product.name }}</td>
             <td>{{ product.category.name }}</td>
             <td style="text-wrap: nowrap;">{{ product.date_of_buy | date }}</td>
@@ -124,6 +131,7 @@ export class ItemsListComponent {
     { label: '25', value: 25 },
     { label: '50', value: 50 },
   ];
+  baseUrl = environment.api_url + '/storage/';
 
   page = signal(0);
   size = signal(25);

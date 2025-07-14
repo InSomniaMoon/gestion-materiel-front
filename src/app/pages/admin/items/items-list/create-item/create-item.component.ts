@@ -25,6 +25,7 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { Select } from 'primeng/select';
 import { Textarea } from 'primeng/textarea';
+import { UploadFileComponent } from '@app/components/upload-file/upload-file.component';
 @Component({
   selector: 'app-create-item',
   imports: [
@@ -37,6 +38,7 @@ import { Textarea } from 'primeng/textarea';
     Textarea,
     Select,
     DatePicker,
+    UploadFileComponent,
   ],
   template: `
     <form [formGroup]="form">
@@ -65,17 +67,23 @@ import { Textarea } from 'primeng/textarea';
           <label for="date_of_buy">Date d'achat (optionnel)</label>
         </p-float-label>
       </div>
-      <p-float-label variant="on">
-        <textarea
-          pTextarea
-          id="description"
-          autoResize
-          formControlName="description"
-          rows="5"
-        ></textarea>
+      <div class="flex">
+        <p-float-label variant="on" [class]="'w-full'" style="width: 100%;">
+          <textarea
+            pTextarea
+            id="description"
+            autoResize
+            formControlName="description"
+            rows="5"
+          ></textarea>
 
-        <label for="description">Description (optionnel)</label>
-      </p-float-label>
+          <label for="description">Description (optionnel)</label>
+        </p-float-label>
+        <app-upload-file
+          [handler]="fileUploadHandler"
+          (fileUploaded)="setImagePath($event)"
+        />
+      </div>
       <div formArray="options">
         @for (item of options.controls; track $index) {
         <h3 class="option-title">Option {{ $index + 1 }}</h3>
@@ -138,6 +146,14 @@ export class CreateItemComponent implements OnInit {
     this.dialogRef
   ).data;
 
+  fileUploadHandler = this.itemService.uploadImage;
+
+  setImagePath(filePAth: string) {
+    this.form.patchValue({
+      image: filePAth,
+    });
+  }
+
   categoryQuery = signal('');
   categories = signal<ItemCategory[]>([]);
   fb = inject(FormBuilder);
@@ -146,6 +162,9 @@ export class CreateItemComponent implements OnInit {
     name: this.fb.control('', {
       nonNullable: true,
       validators: [Validators.required],
+    }),
+    image: this.fb.control<string>('', {
+      nonNullable: true,
     }),
     description: this.fb.nonNullable.control(''),
     category_id: this.fb.nonNullable.control<number | undefined>(undefined, {
@@ -234,6 +253,7 @@ export class CreateItemComponent implements OnInit {
         description: this.form.value.description,
         category_id: this.form.value.category_id!,
         date_of_buy: this.form.value.date_of_buy,
+        image: this.form.value.image,
         options: this.form.getRawValue().options.map((option) => ({
           id: option.id ?? null,
           name: option.name,
