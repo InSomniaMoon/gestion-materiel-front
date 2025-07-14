@@ -7,6 +7,7 @@ export type Group = {
 
 export type GroupWithPivot = Group & {
   pivot: {
+    group_id?: number;
     role: string;
   };
 };

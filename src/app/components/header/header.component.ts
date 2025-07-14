@@ -61,11 +61,11 @@ export class HeaderComponent implements OnInit {
             }))
           : undefined,
     },
-    {
-      label: 'Mon compte',
-      routerLink: '/account',
-      icon: 'pi pi-user',
-    },
+    // {
+    //   label: 'Mon compte',
+    //   routerLink: '/account',
+    //   icon: 'pi pi-user',
+    // },
     {
       label: 'Déconnexion',
       icon: 'pi pi-sign-out',
@@ -81,11 +81,7 @@ export class HeaderComponent implements OnInit {
       routerLink: '/items',
       icon: 'pi pi-home',
     },
-    {
-      label: 'Mon compte',
-      icon: 'pi pi-user',
-      routerLink: '/account',
-    },
+
     {
       label: 'Administration',
       icon: 'pi pi-cog',

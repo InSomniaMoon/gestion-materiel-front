@@ -20,6 +20,7 @@ import { CreateUserModalComponent } from './create-user-modal/create-user-modal.
 import { User } from '@app/core/types/user.type';
 import { TippyDirective } from '@ngneat/helipopper';
 import { AppAdminUserEditGroupsComponent } from './backoffice-user-edit-groups/backoffice-user-edit-groups.component';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-backoffice-users-list',
@@ -98,6 +99,7 @@ import { AppAdminUserEditGroupsComponent } from './backoffice-user-edit-groups/b
 export class AppAdminUsersListComponent {
   private readonly backofficeService = inject(BackofficeService);
   private readonly dialogService = inject(DialogService);
+  private readonly messageService = inject(MessageService);
 
   page = signal(1);
   size = signal(25);
@@ -143,6 +145,7 @@ export class AppAdminUsersListComponent {
       .open(CreateUserModalComponent, {
         header: 'Ajouter un utilisateur',
         width: '50%',
+        height: '80%',
         modal: true,
         dismissableMask: true,
       })
@@ -156,13 +159,19 @@ export class AppAdminUsersListComponent {
     this.dialogService
       .open(AppAdminUserEditGroupsComponent, {
         header: 'Editer les groupes de ' + user.name,
-        // width: '80%',
+        width: '50%',
+        height: '80%',
         modal: true,
         dismissableMask: true,
         data: { userId: user.id },
       })
       .onClose.subscribe((value) => {
         if (!value) return;
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Succès',
+          detail: "Groupes de l'utilisateur mis à jour avec succès",
+        });
         this.usersQuery.refetch();
       });
   }
