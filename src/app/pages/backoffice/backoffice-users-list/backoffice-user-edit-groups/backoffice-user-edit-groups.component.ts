@@ -36,12 +36,10 @@ import { BackofficeService } from '../../services/backoffice.service';
 
         @for (group of userGroups.value(); track $index) {
         <div class="group">
-          <span [class.changed]="hasGroupChanged(group.group!)">{{
-            group.group?.name
-          }}</span>
+          <span [class.changed]="hasGroupChanged(group)">{{ group.name }}</span>
           <p-select
             [options]="rolesOptions"
-            (onChange)="groupChanged(group.group!, $event)"
+            (onChange)="groupChanged(group, $event)"
             optionLabel="label"
             optionValue="value"
           />
@@ -86,7 +84,7 @@ export class AppAdminUserEditGroupsComponent {
         (group) =>
           !this.userGroups
             .value()
-            .map((ug) => ug.group_id)
+            .map((ug) => ug.id)
             .includes(group.id)
       )
       .filter(

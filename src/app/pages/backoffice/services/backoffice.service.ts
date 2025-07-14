@@ -1,6 +1,6 @@
 import { HttpClient, httpResource } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Group } from '@app/core/types/group.type';
+import { Group, GroupWithPivot } from '@app/core/types/group.type';
 import { PaginatedData } from '@app/core/types/paginatedData.type';
 import { User } from '@app/core/types/user.type';
 import { UserGroup } from '@app/core/types/userGroup.type';
@@ -56,10 +56,12 @@ export class BackofficeService {
   }
 
   getUserGroups(userId: string) {
-    return httpResource<UserGroup[]>(`${this.apiUrl}/users/${userId}/groups`, {
-      defaultValue: [],
-    });
-    // return this.http.get<Group[]>(`${this.apiUrl}/users/${userId}/groups`);
+    return httpResource<GroupWithPivot[]>(
+      `${this.apiUrl}/users/${userId}/groups`,
+      {
+        defaultValue: [],
+      }
+    );
   }
 
   updateUserGroups(
@@ -81,7 +83,7 @@ export class BackofficeService {
     );
   }
 
-  getGroups(): Observable<Group[]>;
+  getGroups(): Observable<GroupWithPivot[]>;
   getGroups(params?: {
     size?: number;
     page?: number;
