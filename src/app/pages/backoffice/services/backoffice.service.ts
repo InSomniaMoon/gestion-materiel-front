@@ -113,8 +113,34 @@ export class BackofficeService {
     });
   }
 
-  createGroup(dto: { name: string; description: string | null }) {
+  createGroup(dto: {
+    name: string;
+    description: string | null;
+    image: string | null;
+  }) {
     return this.http.post(`${this.apiUrl}/groups`, dto, {
+      ...CLEAR_CACHE_CONTEXT_OPTIONS(),
+    });
+  }
+
+  uploadGroupImage = (file: File) => {
+    const formData = new FormData();
+    formData.append('image', file);
+
+    return this.http.post<{ path: string }>(
+      `${this.apiUrl}/groups/image`,
+      formData,
+      {
+        ...CLEAR_CACHE_CONTEXT_OPTIONS(),
+      }
+    );
+  };
+
+  updateGroup(
+    id: number,
+    dto: { name: string; description: string | null; image: string | null }
+  ) {
+    return this.http.put(`${this.apiUrl}/groups/${id}`, dto, {
       ...CLEAR_CACHE_CONTEXT_OPTIONS(),
     });
   }

@@ -5,15 +5,12 @@ import { PaginatedData } from '@app/core/types/paginatedData.type';
 import { environment } from '@env/environment';
 import { queryParams } from '../utils/http.utils';
 import { CLEAR_CACHE_CONTEXT_OPTIONS } from '../utils/injectionToken';
-import { CacheService } from './cache.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ItemsService {
   private readonly http = inject(HttpClient);
-  private readonly cache = inject(CacheService);
-
   private api_url = environment.api_url;
 
   createItem(item: Item) {
@@ -48,11 +45,31 @@ export class ItemsService {
   }
 
   updateItem(item: Item) {
-    return this.http.put<Item>(`${this.api_url}/items/${item.id}`, item);
+    return this.http.put<Item>(`${this.api_url}/admin/items/${item.id}`, item, {
+      ...CLEAR_CACHE_CONTEXT_OPTIONS(new Set([`${this.api_url}/items`])),
+    });
+  }
+  deleteItem(item: Item) {
+    return this.http.delete<Item>(`${this.api_url}/admin/items/${item.id}`, {
+      ...CLEAR_CACHE_CONTEXT_OPTIONS(new Set([`${this.api_url}/items`])),
+    });
   }
 
   getCategories() {
     const url = `${this.api_url}/items/categories`;
     return this.http.get<ItemCategory[]>(url);
   }
+
+  uploadImage = (file: File) => {
+    const formData = new FormData();
+    formData.append('image', file);
+
+    return this.http.post<{ path: string }>(
+      `${this.api_url}/admin/items/images`,
+      formData,
+      {
+        ...CLEAR_CACHE_CONTEXT_OPTIONS(),
+      }
+    );
+  };
 }

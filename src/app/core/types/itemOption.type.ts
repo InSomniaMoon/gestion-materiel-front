@@ -9,8 +9,8 @@ import { OptionIssue } from './optionIssue.type';
 
 // },
 export type ItemOption = {
-  id: number;
-  item_id: number;
+  id: number | null;
+  item_id: number | null;
   name: string;
   description?: string;
   usable: boolean;

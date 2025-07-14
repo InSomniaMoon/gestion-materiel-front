@@ -38,7 +38,7 @@ input
 }
 
 p {
-  margin: 0 0 1rem;
+  margin: 0;
 }
 
 .fc .fc-toolbar {
@@ -74,4 +74,28 @@ a[pButton] {
 
 .invalid {
   color: var(--p-red-500);
+}
+
+table {
+  table-layout: auto;
+}
+td {
+  vertical-align: middle;
+  width: 100%;
+  max-width: fit-content;
+  min-width: 0;
+  &.image {
+    width: 0;
+    img {
+      width: 32px;
+      height: 32px;
+      object-fit: cover;
+    }
+  }
+  // &:has(img),
+  &:has(p-button) {
+    display: flex;
+    justify-content: end;
+    gap: 0.5rem;
+  }
 }

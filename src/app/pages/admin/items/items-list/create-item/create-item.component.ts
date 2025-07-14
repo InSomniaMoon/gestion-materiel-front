@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  computed,
   DestroyRef,
   inject,
   OnInit,
@@ -20,11 +19,13 @@ import { ItemsService } from '@app/core/services/items.service';
 import { Item, ItemCategory } from '@app/core/types/item.type';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { ButtonModule } from 'primeng/button';
+import { DatePicker } from 'primeng/datepicker';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
-import { Textarea } from 'primeng/textarea';
 import { Select } from 'primeng/select';
-import { DatePicker } from 'primeng/datepicker';
+import { Textarea } from 'primeng/textarea';
+import { UploadFileComponent } from '@app/components/upload-file/upload-file.component';
 @Component({
   selector: 'app-create-item',
   imports: [
@@ -37,16 +38,16 @@ import { DatePicker } from 'primeng/datepicker';
     Textarea,
     Select,
     DatePicker,
+    UploadFileComponent,
   ],
   template: `
-    <h1>Créer un item</h1>
     <form [formGroup]="form">
       <div class="flex">
-        <p-floatLabel variant="on">
+        <p-float-label variant="on">
           <input pInputText type="text" id="name" formControlName="name" />
           <label for="name">Nom</label>
-        </p-floatLabel>
-        <p-floatLabel variant="on">
+        </p-float-label>
+        <p-float-label variant="on">
           <p-select
             id="category"
             placeholder="Catégorie"
@@ -60,29 +61,35 @@ import { DatePicker } from 'primeng/datepicker';
             formControlName="category_id"
           />
           <label for="category">Catégorie</label>
-        </p-floatLabel>
-        <p-floatLabel variant="on">
-          <p-date-picker id="date_of_buy" />
+        </p-float-label>
+        <p-float-label variant="on">
+          <p-date-picker id="date_of_buy" formControlName="date_of_buy" />
           <label for="date_of_buy">Date d'achat (optionnel)</label>
-        </p-floatLabel>
+        </p-float-label>
       </div>
-      <p-floatLabel variant="on">
-        <textarea
-          pTextarea
-          id="description"
-          autoResize
-          formControlName="description"
-          rows="5"
-        ></textarea>
+      <div class="flex">
+        <p-float-label variant="on" [class]="'w-full'" style="width: 100%;">
+          <textarea
+            pTextarea
+            id="description"
+            autoResize
+            formControlName="description"
+            rows="5"
+          ></textarea>
 
-        <label for="description">Description (optionnel)</label>
-      </p-floatLabel>
+          <label for="description">Description (optionnel)</label>
+        </p-float-label>
+        <app-upload-file
+          [handler]="fileUploadHandler"
+          (fileUploaded)="setImagePath($event)"
+        />
+      </div>
       <div formArray="options">
         @for (item of options.controls; track $index) {
         <h3 class="option-title">Option {{ $index + 1 }}</h3>
         <div [formGroup]="item" class="option">
           <div class="option-form">
-            <p-floatLabel variant="on">
+            <p-float-label variant="on">
               <input
                 pInputText
                 type="text"
@@ -90,8 +97,8 @@ import { DatePicker } from 'primeng/datepicker';
                 formControlName="name"
               />
               <label for="option-name-{{ $index }}">Nom</label>
-            </p-floatLabel>
-            <p-floatLabel variant="on">
+            </p-float-label>
+            <p-float-label variant="on">
               <textarea
                 pInputTextarea
                 id="option-description-{{ $index }}"
@@ -102,7 +109,7 @@ import { DatePicker } from 'primeng/datepicker';
               <label for="option-description-{{ $index }}"
                 >Description (optionnel)</label
               >
-            </p-floatLabel>
+            </p-float-label>
           </div>
           <p-button
             type="button"
@@ -122,7 +129,7 @@ import { DatePicker } from 'primeng/datepicker';
         type="submit"
         (click)="onSubmit()"
       >
-        Créer
+        {{ data ? 'Modifier' : 'Créer' }}
       </button>
     </form>
   `,
@@ -131,22 +138,39 @@ import { DatePicker } from 'primeng/datepicker';
 })
 export class CreateItemComponent implements OnInit {
   private readonly itemService = inject(ItemsService);
-  private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
+  protected readonly dialogRef = inject(DynamicDialogRef);
+  private readonly dialogService = inject(DialogService);
+
+  protected data: Item | undefined = this.dialogService.getInstance(
+    this.dialogRef
+  ).data;
+
+  fileUploadHandler = this.itemService.uploadImage;
+
+  setImagePath(filePAth: string) {
+    this.form.patchValue({
+      image: filePAth,
+    });
+  }
 
   categoryQuery = signal('');
   categories = signal<ItemCategory[]>([]);
   fb = inject(FormBuilder);
+
   form = this.fb.group({
     name: this.fb.control('', {
       nonNullable: true,
       validators: [Validators.required],
     }),
+    image: this.fb.control<string>('', {
+      nonNullable: true,
+    }),
     description: this.fb.nonNullable.control(''),
     category_id: this.fb.nonNullable.control<number | undefined>(undefined, {
       validators: [Validators.required],
     }),
-    options: this.fb.array([this.newOption()]),
+    options: this.fb.nonNullable.array([this.newOption()]),
     date_of_buy: this.fb.nonNullable.control<Date | undefined>(undefined, {
       validators: [],
     }),
@@ -155,6 +179,7 @@ export class CreateItemComponent implements OnInit {
   get options() {
     return this.form.controls['options'];
   }
+
   ngOnInit(): void {
     this.itemService
       .getCategories()
@@ -165,10 +190,39 @@ export class CreateItemComponent implements OnInit {
           category_id: categories[0]?.id,
         });
       });
+
+    if (!this.data) {
+      return;
+    }
+    this.form.patchValue({
+      name: this.data.name,
+      description: this.data.description,
+      category_id: this.data.category_id,
+      date_of_buy: this.data.date_of_buy
+        ? new Date(this.data.date_of_buy)
+        : undefined,
+    });
+    this.options.clear();
+    this.data.options?.forEach((option) =>
+      this.options.push(
+        this.fb.group({
+          id: this.fb.control(option.id ?? null),
+          name: this.fb.control(option.name, {
+            nonNullable: true,
+            validators: [Validators.required],
+          }),
+          description: this.fb.control(option.description ?? '', {
+            nonNullable: true,
+          }),
+          item_id: this.fb.control(option.item_id ?? null),
+        })
+      )
+    );
   }
 
   newOption() {
     return this.fb.group({
+      id: this.fb.control<number | null>(null),
       name: this.fb.control('', {
         nonNullable: true,
         validators: [Validators.required],
@@ -176,6 +230,7 @@ export class CreateItemComponent implements OnInit {
       description: this.fb.control('', {
         nonNullable: true,
       }),
+      item_id: this.fb.control<number | null>(this.data?.id ?? null),
     });
   }
 
@@ -198,10 +253,21 @@ export class CreateItemComponent implements OnInit {
         description: this.form.value.description,
         category_id: this.form.value.category_id!,
         date_of_buy: this.form.value.date_of_buy,
+        image: this.form.value.image,
+        options: this.form.getRawValue().options.map((option) => ({
+          id: option.id ?? null,
+          name: option.name,
+          description: option.description,
+          usable: true,
+          item_id: this.data ? this.data.id : null,
+        })),
       };
-      this.itemService.createItem(item).subscribe({
+      (this.data
+        ? this.itemService.updateItem({ ...item, id: this.data.id })
+        : this.itemService.createItem(item)
+      ).subscribe({
         next: () => {
-          this.router.navigate(['/admin', 'items']);
+          this.dialogRef.close(true);
         },
       });
     }

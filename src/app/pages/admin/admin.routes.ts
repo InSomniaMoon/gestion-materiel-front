@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
-import { CreateItemComponent } from './items/create-item/create-item.component';
+import { CreateItemComponent } from './items/items-list/create-item/create-item.component';
 
 export const ADMIN_ROUTES: Routes = [
   {

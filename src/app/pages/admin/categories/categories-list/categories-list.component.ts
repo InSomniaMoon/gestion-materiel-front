@@ -11,7 +11,6 @@ import { CategoriesService } from '@app/core/services/categories.service';
 import { injectQuery } from '@tanstack/angular-query-experimental';
 import { Button } from 'primeng/button';
 import { DialogService, DynamicDialogConfig } from 'primeng/dynamicdialog';
-import { InputTextModule } from 'primeng/inputtext';
 import { Paginator, PaginatorState } from 'primeng/paginator';
 import { Select } from 'primeng/select';
 import { TableModule } from 'primeng/table';
@@ -52,6 +51,7 @@ export class CategoriesListComponent {
       this.size(),
       this.searchQuery(),
       this.orderBy(),
+      this.selectedGroup(),
     ],
     queryFn: () =>
       lastValueFrom(

@@ -13,7 +13,13 @@ import { DialogService } from 'primeng/dynamicdialog';
 import { MenubarModule } from 'primeng/menubar';
 import { TieredMenuModule } from 'primeng/tieredmenu';
 import { ChangeActiveGroupComponent } from './changeActiveGroup/changeActiveGroup.component';
+import { environment } from '@env/environment';
+import { JsonPipe } from '@angular/common';
 
+export type MenuItemWithImage = MenuItem & {
+  img?: string;
+  items?: MenuItemWithImage[];
+};
 @Component({
   selector: 'app-header',
   imports: [AvatarModule, TieredMenuModule, MenubarModule, RouterLink],
@@ -30,6 +36,8 @@ export class HeaderComponent implements OnInit {
   readonly selectedGroup = this.auth$.selectedGroup;
   private readonly router = inject(Router);
 
+  protected readonly apiUrl = environment.api_url + '/storage/';
+
   lettres = computed(
     () =>
       this.user()
@@ -38,7 +46,7 @@ export class HeaderComponent implements OnInit {
         .join('') ?? ''
   );
 
-  authItems = computed<MenuItem[]>(() => [
+  authItems = computed<MenuItemWithImage[]>(() => [
     {
       label: this.selectedGroup()?.name ?? 'Groupe Actif',
       icon: 'pi pi-users',
@@ -47,6 +55,7 @@ export class HeaderComponent implements OnInit {
         this.groups().length > 1
           ? this.groups().map((group) => ({
               label: group.name,
+              img: group.image,
               icon: 'pi pi-users',
               command: () => this.auth$.setSelectGroupById(group.id),
             }))
@@ -81,20 +90,22 @@ export class HeaderComponent implements OnInit {
       label: 'Administration',
       icon: 'pi pi-cog',
       routerLink: '/admin',
-      style: {
-        display:
-          this.selectedGroup()?.pivot.role == ('admin' as string)
-            ? 'block'
-            : 'none',
-      },
+      visible: this.auth$.isAdmin(),
+      // style: {
+      //   display:
+      //     this.selectedGroup()?.pivot.role == ('admin' as string)
+      //       ? 'block'
+      //       : 'none',
+      // },
     },
     {
       label: 'App Admininistration',
       icon: 'pi pi-cog',
       routerLink: '/backoffice',
-      style: {
-        display: this.auth$.isAppAdmin() ? 'block' : 'none',
-      },
+      visible: this.auth$.isAppAdmin(),
+      // style: {
+      //   display: this.auth$.isAppAdmin() ? 'block' : 'none',
+      // },
     },
   ]);
   ngOnInit(): void {}
