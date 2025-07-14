@@ -123,7 +123,7 @@ export class BackofficeService {
     });
   }
 
-  uploadGroupImage(file: File) {
+  uploadGroupImage = (file: File) => {
     const formData = new FormData();
     formData.append('image', file);
 
@@ -134,7 +134,7 @@ export class BackofficeService {
         ...CLEAR_CACHE_CONTEXT_OPTIONS(),
       }
     );
-  }
+  };
 
   updateGroup(
     id: number,

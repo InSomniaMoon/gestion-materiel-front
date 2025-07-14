@@ -1,30 +1,22 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  DestroyRef,
   inject,
   linkedSignal,
   OnInit,
   signal,
-  viewChild,
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { UploadFileComponent } from '@app/components/upload-file/upload-file.component';
 import { environment } from '@env/environment';
 import { MessageService } from 'primeng/api';
 import { Button } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
-import {
-  FileSelectEvent,
-  FileUpload,
-  FileUploadHandlerEvent,
-} from 'primeng/fileupload';
 import { FloatLabel } from 'primeng/floatlabel';
 import { InputText } from 'primeng/inputtext';
 import { Textarea } from 'primeng/textarea';
 import { BackofficeService } from '../../services/backoffice.service';
-import { tap } from 'rxjs';
 @Component({
   selector: 'app-backoffice-create-group',
   imports: [
@@ -34,7 +26,7 @@ import { tap } from 'rxjs';
     FloatLabel,
     InputText,
     Textarea,
-    FileUpload,
+    UploadFileComponent,
   ],
   template: ` <form [formGroup]="form">
       <p-float-label>
@@ -60,37 +52,16 @@ import { tap } from 'rxjs';
       />
       <p>Fichier utilisé : {{ file().name }}</p>
       }
-      <!-- (onSelect)="onUpload($event)"
-      (onUpload)="onSend($event)" -->
-      <p-fileupload
-        name="image"
-        #fileUploader
-        [multiple]="false"
-        [customUpload]="true"
-        (uploadHandler)="handleUpload($event)"
-        [auto]="true"
-        accept="image/*"
+      <app-upload-file
         [maxFileSize]="maxFileSize"
-        [invalidFileSizeMessageSummary]="invalidFileSizeMessageSummary"
-        [invalidFileSizeMessageDetail]="invalidFileSizeMessageDetail"
-        [invalidFileTypeMessageSummary]="invalidFileTypeMessageSummary"
-        [invalidFileTypeMessageDetail]="invalidFileTypeMessageDetail"
-        [invalidFileLimitMessageSummary]="invalidFileLimitMessageSummary"
-        [invalidFileLimitMessageDetail]="invalidFileLimitMessageDetail"
-        [showUploadButton]="false"
-        [showCancelButton]="false"
-        chooseLabel="Choisir une image"
-        mode="advanced"
-      >
-        <ng-template #empty>
-          <div>Glisser et deposer le fichier ici pour l'uploader</div>
-        </ng-template>
-      </p-fileupload>
+        [handler]="uploadGroupImage"
+        (fileUploaded)="setFilePath($event)"
+      />
     </form>
     <p-footer>
       <p-button label="Fermer" severity="secondary" (onClick)="ref.close()" />
       <p-button
-        label="Créer"
+        [label]="data ? 'Mettre à jour' : 'Créer'"
         [disabled]="!form.valid || saveClicked()"
         (onClick)="save()"
         [loading]="saveClicked()"
@@ -106,21 +77,17 @@ export class CreateUpdateGroupComponent implements OnInit {
   private readonly backofficeService = inject(BackofficeService);
   private readonly toast = inject(MessageService);
 
-  private readonly data = this.dialogRef.getInstance(this.ref).data;
+  protected readonly data = this.dialogRef.getInstance(this.ref).data;
 
-  fileUploader = viewChild.required('fileUploader', { read: FileUpload });
-  baseUrl = environment.api_url;
+  protected readonly uploadGroupImage = this.backofficeService.uploadGroupImage;
+
+  baseUrl = environment.api_url + '/storage/';
 
   maxFileSize = 1024 * 1024 * 2; // 2MB
-  invalidFileSizeMessageSummary = '{0} : Taille de fichier invalide,';
-  invalidFileSizeMessageDetail =
-    'la taille du fichier ne doit pas dépasser {0}.';
-  invalidFileTypeMessageSummary = '{0} : Type de fichier invalide,';
-  invalidFileTypeMessageDetail = 'le type de fichier doit être une image.';
-  invalidFileLimitMessageDetail =
-    'le nombre de fichiers ne doit pas dépasser {0}.';
-  invalidFileLimitMessageSummary = 'Nombre de fichiers max atteints,';
+
   saveClicked = signal(false);
+
+  progress = signal(0);
 
   form = this.fb.nonNullable.group({
     name: this.fb.nonNullable.control('', {
@@ -135,9 +102,22 @@ export class CreateUpdateGroupComponent implements OnInit {
   save() {
     this.saveClicked.set(true);
 
-    this.saveOrUpdateGroup().subscribe({
+    (this.data
+      ? this.backofficeService.updateGroup(
+          this.data.group.id,
+          this.form.getRawValue()
+        )
+      : this.backofficeService.createGroup(this.form.getRawValue())
+    ).subscribe({
       next: () => {
         this.ref.close(true);
+        this.toast.add({
+          severity: 'success',
+          summary: `Groupe ${this.data ? 'mis à jour' : 'créé'}`,
+          detail: `Le groupe a été ${
+            this.data ? 'mis à jour' : 'créé'
+          } avec succès`,
+        });
       },
       error: () => {
         this.toast.add({
@@ -155,40 +135,10 @@ export class CreateUpdateGroupComponent implements OnInit {
     });
   }
 
-  private saveOrUpdateGroup() {
-    return this.data
-      ? this.backofficeService
-          .updateGroup(this.data.group.id, this.form.getRawValue())
-          .pipe(
-            tap(() => {
-              this.toast.add({
-                severity: 'success',
-                summary: 'Groupe mis à jour',
-                detail: 'Le groupe a été mis à jour avec succès',
-              });
-            })
-          )
-      : this.backofficeService.createGroup(this.form.getRawValue()).pipe(
-          tap(() => {
-            this.toast.add({
-              severity: 'success',
-              summary: 'Groupe créé',
-              detail: 'Le groupe a été créé avec succès',
-            });
-          })
-        );
-  }
-
   file = signal<File>(null!);
   fileUrl = linkedSignal<string>(() =>
     this.file() ? URL.createObjectURL(this.file()) : ''
   );
-
-  totalSize = signal(0);
-
-  totalSizePercent = signal(0);
-
-  private messageService = inject(MessageService);
 
   ngOnInit(): void {
     if (this.data) {
@@ -203,82 +153,7 @@ export class CreateUpdateGroupComponent implements OnInit {
     }
   }
 
-  async handleUpload(event: FileUploadHandlerEvent) {
-    const file = event.files[0];
-    if (!file) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Aucun fichier sélectionné',
-        detail: 'Veuillez sélectionner un fichier à télécharger.',
-      });
-      return;
-    }
-    if (file.size > this.maxFileSize) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Taille de fichier invalide',
-        detail: `La taille du fichier ne doit pas dépasser ${
-          this.maxFileSize / 1024 / 1024
-        } Mo.`,
-      });
-      return;
-    }
-    const { height, width } = await this.getHeightAndWidthFromDataUrl(
-      URL.createObjectURL(file)
-    );
-    if (height !== width) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Image non carrée',
-        detail: "L'image doit être carrée (hauteur = largeur).",
-      });
-
-      this.fileUploader()!.clear();
-      return;
-    }
-    this.fileUploader().progress = 50; // Simulate progress
-    this.uploadFile(file);
-  }
-
-  async onUpload(event: FileSelectEvent) {
-    console.log('Files uploaded:', event);
-    for (let file of event.files) {
-      if (file.size > this.maxFileSize) {
-        continue;
-      }
-    }
-  }
-
-  private uploadFile(file: File) {
-    this.backofficeService.uploadGroupImage(file).subscribe({
-      next: (res) => {
-        this.form.patchValue({
-          image: res.path,
-        });
-        this.file.set(file);
-        this.fileUploader().progress = 100; // Simulate progress completion
-        this.fileUploader().clear(); // Clear the file input
-        this.messageService.add({
-          severity: 'info',
-          summary: 'Image uploadée',
-          detail: '',
-        });
-      },
-    });
-  }
-
-  private getHeightAndWidthFromDataUrl(
-    dataURL: string
-  ): Promise<{ height: number; width: number }> {
-    return new Promise((resolve) => {
-      const img = new Image();
-      img.onload = () => {
-        resolve({
-          height: img.height,
-          width: img.width,
-        });
-      };
-      img.src = dataURL;
-    });
+  setFilePath(filePath: string) {
+    this.form.patchValue({ image: filePath });
   }
 }

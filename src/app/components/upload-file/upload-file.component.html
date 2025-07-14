@@ -1,0 +1,34 @@
+@if (file()) {
+<img
+  [src]="fileUrl()"
+  alt="Uploaded Image"
+  class="uploaded-image"
+  width="64px"
+  height="64px"
+/>
+}
+
+<p-fileupload
+  name="image"
+  #fileUploader
+  [multiple]="false"
+  [customUpload]="true"
+  (uploadHandler)="handleUpload($event)"
+  [auto]="true"
+  [accept]="accept()"
+  [maxFileSize]="maxFileSize"
+  [invalidFileSizeMessageSummary]="invalidFileSizeMessageSummary"
+  [invalidFileSizeMessageDetail]="invalidFileSizeMessageDetail"
+  [invalidFileTypeMessageSummary]="invalidFileTypeMessageSummary"
+  [invalidFileTypeMessageDetail]="invalidFileTypeMessageDetail"
+  [invalidFileLimitMessageSummary]="invalidFileLimitMessageSummary"
+  [invalidFileLimitMessageDetail]="invalidFileLimitMessageDetail"
+  [showUploadButton]="false"
+  [showCancelButton]="false"
+  chooseLabel="Choisir une image"
+  mode="advanced"
+>
+  <ng-template #empty>
+    <div>Glisser et deposer le fichier ici pour l'uploader</div>
+  </ng-template>
+</p-fileupload>

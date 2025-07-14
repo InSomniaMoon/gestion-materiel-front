@@ -82,11 +82,6 @@ import { environment } from '@env/environment';
               severity="secondary"
               (onClick)="openUpdateGroupDialog(group)"
             />
-            <p-button
-              icon="pi pi-pencil"
-              severity="secondary"
-              (onClick)="openUpdateGroupDialog(group)"
-            />
           </td>
         </tr>
       </ng-template>

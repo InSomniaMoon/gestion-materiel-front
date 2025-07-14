@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  computed,
   DestroyRef,
   inject,
   OnInit,
@@ -20,11 +19,12 @@ import { ItemsService } from '@app/core/services/items.service';
 import { Item, ItemCategory } from '@app/core/types/item.type';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { ButtonModule } from 'primeng/button';
+import { DatePicker } from 'primeng/datepicker';
+import { FileUpload } from 'primeng/fileupload';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
-import { Textarea } from 'primeng/textarea';
 import { Select } from 'primeng/select';
-import { DatePicker } from 'primeng/datepicker';
+import { Textarea } from 'primeng/textarea';
 @Component({
   selector: 'app-create-item',
   imports: [
