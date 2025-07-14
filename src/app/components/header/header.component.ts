@@ -14,8 +14,12 @@ import { MenubarModule } from 'primeng/menubar';
 import { TieredMenuModule } from 'primeng/tieredmenu';
 import { ChangeActiveGroupComponent } from './changeActiveGroup/changeActiveGroup.component';
 import { environment } from '@env/environment';
+import { JsonPipe } from '@angular/common';
 
-export type MenuItemWithImage = MenuItem & { img?: string };
+export type MenuItemWithImage = MenuItem & {
+  img?: string;
+  items?: MenuItemWithImage[];
+};
 @Component({
   selector: 'app-header',
   imports: [AvatarModule, TieredMenuModule, MenubarModule, RouterLink],
@@ -32,7 +36,7 @@ export class HeaderComponent implements OnInit {
   readonly selectedGroup = this.auth$.selectedGroup;
   private readonly router = inject(Router);
 
-  protected readonly apiUrl = environment.api_url + '/storage';
+  protected readonly apiUrl = environment.api_url + '/storage/';
 
   lettres = computed(
     () =>

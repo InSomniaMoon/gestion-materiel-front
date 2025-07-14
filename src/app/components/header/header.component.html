@@ -1,16 +1,26 @@
 <p-menubar [model]="menuItems()">
   <ng-template pTemplate="item" let-item let-root="root">
     <a class="flex p-menuitem-link" [routerLink]="item.routerLink">
-      @if (item.img) {
-      <img [src]="apiUrl + '/' + item.img" alt="" />
-      }@else {
       <span [class]="item.icon"></span>
-      }
       <span>{{ item.label }}</span>
     </a>
   </ng-template>
   <ng-template pTemplate="end">
-    <p-tieredMenu #userMenu [popup]="true" [model]="authItems()" />
+    <p-tieredMenu #userMenu [popup]="true" [model]="authItems()">
+      <ng-template #item let-item let-hasSubmenu="hasSubmenu">
+        <a pRipple class="flex items-center p-tieredmenu-item-link">
+          @if (item.img) {
+          <img [src]="apiUrl + item.img" alt="" width="32px" height="32px" />
+          }@else {
+          <span [class]="item.icon"></span>
+          }
+          <span class="ml-2">{{ item.label }}</span>
+          @if (hasSubmenu) {
+          <i class="pi pi-angle-right ml-auto"></i>
+          }
+        </a>
+      </ng-template>
+    </p-tieredMenu>
     <p-avatar
       (click)="userMenu.toggle($event)"
       [label]="lettres()"
