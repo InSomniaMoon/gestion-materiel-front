@@ -106,7 +106,7 @@ export class OptionsTableComponent {
         }
 
         this.itemOptionService
-          .deleteItemOption(this.item()!.id, option.id)
+          .deleteItemOption(this.item()!.id, option.id!)
           .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe({
             next: () => {
