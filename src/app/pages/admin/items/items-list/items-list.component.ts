@@ -18,6 +18,7 @@ import { IconField } from 'primeng/iconfield';
 import { InputIcon } from 'primeng/inputicon';
 import { SearchBarComponent } from '@app/components/search-bar/search-bar.component';
 import { DatePipe } from '@angular/common';
+import { AuthService } from '@app/core/services/auth.service';
 
 @Component({
   selector: 'app-items-list',
@@ -106,6 +107,7 @@ import { DatePipe } from '@angular/common';
 })
 export class ItemsListComponent {
   private readonly itemService = inject(ItemsService);
+  private readonly authService = inject(AuthService);
 
   options = [
     { label: '10', value: 10 },
@@ -125,6 +127,7 @@ export class ItemsListComponent {
       size: this.size(),
       q: this.searchQuery(),
       order_by: this.orderBy(),
+      activeGroup: this.authService.selectedGroup(),
     }),
   });
 

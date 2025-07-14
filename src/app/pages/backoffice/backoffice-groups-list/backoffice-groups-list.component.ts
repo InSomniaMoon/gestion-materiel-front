@@ -6,6 +6,7 @@ import {
   signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { GroupWithPivot } from '@app/core/types/group.type';
 import { injectQuery } from '@tanstack/angular-query-experimental';
 import { Button } from 'primeng/button';
 import { DialogService } from 'primeng/dynamicdialog';
@@ -15,7 +16,8 @@ import { InputTextModule } from 'primeng/inputtext';
 import { TableModule, TablePageEvent } from 'primeng/table';
 import { lastValueFrom } from 'rxjs';
 import { BackofficeService } from '../services/backoffice.service';
-import { AppAdminCreateGroupComponent } from './backoffice-create-group/backoffice-create-group.component';
+import { CreateUpdateGroupComponent } from './backoffice-create-update-group/backoffice-create-update-group.component';
+import { environment } from '@env/environment';
 
 @Component({
   selector: 'app-backoffice-groups-list',
@@ -61,16 +63,31 @@ import { AppAdminCreateGroupComponent } from './backoffice-create-group/backoffi
       </ng-template>
       <ng-template #header>
         <tr>
+          <th></th>
           <th>Nom</th>
-          <th>Mail</th>
-          <th>Role</th>
+          <th></th>
         </tr>
       </ng-template>
-      <ng-template #body let-user>
+      <ng-template #body let-group>
         <tr>
-          <td>{{ user.name }}</td>
-          <td>{{ user.email }}</td>
-          <td>{{ user.role }}</td>
+          <td class="image">
+            @if(group.image) {
+            <img [src]="baseUrl + group.image" width="32px" height="32px" />
+            }
+          </td>
+          <td>{{ group.name }}</td>
+          <td style="background-color: aliceblue;">
+            <p-button
+              icon="pi pi-pencil"
+              severity="secondary"
+              (onClick)="openUpdateGroupDialog(group)"
+            />
+            <p-button
+              icon="pi pi-pencil"
+              severity="secondary"
+              (onClick)="openUpdateGroupDialog(group)"
+            />
+          </td>
         </tr>
       </ng-template>
     </p-table>
@@ -82,6 +99,8 @@ import { AppAdminCreateGroupComponent } from './backoffice-create-group/backoffi
 export class AppAdminGroupsListComponent {
   private readonly backofficeService = inject(BackofficeService);
   private readonly dialogService = inject(DialogService);
+
+  baseUrl = environment.api_url + '/storage/';
 
   page = signal(1);
   size = signal(25);
@@ -117,7 +136,7 @@ export class AppAdminGroupsListComponent {
 
   openCreateGroupDialog() {
     this.dialogService
-      .open(AppAdminCreateGroupComponent, {
+      .open(CreateUpdateGroupComponent, {
         header: 'Créer un groupe',
         width: '70%',
         modal: true,
@@ -125,6 +144,22 @@ export class AppAdminGroupsListComponent {
       })
       .onClose.subscribe((created) => {
         if (created) {
+          this.groupsQuery.refetch();
+        }
+      });
+  }
+
+  openUpdateGroupDialog(group: GroupWithPivot) {
+    this.dialogService
+      .open(CreateUpdateGroupComponent, {
+        header: `Modifier le groupe ${group.name}`,
+        width: '70%',
+        modal: true,
+        dismissableMask: true,
+        data: { group },
+      })
+      .onClose.subscribe((updated) => {
+        if (updated) {
           this.groupsQuery.refetch();
         }
       });

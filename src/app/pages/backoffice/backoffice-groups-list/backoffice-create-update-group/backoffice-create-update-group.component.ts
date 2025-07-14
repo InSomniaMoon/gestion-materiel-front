@@ -3,6 +3,8 @@ import {
   Component,
   DestroyRef,
   inject,
+  linkedSignal,
+  OnInit,
   signal,
   viewChild,
 } from '@angular/core';
@@ -15,15 +17,14 @@ import { DialogModule } from 'primeng/dialog';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import {
   FileSelectEvent,
-  FileSendEvent,
   FileUpload,
-  FileUploadEvent,
   FileUploadHandlerEvent,
 } from 'primeng/fileupload';
 import { FloatLabel } from 'primeng/floatlabel';
 import { InputText } from 'primeng/inputtext';
 import { Textarea } from 'primeng/textarea';
 import { BackofficeService } from '../../services/backoffice.service';
+import { tap } from 'rxjs';
 @Component({
   selector: 'app-backoffice-create-group',
   imports: [
@@ -49,7 +50,16 @@ import { BackofficeService } from '../../services/backoffice.service';
         ></textarea>
         <label>Description (optionnel)</label>
       </p-float-label>
-
+      @if (file()) {
+      <img
+        [src]="fileUrl()"
+        alt="Image"
+        class="group-image"
+        width="128px"
+        height="128px"
+      />
+      <p>Fichier utilisé : {{ file().name }}</p>
+      }
       <!-- (onSelect)="onUpload($event)"
       (onUpload)="onSend($event)" -->
       <p-fileupload
@@ -76,9 +86,6 @@ import { BackofficeService } from '../../services/backoffice.service';
           <div>Glisser et deposer le fichier ici pour l'uploader</div>
         </ng-template>
       </p-fileupload>
-      @if (file()) {
-      <p>Fichier utilisé : {{ file().name }}</p>
-      }
     </form>
     <p-footer>
       <p-button label="Fermer" severity="secondary" (onClick)="ref.close()" />
@@ -89,16 +96,17 @@ import { BackofficeService } from '../../services/backoffice.service';
         [loading]="saveClicked()"
       />
     </p-footer>`,
-  styleUrl: './backoffice-create-group.component.scss',
+  styleUrl: './backoffice-create-update-group.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppAdminCreateGroupComponent {
+export class CreateUpdateGroupComponent implements OnInit {
   readonly ref = inject(DynamicDialogRef);
   readonly dialogRef = inject(DialogService);
   private readonly fb = inject(FormBuilder);
   private readonly backofficeService = inject(BackofficeService);
   private readonly toast = inject(MessageService);
-  private readonly destroyRef = inject(DestroyRef);
+
+  private readonly data = this.dialogRef.getInstance(this.ref).data;
 
   fileUploader = viewChild.required('fileUploader', { read: FileUpload });
   baseUrl = environment.api_url;
@@ -119,47 +127,82 @@ export class AppAdminCreateGroupComponent {
       validators: [Validators.required],
     }),
     description: this.fb.control(''),
-    file: this.fb.control<string>('', {
+    image: this.fb.control<string>('', {
       validators: [Validators.required],
     }),
   });
 
   save() {
     this.saveClicked.set(true);
-    this.backofficeService
-      .createGroup(this.form.getRawValue())
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: () => {
-          this.toast.add({
-            severity: 'success',
-            summary: 'Groupe créé',
-            detail: 'Le groupe a été créé avec succès',
-          });
 
-          this.ref.close(true);
-        },
-        error: () => {
-          this.toast.add({
-            severity: 'error',
-            summary: 'Erreur',
-            detail: 'Une erreur est survenue lors de la création du groupe',
-          });
-        },
-        complete: () => {
-          this.saveClicked.set(false);
-        },
-      });
+    this.saveOrUpdateGroup().subscribe({
+      next: () => {
+        this.ref.close(true);
+      },
+      error: () => {
+        this.toast.add({
+          severity: 'error',
+          summary: 'Erreur',
+          detail: `Une erreur est survenue lors de la ${
+            this.data ? 'mise à jour' : 'création'
+          } du groupe`,
+        });
+        this.saveClicked.set(false);
+      },
+      complete: () => {
+        this.saveClicked.set(false);
+      },
+    });
+  }
+
+  private saveOrUpdateGroup() {
+    return this.data
+      ? this.backofficeService
+          .updateGroup(this.data.group.id, this.form.getRawValue())
+          .pipe(
+            tap(() => {
+              this.toast.add({
+                severity: 'success',
+                summary: 'Groupe mis à jour',
+                detail: 'Le groupe a été mis à jour avec succès',
+              });
+            })
+          )
+      : this.backofficeService.createGroup(this.form.getRawValue()).pipe(
+          tap(() => {
+            this.toast.add({
+              severity: 'success',
+              summary: 'Groupe créé',
+              detail: 'Le groupe a été créé avec succès',
+            });
+          })
+        );
   }
 
   file = signal<File>(null!);
-  fileUrl = signal<string>('');
+  fileUrl = linkedSignal<string>(() =>
+    this.file() ? URL.createObjectURL(this.file()) : ''
+  );
 
   totalSize = signal(0);
 
   totalSizePercent = signal(0);
 
   private messageService = inject(MessageService);
+
+  ngOnInit(): void {
+    if (this.data) {
+      this.form.patchValue({
+        name: this.data.group.name,
+        description: this.data.group.description,
+      });
+      this.file.set(this.data.group.image);
+      this.fileUrl.set(
+        `${this.baseUrl}/${this.data.group.image ?? 'default-group.png'}`
+      );
+    }
+  }
+
   async handleUpload(event: FileUploadHandlerEvent) {
     const file = event.files[0];
     if (!file) {
@@ -210,14 +253,14 @@ export class AppAdminCreateGroupComponent {
     this.backofficeService.uploadGroupImage(file).subscribe({
       next: (res) => {
         this.form.patchValue({
-          file: res.path,
+          image: res.path,
         });
         this.file.set(file);
         this.fileUploader().progress = 100; // Simulate progress completion
-
+        this.fileUploader().clear(); // Clear the file input
         this.messageService.add({
           severity: 'info',
-          summary: 'File Uploaded',
+          summary: 'Image uploadée',
           detail: '',
         });
       },

@@ -1,7 +1,11 @@
 <p-menubar [model]="menuItems()">
   <ng-template pTemplate="item" let-item let-root="root">
     <a class="flex p-menuitem-link" [routerLink]="item.routerLink">
+      @if (item.img) {
+      <img [src]="apiUrl + '/' + item.img" alt="" />
+      }@else {
       <span [class]="item.icon"></span>
+      }
       <span>{{ item.label }}</span>
     </a>
   </ng-template>

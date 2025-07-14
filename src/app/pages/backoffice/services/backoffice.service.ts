@@ -113,7 +113,11 @@ export class BackofficeService {
     });
   }
 
-  createGroup(dto: { name: string; description: string | null }) {
+  createGroup(dto: {
+    name: string;
+    description: string | null;
+    image: string | null;
+  }) {
     return this.http.post(`${this.apiUrl}/groups`, dto, {
       ...CLEAR_CACHE_CONTEXT_OPTIONS(),
     });
@@ -130,5 +134,14 @@ export class BackofficeService {
         ...CLEAR_CACHE_CONTEXT_OPTIONS(),
       }
     );
+  }
+
+  updateGroup(
+    id: number,
+    dto: { name: string; description: string | null; image: string | null }
+  ) {
+    return this.http.put(`${this.apiUrl}/groups/${id}`, dto, {
+      ...CLEAR_CACHE_CONTEXT_OPTIONS(),
+    });
   }
 }
