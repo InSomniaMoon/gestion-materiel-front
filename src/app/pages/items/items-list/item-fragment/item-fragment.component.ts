@@ -61,7 +61,7 @@ export class ItemFragmentComponent implements OnInit, AfterViewInit {
   private readonly router = inject(Router);
   private readonly dialog = inject(DialogService);
 
-  calendar = viewChild.required<FullCalendarComponent>('calendar');
+  calendar = viewChild<FullCalendarComponent>('calendar');
 
   calendarOptions = computed<CalendarOptions>(() => ({
     locale,
@@ -90,7 +90,7 @@ export class ItemFragmentComponent implements OnInit, AfterViewInit {
     this.fetchSubscriptions();
   }
   ngAfterViewInit(): void {
-    this.calendar().getApi().updateSize();
+    // this.calendar().getApi().updateSize();
   }
 
   openAddSubscriptionDialog() {
@@ -143,7 +143,7 @@ export class ItemFragmentComponent implements OnInit, AfterViewInit {
 
   dayClicked(event: any) {
     console.log(event);
-    this.calendar().getApi().changeView('timeGridDay', event.dateStr);
+    this.calendar()?.getApi().changeView('timeGridDay', event.dateStr);
     // TODO: Implement this
   }
 

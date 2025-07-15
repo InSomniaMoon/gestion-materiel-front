@@ -1,14 +1,16 @@
-:host,
-.items-list {
+:host {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  padding: 1rem;
+  padding-top: 1rem;
   width: 100%;
 }
 .items-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
   overflow: auto;
-  padding: 0;
+  padding: 0 1rem;
 }
 
 p-progressSpinner {

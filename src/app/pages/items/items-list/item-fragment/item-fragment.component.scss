@@ -1,6 +1,19 @@
 :host {
-  display: block;
+  display: flex;
+  padding-bottom: 4px;
 }
+
+:host ::ng-deep {
+  p-card {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    .p-card {
+      flex: 1;
+    }
+  }
+}
+
 .body {
   flex: 1;
   display: flex;
@@ -19,4 +32,8 @@ mwl-calendar-month-view {
   @media screen and (min-width: 768px) {
     width: 50%;
   }
+}
+
+p-tag {
+  text-wrap: nowrap;
 }
