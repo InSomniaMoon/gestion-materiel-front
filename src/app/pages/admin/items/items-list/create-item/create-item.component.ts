@@ -14,7 +14,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Router } from '@angular/router';
+import { UploadFileComponent } from '@app/components/upload-file/upload-file.component';
 import { ItemsService } from '@app/core/services/items.service';
 import { Item, ItemCategory } from '@app/core/types/item.type';
 import { AutoCompleteModule } from 'primeng/autocomplete';
@@ -25,7 +25,6 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { Select } from 'primeng/select';
 import { Textarea } from 'primeng/textarea';
-import { UploadFileComponent } from '@app/components/upload-file/upload-file.component';
 @Component({
   selector: 'app-create-item',
   imports: [
@@ -55,8 +54,7 @@ import { UploadFileComponent } from '@app/components/upload-file/upload-file.com
             [filter]="true"
             optionLabel="name"
             optionValue="id"
-            filterBy="'name'"
-            [virtualScroll]="true"
+            filterBy="name"
             [scrollHeight]="'200px'"
             formControlName="category_id"
           />
