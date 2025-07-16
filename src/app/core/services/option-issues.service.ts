@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '@env/environment';
-import { of, tap } from 'rxjs';
+import { tap } from 'rxjs';
 import { OptionIssue } from '../types/optionIssue.type';
 import { CLEAR_CACHE_CONTEXT_OPTIONS } from '../utils/injectionToken';
 import { CacheService } from './cache.service';
@@ -16,7 +16,6 @@ export class OptionIssuesService {
 
   getOptionIssues(itemId: number) {
     const url = `/admin/items/${itemId}/options/issues`;
-
     return this.http.get<OptionIssue[]>(this.api_url + url);
   }
 

@@ -17,11 +17,12 @@
       <p-toggleButton
         onLabel="Oui"
         offLabel="Non"
-        [disabled]="true"
+        [disabled]="!userAdmin()"
         role="button"
-        [onIcon]="'pi pi-check'"
+        onIcon="pi pi-check"
         offIcon="pi pi-times"
-        [ngModel]="item()?.usable" />
+        [ngModel]="item()?.usable"
+        (ngModelChange)="updateItem()" />
     </div>
   </section>
 
