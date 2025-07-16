@@ -33,6 +33,7 @@ export class HeaderComponent implements OnInit {
   readonly user = this.auth$.user;
   readonly groups = this.auth$.groups;
   readonly selectedGroup = this.auth$.selectedGroup;
+  readonly selectedUnit = this.auth$.selectedUnit;
   private readonly router = inject(Router);
 
   protected readonly apiUrl = environment.api_url + '/storage/';
@@ -59,6 +60,11 @@ export class HeaderComponent implements OnInit {
               command: () => this.auth$.setSelectGroupById(group.id),
             }))
           : undefined,
+    },
+    {
+      label: this.selectedUnit()?.name ?? "Pas d'unité ",
+      icon: 'pi pi-building',
+      command: undefined,
     },
     // {
     //   label: 'Mon compte',

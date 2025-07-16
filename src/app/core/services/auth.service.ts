@@ -1,14 +1,19 @@
 import { HttpClient } from '@angular/common/http';
-import { computed, inject, Injectable, signal } from '@angular/core';
+import {
+  computed,
+  inject,
+  Injectable,
+  linkedSignal,
+  signal,
+} from '@angular/core';
 import { LoginDTO } from '@core/types/loginDTO.type';
 import { User } from '@core/types/user.type';
 import { environment } from '@env/environment';
 import { catchError, map, of, tap } from 'rxjs';
-import { UserGroup } from '../types/userGroup.type';
+import { GroupWithPivot } from '../types/group.type';
+import { Unit } from '../types/unit.type';
 import { REFRESH_TOKEN_KEY } from '../utils/constants';
 import { CacheService } from './cache.service';
-import { Group, GroupWithPivot } from '../types/group.type';
-import { Unit } from '../types/unit.type';
 
 @Injectable({
   providedIn: 'root',
@@ -34,7 +39,13 @@ export class AuthService {
       unit => unit.group_id == this.selectedGroup()?.id
     );
   });
-  private _selectedUnit = signal<Unit | null>(null);
+  private _selectedUnit = linkedSignal<Unit | null>(
+    () => this._groupUnits()[0] || null
+  );
+  selectedUnit = this._selectedUnit.asReadonly();
+  setSelectedUnit(unit: Unit | null) {
+    this._selectedUnit.set(unit);
+  }
 
   userUnits = this._groupUnits;
 
