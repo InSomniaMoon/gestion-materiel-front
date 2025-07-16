@@ -1,5 +1,4 @@
 import {
-  AfterViewChecked,
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
@@ -14,7 +13,6 @@ import {
   viewChild,
 } from '@angular/core';
 import { Item, ItemCategory } from '@core/types/item.type';
-import { PaginatedData } from '@core/types/paginatedData.type';
 import { ItemsService } from '@services/items.service';
 
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
@@ -57,7 +55,15 @@ import { fromEvent, lastValueFrom, map, tap } from 'rxjs';
         <app-item-fragment [item]="item" />
       }
       @if (itemsQuery.isLoading()) {
-        <p-progressSpinner />
+        <div
+          class="flex justify-center content-center"
+          style="grid-column: 1/-1; padding-block: 1rem;">
+          <p-progress-spinner
+            strokeWidth="8"
+            fill="transparent"
+            animationDuration=".5s"
+            [style]="{ width: '50px', height: '50px' }" />
+        </div>
       }
     </div>
   `,
@@ -65,8 +71,6 @@ import { fromEvent, lastValueFrom, map, tap } from 'rxjs';
 export class ItemsListComponent implements OnDestroy, AfterViewInit {
   private readonly items$ = inject(ItemsService);
   private readonly destroyRef = inject(DestroyRef);
-
-  readonly paginated!: Signal<PaginatedData<Item> | undefined>;
 
   private readonly scrollContent =
     viewChild.required<ElementRef<HTMLDivElement>>('scroll');
@@ -106,7 +110,7 @@ export class ItemsListComponent implements OnDestroy, AfterViewInit {
         this.items$
           .getItems({
             page: this.page(),
-            size: 10,
+            size: 25,
             q: this.searchQuery(),
             category_id: this.categoryFilter(),
           })

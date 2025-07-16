@@ -36,6 +36,14 @@ input
   gap: 0.5rem;
   align-items: center;
 }
+.flex-column {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.content-center {
+  justify-content: center;
+}
 
 p {
   margin: 0;

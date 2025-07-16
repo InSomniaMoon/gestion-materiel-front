@@ -31,7 +31,6 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import { MessageService } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
 
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import locale from '@fullcalendar/core/locales/fr';
 
 @Component({
@@ -131,12 +130,12 @@ export class ItemFragmentComponent implements OnInit, AfterViewInit {
   });
 
   fetchSubscriptions() {
-    this.subscription$
-      .getItemSubscriptions(this.item())
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(subscriptions => {
-        this.uses.set(subscriptions);
-      });
+    // this.subscription$
+    //   .getItemSubscriptions(this.item())
+    //   .pipe(takeUntilDestroyed(this.destroyRef))
+    //   .subscribe(subscriptions => {
+    //     this.uses.set(subscriptions);
+    //   });
   }
 
   displaySubscriptionDialog = signal(false);
