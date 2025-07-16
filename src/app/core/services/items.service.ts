@@ -38,6 +38,26 @@ export class ItemsService {
     });
   }
 
+  getAdminItems(
+    opt: {
+      q?: string;
+      size?: number;
+      page?: number;
+      order_by?: string;
+      category_id?: number;
+      sort_by?: string;
+    } = {
+      page: 1,
+      size: 25,
+    }
+  ) {
+    let url = `${this.api_url}/admin/items`;
+
+    return this.http.get<PaginatedData<Item>>(url, {
+      params: queryParams(opt),
+    });
+  }
+
   getItem(id: number) {
     const url = `${this.api_url}/items/${id}`;
 

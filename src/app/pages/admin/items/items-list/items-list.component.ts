@@ -2,29 +2,31 @@ import { DatePipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
+  effect,
   inject,
   resource,
   signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { SearchBarComponent } from '@app/components/search-bar/search-bar.component';
-import { AuthService } from '@app/core/services/auth.service';
+import {
+  SimpleModalComponent,
+  SimpleModalData,
+} from '@app/components/simple-modal/simple-modal.component';
 import { ItemsService } from '@app/core/services/items.service';
 import { Item } from '@app/core/types/item.type';
 import { AppTable } from '@components/ui/table/table.component';
-import { Button } from 'primeng/button';
+import { environment } from '@env/environment';
+import { Badge } from 'primeng/badge';
+import { Button, ButtonDirective } from 'primeng/button';
 import { DialogService } from 'primeng/dynamicdialog';
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 import { Select, SelectModule } from 'primeng/select';
 import { TableModule } from 'primeng/table';
 import { lastValueFrom } from 'rxjs';
 import { CreateItemComponent } from './create-item/create-item.component';
-import {
-  SimpleModalComponent,
-  SimpleModalData,
-} from '@app/components/simple-modal/simple-modal.component';
-import { environment } from '@env/environment';
-
 @Component({
   selector: 'app-items-list',
   imports: [
@@ -37,6 +39,9 @@ import { environment } from '@env/environment';
     Button,
     SearchBarComponent,
     DatePipe,
+    Badge,
+    RouterLink,
+    ButtonDirective,
   ],
   template: `
     <div class="header">
@@ -54,31 +59,59 @@ import { environment } from '@env/environment';
         [value]="items.value()?.data ?? []"
         stripedRows
         [sortField]="orderBy()"
-        (onSort)="orderBy.set($event.field)">
+        [sortOrder]="sortBy()"
+        (onSort)="orderBy.set($event.field); sortBy.set($event.order)">
         <ng-template #header>
           <tr>
+            <th pSortableColumn="state">Etat<p-sortIcon field="state" /></th>
             <th></th>
-            <th pSortableColumn="name">Nom <p-sortIcon field="name" /></th>
+            <th pSortableColumn="name">Nom<p-sortIcon field="name" /></th>
             <th pSortableColumn="category_id">
               Categorie <p-sortIcon field="category_id" />
             </th>
+            <th pSortableColumn="open_option_issues_count">
+              Avaries
+              <p-sortIcon field="open_option_issues_count" />
+            </th>
             <th>Date d'achat</th>
-            <th>Avaries</th>
             <th></th>
           </tr>
         </ng-template>
         <ng-template #body let-product>
           <tr>
             <td class="image">
+              <p-badge
+                size="small"
+                value=" "
+                [severity]="
+                  product.state === 'OK'
+                    ? 'success'
+                    : product.state === 'NOK'
+                      ? 'warn'
+                      : product.state === 'KO'
+                        ? 'danger'
+                        : 'info'
+                " />
+            </td>
+            <td class="image">
               @if (product.image) {
                 <img [src]="baseUrl + product.image" alt="" />
               }
             </td>
             <td>{{ product.name }}</td>
-            <td>{{ product.category.name }}</td>
+            <td style="text-wrap: nowrap;">{{ product.category.name }}</td>
+            <td style="text-wrap: nowrap;">
+              {{ product.open_option_issues_count }}
+            </td>
             <td style="text-wrap: nowrap;">{{ product.date_of_buy | date }}</td>
-            <td style="text-wrap: nowrap;"></td>
             <td class="actions">
+              <a
+                pButton
+                [routerLink]="['/items', product.id]"
+                size="small"
+                severity="info"
+                icon="pi pi-eye">
+              </a>
               <p-button
                 icon="pi pi-pencil"
                 size="small"
@@ -101,14 +134,16 @@ import { environment } from '@env/environment';
           [ngModel]="size()"
           (ngModelChange)="page.set(0); size.set($event)" />
         <p-paginator
-          [first]="page()"
+          [first]="first()"
           [rows]="size()"
           [totalRecords]="items.value()?.total ?? 0"
           (onPageChange)="onPageChange($event)"
           [showCurrentPageReport]="true"
           currentPageReportTemplate="{first} - {last} sur {totalRecords}"
           [showPageLinks]="false"
-          [showFirstLastIcon]="false" />
+          [showFirstLastIcon]="false"
+          [alwaysShow]="true"
+          [locale]="'fr'" />
       </div>
     </matos-table>
   `,
@@ -117,9 +152,15 @@ import { environment } from '@env/environment';
 })
 export class ItemsListComponent {
   private readonly itemService = inject(ItemsService);
-  private readonly authService = inject(AuthService);
   private readonly dialogService = inject(DialogService);
 
+  constructor() {
+    effect(() => {
+      this.orderBy();
+      this.sortBy();
+      this.page.set(0);
+    });
+  }
   options = [
     { label: '10', value: 10 },
     { label: '25', value: 25 },
@@ -131,20 +172,25 @@ export class ItemsListComponent {
   size = signal(25);
   searchQuery = signal('');
   orderBy = signal('name');
+  sortBy = signal<1 | -1>(1);
+  first = computed(() => this.page() * this.size());
 
   items = resource({
-    loader: ({ request }) => lastValueFrom(this.itemService.getItems(request)),
+    loader: ({ request }) =>
+      lastValueFrom(this.itemService.getAdminItems(request)),
     request: () => ({
       page: this.page(),
       size: this.size(),
       q: this.searchQuery(),
       order_by: this.orderBy(),
-      activeGroup: this.authService.selectedGroup(),
+      sort_by: this.sortBy() === 1 ? 'asc' : 'desc',
     }),
   });
 
   onPageChange(event: PaginatorState) {
-    this.page.set(event.page! + 1);
+    console.log('Page changed:', event);
+
+    this.page.set(event.page!);
     this.size.set(event.rows!);
   }
 

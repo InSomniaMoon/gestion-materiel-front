@@ -87,6 +87,9 @@ a[pButton] {
 table {
   table-layout: auto;
 }
+th {
+  text-wrap: nowrap;
+}
 td {
   vertical-align: middle;
   width: 100%;
