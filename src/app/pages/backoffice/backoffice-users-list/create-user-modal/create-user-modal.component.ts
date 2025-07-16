@@ -36,8 +36,7 @@ import { BackofficeService } from '../../services/backoffice.service';
             optionLabel="name"
             optionValue="code"
             placeholder="Groupe"
-            formControlName="group_id"
-          />
+            formControlName="group_id" />
           <label for="role">Groupe</label>
         </p-floatlabel>
         <p-floatlabel>
@@ -46,8 +45,7 @@ import { BackofficeService } from '../../services/backoffice.service';
             optionLabel="name"
             optionValue="code"
             placeholder="Rôle"
-            formControlName="role"
-          />
+            formControlName="role" />
           <label for="role">Role</label>
         </p-floatlabel>
       </div>
@@ -60,8 +58,7 @@ import { BackofficeService } from '../../services/backoffice.service';
           [options]="roles"
           optionLabel="name"
           optionValue="code"
-          formControlName="app_role"
-        />
+          formControlName="app_role" />
         <label for="role">Rôle appli</label>
       </p-floatlabel>
       <p-floatlabel>
@@ -101,10 +98,10 @@ export class CreateUserModalComponent {
   });
 
   groups = computed(() =>
-    (this.groupsResource.value() ?? []).map((group) => ({
+    (this.groupsResource.value() ?? []).map(group => ({
       name: group.name,
       code: group.id,
-    })),
+    }))
   );
 
   form = this.fb.nonNullable.group({
@@ -131,7 +128,7 @@ export class CreateUserModalComponent {
       .createUser(this.form.getRawValue())
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (val) => {
+        next: val => {
           console.log(val);
           this.toast.add({
             detail: 'Utilisateur ajouté avec succès',
@@ -139,7 +136,7 @@ export class CreateUserModalComponent {
           });
           this.ref.close(true);
         },
-        error: (error) => {
+        error: error => {
           this.toast.add({
             detail: error.error.message,
             severity: 'error',

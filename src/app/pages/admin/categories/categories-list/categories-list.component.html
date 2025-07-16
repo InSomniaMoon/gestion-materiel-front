@@ -5,22 +5,19 @@
       dropdownIcon="pi pi-filter"
       [checkmark]="true"
       [options]="[{ label: 'Nom', value: 'name' }]"
-      [(ngModel)]="orderBy"
-    />
+      [(ngModel)]="orderBy" />
   </div>
   <p-button
     icon="pi pi-plus"
     label="Ajouter"
-    (onClick)="openCreateCategroyModal()"
-  />
+    (onClick)="openCreateCategroyModal()" />
 </div>
 <matos-table [status]="categoriesQuery.status()">
   <p-table
     [value]="categoriesQuery.data()?.data ?? []"
     stripedRows
     [sortField]="orderBy()"
-    (onSort)="orderBy.set($event.field)"
-  >
+    (onSort)="orderBy.set($event.field)">
     <ng-template #header>
       <tr>
         <th pSortableColumn="name">Nom <p-sortIcon field="name" /></th>
@@ -34,14 +31,12 @@
           <p-button
             icon="pi pi-pencil"
             size="small"
-            (onClick)="openUpdateCategoryModal(category)"
-          />
+            (onClick)="openUpdateCategoryModal(category)" />
           <p-button
             size="small"
             icon="pi pi-trash"
             severity="danger"
-            (onClick)="deleteCategory(category)"
-          />
+            (onClick)="deleteCategory(category)" />
         </td>
       </tr>
     </ng-template>
@@ -53,8 +48,7 @@
       optionLabel="label"
       optionValue="value"
       [ngModel]="size()"
-      (ngModelChange)="page.set(0); size.set($event)"
-    />
+      (ngModelChange)="page.set(0); size.set($event)" />
     <p-paginator
       [first]="page()"
       [rows]="size()"
@@ -63,7 +57,6 @@
       [showCurrentPageReport]="true"
       currentPageReportTemplate="{first} - {last} sur {totalRecords}"
       [showPageLinks]="false"
-      [showFirstLastIcon]="false"
-    />
+      [showFirstLastIcon]="false" />
   </div>
 </matos-table>

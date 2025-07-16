@@ -112,11 +112,11 @@ export class SubscriptionDetailsComponent implements AfterViewInit {
     this.subscription$
       .getItemSubscription(
         this.activatedRoute.snapshot.params['itemId'],
-        this.activatedRoute.snapshot.params['subscriptionId'],
+        this.activatedRoute.snapshot.params['subscriptionId']
       )
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (subscription) => {
+        next: subscription => {
           this.subscription.set(subscription);
 
           this.viewDate.set(subscription.start_date);
@@ -149,13 +149,13 @@ export class SubscriptionDetailsComponent implements AfterViewInit {
     const end = new Date(
       subscription.end_date.getFullYear(),
       subscription.end_date.getMonth(),
-      subscription.end_date.getDate(),
+      subscription.end_date.getDate()
     );
 
     const start = new Date(
       subscription.start_date.getFullYear(),
       subscription.start_date.getMonth(),
-      subscription.start_date.getDate(),
+      subscription.start_date.getDate()
     );
 
     return end.getTime() === start.getTime();
@@ -166,13 +166,13 @@ export class SubscriptionDetailsComponent implements AfterViewInit {
     const end = new Date(
       subscription.end_date.getFullYear(),
       subscription.end_date.getMonth(),
-      subscription.end_date.getDate(),
+      subscription.end_date.getDate()
     );
 
     const start = new Date(
       subscription.start_date.getFullYear(),
       subscription.start_date.getMonth(),
-      subscription.start_date.getDate(),
+      subscription.start_date.getDate()
     );
 
     const diff = end.getTime() - start.getTime();

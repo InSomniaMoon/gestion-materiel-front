@@ -6,23 +6,24 @@
     </p-float-label>
     <div class="row flex-1">
       <span
-        [style]="`display:block; width: 40px; height: 28px; background-color: ${form.get('unit')!.value?.color}; border-radius: 4px;`"
-      ></span>
+        [style]="
+          `display:block; width: 40px; height: 28px; background-color: ${form.get('unit')!.value?.color}; border-radius: 4px;`
+        "></span>
       @if (units().length > 1) {
-      <p-float-label variant="on">
-        <p-select
-          formControlName="unit"
-          id="unit_id"
-          [options]="units()"
-          optionLabel="name"
-          [optionValue]="undefined"
-          [fluid]="true"
-          [showClear]="true"
-        ></p-select>
-        <label for="unit_id">Unité empruntante</label>
-      </p-float-label>
-      } @else { @let unit = units()[0];
-      <p>Unité empruntante : {{ unit.name }}</p>
+        <p-float-label variant="on">
+          <p-select
+            formControlName="unit"
+            id="unit_id"
+            [options]="units()"
+            optionLabel="name"
+            [optionValue]="undefined"
+            [fluid]="true"
+            [showClear]="true"></p-select>
+          <label for="unit_id">Unité empruntante</label>
+        </p-float-label>
+      } @else {
+        @let unit = units()[0];
+        <p>Unité empruntante : {{ unit.name }}</p>
       }
     </div>
   </div>
@@ -39,15 +40,13 @@
       stepMinute="30"
       readonlyInput
       #start_date
-      (ngModelChange)="resetEndDate()"
-    >
+      (ngModelChange)="resetEndDate()">
       <ng-template pTemplate="footer">
         <button
           pButton
           type="button"
           label="Fermer"
-          (click)="start_date.toggle()"
-        ></button>
+          (click)="start_date.toggle()"></button>
       </ng-template>
     </p-date-picker>
     <label for="start_date">Début de l'emprunt</label>
@@ -66,15 +65,13 @@
       readonlyInput
       [responsiveOptions]="responsiveOptions"
       [minDate]="minDate()"
-      #end_date
-    >
+      #end_date>
       <ng-template pTemplate="footer">
         <button
           pButton
           type="button"
           label="Fermer"
-          (click)="end_date.toggle()"
-        ></button>
+          (click)="end_date.toggle()"></button>
       </ng-template>
     </p-date-picker>
     <label for="end_date">Fin de l'emprunt</label>

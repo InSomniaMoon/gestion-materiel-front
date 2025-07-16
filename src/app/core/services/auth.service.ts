@@ -31,7 +31,7 @@ export class AuthService {
       return [];
     }
     return this._userUnits().filter(
-      (unit) => unit.group_id == this.selectedGroup()?.id
+      unit => unit.group_id == this.selectedGroup()?.id
     );
   });
   private _selectedUnit = signal<Unit | null>(null);
@@ -58,7 +58,7 @@ export class AuthService {
     return this.http
       .post<LoginDTO>(`${this.api_url}/auth/login`, { email, password })
       .pipe(
-        tap((res) => {
+        tap(res => {
           this.processLoginDTO(res);
         })
       );
@@ -81,7 +81,7 @@ export class AuthService {
           refresh_token,
         })
         .pipe(
-          map((DTO) => {
+          map(DTO => {
             this.processLoginDTO(DTO);
             return of(true);
           }),
@@ -105,7 +105,7 @@ export class AuthService {
   }
 
   setSelectGroupById(id: number) {
-    this._selectedGroup.set(this._userGroups().find((g) => g.id == id)!);
+    this._selectedGroup.set(this._userGroups().find(g => g.id == id)!);
   }
 
   private processLoginDTO(DTO: LoginDTO) {

@@ -56,8 +56,7 @@ import { Textarea } from 'primeng/textarea';
             optionValue="id"
             filterBy="name"
             [scrollHeight]="'200px'"
-            formControlName="category_id"
-          />
+            formControlName="category_id" />
           <label for="category">Catégorie</label>
         </p-float-label>
         <p-float-label variant="on">
@@ -72,51 +71,46 @@ import { Textarea } from 'primeng/textarea';
             id="description"
             autoResize
             formControlName="description"
-            rows="5"
-          ></textarea>
+            rows="5"></textarea>
 
           <label for="description">Description (optionnel)</label>
         </p-float-label>
         <app-upload-file
           [handler]="fileUploadHandler"
-          (fileUploaded)="setImagePath($event)"
-        />
+          (fileUploaded)="setImagePath($event)" />
       </div>
       <div formArray="options">
         @for (item of options.controls; track $index) {
-        <h3 class="option-title">Option {{ $index + 1 }}</h3>
-        <div [formGroup]="item" class="option">
-          <div class="option-form">
-            <p-float-label variant="on">
-              <input
-                pInputText
-                type="text"
-                id="option-name-{{ $index }}"
-                formControlName="name"
-              />
-              <label for="option-name-{{ $index }}">Nom</label>
-            </p-float-label>
-            <p-float-label variant="on">
-              <textarea
-                pInputTextarea
-                id="option-description-{{ $index }}"
-                autoResize
-                formControlName="description"
-                rows="5"
-              ></textarea>
-              <label for="option-description-{{ $index }}"
-                >Description (optionnel)</label
-              >
-            </p-float-label>
+          <h3 class="option-title">Option {{ $index + 1 }}</h3>
+          <div [formGroup]="item" class="option">
+            <div class="option-form">
+              <p-float-label variant="on">
+                <input
+                  pInputText
+                  type="text"
+                  id="option-name-{{ $index }}"
+                  formControlName="name" />
+                <label for="option-name-{{ $index }}">Nom</label>
+              </p-float-label>
+              <p-float-label variant="on">
+                <textarea
+                  pInputTextarea
+                  id="option-description-{{ $index }}"
+                  autoResize
+                  formControlName="description"
+                  rows="5"></textarea>
+                <label for="option-description-{{ $index }}"
+                  >Description (optionnel)</label
+                >
+              </p-float-label>
+            </div>
+            <p-button
+              type="button"
+              (click)="removeOption($index)"
+              icon="pi pi-trash"
+              severity="danger"
+              outlined />
           </div>
-          <p-button
-            type="button"
-            (click)="removeOption($index)"
-            icon="pi pi-trash"
-            severity="danger"
-            outlined
-          />
-        </div>
         }
         <p-button label="Option" icon="pi pi-plus" (onClick)="addOption()" />
       </div>
@@ -125,8 +119,7 @@ import { Textarea } from 'primeng/textarea';
         pButton
         [disabled]="!form.valid"
         type="submit"
-        (click)="onSubmit()"
-      >
+        (click)="onSubmit()">
         {{ data ? 'Modifier' : 'Créer' }}
       </button>
     </form>
@@ -182,7 +175,7 @@ export class CreateItemComponent implements OnInit {
     this.itemService
       .getCategories()
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((categories) => {
+      .subscribe(categories => {
         this.categories.set(categories);
         this.form.patchValue({
           category_id: categories[0]?.id,
@@ -201,7 +194,7 @@ export class CreateItemComponent implements OnInit {
         : undefined,
     });
     this.options.clear();
-    this.data.options?.forEach((option) =>
+    this.data.options?.forEach(option =>
       this.options.push(
         this.fb.group({
           id: this.fb.control(option.id ?? null),
@@ -252,7 +245,7 @@ export class CreateItemComponent implements OnInit {
         category_id: this.form.value.category_id!,
         date_of_buy: this.form.value.date_of_buy,
         image: this.form.value.image,
-        options: this.form.getRawValue().options.map((option) => ({
+        options: this.form.getRawValue().options.map(option => ({
           id: option.id ?? null,
           name: option.name,
           description: option.description,

@@ -7,19 +7,18 @@ import {
   signal,
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { UsersService } from '@app/core/services/users.service';
+import { User } from '@app/core/types/user.type';
+import { debounceTimeSignal } from '@app/core/utils/signals.utils';
 import { Button } from 'primeng/button';
+import { ColorPicker } from 'primeng/colorpicker';
 import { DialogModule } from 'primeng/dialog';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { FloatLabel } from 'primeng/floatlabel';
 import { InputText } from 'primeng/inputtext';
-import { ColorPicker } from 'primeng/colorpicker';
 import { MultiSelect } from 'primeng/multiselect';
-import { from, lastValueFrom, map, of } from 'rxjs';
-import { UsersService } from '@app/core/services/users.service';
-import { debounceTimeSignal } from '@app/core/utils/signals.utils';
 import { Select } from 'primeng/select';
-import { JsonPipe } from '@angular/common';
-import { User } from '@app/core/types/user.type';
+import { lastValueFrom, map } from 'rxjs';
 @Component({
   selector: 'app-create-unit',
   imports: [
@@ -57,7 +56,6 @@ export class CreateUnitComponent implements OnInit {
 
   ngOnInit(): void {
     const data = this.dialog$.getInstance(this.ref).data;
-    console.log(data);
 
     if (data) {
       this.validateLabel.set('Modifier');
@@ -65,7 +63,7 @@ export class CreateUnitComponent implements OnInit {
         name: data.name || '',
         color: data.color || '#000000',
         chiefs:
-          (data.chiefs as User[]).map((c) => ({
+          (data.chiefs as User[]).map(c => ({
             code: c.id,
             name: c.name,
           })) || [],
@@ -75,7 +73,7 @@ export class CreateUnitComponent implements OnInit {
       });
     }
 
-    this.form.get('chiefs')?.valueChanges.subscribe((value) => {
+    this.form.get('chiefs')?.valueChanges.subscribe(value => {
       if (value.length == 0) {
         this.form.get('responsible')!.setValue(null);
       }
@@ -84,7 +82,7 @@ export class CreateUnitComponent implements OnInit {
 
   closeConfirm() {
     const value = this.form.getRawValue();
-    const chiefs = value.chiefs.map((chief) => chief.code);
+    const chiefs = value.chiefs.map(chief => chief.code);
     const resp = value.responsible?.code;
     this.ref.close({
       ...value,
@@ -107,8 +105,8 @@ export class CreateUnitComponent implements OnInit {
         this.usersService
           .getPaginatedUsers({ ...request, page: 1, size: 100 })
           .pipe(
-            map((data) =>
-              data.data.map((user) => ({
+            map(data =>
+              data.data.map(user => ({
                 name: user.name,
                 code: user.id,
               }))

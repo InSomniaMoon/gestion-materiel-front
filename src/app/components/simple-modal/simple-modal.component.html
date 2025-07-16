@@ -4,9 +4,8 @@
   <p-button
     [label]="data().cancelText"
     severity="secondary"
-    (onClick)="closeCancel()"
-  />
+    (onClick)="closeCancel()" />
   @if (data().confirm) {
-  <p-button [label]="data().confirmText" (onClick)="closeConfirm()" />
+    <p-button [label]="data().confirmText" (onClick)="closeConfirm()" />
   }
 </p-footer>

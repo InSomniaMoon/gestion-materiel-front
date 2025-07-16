@@ -47,16 +47,14 @@ import { environment } from '@env/environment';
       <p-button
         icon="pi pi-plus"
         label="Ajouter"
-        (onClick)="openCreateItem()"
-      />
+        (onClick)="openCreateItem()" />
     </div>
     <matos-table [status]="items.status()">
       <p-table
         [value]="items.value()?.data ?? []"
         stripedRows
         [sortField]="orderBy()"
-        (onSort)="orderBy.set($event.field)"
-      >
+        (onSort)="orderBy.set($event.field)">
         <ng-template #header>
           <tr>
             <th></th>
@@ -73,7 +71,7 @@ import { environment } from '@env/environment';
           <tr>
             <td class="image">
               @if (product.image) {
-              <img [src]="baseUrl + product.image" alt="" />
+                <img [src]="baseUrl + product.image" alt="" />
               }
             </td>
             <td>{{ product.name }}</td>
@@ -84,14 +82,12 @@ import { environment } from '@env/environment';
               <p-button
                 icon="pi pi-pencil"
                 size="small"
-                (onClick)="openUpdateItem(product)"
-              />
+                (onClick)="openUpdateItem(product)" />
               <p-button
                 icon="pi pi-trash"
                 size="small"
                 severity="danger"
-                (onClick)="deleteItem(product)"
-              />
+                (onClick)="deleteItem(product)" />
             </td>
           </tr>
         </ng-template>
@@ -103,8 +99,7 @@ import { environment } from '@env/environment';
           optionLabel="label"
           optionValue="value"
           [ngModel]="size()"
-          (ngModelChange)="page.set(0); size.set($event)"
-        />
+          (ngModelChange)="page.set(0); size.set($event)" />
         <p-paginator
           [first]="page()"
           [rows]="size()"
@@ -113,8 +108,7 @@ import { environment } from '@env/environment';
           [showCurrentPageReport]="true"
           currentPageReportTemplate="{first} - {last} sur {totalRecords}"
           [showPageLinks]="false"
-          [showFirstLastIcon]="false"
-        />
+          [showFirstLastIcon]="false" />
       </div>
     </matos-table>
   `,
@@ -163,7 +157,7 @@ export class ItemsListComponent {
         modal: true,
         dismissableMask: true,
       })
-      .onClose.subscribe((created) => {
+      .onClose.subscribe(created => {
         if (created) {
           this.items.reload();
         }
@@ -180,7 +174,7 @@ export class ItemsListComponent {
         dismissableMask: true,
         data: item,
       })
-      .onClose.subscribe((updated) => {
+      .onClose.subscribe(updated => {
         if (updated) {
           this.items.reload();
         }
@@ -201,7 +195,7 @@ export class ItemsListComponent {
           confirm: true,
         },
       })
-      .onClose.subscribe((confirmed) => {
+      .onClose.subscribe(confirmed => {
         if (confirmed) {
           this.itemService.deleteItem(item).subscribe(() => {
             this.items.reload();

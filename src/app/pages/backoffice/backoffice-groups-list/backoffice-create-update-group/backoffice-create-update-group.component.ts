@@ -38,25 +38,22 @@ import { BackofficeService } from '../../services/backoffice.service';
           pTextarea
           cols="auto"
           rows="6"
-          formControlName="description"
-        ></textarea>
+          formControlName="description"></textarea>
         <label>Description (optionnel)</label>
       </p-float-label>
       @if (file()) {
-      <img
-        [src]="fileUrl()"
-        alt="Image"
-        class="group-image"
-        width="128px"
-        height="128px"
-      />
-      <p>Fichier utilisé : {{ file().name }}</p>
+        <img
+          [src]="fileUrl()"
+          alt="Image"
+          class="group-image"
+          width="128px"
+          height="128px" />
+        <p>Fichier utilisé : {{ file().name }}</p>
       }
       <app-upload-file
         [maxFileSize]="maxFileSize"
         [handler]="uploadGroupImage"
-        (fileUploaded)="setFilePath($event)"
-      />
+        (fileUploaded)="setFilePath($event)" />
     </form>
     <p-footer>
       <p-button label="Fermer" severity="secondary" (onClick)="ref.close()" />
@@ -64,8 +61,7 @@ import { BackofficeService } from '../../services/backoffice.service';
         [label]="data ? 'Mettre à jour' : 'Créer'"
         [disabled]="!form.valid || saveClicked()"
         (onClick)="save()"
-        [loading]="saveClicked()"
-      />
+        [loading]="saveClicked()" />
     </p-footer>`,
   styleUrl: './backoffice-create-update-group.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -28,47 +28,42 @@ import { DeclareOptionIssueComponent } from './declareOptionIssue/declareOptionI
   template: `<div class="title">
       <h2>Options</h2>
       @if (userAdmin()) {
-      <p-button
-        outlined
-        label="Ajouter"
-        icon="pi pi-plus"
-        iconPos="right"
-        (onClick)="openAddOptionDialog()"
-      />
+        <p-button
+          outlined
+          label="Ajouter"
+          icon="pi pi-plus"
+          iconPos="right"
+          (onClick)="openAddOptionDialog()" />
       }
     </div>
     <section class="options">
       @for (option of options(); track $index) {
-      <p-card [header]="option.name" [subheader]="option.description">
-        <p-tag
-          [icon]="option.usable ? 'pi pi-check' : 'pi pi-times'"
-          [severity]="option.usable ? 'success' : 'danger'"
-        />
-        <p-button
-          label="Avarie"
-          [outlined]="true"
-          icon="pi pi-plus"
-          (onClick)="createAvarie(option)"
-        />
-        <ng-template pTemplate="footer">
-          @if (userAdmin()) {
+        <p-card [header]="option.name" [subheader]="option.description">
+          <p-tag
+            [icon]="option.usable ? 'pi pi-check' : 'pi pi-times'"
+            [severity]="option.usable ? 'success' : 'danger'" />
           <p-button
-            type="button"
-            icon="pi pi-pencil"
-            severity="secondary"
-            size="small"
-            (onClick)="openEditOptionDialog(option)"
-          ></p-button>
-          <p-button
-            type="button"
-            icon="pi pi-trash"
-            size="small"
-            severity="danger"
-            (onClick)="deleteOption(option)"
-          ></p-button>
-          }
-        </ng-template>
-      </p-card>
+            label="Avarie"
+            [outlined]="true"
+            icon="pi pi-plus"
+            (onClick)="createAvarie(option)" />
+          <ng-template pTemplate="footer">
+            @if (userAdmin()) {
+              <p-button
+                type="button"
+                icon="pi pi-pencil"
+                severity="secondary"
+                size="small"
+                (onClick)="openEditOptionDialog(option)"></p-button>
+              <p-button
+                type="button"
+                icon="pi pi-trash"
+                size="small"
+                severity="danger"
+                (onClick)="deleteOption(option)"></p-button>
+            }
+          </ng-template>
+        </p-card>
       }
     </section> `,
   styleUrl: './options-table.component.scss',
@@ -100,7 +95,7 @@ export class OptionsTableComponent {
           cancelText: 'Annuler',
         },
       })
-      .onClose.subscribe((confirm) => {
+      .onClose.subscribe(confirm => {
         if (!confirm) {
           return;
         }
@@ -147,7 +142,7 @@ export class OptionsTableComponent {
               detail: `L'option ${option.name} a bien été créée`,
             });
           },
-          error: (error) =>
+          error: error =>
             this.handleError(
               "Une erreur est survenue dans la création de l'option"
             ),
@@ -173,7 +168,7 @@ export class OptionsTableComponent {
           .updateItemOption(this.item()!.id, option)
           .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe({
-            next: (_) => {
+            next: _ => {
               this.optionsChange.emit();
               this.message.add({
                 severity: 'success',
@@ -181,7 +176,7 @@ export class OptionsTableComponent {
                 detail: `L'option ${option.name} a bien été modifiée`,
               });
             },
-            error: (error) =>
+            error: error =>
               this.handleError(
                 "Une erreur est survenue dans la modification de l'option"
               ),
@@ -199,7 +194,7 @@ export class OptionsTableComponent {
         },
         dismissableMask: true,
       })
-      .onClose.subscribe((success) => {
+      .onClose.subscribe(success => {
         if (!success) {
           return;
         }

@@ -4,8 +4,7 @@
     routerLink="/items"
     icon="pi pi-arrow-left"
     [text]="true"
-    size="large"
-  ></a>
+    size="large"></a>
   @if (subscription()) {
     {{ subscription()?.name }}
   } @else {
@@ -18,8 +17,7 @@
     <full-calendar
       #calendar
       [deepChangeDetection]="true"
-      [options]="calendarOptions()"
-    />
+      [options]="calendarOptions()" />
   </p-accordionTab>
 </p-accordion>
 
@@ -30,8 +28,7 @@
     icon="pi pi-plus"
     iconPos="right"
     size="large"
-    (onClick)="featureClicked('declare_ano_subscription')"
-  />
+    (onClick)="featureClicked('declare_ano_subscription')" />
 </div>
 
 @for (issue of issues() ?? []; track $index) {}

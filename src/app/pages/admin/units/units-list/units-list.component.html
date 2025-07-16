@@ -6,8 +6,7 @@
   <p-button
     icon="pi pi-plus"
     label="Ajouter"
-    (onClick)="openCreateUnitDialog()"
-  />
+    (onClick)="openCreateUnitDialog()" />
 </div>
 
 <matos-table [status]="status()">
@@ -25,16 +24,16 @@
         <td>{{ unit.name }}</td>
         <td style="vertical-align: middle">
           <div
-            [style]="`width: 40px; height: 28px; background-color: ${unit.color}; border-radius: 4px;`"
-          ></div>
+            [style]="
+              `width: 40px; height: 28px; background-color: ${unit.color}; border-radius: 4px;`
+            "></div>
         </td>
         <td>{{ unit.responsible?.name }}</td>
         <td class="actions">
           <p-button
             icon="pi pi-pencil"
             (onClick)="openUpdateUnitDialog(unit)"
-            size="small"
-          />
+            size="small" />
           <!-- <p-button size="small" icon="pi pi-trash" severity="danger" /> -->
         </td>
       </tr>

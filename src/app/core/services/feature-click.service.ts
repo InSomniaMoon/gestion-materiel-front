@@ -14,7 +14,7 @@ export class FeatureClickService {
 
   clickFeature(slug: string) {
     return this.http.post(`${this.api_url}/features/${slug}/click`, {}).pipe(
-      tap((value) => {
+      tap(value => {
         console.log(value);
 
         this.toast.add({
@@ -24,7 +24,7 @@ export class FeatureClickService {
             'Cette feature est en cours de développement, elle arrivera bientôt !',
           text: 'OK',
         });
-      }),
+      })
     );
   }
 }

@@ -23,45 +23,41 @@ import { UserGroup } from '@app/core/types/userGroup.type';
   template: `
     <div>
       @for (group of userGroups(); track group.id) {
-      <div class="group">
-        <span>{{ group.name }}</span>
-        <p-select
-          [options]="rolesOptions"
-          [(ngModel)]="group.pivot.role"
-          optionLabel="label"
-          optionValue="value"
-        />
+        <div class="group">
+          <span>{{ group.name }}</span>
+          <p-select
+            [options]="rolesOptions"
+            [(ngModel)]="group.pivot.role"
+            optionLabel="label"
+            optionValue="value" />
+          <p-button
+            icon="pi pi-times"
+            severity="danger"
+            iconPos="right"
+            (onClick)="removeGroup(group)" />
+        </div>
+      }
+      @if (toggleSelectNewGroup()) {
         <p-button
-          icon="pi pi-times"
-          severity="danger"
-          iconPos="right"
-          (onClick)="removeGroup(group)"
-        />
-      </div>
-      } @if (toggleSelectNewGroup()) {
-      <p-button
-        label="Ajouter"
-        severity="info"
-        fluid="true"
-        icon="pi pi-plus"
-        (onClick)="toggleSelectNewGroup.set(false)"
-      />
-      } @else {
-      <div class="flex">
-        <p-select
-          [filter]="true"
-          filterBy="name"
-          [options]="groupsWithoutUserGroups()"
-          optionLabel="name"
-          optionValue="id"
-          #selectNewGroup
-        />
-        <p-button
-          severity="success"
+          label="Ajouter"
+          severity="info"
+          fluid="true"
           icon="pi pi-plus"
-          (onClick)="addGroup(selectNewGroup.value)"
-        />
-      </div>
+          (onClick)="toggleSelectNewGroup.set(false)" />
+      } @else {
+        <div class="flex">
+          <p-select
+            [filter]="true"
+            filterBy="name"
+            [options]="groupsWithoutUserGroups()"
+            optionLabel="name"
+            optionValue="id"
+            #selectNewGroup />
+          <p-button
+            severity="success"
+            icon="pi pi-plus"
+            (onClick)="addGroup(selectNewGroup.value)" />
+        </div>
       }
     </div>
     <p-footer>
@@ -88,19 +84,19 @@ export class AppAdminUserEditGroupsComponent {
   });
 
   groupsWithoutUserGroups = linkedSignal(() => {
-    const userGroupIds = this.userGroups().map((g) => g.id);
-    return this._groups().filter((group) => !userGroupIds.includes(group.id));
+    const userGroupIds = this.userGroups().map(g => g.id);
+    return this._groups().filter(group => !userGroupIds.includes(group.id));
   });
   groups = computed<Group[]>(() => this._groups());
 
   removeGroup(group: Group) {
-    this.userGroups.update((groups) => groups.filter((g) => g.id !== group.id));
+    this.userGroups.update(groups => groups.filter(g => g.id !== group.id));
   }
 
   addGroup(groupId: number) {
-    const group = this.groupsWithoutUserGroups().find((g) => g.id === groupId);
+    const group = this.groupsWithoutUserGroups().find(g => g.id === groupId);
     if (group) {
-      this.userGroups.update((groups) => [
+      this.userGroups.update(groups => [
         ...groups,
         { ...group, pivot: { role: 'user' } },
       ]);
@@ -116,19 +112,19 @@ export class AppAdminUserEditGroupsComponent {
       .updateUserGroups(
         this.data.userId,
         this.userGroups().map(
-          (g) =>
+          g =>
             ({
               user_id: this.data.userId,
               group_id: g.id,
               role: g.pivot.role,
-            } as UserGroup)
+            }) as UserGroup
         )
       )
       .subscribe({
         next: () => {
           this.ref.close(true);
         },
-        error: (err) => {
+        error: err => {
           console.error('Error updating user groups:', err);
         },
       });

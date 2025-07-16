@@ -36,11 +36,11 @@ import {
 export class AppTable {
   isLoading = computed(
     () =>
-      this.status() === 'pending' || this.status() === ResourceStatus.Loading,
+      this.status() === 'pending' || this.status() === ResourceStatus.Loading
   );
 
   isError = computed(
-    () => this.status() === 'error' || this.status() === ResourceStatus.Error,
+    () => this.status() === 'error' || this.status() === ResourceStatus.Error
   );
 
   status = input.required<'error' | 'success' | 'pending' | ResourceStatus>();

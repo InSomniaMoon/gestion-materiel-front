@@ -31,7 +31,7 @@ export const cacheInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(req).pipe(
     tap({
-      next: (event) => {
+      next: event => {
         checkClearCache(req, cacheService);
 
         if (!(event instanceof HttpResponse)) {

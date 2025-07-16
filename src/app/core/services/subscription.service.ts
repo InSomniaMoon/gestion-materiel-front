@@ -54,7 +54,7 @@ export class SubscriptionService {
         subscription.start_date = new Date(subscription.start_date);
         subscription.end_date = new Date(subscription.end_date);
         return subscription;
-      }),
+      })
     );
   }
 }

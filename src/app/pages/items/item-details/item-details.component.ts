@@ -69,11 +69,11 @@ export class ItemDetailsComponent implements OnInit {
       .getItem(this.itemId()!)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (item) => {
+        next: item => {
           this.item.set(item);
           this.titleService.setTitle(item.name);
         },
-        error: (error) => {
+        error: error => {
           this.message.add({
             severity: 'error',
             summary: 'Erreur',
@@ -92,7 +92,7 @@ export class ItemDetailsComponent implements OnInit {
       .updateItem(item)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (item) => {
+        next: item => {
           this.item.set(item);
           this.message.add({
             severity: 'success',

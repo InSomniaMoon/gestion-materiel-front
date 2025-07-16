@@ -23,8 +23,7 @@ import { InputTextModule } from 'primeng/inputtext';
         pInputText
         #searchInput
         type="text"
-        [placeholder]="placeholder()"
-      />
+        [placeholder]="placeholder()" />
     </p-iconField>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -44,6 +43,6 @@ export class SearchBarComponent implements OnInit {
         debounceTime(500),
         distinctUntilChanged()
       )
-      .subscribe((query) => this.queryChange.emit(query));
+      .subscribe(query => this.queryChange.emit(query));
   }
 }

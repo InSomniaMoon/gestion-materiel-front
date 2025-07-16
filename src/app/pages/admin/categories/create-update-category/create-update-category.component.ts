@@ -57,7 +57,7 @@ export class CreateUpdateCategoryComponent {
             });
             this.ref.close(true);
           },
-          error: (error) => {
+          error: error => {
             console.error('Error updating category:', error);
             this.messageService.add({
               severity: 'error',
@@ -79,7 +79,7 @@ export class CreateUpdateCategoryComponent {
         });
         this.ref.close(true);
       },
-      error: (error) => {
+      error: error => {
         console.error('Error creating category:', error);
         this.messageService.add({
           severity: 'error',

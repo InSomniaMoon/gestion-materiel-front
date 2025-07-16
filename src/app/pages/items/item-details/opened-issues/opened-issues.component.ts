@@ -15,9 +15,9 @@ import { CardModule } from 'primeng/card';
 import { DialogService } from 'primeng/dynamicdialog';
 
 @Component({
-    selector: 'app-opened-issues',
-    imports: [ButtonModule, CardModule, DatePipe],
-    template: `<div class="title">
+  selector: 'app-opened-issues',
+  imports: [ButtonModule, CardModule, DatePipe],
+  template: `<div class="title">
       <h2>Problèmes non résolus</h2>
       <!-- <p-button outlined icon="pi pi-plus" iconPos="right" label="" /> -->
     </div>
@@ -31,16 +31,15 @@ import { DialogService } from 'primeng/dynamicdialog';
               label="Voir les details"
               severity="secondary"
               outlined="true"
-              (onClick)="openIssueDetailsModal(issue)"
-            />
+              (onClick)="openIssueDetailsModal(issue)" />
           </ng-template>
         </p-card>
 
         <!-- <pre>{{ issue | json }}</pre> -->
       }
     }`,
-    styleUrl: './opened-issues.component.scss',
-    changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrl: './opened-issues.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OpenedIssuesComponent {
   readonly userAdmin = inject(AuthService).isAdmin;
@@ -57,7 +56,7 @@ export class OpenedIssuesComponent {
         header: 'Détails du problème',
         width: 'auto',
       })
-      .onClose.subscribe((event) => {
+      .onClose.subscribe(event => {
         if (event) {
           this.optionsChange.emit();
         }

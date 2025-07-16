@@ -9,18 +9,18 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { SubscriptionService } from '@app/core/services/subscription.service';
+import { Unit } from '@core/types/unit.type';
+import { AuthService } from '@services/auth.service';
+import { SubscriptionService } from '@services/subscription.service';
 import { MessageService, ResponsiveOverlayOptions } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { DatePicker } from 'primeng/datepicker';
 import { DialogModule } from 'primeng/dialog';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { InputTextModule } from 'primeng/inputtext';
-import { fromEvent, map, startWith } from 'rxjs';
 import { FloatLabel } from 'primeng/floatlabel';
-import { AuthService } from '@app/core/services/auth.service';
+import { InputTextModule } from 'primeng/inputtext';
 import { Select } from 'primeng/select';
-import { Unit } from '@app/core/types/unit.type';
+import { fromEvent, map, startWith } from 'rxjs';
 
 @Component({
   selector: 'app-add-subscription',
@@ -81,7 +81,7 @@ export class AddSubscriptionComponent implements OnInit {
     },
     {
       validators: [
-        (form) => {
+        form => {
           if (form.get('start_date')?.value > form.get('end_date')?.value) {
             return { invalidDate: true };
           }
@@ -103,7 +103,7 @@ export class AddSubscriptionComponent implements OnInit {
   constructor() {
     this.form.valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((value) => {
+      .subscribe(value => {
         this.minDate.set(this.date(value.start_date!));
       });
   }
@@ -149,7 +149,7 @@ export class AddSubscriptionComponent implements OnInit {
         next: () => {
           this.ref.close(true);
         },
-        error: (error) => {
+        error: error => {
           console.warn(error.error);
           this.toast.add({
             severity: 'error',

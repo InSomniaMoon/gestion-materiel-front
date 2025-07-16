@@ -34,7 +34,7 @@ export class LoginComponent implements OnDestroy {
       .login(form.value)
       .pipe(takeUntil(this.destroy))
       .subscribe({
-        next: (res) => {
+        next: res => {
           if (this.routeSnapshot.queryParams['redirect']) {
             this.router.navigateByUrl(
               this.routeSnapshot.queryParams['redirect']
@@ -43,7 +43,7 @@ export class LoginComponent implements OnDestroy {
             this.router.navigate(['/items']);
           }
         },
-        error: (err) => {
+        error: err => {
           console.error(err);
           this.error.set(
             err.error.error ?? 'Une erreur est survenue, veuillez réessayer.'

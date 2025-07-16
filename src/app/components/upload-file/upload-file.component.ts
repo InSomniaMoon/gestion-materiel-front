@@ -88,7 +88,7 @@ export class UploadFileComponent {
 
   private uploadFile(file: File) {
     this.handler()(file).subscribe({
-      next: (res) => {
+      next: res => {
         this.file.set(file);
         this.fileUrl.set(URL.createObjectURL(file));
         this.fileUploader().progress = 100; // Simulate progress completion
@@ -100,7 +100,7 @@ export class UploadFileComponent {
           detail: 'Le fichier a été uploadé avec succès.',
         });
       },
-      error: (err) => {
+      error: err => {
         this.messageService.add({
           severity: 'error',
           summary: "Erreur d'upload",
@@ -113,7 +113,7 @@ export class UploadFileComponent {
   private getHeightAndWidthFromDataUrl(
     dataURL: string
   ): Promise<{ height: number; width: number }> {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       const img = new Image();
       img.onload = () => {
         resolve({

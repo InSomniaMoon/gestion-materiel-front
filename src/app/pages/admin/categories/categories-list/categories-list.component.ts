@@ -82,7 +82,7 @@ export class CategoriesListComponent {
         dismissableMask: true,
         modal: true,
       })
-      .onClose.subscribe((result) => {
+      .onClose.subscribe(result => {
         if (result) {
           this.categoriesQuery.refetch();
         }
@@ -99,7 +99,7 @@ export class CategoriesListComponent {
         dismissableMask: true,
         modal: true,
       })
-      .onClose.subscribe((result) => {
+      .onClose.subscribe(result => {
         if (result) {
           this.categoriesQuery.refetch();
         }
@@ -121,7 +121,7 @@ export class CategoriesListComponent {
     };
     this.dialogRef
       .open(SimpleModalComponent, config)
-      .onClose.subscribe((result) => {
+      .onClose.subscribe(result => {
         if (!result) {
           return;
         }
@@ -130,7 +130,7 @@ export class CategoriesListComponent {
           next: () => {
             this.categoriesQuery.refetch();
           },
-          error: (error) => {
+          error: error => {
             console.error('Error deleting category:', error);
           },
         });

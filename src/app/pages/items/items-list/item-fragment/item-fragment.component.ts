@@ -74,7 +74,7 @@ export class ItemFragmentComponent implements OnInit, AfterViewInit {
     },
     plugins: [dayGridPlugin, timeGridPlugin],
     events: this.events(),
-    eventClick: (event) => {
+    eventClick: event => {
       this.eventClicked(event);
     },
     handleWindowResize: true,
@@ -107,7 +107,7 @@ export class ItemFragmentComponent implements OnInit, AfterViewInit {
           '640px': '90vw',
         },
       })
-      .onClose.subscribe((value) => {
+      .onClose.subscribe(value => {
         if (!value) return;
         this.fetchSubscriptions();
         this.toast.add({
@@ -122,7 +122,7 @@ export class ItemFragmentComponent implements OnInit, AfterViewInit {
     if (!this.uses()) {
       return undefined;
     }
-    return this.uses().map((use) => ({
+    return this.uses().map(use => ({
       title: use.name,
       start: use.start_date,
       end: use.end_date,
@@ -134,7 +134,7 @@ export class ItemFragmentComponent implements OnInit, AfterViewInit {
     this.subscription$
       .getItemSubscriptions(this.item())
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((subscriptions) => {
+      .subscribe(subscriptions => {
         this.uses.set(subscriptions);
       });
   }

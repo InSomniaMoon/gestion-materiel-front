@@ -1,11 +1,10 @@
 @if (file()) {
-<img
-  [src]="fileUrl()"
-  alt="Uploaded Image"
-  class="uploaded-image"
-  width="64px"
-  height="64px"
-/>
+  <img
+    [src]="fileUrl()"
+    alt="Uploaded Image"
+    class="uploaded-image"
+    width="64px"
+    height="64px" />
 }
 
 <p-fileupload
@@ -26,8 +25,7 @@
   [showUploadButton]="false"
   [showCancelButton]="false"
   chooseLabel="Choisir une image"
-  mode="advanced"
->
+  mode="advanced">
   <ng-template #empty>
     <div>Glisser et deposer le fichier ici pour l'uploader</div>
   </ng-template>

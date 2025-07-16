@@ -8,8 +8,7 @@
     pInputText
     formControlName="description"
     id="description"
-    rows="6"
-  ></textarea>
+    rows="6"></textarea>
 
   <label for="usable">Utilisable</label>
   <p-inputSwitch formControlName="usable" id="usable" />
@@ -20,13 +19,11 @@
     label="Annuler"
     icon="pi pi-times"
     iconPos="right"
-    (onClick)="closeDialog()"
-  />
+    (onClick)="closeDialog()" />
   <p-button
     label="Enregistrer"
     icon="pi pi-check"
     iconPos="right"
     [disabled]="!form.valid"
-    (onClick)="save()"
-  />
+    (onClick)="save()" />
 </p-footer>

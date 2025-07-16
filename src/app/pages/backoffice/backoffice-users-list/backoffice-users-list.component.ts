@@ -42,8 +42,7 @@ import { MessageService } from 'primeng/api';
       [rowsPerPageOptions]="[10, 25, 50]"
       [sortField]="orderBy()"
       [sortOrder]="sortOrder()"
-      (onPage)="pageChange($event)"
-    >
+      (onPage)="pageChange($event)">
       <ng-template #caption>
         <div class="caption">
           <p-iconfield iconPosition="left">
@@ -55,15 +54,13 @@ import { MessageService } from 'primeng/api';
               type="text"
               (ngModelChange)="q.set($event)"
               ngModel
-              placeholder="Rechercher un utilisateur"
-            />
+              placeholder="Rechercher un utilisateur" />
           </p-iconfield>
 
           <p-button
             label="Ajouter"
             icon="pi pi-plus"
-            (onClick)="openAddUserDialog()"
-          />
+            (onClick)="openAddUserDialog()" />
         </div>
       </ng-template>
       <ng-template #header>
@@ -86,8 +83,7 @@ import { MessageService } from 'primeng/api';
               rounded
               aria-label="Editer les groupes de l'utilisateur"
               tp="Editer les groupes de l'utilisateur"
-              (onClick)="openEditGroupsDialog(user)"
-            />
+              (onClick)="openEditGroupsDialog(user)" />
           </td>
         </tr>
       </ng-template>
@@ -149,7 +145,7 @@ export class AppAdminUsersListComponent {
         modal: true,
         dismissableMask: true,
       })
-      .onClose.subscribe((value) => {
+      .onClose.subscribe(value => {
         if (!value) return;
         this.usersQuery.refetch();
       });
@@ -165,7 +161,7 @@ export class AppAdminUsersListComponent {
         dismissableMask: true,
         data: { userId: user.id },
       })
-      .onClose.subscribe((value) => {
+      .onClose.subscribe(value => {
         if (!value) return;
         this.messageService.add({
           severity: 'success',

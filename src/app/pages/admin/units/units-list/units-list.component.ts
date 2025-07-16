@@ -39,7 +39,7 @@ export class UnitsListComponent {
         width: '50%',
         height: '80%',
       })
-      .onClose.subscribe((result) => {
+      .onClose.subscribe(result => {
         if (!result) {
           return;
         }
@@ -57,7 +57,7 @@ export class UnitsListComponent {
             next: () => {
               this.units.reload();
             },
-            error: (error) => {
+            error: error => {
               console.error("Erreur pendant la création de l'unité :", error);
             },
           });
@@ -75,7 +75,7 @@ export class UnitsListComponent {
         height: '80%',
         data: unit,
       })
-      .onClose.subscribe((result) => {
+      .onClose.subscribe(result => {
         if (!result) {
           return;
         }
@@ -91,7 +91,7 @@ export class UnitsListComponent {
             next: () => {
               this.units.reload();
             },
-            error: (error) => {
+            error: error => {
               console.error(
                 "Erreur pendant la mise à jour de l'unité :",
                 error

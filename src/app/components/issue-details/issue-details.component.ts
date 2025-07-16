@@ -54,8 +54,8 @@ export class IssueDetailsComponent implements OnInit {
       lastValueFrom(
         this.issueCommentsService.getComments(
           this.data.issue.item_option_id,
-          this.data.issue.id,
-        ),
+          this.data.issue.id
+        )
       ),
   }));
 
@@ -63,7 +63,7 @@ export class IssueDetailsComponent implements OnInit {
     () =>
       this.commentsQuery
         .data()
-        ?.sort((a, b) => b.created_at.getTime() - a.created_at.getTime()) ?? [],
+        ?.sort((a, b) => b.created_at.getTime() - a.created_at.getTime()) ?? []
   );
 
   newComment = signal<string>('');
@@ -81,19 +81,17 @@ export class IssueDetailsComponent implements OnInit {
         message: 'Voulez-vous vraiment résoudre ce Problème ?',
       },
     };
-    this.dialog
-      .open(SimpleModalComponent, config)
-      .onClose.subscribe((result) => {
-        if (!result) {
-          return;
-        }
-        // resolve issue
-        this.issueService.resolve(this.data.issue).subscribe({
-          next: () => {
-            this.ref.close(true);
-          },
-        });
+    this.dialog.open(SimpleModalComponent, config).onClose.subscribe(result => {
+      if (!result) {
+        return;
+      }
+      // resolve issue
+      this.issueService.resolve(this.data.issue).subscribe({
+        next: () => {
+          this.ref.close(true);
+        },
       });
+    });
   }
 
   onAddComment() {
@@ -101,7 +99,7 @@ export class IssueDetailsComponent implements OnInit {
       .addComment(
         this.data.issue.item_option_id,
         this.data.issue.id,
-        this.newComment(),
+        this.newComment()
       )
       .subscribe({
         next: () => {

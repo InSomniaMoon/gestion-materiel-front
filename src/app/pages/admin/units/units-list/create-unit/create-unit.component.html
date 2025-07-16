@@ -19,23 +19,21 @@
       [showToggleAll]="false"
       display="chip"
       formControlName="chiefs"
-      optionLabel="name"
-    />
+      optionLabel="name" />
 
     <label for="users">Chef•taine•s de l'unité</label>
   </p-float-label>
 
   @if (chiefsControl.length > 0) {
-  <p-float-label variant="on">
-    <p-select
-      [style]="{ width: '100%' }"
-      formControlName="responsible"
-      optionLabel="name"
-      [options]="chiefsControl"
-    />
+    <p-float-label variant="on">
+      <p-select
+        [style]="{ width: '100%' }"
+        formControlName="responsible"
+        optionLabel="name"
+        [options]="chiefsControl" />
 
-    <label for="responsible">Responsable matériel</label>
-  </p-float-label>
+      <label for="responsible">Responsable matériel</label>
+    </p-float-label>
   }
 </form>
 <p-footer>
@@ -43,6 +41,5 @@
   <p-button
     [label]="validateLabel()"
     [disabled]="form.invalid"
-    (onClick)="closeConfirm()"
-  />
+    (onClick)="closeConfirm()" />
 </p-footer>

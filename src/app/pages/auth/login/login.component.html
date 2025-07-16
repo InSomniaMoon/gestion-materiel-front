@@ -7,8 +7,7 @@
       ngModel
       name="email"
       required
-      id="email"
-    />
+      id="email" />
     <label for="email">Email</label>
   </p-float-label>
   <p-float-label variant="on">
@@ -20,8 +19,7 @@
       name="password"
       id="password"
       [toggleMask]="true"
-      [feedback]="false"
-    />
+      [feedback]="false" />
 
     <label for="password">Mot de passe</label>
   </p-float-label>
@@ -33,6 +31,5 @@
     type="submit"
     [loading]="loading()"
     label="Se connecter"
-    [disabled]="!loginForm.valid"
-  ></button>
+    [disabled]="!loginForm.valid"></button>
 </form>

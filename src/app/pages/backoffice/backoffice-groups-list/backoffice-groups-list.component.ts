@@ -37,8 +37,7 @@ import { environment } from '@env/environment';
       [rowsPerPageOptions]="[10, 25, 50]"
       [sortField]="orderBy()"
       [sortOrder]="sortOrder()"
-      (onPage)="pageChange($event)"
-    >
+      (onPage)="pageChange($event)">
       <ng-template #caption>
         <div class="caption">
           <p-iconfield iconPosition="left">
@@ -50,15 +49,13 @@ import { environment } from '@env/environment';
               type="text"
               (ngModelChange)="q.set($event)"
               ngModel
-              placeholder="Rechercher un utilisateur"
-            />
+              placeholder="Rechercher un utilisateur" />
           </p-iconfield>
 
           <p-button
             label="Ajouter"
             icon="pi pi-plus"
-            (onClick)="openCreateGroupDialog()"
-          />
+            (onClick)="openCreateGroupDialog()" />
         </div>
       </ng-template>
       <ng-template #header>
@@ -71,8 +68,8 @@ import { environment } from '@env/environment';
       <ng-template #body let-group>
         <tr>
           <td class="image">
-            @if(group.image) {
-            <img [src]="baseUrl + group.image" width="32px" height="32px" />
+            @if (group.image) {
+              <img [src]="baseUrl + group.image" width="32px" height="32px" />
             }
           </td>
           <td>{{ group.name }}</td>
@@ -80,8 +77,7 @@ import { environment } from '@env/environment';
             <p-button
               icon="pi pi-pencil"
               severity="secondary"
-              (onClick)="openUpdateGroupDialog(group)"
-            />
+              (onClick)="openUpdateGroupDialog(group)" />
           </td>
         </tr>
       </ng-template>
@@ -137,7 +133,7 @@ export class AppAdminGroupsListComponent {
         modal: true,
         dismissableMask: true,
       })
-      .onClose.subscribe((created) => {
+      .onClose.subscribe(created => {
         if (created) {
           this.groupsQuery.refetch();
         }
@@ -153,7 +149,7 @@ export class AppAdminGroupsListComponent {
         dismissableMask: true,
         data: { group },
       })
-      .onClose.subscribe((updated) => {
+      .onClose.subscribe(updated => {
         if (updated) {
           this.groupsQuery.refetch();
         }

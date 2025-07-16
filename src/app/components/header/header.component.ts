@@ -7,14 +7,13 @@ import {
 } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '@app/core/services/auth.service';
+import { environment } from '@env/environment';
 import { MenuItem } from 'primeng/api';
 import { AvatarModule } from 'primeng/avatar';
 import { DialogService } from 'primeng/dynamicdialog';
 import { MenubarModule } from 'primeng/menubar';
 import { TieredMenuModule } from 'primeng/tieredmenu';
 import { ChangeActiveGroupComponent } from './changeActiveGroup/changeActiveGroup.component';
-import { environment } from '@env/environment';
-import { JsonPipe } from '@angular/common';
 
 export type MenuItemWithImage = MenuItem & {
   img?: string;
@@ -42,7 +41,7 @@ export class HeaderComponent implements OnInit {
     () =>
       this.user()
         ?.name.split(' ')
-        .map((n) => n[0])
+        .map(n => n[0])
         .join('') ?? ''
   );
 
@@ -53,7 +52,7 @@ export class HeaderComponent implements OnInit {
       command: undefined,
       items:
         this.groups().length > 1
-          ? this.groups().map((group) => ({
+          ? this.groups().map(group => ({
               label: group.name,
               img: group.image,
               icon: 'pi pi-users',
@@ -114,7 +113,7 @@ export class HeaderComponent implements OnInit {
         height: '70%',
         appendTo: 'body',
       })
-      .onClose.subscribe((data) => {
+      .onClose.subscribe(data => {
         if (data) {
           this.auth$.setSelectGroupById(data.group_id);
         }

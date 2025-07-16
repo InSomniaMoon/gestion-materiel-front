@@ -63,7 +63,7 @@ export class CacheService {
       return;
     }
     if (param instanceof Array) {
-      param.forEach((url) => {
+      param.forEach(url => {
         this.clearAll(url);
       });
       return;

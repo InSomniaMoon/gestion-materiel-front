@@ -11,13 +11,11 @@
       <p-button
         label="Emprunter"
         [disabled]="!item().usable"
-        (click)="openAddSubscriptionDialog()"
-      />
+        (click)="openAddSubscriptionDialog()" />
       <p-button
         label="Voir les détails"
         [routerLink]="['/items', item().id]"
-        severity="info"
-      />
+        severity="info" />
     </div>
     <!-- <full-calendar
       #calendar

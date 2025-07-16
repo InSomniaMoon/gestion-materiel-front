@@ -14,12 +14,12 @@ export class IssueCommentsService {
 
   getComments(optionId: number, issueId: number) {
     return this.http
-      .get<IssueComment[]>(
-        `${this.api_url}/admin/options/${optionId}/issues/${issueId}/comments`
-      )
+      .get<
+        IssueComment[]
+      >(`${this.api_url}/admin/options/${optionId}/issues/${issueId}/comments`)
       .pipe(
-        map((comments) =>
-          comments.map((comment) => {
+        map(comments =>
+          comments.map(comment => {
             comment.created_at = new Date(comment.created_at);
             return comment;
           })

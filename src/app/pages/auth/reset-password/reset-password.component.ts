@@ -31,8 +31,7 @@ import { Password } from 'primeng/password';
           pInputText
           id="email"
           formControlName="email"
-          autocomplete="email"
-        />
+          autocomplete="email" />
         <label for="email">Email</label>
       </p-float-label>
       <p-float-label>
@@ -41,8 +40,7 @@ import { Password } from 'primeng/password';
           id="password"
           formControlName="password"
           type="password"
-          autocomplete="new-password"
-        />
+          autocomplete="new-password" />
         <label for="password">Mot de passe (min. 8 caractères)</label>
       </p-float-label>
       <p-float-label>
@@ -51,8 +49,7 @@ import { Password } from 'primeng/password';
           formControlName="password_confirmation"
           [toggleMask]="true"
           [feedback]="false"
-          autocomplete="confirm-password"
-        />
+          autocomplete="confirm-password" />
         <label for="password_confirmation">Confirm Password</label>
       </p-float-label>
       <button pButton [disabled]="!form.valid" type="submit">
@@ -91,7 +88,7 @@ export class ResetPasswordComponent implements OnInit {
         { validators: [Validators.required] },
       ],
     },
-    { validators: [this.passwordMatchValidator] },
+    { validators: [this.passwordMatchValidator] }
   );
 
   ngOnInit(): void {
@@ -116,7 +113,7 @@ export class ResetPasswordComponent implements OnInit {
           });
           this.router.navigate(['auth', 'login']);
         },
-        error: (err) => {
+        error: err => {
           console.error(err);
           this.toast.add({
             severity: 'error',

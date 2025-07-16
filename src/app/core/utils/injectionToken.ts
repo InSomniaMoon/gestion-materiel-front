@@ -15,6 +15,6 @@ export const CLEAR_CACHE_CONTEXT_OPTIONS = (
     .set(CLEAR_CACHE, true)
     .set(
       URLS_TO_CLEAR,
-      new Set([...urlsToClear].map((url) => new RegExp(url + '.*')))
+      new Set([...urlsToClear].map(url => new RegExp(url + '.*')))
     ),
 });

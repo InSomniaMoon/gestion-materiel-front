@@ -31,8 +31,7 @@ import { ToggleSwitch } from 'primeng/toggleswitch';
           pTextarea
           id="issue"
           formControlName="issue"
-          style="width:100%"
-        ></textarea>
+          style="width:100%"></textarea>
         <label for="issue">Problème repéré</label>
       </p-floatLabel>
 
@@ -46,8 +45,7 @@ import { ToggleSwitch } from 'primeng/toggleswitch';
       <p-button
         label="Déclarer"
         [disabled]="!form.valid"
-        (onClick)="declareAvarie()"
-      />
+        (onClick)="declareAvarie()" />
     </p-footer>`,
   styleUrl: './declareOptionIssue.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -85,7 +83,7 @@ export class DeclareOptionIssueComponent {
             detail: 'La déclaration a été effectuée avec succès.',
           });
         },
-        error: (err) => {
+        error: err => {
           console.error(err);
           this.messageService.add({
             severity: 'error',

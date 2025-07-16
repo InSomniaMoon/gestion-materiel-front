@@ -15,7 +15,7 @@ export const ADMIN_ROUTES: Routes = [
         path: '',
         loadComponent: () =>
           import('./items/items-list/items-list.component').then(
-            (m) => m.ItemsListComponent
+            m => m.ItemsListComponent
           ),
       },
       {
@@ -32,7 +32,7 @@ export const ADMIN_ROUTES: Routes = [
         title: 'Catégories',
         loadComponent: () =>
           import('./categories/categories-list/categories-list.component').then(
-            (m) => m.CategoriesListComponent
+            m => m.CategoriesListComponent
           ),
       },
     ],
@@ -45,7 +45,7 @@ export const ADMIN_ROUTES: Routes = [
         path: '',
         loadComponent: () =>
           import('./units/units-list/units-list.component').then(
-            (m) => m.UnitsListComponent
+            m => m.UnitsListComponent
           ),
       },
     ],

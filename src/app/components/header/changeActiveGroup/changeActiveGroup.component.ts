@@ -39,7 +39,7 @@ export class ChangeActiveGroupComponent {
   });
 
   opt = computed(() =>
-    this.authService.groups().map((g) => ({ label: g.name, value: g.id }))
+    this.authService.groups().map(g => ({ label: g.name, value: g.id }))
   );
 
   onResolve() {

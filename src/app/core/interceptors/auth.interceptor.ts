@@ -24,7 +24,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(req).pipe(
     tap({
-      error: (error) => {
+      error: error => {
         console.warn(error.error.error ?? error.message);
 
         if (error.error.error == 'Token not valid') {
@@ -34,6 +34,6 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
           console.warn('Token expired');
         }
       },
-    }),
+    })
   );
 };

@@ -17,11 +17,11 @@ export interface SimpleModalData {
 }
 
 @Component({
-    selector: 'app-simple-modal',
-    imports: [DialogModule, ButtonModule],
-    templateUrl: './simple-modal.component.html',
-    styleUrl: './simple-modal.component.scss',
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-simple-modal',
+  imports: [DialogModule, ButtonModule],
+  templateUrl: './simple-modal.component.html',
+  styleUrl: './simple-modal.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SimpleModalComponent implements OnInit {
   private ref = inject(DynamicDialogRef);

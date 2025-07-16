@@ -8,24 +8,23 @@ import { Card } from 'primeng/card';
   imports: [Card, ButtonDirective, RouterLink],
   template: `
     @for (item of items; track $index) {
-    <p-card>
-      <ng-template #header> </ng-template>
-      <ng-template #title> {{ item.label }} </ng-template>
+      <p-card>
+        <ng-template #header> </ng-template>
+        <ng-template #title> {{ item.label }} </ng-template>
 
-      <ng-template #footer>
-        <div>
-          <a
-            p
-            class="p-button"
-            pButton
-            [outlined]="true"
-            [routerLink]="item.link"
-          >
-            Voir
-          </a>
-        </div>
-      </ng-template>
-    </p-card>
+        <ng-template #footer>
+          <div>
+            <a
+              p
+              class="p-button"
+              pButton
+              [outlined]="true"
+              [routerLink]="item.link">
+              Voir
+            </a>
+          </div>
+        </ng-template>
+      </p-card>
     }
   `,
   styleUrl: './admin-dashboard.component.scss',

@@ -43,22 +43,21 @@ import { fromEvent, lastValueFrom, map, tap } from 'rxjs';
     <div class="flex">
       <app-search-bar
         (queryChange)="searchQuery.set($event); resetPagination()"
-        style="flex: 1;"
-      />
+        style="flex: 1;" />
 
       <p-select
         [options]="categories()"
         (onChange)="categoryFilter.set($event.value); resetPagination()"
         dropdownIcon="pi pi-filter"
-        [focusOnHover]="true"
-      />
+        [focusOnHover]="true" />
     </div>
 
     <div class="items-list" #scroll>
       @for (item of items(); track $index) {
-      <app-item-fragment [item]="item" />
-      } @if (itemsQuery.isLoading()) {
-      <p-progressSpinner />
+        <app-item-fragment [item]="item" />
+      }
+      @if (itemsQuery.isLoading()) {
+        <p-progressSpinner />
       }
     </div>
   `,
@@ -93,7 +92,7 @@ export class ItemsListComponent implements OnDestroy, AfterViewInit {
 
   categories = computed(() => [
     { label: 'Categories', value: null },
-    ...this.cats().map((cat) => ({
+    ...this.cats().map(cat => ({
       label: this.upperCaseFirstLetter(cat.name),
       value: cat.id,
     })),
@@ -112,8 +111,8 @@ export class ItemsListComponent implements OnDestroy, AfterViewInit {
             category_id: this.categoryFilter(),
           })
           .pipe(
-            tap((data) => {
-              this.items.update((d) => [...d, ...data.data]);
+            tap(data => {
+              this.items.update(d => [...d, ...data.data]);
               if (data.last_page == data.current_page)
                 this.noMoreData.set(true);
             })
@@ -152,7 +151,7 @@ export class ItemsListComponent implements OnDestroy, AfterViewInit {
         })
       )
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((scrollPos) => {
+      .subscribe(scrollPos => {
         let limit =
           this.scrollContent().nativeElement.scrollHeight -
           this.scrollContent().nativeElement.clientHeight;

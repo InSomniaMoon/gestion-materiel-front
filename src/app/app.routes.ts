@@ -7,7 +7,7 @@ export const routes: Routes = [
   {
     path: 'auth',
     loadChildren: () =>
-      import('./pages/auth/auth.routes').then((m) => m.AUTH_ROUTES),
+      import('./pages/auth/auth.routes').then(m => m.AUTH_ROUTES),
     title: 'Connexion',
   },
   {
@@ -18,20 +18,20 @@ export const routes: Routes = [
       {
         path: 'items',
         loadChildren: () =>
-          import('./pages/items/items.routes').then((m) => m.ITEMS_ROUTES),
+          import('./pages/items/items.routes').then(m => m.ITEMS_ROUTES),
       },
       {
         path: 'backoffice',
         loadChildren: () =>
           import('./pages/backoffice/backoffice.routes').then(
-            (m) => m.APP_ADMIN_ROUTES
+            m => m.APP_ADMIN_ROUTES
           ),
       },
       {
         path: 'admin',
         canMatch: [adminGuard],
         loadChildren: () =>
-          import('./pages/admin/admin.routes').then((m) => m.ADMIN_ROUTES),
+          import('./pages/admin/admin.routes').then(m => m.ADMIN_ROUTES),
       },
       { path: '**', redirectTo: 'items' },
     ],

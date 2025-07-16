@@ -8,18 +8,18 @@ import { CardModule } from 'primeng/card';
   imports: [CardModule, RouterLink, ButtonModule],
   template: `
     @for (card of cards; track $index) {
-    <p-card class="card" [header]="card.label">
-      <i class="pi pi-{{ card.icon }}"></i>
-      <ng-template #footer>
-        <a
-          pButton
-          severity="secondary"
-          [routerLink]="card.link"
-          [outlined]="true"
-          >Aller</a
-        >
-      </ng-template>
-    </p-card>
+      <p-card class="card" [header]="card.label">
+        <i class="pi pi-{{ card.icon }}"></i>
+        <ng-template #footer>
+          <a
+            pButton
+            severity="secondary"
+            [routerLink]="card.link"
+            [outlined]="true"
+            >Aller</a
+          >
+        </ng-template>
+      </p-card>
     }
   `,
   styleUrl: './backoffice-dashboard.component.scss',
