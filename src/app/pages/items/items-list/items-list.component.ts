@@ -22,9 +22,12 @@ import { ItemFragmentComponent } from './item-fragment/item-fragment.component';
 import { AuthService } from '@app/core/services/auth.service';
 import { injectQuery, QueryClient } from '@tanstack/angular-query-experimental';
 import { ButtonModule } from 'primeng/button';
+import { DialogService } from 'primeng/dynamicdialog';
+import { InputTextModule } from 'primeng/inputtext';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { Select } from 'primeng/select';
 import { fromEvent, lastValueFrom, map, tap } from 'rxjs';
+import { CreateEventWithSubscriptionsComponent } from './create-event-with-subscriptions/create-event-with-subscriptions.component';
 
 @Component({
   selector: 'app-items-list',
@@ -34,6 +37,7 @@ import { fromEvent, lastValueFrom, map, tap } from 'rxjs';
     ProgressSpinnerModule,
     ButtonModule,
     Select,
+    InputTextModule,
   ],
   styleUrl: './items-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -48,6 +52,11 @@ import { fromEvent, lastValueFrom, map, tap } from 'rxjs';
         (onChange)="categoryFilter.set($event.value); resetPagination()"
         dropdownIcon="pi pi-filter"
         [focusOnHover]="true" />
+
+      <p-button
+        icon="pi pi-plus"
+        label="Faire un emprunt"
+        (onClick)="openEmpruntEvent()" />
     </div>
 
     <div class="items-list" #scroll>
@@ -71,6 +80,9 @@ import { fromEvent, lastValueFrom, map, tap } from 'rxjs';
 export class ItemsListComponent implements OnDestroy, AfterViewInit {
   private readonly items$ = inject(ItemsService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly authService = inject(AuthService);
+  private readonly queryClient = inject(QueryClient);
+  private readonly dialogService = inject(DialogService);
 
   private readonly scrollContent =
     viewChild.required<ElementRef<HTMLDivElement>>('scroll');
@@ -124,9 +136,6 @@ export class ItemsListComponent implements OnDestroy, AfterViewInit {
       ),
   }));
 
-  private readonly authService = inject(AuthService);
-  private readonly queryClient = inject(QueryClient);
-
   constructor() {
     this.cats = toSignal(
       this.items$.getCategories().pipe(takeUntilDestroyed(this.destroyRef)),
@@ -178,9 +187,16 @@ export class ItemsListComponent implements OnDestroy, AfterViewInit {
     this.noMoreData.set(false);
   }
 
-  onScroll(event: any) {
-    console.log(event);
-
-    // this.page.set($event + 1);
+  openEmpruntEvent() {
+    this.dialogService.open(CreateEventWithSubscriptionsComponent, {
+      header: 'Créer un emprunt',
+      width: '50%',
+      height: '80%',
+      modal: true,
+      dismissableMask: true,
+    });
+    // Logic to open the event creation dialog
+    // This could be a dialog service or a component navigation
+    console.log('Open emprunt event dialog');
   }
 }

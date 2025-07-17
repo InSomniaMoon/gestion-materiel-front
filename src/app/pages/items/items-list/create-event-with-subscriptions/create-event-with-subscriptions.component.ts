@@ -4,54 +4,72 @@ import {
   DestroyRef,
   inject,
   OnInit,
-  output,
   signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Unit } from '@core/types/unit.type';
-import { AuthService } from '@services/auth.service';
-import { SubscriptionService } from '@services/subscription.service';
+import { AuthService } from '@app/core/services/auth.service';
+import { Unit } from '@app/core/types/unit.type';
 import { MessageService, ResponsiveOverlayOptions } from 'primeng/api';
-import { ButtonModule } from 'primeng/button';
+import { Button } from 'primeng/button';
 import { DatePicker } from 'primeng/datepicker';
 import { DialogModule } from 'primeng/dialog';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { FloatLabel } from 'primeng/floatlabel';
-import { InputTextModule } from 'primeng/inputtext';
+import { InputText } from 'primeng/inputtext';
 import { Select } from 'primeng/select';
 
 @Component({
-  selector: 'app-add-subscription',
+  selector: 'app-create-event-with-subscriptions',
   imports: [
-    DialogModule,
-    ButtonModule,
-    DatePicker,
     ReactiveFormsModule,
-    InputTextModule,
+    DialogModule,
     FloatLabel,
+    DatePicker,
+    Button,
+    InputText,
     Select,
   ],
-  templateUrl: './add-subscription.component.html',
-  styleUrl: './add-subscription.component.scss',
+  templateUrl: './create-event-with-subscriptions.component.html',
+  styleUrl: './create-event-with-subscriptions.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AddSubscriptionComponent implements OnInit {
-  fb = inject(FormBuilder);
-  private readonly ref = inject(DynamicDialogRef);
+export class CreateEventWithSubscriptionsComponent implements OnInit {
   private readonly dialogRef = inject(DialogService);
-  private readonly toast = inject(MessageService);
-  private readonly destroyRef = inject(DestroyRef);
   private readonly authService = inject(AuthService);
-
-  private readonly subscriptionService = inject(SubscriptionService);
-  private data = this.dialogRef.getInstance(this.ref).data;
+  private readonly fb = inject(FormBuilder);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly ref = inject(DynamicDialogRef);
+  private readonly toast = inject(MessageService);
 
   readonly units = this.authService.userUnits;
 
   minDate = signal(new Date());
-  subscriptionChange = output<void>();
+  responsiveOptions: ResponsiveOverlayOptions[] = [
+    {
+      breakpoint: '768px',
+    },
+  ];
 
+  constructor() {
+    this.form.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(value => {
+        this.minDate.set(this.date(value.start_date!));
+      });
+  }
+
+  ngOnInit(): void {
+    let curDate = new Date();
+    curDate.setMinutes(0, 0, 0);
+    // format :2024-11-13 16:01
+
+    this.form.patchValue({
+      start_date: this.formatDate(curDate),
+      end_date: this.formatDate(curDate),
+      unit: this.units()[0] ?? null,
+    });
+  }
   form = this.fb.group(
     {
       name: this.fb.control('', {
@@ -86,70 +104,16 @@ export class AddSubscriptionComponent implements OnInit {
     }
   );
 
-  responsiveOptions: ResponsiveOverlayOptions[] = [
-    {
-      breakpoint: '768px',
-    },
-  ];
-
-  constructor() {
-    this.form.valueChanges
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(value => {
-        this.minDate.set(this.date(value.start_date!));
-      });
-  }
-
-  ngOnInit(): void {
-    let curDate = new Date();
-    curDate.setMinutes(0, 0, 0);
-    // format :2024-11-13 16:01
-
-    this.form.patchValue({
-      start_date: this.formatDate(curDate),
-      end_date: this.formatDate(curDate),
-      unit: this.units()[0] ?? null,
-    });
-  }
-
   close() {
     this.ref.close();
-  }
-
-  date(str: string): Date {
-    return new Date(str);
   }
 
   submit() {
     if (this.form.invalid) {
       return;
     }
+
     const value = this.form.value;
-    this.subscriptionService
-      .addSubscription(this.data.item, {
-        name: value.name!,
-        start_date: new Date(value.start_date!),
-        end_date: new Date(value.end_date!),
-        item_id: this.data.item.id,
-        status: 'active',
-        id: 0,
-        user_id: 0,
-        unit_id: value.unit!.id,
-      })
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: () => {
-          this.ref.close(true);
-        },
-        error: error => {
-          console.warn(error.error);
-          this.toast.add({
-            severity: 'error',
-            summary: 'Erreur',
-            detail: error.error.message ?? 'Une erreur est survenue',
-          });
-        },
-      });
   }
 
   resetEndDate() {
@@ -158,6 +122,9 @@ export class AddSubscriptionComponent implements OnInit {
     });
   }
 
+  private date(str: string): Date {
+    return new Date(str);
+  }
   private formatDate(date: Date): string {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
