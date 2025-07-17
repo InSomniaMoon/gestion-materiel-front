@@ -13,17 +13,17 @@ import {
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { InputSwitchModule } from 'primeng/inputswitch';
 import { InputTextModule } from 'primeng/inputtext';
+import { ToggleSwitch } from 'primeng/toggleswitch';
 
 @Component({
   selector: 'app-create-update-item-option',
   imports: [
     ReactiveFormsModule,
     InputTextModule,
-    InputSwitchModule,
     DialogModule,
     ButtonModule,
+    ToggleSwitch,
   ],
   templateUrl: './create-update-item-option.component.html',
   styleUrl: './create-update-item-option.component.scss',

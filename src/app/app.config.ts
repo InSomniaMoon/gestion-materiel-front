@@ -3,7 +3,7 @@ import {
   inject,
   LOCALE_ID,
   provideAppInitializer,
-  provideExperimentalZonelessChangeDetection,
+  provideZonelessChangeDetection,
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
@@ -36,8 +36,8 @@ import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { cacheInterceptor } from './core/interceptors/cache.interceptor';
 import { groupInterceptor } from './core/interceptors/group.interceptor';
 import { AuthService } from './core/services/auth.service';
-import { SgdfPresetTheme } from './theme/theme';
 import { FRENCH_TRANSLATIONS } from './fr.translation';
+import { SgdfPresetTheme } from './theme/theme';
 
 registerLocaleData(localeFR);
 
@@ -45,7 +45,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     DialogService,
     MessageService,
-    provideExperimentalZonelessChangeDetection(),
+    provideZonelessChangeDetection(),
     provideRouter(routes),
     provideAnimations(),
     provideQueryClient(new QueryClient()),

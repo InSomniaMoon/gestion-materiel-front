@@ -1,19 +1,34 @@
 import { definePreset, palette } from '@primeng/themes';
 import ThemeBase from '@primeng/themes/lara';
-import { ButtonDesignTokens } from '@primeng/themes/types/button';
-import { DataTableDesignTokens } from '@primeng/themes/types/datatable';
-import { MenubarDesignTokens } from '@primeng/themes/types/menubar';
-import { ProgressSpinnerDesignTokens } from '@primeng/themes/types/progressspinner';
-import { TieredMenuDesignTokens } from '@primeng/themes/types/tieredmenu';
+import { LaraBaseTokenSections } from '@primeuix/themes/lara/base';
+import { ButtonDesignTokens } from '@primeuix/themes/types/button';
+import { DataTableDesignTokens } from '@primeuix/themes/types/datatable';
+import { MenubarDesignTokens } from '@primeuix/themes/types/menubar';
+import { ProgressSpinnerDesignTokens } from '@primeuix/themes/types/progressspinner';
+import { TieredMenuDesignTokens } from '@primeuix/themes/types/tieredmenu';
 
-const whitePalette = palette('#ffffff');
-export const primitives = {
-  cyan: palette('#0077b3'),
-  blue: palette('#003a5d'),
-  green: palette('#007254'),
-  orange: palette('#ff8300'),
-  red: palette('#d03f15'),
-  violet: palette('#6e74aa'),
+type Palette = {
+  50?: string;
+  100?: string;
+  200?: string;
+  300?: string;
+  400?: string;
+  500?: string;
+  600?: string;
+  700?: string;
+  800?: string;
+  900?: string;
+  950?: string;
+};
+
+const whitePalette = palette('#ffffff') as Palette;
+export const primitives: LaraBaseTokenSections.Primitive = {
+  cyan: palette('#0077b3') as Palette,
+  blue: palette('#003a5d') as Palette,
+  // green: palette('#007254'),
+  orange: palette('#ff8300') as Palette,
+  red: palette('#d03f15') as Palette,
+  violet: palette('#6e74aa') as Palette,
   // amber: whitePalette,
   // emerald: whitePalette,
   // fuchsia: whitePalette,
@@ -49,7 +64,6 @@ export const SgdfPresetTheme = definePreset(ThemeBase, {
       style: 'solid',
       color: '{primary.color}',
       offset: '2px',
-      shadow: 'none',
     },
     iconSize: '1rem',
     transitionDuration: '0.2s',

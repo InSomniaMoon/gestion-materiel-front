@@ -176,9 +176,9 @@ export class ItemsListComponent {
   first = computed(() => this.page() * this.size());
 
   items = resource({
-    loader: ({ request }) =>
-      lastValueFrom(this.itemService.getAdminItems(request)),
-    request: () => ({
+    loader: ({ params }) =>
+      lastValueFrom(this.itemService.getAdminItems(params)),
+    params: () => ({
       page: this.page(),
       size: this.size(),
       q: this.searchQuery(),
