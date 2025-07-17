@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { Item, ItemCategory } from '@app/core/types/item.type';
 import { PaginatedData } from '@app/core/types/paginatedData.type';
 import { environment } from '@env/environment';
+import { PaginationRequest } from '../types/pagination-request.type';
 import { queryParams } from '../utils/http.utils';
 import { CLEAR_CACHE_CONTEXT_OPTIONS } from '../utils/injectionToken';
 
@@ -21,12 +22,8 @@ export class ItemsService {
 
   getItems(
     opt: {
-      q?: string;
-      size?: number;
-      page?: number;
-      order_by?: string;
       category_id?: number;
-    } = {
+    } & Partial<PaginationRequest> = {
       page: 1,
       size: 25,
     }
@@ -35,6 +32,25 @@ export class ItemsService {
 
     return this.http.get<PaginatedData<Item>>(url, {
       params: queryParams(opt),
+    });
+  }
+
+  getAvailableItems(
+    opt: Partial<PaginationRequest> & { start_date: Date; end_date: Date } = {
+      page: 1,
+      size: 25,
+      start_date: new Date(),
+      end_date: new Date(),
+    }
+  ) {
+    let url = `${this.api_url}/items/available`;
+
+    return this.http.get<PaginatedData<Item>>(url, {
+      params: queryParams({
+        ...opt,
+        start_date: opt.start_date.toISOString(),
+        end_date: opt.end_date.toISOString(),
+      }),
     });
   }
 

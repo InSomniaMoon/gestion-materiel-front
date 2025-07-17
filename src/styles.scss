@@ -35,6 +35,9 @@ input
   display: flex;
   gap: 0.5rem;
   align-items: center;
+  &.wrap {
+    flex-wrap: wrap;
+  }
 }
 .flex-column {
   display: flex;
@@ -109,4 +112,8 @@ td {
     justify-content: end;
     gap: 0.5rem;
   }
+}
+
+.text-danger {
+  color: var(--p-red-500);
 }

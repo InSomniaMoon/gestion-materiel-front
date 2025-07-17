@@ -1,16 +1,32 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   DestroyRef,
+  effect,
   inject,
   OnInit,
+  resource,
   signal,
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import {
+  FormBuilder,
+  FormControl,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { AuthService } from '@app/core/services/auth.service';
+import { ItemsService } from '@app/core/services/items.service';
+import { Item } from '@app/core/types/item.type';
+import { PaginatedData } from '@app/core/types/paginatedData.type';
 import { Unit } from '@app/core/types/unit.type';
-import { MessageService, ResponsiveOverlayOptions } from 'primeng/api';
+import { debounceTimeSignal } from '@app/core/utils/signals.utils';
+import {
+  MessageService,
+  ResponsiveOverlayOptions,
+  ScrollerOptions,
+} from 'primeng/api';
 import { Button } from 'primeng/button';
 import { DatePicker } from 'primeng/datepicker';
 import { DialogModule } from 'primeng/dialog';
@@ -18,6 +34,7 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { FloatLabel } from 'primeng/floatlabel';
 import { InputText } from 'primeng/inputtext';
 import { Select } from 'primeng/select';
+import { lastValueFrom, of, tap } from 'rxjs';
 
 @Component({
   selector: 'app-create-event-with-subscriptions',
@@ -41,6 +58,7 @@ export class CreateEventWithSubscriptionsComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
   private readonly ref = inject(DynamicDialogRef);
   private readonly toast = inject(MessageService);
+  private readonly itemsService = inject(ItemsService);
 
   readonly units = this.authService.userUnits;
 
@@ -57,6 +75,12 @@ export class CreateEventWithSubscriptionsComponent implements OnInit {
       .subscribe(value => {
         this.minDate.set(this.date(value.start_date!));
       });
+
+    effect(() => {
+      this.itemsSearchQueryDebounced();
+      this.availableItemsPage.set(1);
+      this.availableItems.set([]);
+    });
   }
 
   ngOnInit(): void {
@@ -88,6 +112,7 @@ export class CreateEventWithSubscriptionsComponent implements OnInit {
         nonNullable: true,
         validators: [Validators.required],
       }),
+      items: this.fb.control<Item[]>([]),
     },
     {
       validators: [
@@ -103,6 +128,89 @@ export class CreateEventWithSubscriptionsComponent implements OnInit {
       ],
     }
   );
+
+  get items() {
+    return this.form.get('items')! as FormControl<Item[]>;
+  }
+
+  private categories = toSignal(this.itemsService.getCategories(), {
+    initialValue: [],
+  });
+
+  private readonly startDate = toSignal(
+    this.form.get('start_date')!.valueChanges,
+    { initialValue: '' }
+  );
+  private readonly endDate = toSignal(this.form.get('end_date')!.valueChanges, {
+    initialValue: '',
+  });
+  private availableItems = signal<Item[]>([]);
+  protected groupedAvailableItems = computed(() =>
+    Object.entries(
+      Object.groupBy(this.availableItems(), (item: Item) => item.category_id)
+    ).map(([categoryId, items]) => ({
+      label:
+        this.categories().find(c => c.id === +categoryId)?.name || 'Autres',
+      value: categoryId,
+      items: items,
+    }))
+  );
+
+  scrollOption = computed<ScrollerOptions>(() => ({
+    lazy: true,
+    items: this.groupedAvailableItems(),
+    itemSize: 50,
+  }));
+
+  itemsSearchQuery = signal('');
+  private itemsSearchQueryDebounced = debounceTimeSignal(this.itemsSearchQuery);
+  protected availableItemsPage = signal(1);
+  availableItemsResource = resource<PaginatedData<Item>, any>({
+    params: () => ({
+      endDate: this.endDate(),
+      startDate: this.startDate(),
+      q: this.itemsSearchQueryDebounced(),
+      page: this.availableItemsPage(),
+    }),
+
+    loader: ({ params }) =>
+      params.startDate != params.endDate
+        ? lastValueFrom(
+            this.itemsService
+              .getAvailableItems({
+                start_date: new Date(params.startDate),
+                end_date: new Date(params.endDate),
+                page: params.page,
+                size: 25,
+                q: params.q,
+              })
+              .pipe(
+                tap(data => {
+                  this.availableItems.update(val => [...val, ...data.data]);
+                })
+              )
+          )
+        : lastValueFrom(
+            of({
+              data: [],
+              total: 0,
+              per_page: 25,
+              current_page: 1,
+              last_page: 1,
+              to: 0,
+              from: 0,
+            } as PaginatedData<Item>)
+          ),
+    defaultValue: {
+      data: [],
+      total: 0,
+      per_page: 25,
+      current_page: 1,
+      last_page: 1,
+      to: 0,
+      from: 0,
+    },
+  });
 
   close() {
     this.ref.close();
@@ -122,9 +230,31 @@ export class CreateEventWithSubscriptionsComponent implements OnInit {
     });
   }
 
+  addItem(item: Item) {
+    if (this.items.value.find(i => i.id === item.id)) {
+      this.toast.add({
+        severity: 'warn',
+        summary: 'Item déjà ajouté',
+        detail: 'Cet item est déjà dans la liste.',
+      });
+      return;
+    }
+
+    this.items.patchValue([...this.items.value, item]);
+    this.availableItems.update(val => val.filter(i => i.id !== item.id));
+  }
+  removeItem(item: Item) {
+    this.items.patchValue(this.items.value.filter(i => i.id !== item.id));
+  }
+
+  log(loggable: any) {
+    console.log(loggable);
+  }
+
   private date(str: string): Date {
     return new Date(str);
   }
+
   private formatDate(date: Date): string {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');

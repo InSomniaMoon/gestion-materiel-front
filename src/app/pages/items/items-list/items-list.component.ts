@@ -192,6 +192,10 @@ export class ItemsListComponent implements OnDestroy, AfterViewInit {
       header: 'Créer un emprunt',
       width: '50%',
       height: '80%',
+      breakpoints: {
+        '960px': '75%',
+        '640px': '90%',
+      },
       modal: true,
       dismissableMask: true,
     });
