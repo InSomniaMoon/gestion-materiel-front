@@ -56,7 +56,7 @@ export class BackofficeService {
 
   getUserGroups(userId: string) {
     return httpResource<GroupWithPivot[]>(
-      `${this.apiUrl}/users/${userId}/groups`,
+      () => `${this.apiUrl}/users/${userId}/groups`,
       {
         defaultValue: [],
       }

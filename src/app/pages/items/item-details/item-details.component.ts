@@ -17,7 +17,6 @@ import { Item } from '@app/core/types/item.type';
 import { injectQuery } from '@tanstack/angular-query-experimental';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
-import { InputSwitchModule } from 'primeng/inputswitch';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
@@ -33,7 +32,6 @@ import { OptionsTableComponent } from './options-table/options-table.component';
     TableModule,
     TagModule,
     ButtonModule,
-    InputSwitchModule,
     ToggleButtonModule,
     FormsModule,
     RouterLink,

@@ -99,11 +99,11 @@ export class CreateUnitComponent implements OnInit {
   debouncedChiefsFilter = debounceTimeSignal(this.chiefsFilter);
 
   chiefs = resource({
-    request: () => ({ q: this.debouncedChiefsFilter() }),
-    loader: ({ request }) =>
+    params: () => ({ q: this.debouncedChiefsFilter() }),
+    loader: ({ params }) =>
       lastValueFrom(
         this.usersService
-          .getPaginatedUsers({ ...request, page: 1, size: 100 })
+          .getPaginatedUsers({ ...params, page: 1, size: 100 })
           .pipe(
             map(data =>
               data.data.map(user => ({
