@@ -10,8 +10,8 @@ import {
   viewChild,
 } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
+import { EventsService } from '@app/core/services/events.service';
 import { AddSubscriptionComponent } from '@components/add-subscription/add-subscription.component';
-import { SubscriptionService } from '@core/services/subscription.service';
 import { Item } from '@core/types/item.type';
 import { Subscription } from '@core/types/subscription.type';
 import {
@@ -50,10 +50,10 @@ import locale from '@fullcalendar/core/locales/fr';
   // changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ItemFragmentComponent implements OnInit, AfterViewInit {
-  private readonly subscriptionService = inject(SubscriptionService);
+  private readonly subscriptionService = inject(EventsService);
   private readonly destroyRef = inject(DestroyRef);
   item = input.required<Item>();
-  subscription$ = inject(SubscriptionService);
+  subscription$ = inject(EventsService);
 
   toast = inject(MessageService);
 

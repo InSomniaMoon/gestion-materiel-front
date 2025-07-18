@@ -1,0 +1,6 @@
+@defer (when isGroupResp()) {
+  <p>Vous êtes responsable de groupe</p>
+} @placeholder {}
+@defer (when isGroupChief()) {
+  <app-user-dashboard />
+} @placeholder {}

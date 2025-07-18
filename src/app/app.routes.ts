@@ -16,6 +16,14 @@ export const routes: Routes = [
     component: AuthenticatedShellComponent,
     children: [
       {
+        path: 'dashboard',
+        loadComponent: () =>
+          import('./pages/dashboard/dashboard.component').then(
+            m => m.DashboardComponent
+          ),
+        title: 'Tableau de bord',
+      },
+      {
         path: 'items',
         loadChildren: () =>
           import('./pages/items/items.routes').then(m => m.ITEMS_ROUTES),

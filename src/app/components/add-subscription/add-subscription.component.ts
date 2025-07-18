@@ -9,9 +9,9 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { EventsService } from '@app/core/services/events.service';
 import { Unit } from '@core/types/unit.type';
 import { AuthService } from '@services/auth.service';
-import { SubscriptionService } from '@services/subscription.service';
 import { MessageService, ResponsiveOverlayOptions } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { DatePicker } from 'primeng/datepicker';
@@ -44,7 +44,7 @@ export class AddSubscriptionComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
   private readonly authService = inject(AuthService);
 
-  private readonly subscriptionService = inject(SubscriptionService);
+  private readonly subscriptionService = inject(EventsService);
   private data = this.dialogRef.getInstance(this.ref).data;
 
   readonly units = this.authService.userUnits;

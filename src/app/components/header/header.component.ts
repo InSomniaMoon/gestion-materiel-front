@@ -83,7 +83,7 @@ export class HeaderComponent implements OnInit {
   menuItems = computed<MenuItem[]>(() => [
     {
       label: 'Accueil',
-      routerLink: '/items',
+      routerLink: '/dashboard',
       icon: 'pi pi-home',
     },
 
