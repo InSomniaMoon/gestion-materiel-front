@@ -39,4 +39,10 @@ export class EventsService {
       ...CLEAR_CACHE_CONTEXT_OPTIONS(),
     });
   }
+
+  getEventsForUnit(unitId: number) {
+    const url = `${this.api_url}/events?unit_id=${unitId}`;
+    // This method should return an observable of the unit events
+    return this.http.get<Subscription[]>(url);
+  }
 }
