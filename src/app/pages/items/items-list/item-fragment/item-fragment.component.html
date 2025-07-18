@@ -6,16 +6,15 @@
     </div>
   </ng-template>
   <div class="body">
-    <p>{{ item().description }}</p>
     <div class="button-group">
       <p-button
-        label="Emprunter"
+        label="Réserver"
         [disabled]="!item().usable"
         (click)="openAddSubscriptionDialog()">
       </p-button>
       <a
         pButton
-        label="Voir les détails"
+        label="Détails"
         [routerLink]="['/items', item().id]"
         severity="info">
       </a>

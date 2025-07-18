@@ -30,6 +30,7 @@
   <div class="flex wrap">
     <p-float-label variant="on">
       <p-date-picker
+        appendTo="body"
         showIcon
         iconDisplay="input"
         [showTime]="true"
@@ -55,6 +56,7 @@
     <p-float-label variant="on">
       <p-date-picker
         showIcon
+        appendTo="body"
         iconDisplay="input"
         [showTime]="true"
         hourFormat="24"
@@ -87,7 +89,7 @@
     [filterFields]="['name', 'category.name']"
     (onFilter)="itemsSearchQuery.set($event.filter)"
     optionLabel="name"
-    [optionValue]="undefined"
+    optionValue="id"
     (onChange)="addItem($event.value); select.selectedOption = null"
     [lazy]="true"
     [loading]="availableItemsResource.isLoading()"
@@ -111,5 +113,5 @@
 
 <p-footer>
   <p-button label="Annuler" severity="secondary" (onClick)="close()" />
-  <p-button label="Emprunter" [disabled]="!form.valid" (onClick)="submit()" />
+  <p-button label="Réserver" [disabled]="!form.valid" (onClick)="submit()" />
 </p-footer>

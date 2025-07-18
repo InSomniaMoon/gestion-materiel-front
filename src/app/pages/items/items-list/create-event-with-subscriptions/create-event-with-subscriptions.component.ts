@@ -81,6 +81,10 @@ export class CreateEventWithSubscriptionsComponent implements OnInit {
       this.availableItemsPage.set(1);
       this.availableItems.set([]);
     });
+
+    effect(() => {
+      console.log(this.groupedAvailableItems());
+    });
   }
 
   ngOnInit(): void {
@@ -150,7 +154,8 @@ export class CreateEventWithSubscriptionsComponent implements OnInit {
       Object.groupBy(this.availableItems(), (item: Item) => item.category_id)
     ).map(([categoryId, items]) => ({
       label:
-        this.categories().find(c => c.id === +categoryId)?.name || 'Autres',
+        this.categories().find(cat => cat.id === Number(categoryId))?.name ||
+        'Autres',
       value: categoryId,
       items: items,
     }))
