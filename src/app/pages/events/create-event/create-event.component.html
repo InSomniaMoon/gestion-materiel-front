@@ -1,0 +1,50 @@
+<p-stepper [value]="1" [linear]="true">
+  <p-step-list>
+    <p-step [value]="1">Informations</p-step>
+    <p-step [value]="2">Liste du matériel</p-step>
+    <p-step [value]="3">Commentaire</p-step>
+    <p-step [value]="4">Confirmation</p-step>
+  </p-step-list>
+  <p-step-panels>
+    <p-step-panel [value]="1">
+      <ng-template #content let-activateCallback="activateCallback">
+        Etape 1
+        <p-button
+          label="Next"
+          icon="pi pi-arrow-right"
+          iconPos="right"
+          (onClick)="activateCallback(2)" />
+      </ng-template>
+    </p-step-panel>
+    <p-step-panel [value]="2">
+      <ng-template #content let-activateCallback="activateCallback">
+        Etape 2
+        <p-button
+          label="Next"
+          icon="pi pi-arrow-right"
+          iconPos="right"
+          (onClick)="activateCallback(3)" />
+      </ng-template>
+    </p-step-panel>
+    <p-step-panel [value]="3">
+      <ng-template #content let-activateCallback="activateCallback">
+        Etape 3
+        <p-button
+          label="Next"
+          icon="pi pi-arrow-right"
+          iconPos="right"
+          (onClick)="activateCallback(4)" />
+      </ng-template>
+    </p-step-panel>
+    <p-step-panel [value]="4">
+      <ng-template #content let-activateCallback="activateCallback">
+        Etape 4
+        <p-button
+          label="Back"
+          icon="pi pi-arrow-right"
+          iconPos="right"
+          (onClick)="activateCallback(3)" />
+      </ng-template>
+    </p-step-panel>
+  </p-step-panels>
+</p-stepper>

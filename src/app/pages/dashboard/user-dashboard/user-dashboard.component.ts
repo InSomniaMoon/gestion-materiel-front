@@ -6,7 +6,7 @@ import {
   resource,
   viewChild,
 } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '@app/core/services/auth.service';
 import { EventsService } from '@app/core/services/events.service';
 import {
@@ -17,11 +17,12 @@ import { CalendarOptions, EventInput } from '@fullcalendar/core/index.js';
 import locale from '@fullcalendar/core/locales/fr';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
+import { ButtonDirective } from 'primeng/button';
 import { catchError, lastValueFrom, map } from 'rxjs';
 
 @Component({
   selector: 'app-user-dashboard',
-  imports: [FullCalendarModule],
+  imports: [ButtonDirective, RouterLink, FullCalendarModule],
   templateUrl: './user-dashboard.component.html',
   styleUrl: './user-dashboard.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

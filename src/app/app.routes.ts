@@ -24,6 +24,11 @@ export const routes: Routes = [
         title: 'Tableau de bord',
       },
       {
+        path: 'events',
+        loadChildren: () =>
+          import('./pages/events/events.routes').then(m => m.EVENTS_ROUTES),
+      },
+      {
         path: 'items',
         loadChildren: () =>
           import('./pages/items/items.routes').then(m => m.ITEMS_ROUTES),
@@ -41,7 +46,7 @@ export const routes: Routes = [
         loadChildren: () =>
           import('./pages/admin/admin.routes').then(m => m.ADMIN_ROUTES),
       },
-      { path: '**', redirectTo: 'items' },
+      { path: '**', redirectTo: 'dashboard' },
     ],
   },
   { path: '**', redirectTo: 'auth/login' },
