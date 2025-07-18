@@ -5,11 +5,12 @@ import {
   inject,
 } from '@angular/core';
 import { AuthService } from '@app/core/services/auth.service';
+import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
 import { UserDashboardComponent } from './user-dashboard/user-dashboard.component';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [UserDashboardComponent],
+  imports: [UserDashboardComponent, AdminDashboardComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
