@@ -1,0 +1,14 @@
+<div class="form"></div>
+
+<div class="footer">
+  <p-button
+    label="Précédent"
+    icon="pi pi-arrow-left"
+    iconPos="left"
+    (onClick)="previousStep.emit()" />
+  <p-button
+    label="Suivant"
+    icon="pi pi-arrow-right"
+    iconPos="right"
+    (onClick)="nextStep.emit()" />
+</div>

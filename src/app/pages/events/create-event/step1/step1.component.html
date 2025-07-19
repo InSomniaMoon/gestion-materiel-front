@@ -1,0 +1,19 @@
+<form [formGroup]="formGroup()">
+  <p-float-label>
+    <input
+      pInputText
+      id="name"
+      formControlName="name"
+      type="text"
+      placeholder="Nom de l'événement" />
+    <label for="name">Nom de l'événement</label>
+  </p-float-label>
+</form>
+
+<div class="footer">
+  <p-button
+    label="Suivant"
+    icon="pi pi-arrow-right"
+    iconPos="right"
+    (onClick)="nextStep.emit()" />
+</div>
