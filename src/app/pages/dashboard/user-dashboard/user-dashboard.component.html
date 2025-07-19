@@ -1,13 +1,44 @@
-<div class="header">
-  <h1>Mes prochains événements</h1>
-  <a
-    pButton
-    [routerLink]="['/events/create']"
-    icon="pi pi-plus"
-    label="Créer un événement"></a>
-</div>
-
-<full-calendar
-  #calendar
-  [options]="calendarOptions()"
-  style="max-height: 80vh" />
+@if (actualEvents.isLoading()) {
+  <p-progressSpinner />
+} @else {
+  @if (actualEvents.value().length > 0) {
+    <h2>Mes événements à actuels</h2>
+    @for (event of actualEvents.value(); track event.id) {
+      <div class="event-item">
+        <h3>{{ event.name }}</h3>
+        <p>Début : {{ event.start_date | date: 'short' }}</p>
+        <p>Fin : {{ event.end_date | date: 'short' }}</p>
+      </div>
+      <h4>Objets</h4>
+      <div class="objets">
+        @for (material of event.event_subscriptions; track material.id) {
+          <p-card [header]="material.name">
+            <ng-template #footer>
+              <div class="flex gap-4 mt-1">
+                <p-button
+                  label="Avarie"
+                  severity="danger"
+                  icon="pi pi-plus"
+                  (onClick)="reportDamage(material)"
+                  [outlined]="true" />
+              </div>
+            </ng-template>
+          </p-card>
+        }
+      </div>
+    }
+  } @else {
+    <div class="header">
+      <h1>Mes prochains événements</h1>
+      <a
+        pButton
+        [routerLink]="['/events/create']"
+        icon="pi pi-plus"
+        label="Créer un événement"></a>
+    </div>
+    <full-calendar
+      #calendar
+      [options]="calendarOptions()"
+      style="max-height: 80vh" />
+  }
+}

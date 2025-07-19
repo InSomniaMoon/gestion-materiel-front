@@ -1,19 +1,21 @@
-import { JsonPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  DestroyRef,
+  computed,
   inject,
+  input,
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { OptionIssuesService } from '@app/core/services/option-issues.service';
+import { Item } from '@app/core/types/item.type';
 import { MessageService } from 'primeng/api';
 import { Button } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { FloatLabel } from 'primeng/floatlabel';
+import { Select } from 'primeng/select';
+import { Textarea } from 'primeng/textarea';
 import { ToggleSwitch } from 'primeng/toggleswitch';
 
 @Component({
@@ -22,20 +24,37 @@ import { ToggleSwitch } from 'primeng/toggleswitch';
     DialogModule,
     Button,
     ReactiveFormsModule,
+    Textarea,
     FloatLabel,
     ToggleSwitch,
+    Select,
   ],
   template: `<form [formGroup]="form">
-      <p-floatLabel variant="on">
+      <p-float-label variant="on">
+        <p-select
+          formControlName="optionId"
+          [options]="options()"
+          optionLabel="name"
+          optionValue="id"
+          fluid
+          id="option" />
+        <label for="option">Option</label>
+      </p-float-label>
+
+      <p-float-label variant="on">
         <textarea
           pTextarea
           id="issue"
           formControlName="issue"
-          style="width:100%"></textarea>
-        <label for="issue">Problème repéré</label>
-      </p-floatLabel>
+          fluid
+          rows="5"></textarea>
 
-      <label for="usable">
+        <label for="issue">Problème repéré</label>
+      </p-float-label>
+
+      <label
+        for="usable"
+        style="display: flex; gap: 0.5rem; align-items: center;">
         <p-toggle-switch formControlName="usable" id="usable" />
         Utilisabilité de l'objet
       </label>
@@ -44,7 +63,7 @@ import { ToggleSwitch } from 'primeng/toggleswitch';
       <p-button label="Fermer" severity="secondary" (onClick)="ref.close()" />
       <p-button
         label="Déclarer"
-        [disabled]="!form.valid"
+        [disabled]="form.invalid"
         (onClick)="declareAvarie()" />
     </p-footer>`,
   styleUrl: './declareOptionIssue.component.scss',
@@ -56,23 +75,28 @@ export class DeclareOptionIssueComponent {
   private readonly optionIssuesService = inject(OptionIssuesService);
   private readonly messageService = inject(MessageService);
 
+  item = input.required<Item>();
+  options = computed(() => this.item()?.options || []);
+
   fb = inject(FormBuilder);
   form = this.fb.nonNullable.group({
     issue: this.fb.control('', {
       nonNullable: true,
       validators: [Validators.required],
     }),
-    usable: this.fb.control(true, { nonNullable: true }),
+    usable: this.fb.nonNullable.control(true),
+    optionId: this.fb.nonNullable.control(null, {
+      validators: [Validators.required],
+    }),
   });
 
   declareAvarie() {
     if (!this.form.valid) return;
-
     this.optionIssuesService
       .create(
         this.form.getRawValue(),
-        this.dialogService.getInstance(this.ref).data.itemId,
-        this.dialogService.getInstance(this.ref).data.optionId
+        this.item().id,
+        this.form.value.optionId!
       )
       .subscribe({
         next: () => {
