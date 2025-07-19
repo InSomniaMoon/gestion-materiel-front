@@ -12,6 +12,7 @@
       flex: 1;
       display: flex;
       flex-direction: column;
+      height: 100%;
 
       p-stepper-separator {
         flex: 0;
@@ -19,6 +20,9 @@
 
       .p-steppanel-content {
         flex: 1;
+        height: 100%;
+        display: flex;
+        flex-basis: 0;
       }
     }
   }
@@ -35,11 +39,14 @@ p-stepper {
   display: flex;
   height: 100%;
   flex-direction: column;
+  align-items: center;
 }
 
 p-step-list {
   width: 60%;
-
-  justify-self: center;
   overflow-y: hidden;
+
+  @media screen and (max-width: 768px) {
+    width: 100%;
+  }
 }

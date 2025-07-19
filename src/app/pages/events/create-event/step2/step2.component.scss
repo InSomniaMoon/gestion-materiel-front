@@ -2,19 +2,36 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 100%;
-}
+  padding: 0 2rem;
 
-.form {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
-  flex: 1;
+  @media (max-width: 768px) {
+    margin: 0;
+  }
 }
 
 .footer {
   display: flex;
   justify-content: space-between;
   padding: 1rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+
+  gap: 1rem;
+  padding: 1rem 2rem;
+  border-bottom: 1px solid hwb(120 55% 44%);
+
+  > .flex {
+    gap: 1rem;
+  }
+}
+
+.paginator {
+  border-top: 1px solid hwb(120 55% 44%);
+  display: flex;
+  align-items: center;
+  padding-left: 2rem;
+  gap: 1rem;
 }

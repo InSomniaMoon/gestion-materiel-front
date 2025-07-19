@@ -48,7 +48,6 @@ import { lastValueFrom, of, tap } from 'rxjs';
     Select,
   ],
   templateUrl: './create-event-with-subscriptions.component.html',
-  styleUrl: './create-event-with-subscriptions.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreateEventWithSubscriptionsComponent implements OnInit {
@@ -170,6 +169,7 @@ export class CreateEventWithSubscriptionsComponent implements OnInit {
   itemsSearchQuery = signal('');
   private itemsSearchQueryDebounced = debounceTimeSignal(this.itemsSearchQuery);
   protected availableItemsPage = signal(1);
+
   availableItemsResource = resource<PaginatedData<Item>, any>({
     params: () => ({
       endDate: this.endDate(),

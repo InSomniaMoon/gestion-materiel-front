@@ -4,7 +4,6 @@ import { environment } from '@env/environment';
 import { of } from 'rxjs';
 import { Item } from '../types/item.type';
 import { Subscription } from '../types/subscription.type';
-import { CLEAR_CACHE_CONTEXT_OPTIONS } from '../utils/injectionToken';
 import { CacheService } from './cache.service';
 
 @Injectable({
@@ -31,13 +30,17 @@ export class EventsService {
     return this.http.get<Subscription[]>(url);
   }
 
-  addSubscription(item: Item, subscription: Subscription) {
-    // This method should add a subscription
-    const url = `${this.api_url}/items/${item.id}/uses`;
-
-    return this.http.post<Subscription>(url, subscription, {
-      ...CLEAR_CACHE_CONTEXT_OPTIONS(),
-    });
+  createEvent(data: {
+    name: string;
+    unit_id: number;
+    start_date: Date | null;
+    end_date: Date | null;
+    materials: { id: number; quantity: number }[];
+    comment: string;
+  }) {
+    const url = `${this.api_url}/events`;
+    // This method should return an observable of the created event
+    return this.http.post(url, data);
   }
 
   getEventsForUnit(unitId: number) {

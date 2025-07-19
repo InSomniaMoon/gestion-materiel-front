@@ -4,12 +4,14 @@ import {
   input,
   output,
 } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Button } from 'primeng/button';
+import { FloatLabel } from 'primeng/floatlabel';
+import { Textarea } from 'primeng/textarea';
 
 @Component({
   selector: 'app-step3',
-  imports: [Button],
+  imports: [Button, FloatLabel, Textarea, ReactiveFormsModule],
   templateUrl: './step3.component.html',
   styleUrl: './step3.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

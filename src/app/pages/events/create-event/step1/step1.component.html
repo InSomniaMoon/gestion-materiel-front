@@ -1,13 +1,86 @@
-<form [formGroup]="formGroup()">
-  <p-float-label>
-    <input
-      pInputText
-      id="name"
-      formControlName="name"
-      type="text"
-      placeholder="Nom de l'événement" />
-    <label for="name">Nom de l'événement</label>
-  </p-float-label>
+<form class="modal-content" [formGroup]="formGroup()">
+  <div class="flex wrap">
+    <p-float-label variant="on" class="flex-1">
+      <input pInputText formControlName="name" id="event" [fluid]="true" />
+      <label for="event">Nom de l'emprunt</label>
+    </p-float-label>
+    <div class="flex flex-1">
+      <span
+        [style]="
+          `display:block; width: 40px; height: 28px; background-color: ${formGroup().get('unit')!.value?.color}; border-radius: 4px;`
+        "></span>
+      @if (units().length > 1) {
+        <p-float-label variant="on">
+          <p-select
+            formControlName="unit"
+            id="unit_id"
+            [options]="units()"
+            optionLabel="name"
+            [optionValue]="undefined"
+            [fluid]="true"
+            [showClear]="true"></p-select>
+          <label for="unit_id">Unité empruntante</label>
+        </p-float-label>
+      } @else {
+        @let unit = units()[0];
+        <p>Unité empruntante : {{ unit.name }}</p>
+      }
+    </div>
+  </div>
+  <div class="flex wrap">
+    <p-float-label variant="on" class="flex-1">
+      <p-date-picker
+        appendTo="body"
+        [fluid]="true"
+        showIcon
+        iconDisplay="input"
+        [showTime]="true"
+        hourFormat="24"
+        dateFormat="yy-mm-dd"
+        formControlName="start_date"
+        id="start_date"
+        stepMinute="30"
+        readonlyInput
+        #start_date
+        (ngModelChange)="resetEndDate()">
+        <ng-template pTemplate="footer">
+          <button
+            pButton
+            type="button"
+            label="Fermer"
+            (click)="start_date.toggle()"></button>
+        </ng-template>
+      </p-date-picker>
+      <label for="start_date">Début de l'emprunt</label>
+    </p-float-label>
+
+    <p-float-label variant="on" class="flex-1">
+      <p-date-picker
+        showIcon
+        [fluid]="true"
+        appendTo="body"
+        iconDisplay="input"
+        [showTime]="true"
+        hourFormat="24"
+        dateFormat="yy-mm-dd"
+        stepMinute="30"
+        formControlName="end_date"
+        id="end_date"
+        readonlyInput
+        [responsiveOptions]="responsiveOptions"
+        [minDate]="minDate()"
+        #end_date>
+        <ng-template pTemplate="footer">
+          <button
+            pButton
+            type="button"
+            label="Fermer"
+            (click)="end_date.toggle()"></button>
+        </ng-template>
+      </p-date-picker>
+      <label for="end_date">Fin de l'emprunt</label>
+    </p-float-label>
+  </div>
 </form>
 
 <div class="footer">
@@ -15,5 +88,6 @@
     label="Suivant"
     icon="pi pi-arrow-right"
     iconPos="right"
-    (onClick)="nextStep.emit()" />
+    (onClick)="nextStep.emit()"
+    [disabled]="formGroup().invalid" />
 </div>
