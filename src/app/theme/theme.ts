@@ -5,6 +5,7 @@ import { ButtonDesignTokens } from '@primeuix/themes/types/button';
 import { DataTableDesignTokens } from '@primeuix/themes/types/datatable';
 import { MenubarDesignTokens } from '@primeuix/themes/types/menubar';
 import { ProgressSpinnerDesignTokens } from '@primeuix/themes/types/progressspinner';
+import { StepperDesignTokens } from '@primeuix/themes/types/stepper';
 import { TieredMenuDesignTokens } from '@primeuix/themes/types/tieredmenu';
 
 type Palette = {
@@ -21,30 +22,13 @@ type Palette = {
   950?: string;
 };
 
-const whitePalette = palette('#ffffff') as Palette;
-export const primitives: LaraBaseTokenSections.Primitive = {
+export const primitive: LaraBaseTokenSections.Primitive = {
   cyan: palette('#0077b3') as Palette,
   blue: palette('#003a5d') as Palette,
-  // green: palette('#007254'),
+  green: palette('#007254') as Palette,
   orange: palette('#ff8300') as Palette,
   red: palette('#d03f15') as Palette,
   violet: palette('#6e74aa') as Palette,
-  // amber: whitePalette,
-  // emerald: whitePalette,
-  // fuchsia: whitePalette,
-  // yellow: whitePalette,
-  // indigo: whitePalette,
-  // lime: whitePalette,
-  // pink: whitePalette,
-  // purple: whitePalette,
-  // rose: whitePalette,
-  // sky: whitePalette,
-  // gray: whitePalette,
-  // zinc: whitePalette,
-  // neutral: whitePalette,
-  // slate: whitePalette,
-  // stone: whitePalette,
-  // teal: whitePalette,
   borderRadius: {
     none: '0',
     xs: '0.125rem',
@@ -56,9 +40,9 @@ export const primitives: LaraBaseTokenSections.Primitive = {
 };
 
 export const SgdfPresetTheme = definePreset(ThemeBase, {
-  primitive: primitives,
+  primitive,
   semantic: {
-    primary: primitives.blue,
+    primary: primitive.blue,
     focusRing: {
       width: '1px',
       style: 'solid',
@@ -82,13 +66,6 @@ export const SgdfPresetTheme = definePreset(ThemeBase, {
         paddingY: '0.625rem',
       },
       borderRadius: '{border.radius.md}',
-      // focusRing: {
-      //   width: '0',
-      //   style: 'none',
-      //   color: 'transparent',
-      //   offset: '0',
-      //   shadow: 'none',
-      // },
       transitionDuration: '{transition.duration}',
     },
     colorScheme: {
@@ -165,7 +142,7 @@ export const SgdfPresetTheme = definePreset(ThemeBase, {
             color: '{primary.contrastColor}',
           },
           submenu: {
-            background: `${primitives!.blue?.[500]}`,
+            background: `${primitive.blue?.[500]}`,
             borderColor: '{primary.color}',
           },
         },
@@ -242,4 +219,15 @@ export const SgdfPresetTheme = definePreset(ThemeBase, {
       },
     } as ProgressSpinnerDesignTokens,
   },
+  stepper: {
+    root: {
+      transitionDuration: '{transition.duration}',
+    },
+    steppanel: {
+      padding: '0',
+    },
+    steppanels: {
+      padding: '0',
+    },
+  } as StepperDesignTokens,
 });

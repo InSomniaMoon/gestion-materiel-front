@@ -10,6 +10,7 @@ import {
   selector: 'matos-table',
   imports: [],
   template: `
+    <ng-content select="[header]" />
     @if (!isLoading() && !isError()) {
       <div class="table-container">
         <ng-content select="p-table]" />

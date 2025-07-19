@@ -40,7 +40,7 @@ export class LoginComponent implements OnDestroy {
               this.routeSnapshot.queryParams['redirect']
             );
           } else {
-            this.router.navigate(['/items']);
+            this.router.navigate(['/dashboard']);
           }
         },
         error: err => {

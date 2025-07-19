@@ -1,0 +1,43 @@
+<p-stepper [value]="1">
+  <p-step-list>
+    <p-step [value]="1">Informations</p-step>
+    <p-step [value]="2">Liste du matériel</p-step>
+    <p-step [value]="3">Commentaire</p-step>
+    <p-step [value]="4">Confirmation</p-step>
+  </p-step-list>
+  <p-step-panels>
+    <p-step-panel [value]="1">
+      <ng-template #content let-activateCallback="activateCallback">
+        <app-step1
+          (nextStep)="activateCallback(2)"
+          [formGroup]="informationsFormGroup" />
+      </ng-template>
+    </p-step-panel>
+    <p-step-panel [value]="2">
+      <ng-template #content let-activateCallback="activateCallback">
+        <app-step2
+          (nextStep)="activateCallback(3)"
+          (previousStep)="activateCallback(1)"
+          [formGroup]="materialsFormControl"
+          [startDate]="informationsFormGroup.get('start_date')!.value"
+          [endDate]="informationsFormGroup.get('end_date')!.value" />
+      </ng-template>
+    </p-step-panel>
+    <p-step-panel [value]="3">
+      <ng-template #content let-activateCallback="activateCallback">
+        <app-step3
+          (nextStep)="activateCallback(4)"
+          (previousStep)="activateCallback(2)"
+          [formGroup]="commentFormControl" />
+      </ng-template>
+    </p-step-panel>
+    <p-step-panel [value]="4">
+      <ng-template #content let-activateCallback="activateCallback">
+        <app-step4
+          [event]="form.getRawValue()"
+          (previousStep)="activateCallback(3)"
+          (nextStep)="submitForm()" />
+      </ng-template>
+    </p-step-panel>
+  </p-step-panels>
+</p-stepper>

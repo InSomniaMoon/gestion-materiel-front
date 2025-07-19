@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { Button, ButtonDirective } from 'primeng/button';
+import { ButtonDirective } from 'primeng/button';
 import { Card } from 'primeng/card';
 
 @Component({
@@ -15,7 +15,6 @@ import { Card } from 'primeng/card';
         <ng-template #footer>
           <div>
             <a
-              p
               class="p-button"
               pButton
               [outlined]="true"

@@ -1,0 +1,25 @@
+<div class="form">
+  <p-float-label variant="on">
+    <textarea
+      id="comment"
+      pInputTextarea
+      [fluid]="true"
+      rows="5"
+      [formControl]="formGroup()"></textarea>
+    <label for="comment"> Description de l'événement </label>
+  </p-float-label>
+</div>
+
+<div class="footer">
+  <p-button
+    label="Précédent"
+    icon="pi pi-arrow-left"
+    iconPos="left"
+    (onClick)="previousStep.emit()" />
+  <p-button
+    label="Suivant"
+    icon="pi pi-arrow-right"
+    iconPos="right"
+    [disabled]="formGroup().invalid"
+    (onClick)="nextStep.emit()" />
+</div>
