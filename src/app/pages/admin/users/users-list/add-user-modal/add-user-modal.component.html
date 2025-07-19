@@ -1,0 +1,57 @@
+<form [formGroup]="form" class="modal-content">
+  <p-float-label variant="on">
+    <input
+      id="username"
+      type="text"
+      pInputText
+      formControlName="email"
+      type="email"
+      required />
+    <label for="username">email</label>
+  </p-float-label>
+  @if (!isUserChecked()) {
+    <p-button
+      label="Vérifier l'utilisateur"
+      icon="pi pi-check"
+      iconPos="right"
+      [disabled]="form.get('email')?.invalid"
+      (onClick)="checkUser()" />
+  } @else {
+    <p-float-label variant="on">
+      <p-select id="role" formControlName="role" [options]="roles" />
+      <label for="role">Rôle</label>
+    </p-float-label>
+    @if (userExists()) {
+      <small
+        >L'utilisateur existe, Veuillez assigner une mission pour le
+        groupe</small
+      >
+    } @else {
+      <small class="text-danger"
+        >L'utilisateur n'existe pas, veuillez le créer</small
+      >
+      <p-floatlabel variant="on">
+        <input id="username" pInputText formControlName="name" />
+        <label for="username">Prénom et nom</label>
+      </p-floatlabel>
+
+      <p-floatlabel variant="on">
+        <input id="phone" type="tel" pInputText formControlName="phone" />
+        <label for="phone">Télephone <small>(optionnel)</small></label>
+      </p-floatlabel>
+    }
+  }
+</form>
+<p-footer>
+  <p-button
+    label="Annuler"
+    icon="pi pi-times"
+    iconPos="left"
+    (onClick)="close()" />
+  <p-button
+    label="Ajouter"
+    icon="pi pi-check"
+    iconPos="right"
+    [disabled]="!form.valid"
+    (onClick)="save()"
+/></p-footer>
