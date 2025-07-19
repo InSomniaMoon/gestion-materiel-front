@@ -3,5 +3,5 @@ export type User = {
   name: string;
   email: string;
   phone?: string;
-  role: 'admin' | 'user';
+  role: string | ('admin' | 'user');
 };

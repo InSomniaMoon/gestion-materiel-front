@@ -50,4 +50,17 @@ export const ADMIN_ROUTES: Routes = [
       },
     ],
   },
+  {
+    path: 'users',
+    children: [
+      {
+        path: '',
+        title: 'Utilisateurs',
+        loadComponent: () =>
+          import('./users/users-list/users-list.component').then(
+            m => m.UsersListComponent
+          ),
+      },
+    ],
+  },
 ];
