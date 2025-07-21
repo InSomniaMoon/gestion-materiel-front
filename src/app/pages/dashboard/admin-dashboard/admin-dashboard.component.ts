@@ -68,14 +68,15 @@ export class AdminDashboardComponent {
 
   issues = computed(() => {
     const items: Record<string, AdminDashboardOptionIssue[]> = {};
+    if (!this._issues()) return [];
     this._issues().forEach(issue => {
+      console.log(issue);
+
       const key = issue.item_option!.item!.name;
       if (!items[key]) {
         items[key] = [];
       }
-      if (issue.item_option?.item !== undefined) {
-        delete issue.item_option.item;
-      }
+
       items[key].push(issue);
     });
 
