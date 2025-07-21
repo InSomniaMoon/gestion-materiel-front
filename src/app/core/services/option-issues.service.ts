@@ -2,7 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '@env/environment';
 import { tap } from 'rxjs';
-import { OptionIssue } from '../types/optionIssue.type';
+import {
+  AdminDashboardOptionIssue,
+  OptionIssue,
+} from '../types/optionIssue.type';
+import { PaginatedData } from '../types/paginatedData.type';
+import { PaginationRequest } from '../types/pagination-request.type';
+import { queryParams } from '../utils/http.utils';
 import { CLEAR_CACHE_CONTEXT_OPTIONS } from '../utils/injectionToken';
 import { CacheService } from './cache.service';
 
@@ -54,5 +60,17 @@ export class OptionIssuesService {
         }
       )
       .pipe();
+  }
+
+  getPaginatedOpenedIssues(
+    opt: Partial<PaginationRequest> = {
+      page: 1,
+      size: 25,
+    }
+  ) {
+    const url = `${this.api_url}/admin/issues/open`;
+    return this.http.get<PaginatedData<AdminDashboardOptionIssue>>(url, {
+      params: queryParams(opt),
+    });
   }
 }

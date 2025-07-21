@@ -6,3 +6,17 @@
   padding: 1rem;
   gap: 1rem;
 }
+
+.items {
+  display: flex;
+  gap: 1rem;
+
+  width: 100%;
+  overflow-x: auto;
+  padding: 0.5rem;
+}
+
+p-card {
+  max-width: 50%;
+  min-width: 50%;
+}
