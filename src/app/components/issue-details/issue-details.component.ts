@@ -1,4 +1,4 @@
-import { DatePipe, JsonPipe } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -12,6 +12,7 @@ import { FormsModule } from '@angular/forms';
 import { IssueCommentsService } from '@app/core/services/issue-comments.service';
 import { OptionIssuesService } from '@app/core/services/option-issues.service';
 import { OptionIssue } from '@app/core/types/optionIssue.type';
+import { DIALOG_RESPONSIVE_BREAKPOINTS } from '@app/core/utils/constants';
 import { injectQuery } from '@tanstack/angular-query-experimental';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
@@ -21,6 +22,7 @@ import {
   DynamicDialogRef,
 } from 'primeng/dynamicdialog';
 import { Inplace, InplaceModule } from 'primeng/inplace';
+import { Textarea } from 'primeng/textarea';
 import { lastValueFrom } from 'rxjs';
 import {
   SimpleModalComponent,
@@ -33,7 +35,14 @@ type IssueDetailsComponentData = {
 
 @Component({
   selector: 'app-issue-details',
-  imports: [DatePipe, DialogModule, ButtonModule, InplaceModule, FormsModule],
+  imports: [
+    DatePipe,
+    DialogModule,
+    ButtonModule,
+    InplaceModule,
+    FormsModule,
+    Textarea,
+  ],
   templateUrl: './issue-details.component.html',
   styleUrl: './issue-details.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -80,6 +89,7 @@ export class IssueDetailsComponent implements OnInit {
         confirmText: 'Résoudre',
         message: 'Voulez-vous vraiment résoudre ce Problème ?',
       },
+      breakpoints: DIALOG_RESPONSIVE_BREAKPOINTS,
     };
     this.dialog.open(SimpleModalComponent, config).onClose.subscribe(result => {
       if (!result) {

@@ -7,6 +7,8 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { GroupWithPivot } from '@app/core/types/group.type';
+import { DIALOG_RESPONSIVE_BREAKPOINTS } from '@app/core/utils/constants';
+import { environment } from '@env/environment';
 import { injectQuery } from '@tanstack/angular-query-experimental';
 import { Button } from 'primeng/button';
 import { DialogService } from 'primeng/dynamicdialog';
@@ -17,7 +19,6 @@ import { TableModule, TablePageEvent } from 'primeng/table';
 import { lastValueFrom } from 'rxjs';
 import { BackofficeService } from '../services/backoffice.service';
 import { CreateUpdateGroupComponent } from './backoffice-create-update-group/backoffice-create-update-group.component';
-import { environment } from '@env/environment';
 
 @Component({
   selector: 'app-backoffice-groups-list',
@@ -132,6 +133,7 @@ export class AppAdminGroupsListComponent {
         width: '70%',
         modal: true,
         dismissableMask: true,
+        breakpoints: DIALOG_RESPONSIVE_BREAKPOINTS,
       })
       .onClose.subscribe(created => {
         if (created) {
@@ -147,6 +149,7 @@ export class AppAdminGroupsListComponent {
         width: '70%',
         modal: true,
         dismissableMask: true,
+        breakpoints: DIALOG_RESPONSIVE_BREAKPOINTS,
         data: { group },
       })
       .onClose.subscribe(updated => {

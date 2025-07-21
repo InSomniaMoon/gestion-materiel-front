@@ -49,7 +49,7 @@ import { ToggleSwitch } from 'primeng/toggleswitch';
           fluid
           rows="5"></textarea>
 
-        <label for="issue">Problème repéré</label>
+        <label for="issue">Avarie repérée</label>
       </p-float-label>
 
       <label

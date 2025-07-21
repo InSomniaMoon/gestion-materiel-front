@@ -1,4 +1,4 @@
-import { DatePipe, JsonPipe } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -10,6 +10,7 @@ import { IssueDetailsComponent } from '@app/components/issue-details/issue-detai
 import { AuthService } from '@app/core/services/auth.service';
 import { ItemOption } from '@app/core/types/itemOption.type';
 import { OptionIssue } from '@app/core/types/optionIssue.type';
+import { DIALOG_RESPONSIVE_BREAKPOINTS } from '@app/core/utils/constants';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { DialogService } from 'primeng/dynamicdialog';
@@ -55,6 +56,10 @@ export class OpenedIssuesComponent {
         data: { issue },
         header: 'Détails du problème',
         width: 'auto',
+        dismissableMask: true,
+        modal: true,
+
+        breakpoints: DIALOG_RESPONSIVE_BREAKPOINTS,
       })
       .onClose.subscribe(event => {
         if (event) {

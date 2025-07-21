@@ -7,16 +7,18 @@ import {
   resource,
   signal,
 } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { OptionIssuesService } from '@app/core/services/option-issues.service';
 import { AdminDashboardOptionIssue } from '@app/core/types/optionIssue.type';
 import { environment } from '@env/environment';
+import { ButtonDirective } from 'primeng/button';
 import { Card } from 'primeng/card';
 import { PaginatorState } from 'primeng/paginator';
 import { lastValueFrom, tap } from 'rxjs';
 
 @Component({
   selector: 'app-admin-dashboard',
-  imports: [DatePipe, Card],
+  imports: [DatePipe, Card, ButtonDirective, RouterLink],
   templateUrl: './admin-dashboard.component.html',
   styleUrl: './admin-dashboard.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -64,6 +64,7 @@ export const appConfig: ApplicationConfig = {
           breakpoint: '768px',
           direction: 'bottom',
         },
+        appendTo: 'body',
       },
       theme: {
         preset: SgdfPresetTheme,
@@ -72,6 +73,10 @@ export const appConfig: ApplicationConfig = {
         },
       },
       translation: FRENCH_TRANSLATIONS,
+      overlayAppendTo: 'body',
+      csp: {
+        nonce: 'matos-frontend',
+      },
     }),
 
     provideTippyLoader(() => import('tippy.js')),

@@ -11,6 +11,7 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '@app/core/services/auth.service';
 import { EventsService } from '@app/core/services/events.service';
 import { Item } from '@app/core/types/item.type';
+import { DIALOG_RESPONSIVE_BREAKPOINTS } from '@app/core/utils/constants';
 import { DeclareOptionIssueComponent } from '@app/pages/items/item-details/options-table/declareOptionIssue/declareOptionIssue.component';
 import {
   FullCalendarComponent,
@@ -107,6 +108,7 @@ export class UserDashboardComponent {
       width: '50%',
       dismissableMask: true,
       modal: true,
+      breakpoints: DIALOG_RESPONSIVE_BREAKPOINTS,
       inputValues: {
         item: material,
       },
