@@ -11,6 +11,7 @@ import { DIALOG_RESPONSIVE_BREAKPOINTS } from '@app/core/utils/constants';
 import { environment } from '@env/environment';
 import { MenuItem } from 'primeng/api';
 import { AvatarModule } from 'primeng/avatar';
+import { Badge } from 'primeng/badge';
 import { DialogService } from 'primeng/dynamicdialog';
 import { MenubarModule } from 'primeng/menubar';
 import { TieredMenuModule } from 'primeng/tieredmenu';
@@ -19,10 +20,11 @@ import { ChangeActiveGroupComponent } from './changeActiveGroup/changeActiveGrou
 export type MenuItemWithImage = MenuItem & {
   img?: string;
   items?: MenuItemWithImage[];
+  color?: string;
 };
 @Component({
   selector: 'app-header',
-  imports: [AvatarModule, TieredMenuModule, MenubarModule, RouterLink],
+  imports: [AvatarModule, TieredMenuModule, MenubarModule, RouterLink, Badge],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -50,6 +52,7 @@ export class HeaderComponent implements OnInit {
   authItems = computed<MenuItemWithImage[]>(() => [
     {
       label: this.selectedGroup()?.name ?? 'Groupe Actif',
+      img: this.selectedGroup()?.image,
       icon: 'pi pi-users',
       command: undefined,
       items:
@@ -64,6 +67,7 @@ export class HeaderComponent implements OnInit {
     },
     {
       label: this.selectedUnit()?.name ?? "Pas d'unité ",
+      color: this.selectedUnit()?.color,
       icon: 'pi pi-building',
       command: undefined,
     },

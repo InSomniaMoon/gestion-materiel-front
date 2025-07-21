@@ -1,7 +1,11 @@
 <p-menubar [model]="menuItems()">
   <ng-template pTemplate="item" let-item let-root="root">
     <a class="flex p-menuitem-link" [routerLink]="item.routerLink">
-      <span [class]="item.icon"></span>
+      @if (item.img) {
+        <img [src]="apiUrl + item.img" alt="" width="32px" height="32px" />
+      } @else {
+        <span [class]="item.icon"></span>
+      }
       <span>{{ item.label }}</span>
     </a>
   </ng-template>
@@ -11,6 +15,11 @@
         <a pRipple class="flex items-center p-tieredmenu-item-link">
           @if (item.img) {
             <img [src]="apiUrl + item.img" alt="" width="32px" height="32px" />
+          } @else if (item.color) {
+            <p-badge
+              size="small"
+              value=" "
+              [style]="{ 'background-color': item.color }" />
           } @else {
             <span [class]="item.icon"></span>
           }
