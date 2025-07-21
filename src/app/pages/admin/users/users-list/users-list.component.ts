@@ -11,6 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { SearchBarComponent } from '@app/components/search-bar/search-bar.component';
 import { AppTable } from '@app/components/ui/table/table.component';
 import { UsersService } from '@app/core/services/users.service';
+import { DIALOG_RESPONSIVE_BREAKPOINTS } from '@app/core/utils/constants';
 import { environment } from '@env/environment';
 import { MessageService } from 'primeng/api';
 import { Button } from 'primeng/button';
@@ -89,6 +90,7 @@ export class UsersListComponent {
         width: '50%',
         dismissableMask: true,
         modal: true,
+        breakpoints: DIALOG_RESPONSIVE_BREAKPOINTS,
       })
       .onClose.subscribe(result => {
         if (!result) {

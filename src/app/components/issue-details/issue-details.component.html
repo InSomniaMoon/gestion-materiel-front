@@ -10,10 +10,12 @@
   }
   <p-inplace #inplace closable="closable">
     <ng-template pTemplate="display">
-      <div class="inline-flex">
-        <span class="pi pi-plus" style="vertical-align: middle"></span>
-        <span>ajouter</span>
-      </div>
+      <p-button
+        class="inline-flex"
+        severity="help"
+        icon="pi pi-plus"
+        label="Ajouter un commentaire">
+      </p-button>
     </ng-template>
     <ng-template pTemplate="content">
       <div style="display: grid; gap: 0.5rem">
@@ -22,8 +24,11 @@
           (ngModelChange)="newComment.set($event)"
           rows="3"
           class="w-full"
+          pTextarea
           placeholder="Ajouter un commentaire"></textarea>
-        <button pButton (click)="onAddComment()">Ajouter</button>
+        <button pButton (click)="onAddComment()" [disabled]="!newComment()">
+          Ajouter
+        </button>
       </div>
     </ng-template>
   </p-inplace>

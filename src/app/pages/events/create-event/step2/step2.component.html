@@ -10,7 +10,8 @@
         optionLabel="name"
         optionValue="id"
         [options]="categories()"
-        [(ngModel)]="categoryId" />
+        [(ngModel)]="categoryId"
+        (ngModelChange)="onCategoryChange()" />
       <app-search-bar (queryChange)="searchQuery.set($event)" />
     </div>
 

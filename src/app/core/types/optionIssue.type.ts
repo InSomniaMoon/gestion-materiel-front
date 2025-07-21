@@ -6,10 +6,21 @@
 //   "status": "open"
 //  }
 
+import { ItemOption } from './itemOption.type';
+
 export type OptionIssue = {
   id: number;
   item_option_id: number;
   value: string;
   created_at: Date;
   status: string;
+};
+
+export type AdminDashboardOptionIssue = OptionIssue & {
+  item_option: ItemOption & {
+    item?: {
+      id: number;
+      name: string;
+    };
+  };
 };

@@ -17,6 +17,7 @@ import {
 } from '@app/components/simple-modal/simple-modal.component';
 import { ItemsService } from '@app/core/services/items.service';
 import { Item } from '@app/core/types/item.type';
+import { DIALOG_RESPONSIVE_BREAKPOINTS } from '@app/core/utils/constants';
 import { AppTable } from '@components/ui/table/table.component';
 import { environment } from '@env/environment';
 import { Badge } from 'primeng/badge';
@@ -202,6 +203,7 @@ export class ItemsListComponent {
         height: '80%',
         modal: true,
         dismissableMask: true,
+        breakpoints: DIALOG_RESPONSIVE_BREAKPOINTS,
       })
       .onClose.subscribe(created => {
         if (created) {
@@ -219,6 +221,7 @@ export class ItemsListComponent {
         modal: true,
         dismissableMask: true,
         data: item,
+        breakpoints: DIALOG_RESPONSIVE_BREAKPOINTS,
       })
       .onClose.subscribe(updated => {
         if (updated) {

@@ -4,6 +4,15 @@
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
+  align-content: flex-start;
+
+  @media screen {
+    @media (max-width: 768px) {
+      .p-card {
+        width: 100%;
+      }
+    }
+  }
 }
 .p-card {
   height: fit-content;

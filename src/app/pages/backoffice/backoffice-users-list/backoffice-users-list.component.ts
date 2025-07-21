@@ -18,9 +18,10 @@ import { BackofficeService } from '../services/backoffice.service';
 import { CreateUserModalComponent } from './create-user-modal/create-user-modal.component';
 
 import { User } from '@app/core/types/user.type';
+import { DIALOG_RESPONSIVE_BREAKPOINTS } from '@app/core/utils/constants';
 import { TippyDirective } from '@ngneat/helipopper';
-import { AppAdminUserEditGroupsComponent } from './backoffice-user-edit-groups/backoffice-user-edit-groups.component';
 import { MessageService } from 'primeng/api';
+import { AppAdminUserEditGroupsComponent } from './backoffice-user-edit-groups/backoffice-user-edit-groups.component';
 
 @Component({
   selector: 'app-backoffice-users-list',
@@ -144,6 +145,7 @@ export class AppAdminUsersListComponent {
         height: '80%',
         modal: true,
         dismissableMask: true,
+        breakpoints: DIALOG_RESPONSIVE_BREAKPOINTS,
       })
       .onClose.subscribe(value => {
         if (!value) return;
@@ -159,6 +161,7 @@ export class AppAdminUsersListComponent {
         height: '80%',
         modal: true,
         dismissableMask: true,
+        breakpoints: DIALOG_RESPONSIVE_BREAKPOINTS,
         data: { userId: user.id },
       })
       .onClose.subscribe(value => {

@@ -6,12 +6,13 @@ import {
 } from '@angular/core';
 import { AppTable } from '@app/components/ui/table/table.component';
 import { UnitsService } from '@app/core/services/units.service';
-import { lastValueFrom } from 'rxjs';
-import { Select } from 'primeng/select';
+import { DIALOG_RESPONSIVE_BREAKPOINTS } from '@app/core/utils/constants';
 import { Button } from 'primeng/button';
 import { DialogService } from 'primeng/dynamicdialog';
-import { CreateUnitComponent } from './create-unit/create-unit.component';
+import { Select } from 'primeng/select';
 import { TableModule } from 'primeng/table';
+import { lastValueFrom } from 'rxjs';
+import { CreateUnitComponent } from './create-unit/create-unit.component';
 
 @Component({
   selector: 'app-units-list',
@@ -38,6 +39,7 @@ export class UnitsListComponent {
         closable: true,
         width: '50%',
         height: '80%',
+        breakpoints: DIALOG_RESPONSIVE_BREAKPOINTS,
       })
       .onClose.subscribe(result => {
         if (!result) {
@@ -74,6 +76,7 @@ export class UnitsListComponent {
         width: '50%',
         height: '80%',
         data: unit,
+        breakpoints: DIALOG_RESPONSIVE_BREAKPOINTS,
       })
       .onClose.subscribe(result => {
         if (!result) {

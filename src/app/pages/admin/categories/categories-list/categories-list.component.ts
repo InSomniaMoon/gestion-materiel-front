@@ -5,9 +5,15 @@ import {
   signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import {
+  SimpleModalComponent,
+  SimpleModalData,
+} from '@app/components/simple-modal/simple-modal.component';
 import { AppTable } from '@app/components/ui/table/table.component';
 import { AuthService } from '@app/core/services/auth.service';
 import { CategoriesService } from '@app/core/services/categories.service';
+import { ItemCategory } from '@app/core/types/item.type';
+import { DIALOG_RESPONSIVE_BREAKPOINTS } from '@app/core/utils/constants';
 import { injectQuery } from '@tanstack/angular-query-experimental';
 import { Button } from 'primeng/button';
 import { DialogService, DynamicDialogConfig } from 'primeng/dynamicdialog';
@@ -16,11 +22,6 @@ import { Select } from 'primeng/select';
 import { TableModule } from 'primeng/table';
 import { lastValueFrom } from 'rxjs';
 import { CreateUpdateCategoryComponent } from '../create-update-category/create-update-category.component';
-import { ItemCategory } from '@app/core/types/item.type';
-import {
-  SimpleModalComponent,
-  SimpleModalData,
-} from '@app/components/simple-modal/simple-modal.component';
 
 @Component({
   selector: 'app-categories-list',
@@ -81,6 +82,7 @@ export class CategoriesListComponent {
         closeOnEscape: true,
         dismissableMask: true,
         modal: true,
+        breakpoints: DIALOG_RESPONSIVE_BREAKPOINTS,
       })
       .onClose.subscribe(result => {
         if (result) {
@@ -98,6 +100,7 @@ export class CategoriesListComponent {
         closeOnEscape: true,
         dismissableMask: true,
         modal: true,
+        breakpoints: DIALOG_RESPONSIVE_BREAKPOINTS,
       })
       .onClose.subscribe(result => {
         if (result) {
@@ -118,6 +121,7 @@ export class CategoriesListComponent {
         confirmText: 'Supprimer',
         message: 'Voulez-vous vraiment supprimer cette catégorie ?',
       },
+      breakpoints: DIALOG_RESPONSIVE_BREAKPOINTS,
     };
     this.dialogRef
       .open(SimpleModalComponent, config)

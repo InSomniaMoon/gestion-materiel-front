@@ -1,9 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '@env/environment';
-import { of } from 'rxjs';
+import { ActualEvent, Event } from '../types/event.type';
 import { Item } from '../types/item.type';
-import { Subscription } from '../types/subscription.type';
 import { CacheService } from './cache.service';
 
 @Injectable({
@@ -21,13 +20,8 @@ export class EventsService {
   getItemEvents(item: Item) {
     const url = `${this.api_url}/items/${item.id}/uses`;
 
-    const cache = this.cache.get<Subscription[]>(url);
-
-    if (cache) {
-      return of(cache);
-    }
     // This method should return an observable of the item subscriptions
-    return this.http.get<Subscription[]>(url);
+    return this.http.get<Event[]>(url);
   }
 
   createEvent(data: {
@@ -46,6 +40,12 @@ export class EventsService {
   getEventsForUnit(unitId: number) {
     const url = `${this.api_url}/events?unit_id=${unitId}`;
     // This method should return an observable of the unit events
-    return this.http.get<Subscription[]>(url);
+    return this.http.get<Event[]>(url);
+  }
+
+  getActualEvents() {
+    const url = `${this.api_url}/events/actual`;
+    // This method should return an observable of the actual events
+    return this.http.get<ActualEvent[]>(url);
   }
 }

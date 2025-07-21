@@ -1,1 +1,17 @@
-<p>admin-dashboard works!</p>
+<a routerLink="/admin/items" pButton> Tous les objets</a>
+
+<h1>Alertes</h1>
+@for (item of issues(); track item.name) {
+  <div class="alert">
+    <h2>{{ item.name }}</h2>
+    <div class="items">
+      @for (issue of item.issues; track issue.id) {
+        <p-card class="item">
+          <p>{{ issue.value }}</p>
+          <hr />
+          <p>{{ issue.created_at | date }}</p>
+        </p-card>
+      }
+    </div>
+  </div>
+}

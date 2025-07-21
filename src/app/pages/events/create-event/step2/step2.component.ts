@@ -14,6 +14,7 @@ import { SearchBarComponent } from '@app/components/search-bar/search-bar.compon
 import { AppTable } from '@app/components/ui/table/table.component';
 import { ItemsService } from '@app/core/services/items.service';
 import { Item } from '@app/core/types/item.type';
+import { DIALOG_RESPONSIVE_BREAKPOINTS } from '@app/core/utils/constants';
 import { environment } from '@env/environment';
 import { Button } from 'primeng/button';
 import { Checkbox } from 'primeng/checkbox';
@@ -122,9 +123,14 @@ export class Step2Component {
       height: '80%',
       modal: true,
       dismissableMask: true,
+      breakpoints: DIALOG_RESPONSIVE_BREAKPOINTS,
       inputValues: {
         items: this.formGroup().value || [],
       },
     });
+  }
+
+  onCategoryChange() {
+    this.page.set(1); // Reset to the first page when category changes
   }
 }

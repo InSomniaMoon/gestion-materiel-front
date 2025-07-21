@@ -13,6 +13,7 @@ import { AuthService } from '@app/core/services/auth.service';
 import { ItemOptionService } from '@app/core/services/item-option.service';
 import { Item } from '@app/core/types/item.type';
 import { ItemOption } from '@app/core/types/itemOption.type';
+import { DIALOG_RESPONSIVE_BREAKPOINTS } from '@app/core/utils/constants';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
@@ -87,6 +88,7 @@ export class OptionsTableComponent {
         header: `Supprimer l'option ${option.name}`,
         width: 'auto',
         height: 'auto',
+        breakpoints: DIALOG_RESPONSIVE_BREAKPOINTS,
         data: {
           message: `Voulez-vous vraiment supprimer l'option ${option.name} ?`,
           confirm: true,
@@ -122,6 +124,7 @@ export class OptionsTableComponent {
     const dialog = this.dialogService.open(CreateUpdateItemOptionComponent, {
       header: 'Ajouter une option',
       width: 'auto',
+      breakpoints: DIALOG_RESPONSIVE_BREAKPOINTS,
     });
     dialog.onClose.subscribe((option: ItemOption) => {
       if (!option) {
@@ -151,6 +154,7 @@ export class OptionsTableComponent {
         width: 'auto',
         data: option,
         appendTo: 'body',
+        breakpoints: DIALOG_RESPONSIVE_BREAKPOINTS,
       })
       .onClose.subscribe((opt: ItemOption) => {
         if (!opt) {
@@ -186,6 +190,7 @@ export class OptionsTableComponent {
           optionId: option.id,
         },
         dismissableMask: true,
+        breakpoints: DIALOG_RESPONSIVE_BREAKPOINTS,
       })
       .onClose.subscribe(success => {
         if (!success) {
