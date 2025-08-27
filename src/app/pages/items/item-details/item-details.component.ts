@@ -72,6 +72,7 @@ export class ItemDetailsComponent implements OnInit {
           this.titleService.setTitle(item.name);
         },
         error: error => {
+          console.error(error);
           this.message.add({
             severity: 'error',
             summary: 'Erreur',

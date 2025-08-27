@@ -1,11 +1,11 @@
 <div class="modal-content">
   @for (com of comments(); track $index) {
     <span class="small">
-      {{ com.author.name }} commented on {{ com.created_at | date }}:
+      {{ com.author.name }} | le {{ com.created_at | date }}
     </span>
     <p>{{ com.comment }}</p>
     @if (!$last) {
-      <hr style="margin: 0 1rem" />
+      <hr style="margin: 0.5rem 1rem" />
     }
   }
   <p-inplace #inplace closable="closable">

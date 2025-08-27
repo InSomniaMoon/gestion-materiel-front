@@ -53,7 +53,7 @@ export class OpenedIssuesComponent {
   openIssueDetailsModal(issue: OptionIssue) {
     this.dialogService
       .open(IssueDetailsComponent, {
-        data: { issue },
+        data: { issue, itemId: this.itemId() },
         header: 'Détails du problème',
         width: 'auto',
         dismissableMask: true,

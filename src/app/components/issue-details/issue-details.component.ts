@@ -30,6 +30,7 @@ import {
 } from '../simple-modal/simple-modal.component';
 
 type IssueDetailsComponentData = {
+  itemId: number;
   issue: OptionIssue;
 };
 
@@ -62,6 +63,7 @@ export class IssueDetailsComponent implements OnInit {
     queryFn: () =>
       lastValueFrom(
         this.issueCommentsService.getComments(
+          this.data.itemId,
           this.data.issue.item_option_id,
           this.data.issue.id
         )
@@ -107,6 +109,7 @@ export class IssueDetailsComponent implements OnInit {
   onAddComment() {
     this.issueCommentsService
       .addComment(
+        this.data.itemId,
         this.data.issue.item_option_id,
         this.data.issue.id,
         this.newComment()
