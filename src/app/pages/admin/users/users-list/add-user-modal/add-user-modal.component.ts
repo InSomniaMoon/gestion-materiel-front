@@ -5,8 +5,8 @@ import {
   signal,
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { GroupService } from '@app/core/services/group.service';
-import { UsersService } from '@app/core/services/users.service';
+import { GroupService } from '@services/group.service';
+import { UsersService } from '@services/users.service';
 import { MessageService } from 'primeng/api';
 import { Button } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';

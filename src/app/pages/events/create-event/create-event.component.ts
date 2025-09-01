@@ -6,8 +6,8 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { EventsService } from '@app/core/services/events.service';
-import { Unit } from '@app/core/types/unit.type';
+import { Unit } from '@core/types/unit.type';
+import { EventsService } from '@services/events.service';
 import { StepperModule } from 'primeng/stepper';
 import { Step1Component } from './step1/step1.component';
 import { Step2Component } from './step2/step2.component';

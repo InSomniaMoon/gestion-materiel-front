@@ -8,14 +8,13 @@ import {
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Group } from '@app/core/types/group.type';
+import { Group } from '@core/types/group.type';
+import { UserGroup } from '@core/types/userGroup.type';
 import { Button } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { BackofficeService } from '../../services/backoffice.service';
 import { Select } from 'primeng/select';
-import { AuthService } from '@app/core/services/auth.service';
-import { UserGroup } from '@app/core/types/userGroup.type';
+import { BackofficeService } from '../../services/backoffice.service';
 
 @Component({
   selector: 'app-backoffice-user-edit-groups',

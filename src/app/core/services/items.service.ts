@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Item, ItemCategory } from '@app/core/types/item.type';
-import { PaginatedData } from '@app/core/types/paginatedData.type';
+import { Item, ItemCategory } from '@core/types/item.type';
+import { PaginatedData } from '@core/types/paginatedData.type';
 import { environment } from '@env/environment';
 import { PaginationRequest } from '../types/pagination-request.type';
 import { queryParams } from '../utils/http.utils';

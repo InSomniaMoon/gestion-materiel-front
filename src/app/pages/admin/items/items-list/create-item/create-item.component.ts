@@ -15,8 +15,8 @@ import {
   Validators,
 } from '@angular/forms';
 import { UploadFileComponent } from '@app/components/upload-file/upload-file.component';
-import { ItemsService } from '@app/core/services/items.service';
-import { Item, ItemCategory } from '@app/core/types/item.type';
+import { Item, ItemCategory } from '@core/types/item.type';
+import { ItemsService } from '@services/items.service';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { ButtonModule } from 'primeng/button';
 import { DatePicker } from 'primeng/datepicker';

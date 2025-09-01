@@ -9,11 +9,11 @@ import {
   viewChild,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { IssueCommentsService } from '@app/core/services/issue-comments.service';
-import { OptionIssuesService } from '@app/core/services/option-issues.service';
-import { OptionIssue } from '@app/core/types/optionIssue.type';
-import { DIALOG_RESPONSIVE_BREAKPOINTS } from '@app/core/utils/constants';
+import { OptionIssue } from '@core/types/optionIssue.type';
+import { IssueCommentsService } from '@services/issue-comments.service';
+import { OptionIssuesService } from '@services/option-issues.service';
 import { injectQuery } from '@tanstack/angular-query-experimental';
+import { DIALOG_RESPONSIVE_BREAKPOINTS } from '@utils/constants';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import {

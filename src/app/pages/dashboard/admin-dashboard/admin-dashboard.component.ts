@@ -8,9 +8,9 @@ import {
   signal,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { OptionIssuesService } from '@app/core/services/option-issues.service';
-import { AdminDashboardOptionIssue } from '@app/core/types/optionIssue.type';
+import { AdminDashboardOptionIssue } from '@core/types/optionIssue.type';
 import { environment } from '@env/environment';
+import { OptionIssuesService } from '@services/option-issues.service';
 import { ButtonDirective } from 'primeng/button';
 import { Card } from 'primeng/card';
 import { PaginatorState } from 'primeng/paginator';
@@ -70,8 +70,6 @@ export class AdminDashboardComponent {
     const items: Record<string, AdminDashboardOptionIssue[]> = {};
     if (!this._issues()) return [];
     this._issues().forEach(issue => {
-      console.log(issue);
-
       const key = issue.item_option!.item!.name;
       if (!items[key]) {
         items[key] = [];
@@ -82,6 +80,7 @@ export class AdminDashboardComponent {
 
     return Object.entries(items).map(([key, value]) => ({
       name: key,
+      id: value[0].item_option!.item!.id,
       issues: value,
     }));
   });

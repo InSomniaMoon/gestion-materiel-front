@@ -12,10 +12,10 @@ import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { SearchBarComponent } from '@app/components/search-bar/search-bar.component';
 import { AppTable } from '@app/components/ui/table/table.component';
-import { ItemsService } from '@app/core/services/items.service';
-import { Item } from '@app/core/types/item.type';
-import { DIALOG_RESPONSIVE_BREAKPOINTS } from '@app/core/utils/constants';
+import { Item } from '@core/types/item.type';
 import { environment } from '@env/environment';
+import { ItemsService } from '@services/items.service';
+import { DIALOG_RESPONSIVE_BREAKPOINTS } from '@utils/constants';
 import { Button } from 'primeng/button';
 import { Checkbox } from 'primeng/checkbox';
 import { DialogService } from 'primeng/dynamicdialog';

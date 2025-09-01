@@ -5,8 +5,8 @@ import {
   resource,
 } from '@angular/core';
 import { AppTable } from '@app/components/ui/table/table.component';
-import { UnitsService } from '@app/core/services/units.service';
-import { DIALOG_RESPONSIVE_BREAKPOINTS } from '@app/core/utils/constants';
+import { UnitsService } from '@services/units.service';
+import { DIALOG_RESPONSIVE_BREAKPOINTS } from '@utils/constants';
 import { Button } from 'primeng/button';
 import { DialogService } from 'primeng/dynamicdialog';
 import { Select } from 'primeng/select';

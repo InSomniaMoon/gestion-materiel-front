@@ -7,10 +7,10 @@ import {
   output,
 } from '@angular/core';
 import { IssueDetailsComponent } from '@app/components/issue-details/issue-details.component';
-import { AuthService } from '@app/core/services/auth.service';
-import { ItemOption } from '@app/core/types/itemOption.type';
-import { OptionIssue } from '@app/core/types/optionIssue.type';
-import { DIALOG_RESPONSIVE_BREAKPOINTS } from '@app/core/utils/constants';
+import { ItemOption } from '@core/types/itemOption.type';
+import { OptionIssue } from '@core/types/optionIssue.type';
+import { AuthService } from '@services/auth.service';
+import { DIALOG_RESPONSIVE_BREAKPOINTS } from '@utils/constants';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { DialogService } from 'primeng/dynamicdialog';

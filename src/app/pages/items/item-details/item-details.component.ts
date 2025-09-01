@@ -9,11 +9,11 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
-import { ActivatedRoute, RouterLink } from '@angular/router';
-import { AuthService } from '@app/core/services/auth.service';
-import { ItemOptionService } from '@app/core/services/item-option.service';
-import { ItemsService } from '@app/core/services/items.service';
-import { Item } from '@app/core/types/item.type';
+import { ActivatedRoute } from '@angular/router';
+import { Item } from '@core/types/item.type';
+import { AuthService } from '@services/auth.service';
+import { ItemOptionService } from '@services/item-option.service';
+import { ItemsService } from '@services/items.service';
 import { injectQuery } from '@tanstack/angular-query-experimental';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
@@ -34,7 +34,6 @@ import { OptionsTableComponent } from './options-table/options-table.component';
     ButtonModule,
     ToggleButtonModule,
     FormsModule,
-    RouterLink,
     OptionsTableComponent,
     OpenedIssuesComponent,
   ],
@@ -51,8 +50,6 @@ export class ItemDetailsComponent implements OnInit {
   private readonly auth$ = inject(AuthService);
   private readonly itemOptionService = inject(ItemOptionService);
   private readonly message = inject(MessageService);
-
-  constructor() {}
 
   item = signal<Item | null>(null);
 

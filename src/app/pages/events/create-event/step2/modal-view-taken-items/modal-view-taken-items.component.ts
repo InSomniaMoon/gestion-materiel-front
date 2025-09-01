@@ -5,7 +5,7 @@ import {
   inject,
   input,
 } from '@angular/core';
-import { Item } from '@app/core/types/item.type';
+import { Item } from '@core/types/item.type';
 import { Button } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';

@@ -9,11 +9,11 @@ import {
 } from '@angular/core';
 import { CreateUpdateItemOptionComponent } from '@app/components/create-update-item-option/create-update-item-option.component';
 import { SimpleModalComponent } from '@app/components/simple-modal/simple-modal.component';
-import { AuthService } from '@app/core/services/auth.service';
-import { ItemOptionService } from '@app/core/services/item-option.service';
-import { Item } from '@app/core/types/item.type';
-import { ItemOption } from '@app/core/types/itemOption.type';
-import { DIALOG_RESPONSIVE_BREAKPOINTS } from '@app/core/utils/constants';
+import { Item } from '@core/types/item.type';
+import { ItemOption } from '@core/types/itemOption.type';
+import { AuthService } from '@services/auth.service';
+import { ItemOptionService } from '@services/item-option.service';
+import { DIALOG_RESPONSIVE_BREAKPOINTS } from '@utils/constants';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';

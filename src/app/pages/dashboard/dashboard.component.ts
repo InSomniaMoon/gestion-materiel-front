@@ -4,7 +4,7 @@ import {
   computed,
   inject,
 } from '@angular/core';
-import { AuthService } from '@app/core/services/auth.service';
+import { AuthService } from '@services/auth.service';
 import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
 import { UserDashboardComponent } from './user-dashboard/user-dashboard.component';
 

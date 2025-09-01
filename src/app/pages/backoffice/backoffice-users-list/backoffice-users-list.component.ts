@@ -17,9 +17,9 @@ import { lastValueFrom } from 'rxjs';
 import { BackofficeService } from '../services/backoffice.service';
 import { CreateUserModalComponent } from './create-user-modal/create-user-modal.component';
 
-import { User } from '@app/core/types/user.type';
-import { DIALOG_RESPONSIVE_BREAKPOINTS } from '@app/core/utils/constants';
+import { User } from '@core/types/user.type';
 import { TippyDirective } from '@ngneat/helipopper';
+import { DIALOG_RESPONSIVE_BREAKPOINTS } from '@utils/constants';
 import { MessageService } from 'primeng/api';
 import { AppAdminUserEditGroupsComponent } from './backoffice-user-edit-groups/backoffice-user-edit-groups.component';
 

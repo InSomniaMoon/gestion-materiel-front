@@ -1,11 +1,11 @@
 import { HttpClient, httpResource } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Group, GroupWithPivot } from '@app/core/types/group.type';
-import { PaginatedData } from '@app/core/types/paginatedData.type';
-import { User } from '@app/core/types/user.type';
-import { UserGroup } from '@app/core/types/userGroup.type';
-import { CLEAR_CACHE_CONTEXT_OPTIONS } from '@app/core/utils/injectionToken';
+import { Group, GroupWithPivot } from '@core/types/group.type';
+import { PaginatedData } from '@core/types/paginatedData.type';
+import { User } from '@core/types/user.type';
+import { UserGroup } from '@core/types/userGroup.type';
 import { environment } from '@env/environment';
+import { CLEAR_CACHE_CONTEXT_OPTIONS } from '@utils/injectionToken';
 import { Observable } from 'rxjs';
 
 @Injectable({

@@ -6,7 +6,7 @@ import {
   input,
   output,
 } from '@angular/core';
-import { Item } from '@app/core/types/item.type';
+import { Item } from '@core/types/item.type';
 import { Button } from 'primeng/button';
 
 @Component({

@@ -6,10 +6,10 @@ import {
   signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { GroupWithPivot } from '@app/core/types/group.type';
-import { DIALOG_RESPONSIVE_BREAKPOINTS } from '@app/core/utils/constants';
+import { GroupWithPivot } from '@core/types/group.type';
 import { environment } from '@env/environment';
 import { injectQuery } from '@tanstack/angular-query-experimental';
+import { DIALOG_RESPONSIVE_BREAKPOINTS } from '@utils/constants';
 import { Button } from 'primeng/button';
 import { DialogService } from 'primeng/dynamicdialog';
 import { IconFieldModule } from 'primeng/iconfield';

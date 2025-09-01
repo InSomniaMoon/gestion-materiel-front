@@ -6,9 +6,9 @@ import {
   OnInit,
 } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { AuthService } from '@app/core/services/auth.service';
-import { DIALOG_RESPONSIVE_BREAKPOINTS } from '@app/core/utils/constants';
 import { environment } from '@env/environment';
+import { AuthService } from '@services/auth.service';
+import { DIALOG_RESPONSIVE_BREAKPOINTS } from '@utils/constants';
 import { MenuItem } from 'primeng/api';
 import { AvatarModule } from 'primeng/avatar';
 import { Badge } from 'primeng/badge';

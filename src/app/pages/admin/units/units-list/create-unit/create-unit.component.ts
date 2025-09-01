@@ -7,9 +7,9 @@ import {
   signal,
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { UsersService } from '@app/core/services/users.service';
-import { User } from '@app/core/types/user.type';
-import { debounceTimeSignal } from '@app/core/utils/signals.utils';
+import { User } from '@core/types/user.type';
+import { UsersService } from '@services/users.service';
+import { debounceTimeSignal } from '@utils/signals.utils';
 import { Button } from 'primeng/button';
 import { ColorPicker } from 'primeng/colorpicker';
 import { DialogModule } from 'primeng/dialog';

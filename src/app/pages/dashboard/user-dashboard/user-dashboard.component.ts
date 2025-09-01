@@ -8,11 +8,8 @@ import {
   viewChild,
 } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { AuthService } from '@app/core/services/auth.service';
-import { EventsService } from '@app/core/services/events.service';
-import { Item } from '@app/core/types/item.type';
-import { DIALOG_RESPONSIVE_BREAKPOINTS } from '@app/core/utils/constants';
 import { DeclareOptionIssueComponent } from '@app/pages/items/item-details/options-table/declareOptionIssue/declareOptionIssue.component';
+import { Item } from '@core/types/item.type';
 import {
   FullCalendarComponent,
   FullCalendarModule,
@@ -21,6 +18,9 @@ import { CalendarOptions, EventInput } from '@fullcalendar/core/index.js';
 import locale from '@fullcalendar/core/locales/fr';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
+import { AuthService } from '@services/auth.service';
+import { EventsService } from '@services/events.service';
+import { DIALOG_RESPONSIVE_BREAKPOINTS } from '@utils/constants';
 import { Button, ButtonDirective } from 'primeng/button';
 import { Card } from 'primeng/card';
 import { DialogService } from 'primeng/dynamicdialog';

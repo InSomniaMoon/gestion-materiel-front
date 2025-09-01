@@ -6,8 +6,8 @@ import {
   input,
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { OptionIssuesService } from '@app/core/services/option-issues.service';
-import { Item } from '@app/core/types/item.type';
+import { Item } from '@core/types/item.type';
+import { OptionIssuesService } from '@services/option-issues.service';
 import { MessageService } from 'primeng/api';
 import { Button } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';

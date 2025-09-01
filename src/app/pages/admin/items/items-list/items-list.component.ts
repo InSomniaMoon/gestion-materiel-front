@@ -15,11 +15,11 @@ import {
   SimpleModalComponent,
   SimpleModalData,
 } from '@app/components/simple-modal/simple-modal.component';
-import { ItemsService } from '@app/core/services/items.service';
-import { Item } from '@app/core/types/item.type';
-import { DIALOG_RESPONSIVE_BREAKPOINTS } from '@app/core/utils/constants';
 import { AppTable } from '@components/ui/table/table.component';
+import { Item } from '@core/types/item.type';
 import { environment } from '@env/environment';
+import { ItemsService } from '@services/items.service';
+import { DIALOG_RESPONSIVE_BREAKPOINTS } from '@utils/constants';
 import { Badge } from 'primeng/badge';
 import { Button, ButtonDirective } from 'primeng/button';
 import { DialogService } from 'primeng/dynamicdialog';
