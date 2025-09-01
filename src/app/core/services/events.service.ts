@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '@env/environment';
 import { ActualEvent, Event } from '../types/event.type';
-import { Item } from '../types/item.type';
 import { CacheService } from './cache.service';
 
 @Injectable({
@@ -16,13 +15,6 @@ export class EventsService {
   private api_url = environment.api_url;
 
   constructor() {}
-
-  getItemEvents(item: Item) {
-    const url = `${this.api_url}/items/${item.id}/uses`;
-
-    // This method should return an observable of the item subscriptions
-    return this.http.get<Event[]>(url);
-  }
 
   createEvent(data: {
     name: string;

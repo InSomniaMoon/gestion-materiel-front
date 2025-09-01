@@ -53,7 +53,7 @@ export class OptionIssuesService {
   resolve(issue: OptionIssue) {
     return this.http
       .patch<OptionIssue>(
-        `${this.api_url}/options/${issue.item_option_id}/issues/${issue.id}/resolve`,
+        `${this.api_url}/admin/options/${issue.item_option_id}/issues/${issue.id}/resolve`,
         {},
         {
           ...CLEAR_CACHE_CONTEXT_OPTIONS(),

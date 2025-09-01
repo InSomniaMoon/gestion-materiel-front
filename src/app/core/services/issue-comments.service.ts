@@ -17,7 +17,7 @@ export class IssueCommentsService {
     return this.http
       .get<
         IssueComment[]
-      >(`${this.api_url}/admin/items/${itemId}/options/${optionId}/issues/${issueId}/comments`, CLEAR_CACHE_CONTEXT_OPTIONS(new Set([`${this.api_url}/admin/items/${itemId}/options/${optionId}/issues/${issueId}`])))
+      >(`${this.api_url}/admin/items/${itemId}/options/${optionId}/issues/${issueId}/comments`)
       .pipe(
         map(comments =>
           comments.map(comment => {
@@ -38,7 +38,12 @@ export class IssueCommentsService {
       `${this.api_url}/admin/items/${itemId}/options/${optionId}/issues/${issueId}/comments`,
       {
         comment,
-      }
+      },
+      CLEAR_CACHE_CONTEXT_OPTIONS(
+        new Set([
+          `${this.api_url}/admin/items/${itemId}/options/${optionId}/issues/${issueId}`,
+        ])
+      )
     );
   }
 }

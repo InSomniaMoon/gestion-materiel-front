@@ -16,7 +16,7 @@ export class ItemOptionService {
   getItemOptions(itemId: number, options?: { withIssues: boolean }) {
     const withIssues = options?.withIssues ?? false;
     return this.http.get<ItemOption[]>(
-      `${this.api_url}${withIssues ? '/admin' : ''}/items/${itemId}/options${withIssues ? '/issues' : ''}`
+      `${this.api_url}${withIssues ? '/admin' : ''}/items/${itemId}/options`
     );
   }
 
