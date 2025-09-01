@@ -111,7 +111,6 @@ export class Step2Component {
         currentValues.filter((item: Item) => item.id !== product.id)
       );
     }
-    console.log(this.formGroup().value);
   }
 
   private readonly dialogService = inject(DialogService);

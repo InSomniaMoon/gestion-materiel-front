@@ -69,6 +69,7 @@ export class UserDashboardComponent {
                     title: event.name,
                     allDay: false,
                     color: this.authService.selectedUnit()?.color,
+                    id: `${event.id}`,
                   }) as EventInput
               )
             ),
@@ -92,7 +93,10 @@ export class UserDashboardComponent {
     },
     plugins: [dayGridPlugin, timeGridPlugin],
     events: this.events.value(),
-    eventClick: event => {},
+    eventClick: event => {
+      console.log(event.event.id);
+      this.router.navigate(['/events', event.event.id]);
+    },
     handleWindowResize: true,
   }));
 
