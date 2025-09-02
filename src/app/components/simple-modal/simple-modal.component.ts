@@ -5,7 +5,7 @@ import {
   OnInit,
   signal,
 } from '@angular/core';
-import { ButtonModule } from 'primeng/button';
+import { ButtonModule, ButtonSeverity } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 
@@ -14,6 +14,7 @@ export interface SimpleModalData {
   confirm: boolean;
   confirmText: string;
   cancelText: string;
+  severity?: ButtonSeverity;
 }
 
 @Component({
@@ -32,6 +33,7 @@ export class SimpleModalComponent implements OnInit {
     confirm: false,
     confirmText: 'Confirm',
     cancelText: 'Cancel',
+    severity: 'primary',
   });
 
   ngOnInit(): void {

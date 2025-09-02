@@ -5,12 +5,13 @@ import {
   inject,
   input,
 } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import {
   SimpleModalComponent,
   SimpleModalData,
 } from '@app/components/simple-modal/simple-modal.component';
 import { AuthService } from '@app/core/services/auth.service';
+import { EventsService } from '@app/core/services/events.service';
 import { buildDialogOptions } from '@app/core/utils/constants';
 import { ActualEvent } from '@core/types/event.type';
 import { ButtonDirective } from 'primeng/button';
@@ -27,6 +28,8 @@ import { DialogService } from 'primeng/dynamicdialog';
 export class EventDetailsComponent {
   private readonly authService = inject(AuthService);
   private readonly dialogService = inject(DialogService);
+  private readonly eventsService = inject(EventsService);
+  private readonly router = inject(Router);
 
   event = input.required<ActualEvent>();
 
@@ -35,19 +38,30 @@ export class EventDetailsComponent {
   deleteEvent() {
     // Logic to delete the event
 
-    this.dialogService.open(
-      SimpleModalComponent,
-      buildDialogOptions<SimpleModalData>({
-        data: {
-          message: 'Êtes-vous sûr de vouloir supprimer cet événement ?',
-          confirmText: 'Supprimer',
-          confirm: true,
-          cancelText: 'Annuler',
-        },
-      })
-      // {
-      //   data: {}
-      // }
-    );
+    this.dialogService
+      .open(
+        SimpleModalComponent,
+        buildDialogOptions<SimpleModalData>({
+          data: {
+            message: 'Êtes-vous sûr de vouloir supprimer cet événement ?',
+            confirmText: 'Supprimer',
+            confirm: true,
+            severity: 'danger',
+            cancelText: 'Annuler',
+          },
+        })
+      )
+      .onClose.subscribe(result => {
+        if (result) {
+          this.eventsService.delete(this.event()).subscribe({
+            next: () => {
+              this.router.navigate(['/dashboard']);
+            },
+            error: error => {
+              // Handle error
+            },
+          });
+        }
+      });
   }
 }

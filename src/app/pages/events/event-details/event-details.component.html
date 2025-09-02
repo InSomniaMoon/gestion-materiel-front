@@ -1,9 +1,11 @@
 <div class="header">
   <h1>{{ event().name }}</h1>
-  <a pButton severity="info" [routerLink]="['/events', event().id, 'edit']">
-    Modifier
-  </a>
-  <button pButton severity="danger" (click)="deleteEvent()">Supprimer</button>
+  <div class="flex">
+    <a pButton severity="info" [routerLink]="['/events', event().id, 'edit']">
+      Modifier
+    </a>
+    <button pButton severity="danger" (click)="deleteEvent()">Supprimer</button>
+  </div>
 </div>
 
 {{ event().start_date | date: 'short' }} -

@@ -6,6 +6,9 @@
     severity="secondary"
     (onClick)="closeCancel()" />
   @if (data().confirm) {
-    <p-button [label]="data().confirmText" (onClick)="closeConfirm()" />
+    <p-button
+      [label]="data().confirmText"
+      [severity]="data().severity"
+      (onClick)="closeConfirm()" />
   }
 </p-footer>

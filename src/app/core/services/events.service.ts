@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '@env/environment';
 import { ActualEvent, Event } from '../types/event.type';
+import { CLEAR_CACHE_CONTEXT_OPTIONS } from '../utils/injectionToken';
 import { CacheService } from './cache.service';
 
 @Injectable({
@@ -26,7 +27,11 @@ export class EventsService {
   }) {
     const url = `${this.api_url}/events`;
     // This method should return an observable of the created event
-    return this.http.post(url, data);
+    return this.http.post(
+      url,
+      data,
+      CLEAR_CACHE_CONTEXT_OPTIONS(new Set([`${this.api_url}/events`]))
+    );
   }
 
   getEventsForUnit(unitId: number) {
@@ -43,5 +48,12 @@ export class EventsService {
 
   getEventById(id: number | string) {
     return this.http.get<Event>(`${this.api_url}/events/${id}`);
+  }
+
+  delete(event: Event) {
+    return this.http.delete(
+      `${this.api_url}/events/${event.id}`,
+      CLEAR_CACHE_CONTEXT_OPTIONS(new Set([`${this.api_url}/events`]))
+    );
   }
 }
