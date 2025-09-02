@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 import { AppTable } from '@app/components/ui/table/table.component';
 import { UnitsService } from '@services/units.service';
-import { DIALOG_RESPONSIVE_BREAKPOINTS } from '@utils/constants';
+import { buildDialogOptions } from '@utils/constants';
 import { Button } from 'primeng/button';
 import { DialogService } from 'primeng/dynamicdialog';
 import { Select } from 'primeng/select';
@@ -32,15 +32,14 @@ export class UnitsListComponent {
 
   openCreateUnitDialog() {
     this.dialogService
-      .open(CreateUnitComponent, {
-        dismissableMask: true,
-        header: 'Créer une unité',
-        modal: true,
-        closable: true,
-        width: '50%',
-        height: '80%',
-        breakpoints: DIALOG_RESPONSIVE_BREAKPOINTS,
-      })
+      .open(
+        CreateUnitComponent,
+        buildDialogOptions({
+          header: 'Créer une unité',
+          width: '50%',
+          height: '80%',
+        })
+      )
       .onClose.subscribe(result => {
         if (!result) {
           return;
@@ -68,16 +67,15 @@ export class UnitsListComponent {
 
   openUpdateUnitDialog(unit: any) {
     this.dialogService
-      .open(CreateUnitComponent, {
-        dismissableMask: true,
-        header: "Modifier l'unité",
-        modal: true,
-        closable: true,
-        width: '50%',
-        height: '80%',
-        data: unit,
-        breakpoints: DIALOG_RESPONSIVE_BREAKPOINTS,
-      })
+      .open(
+        CreateUnitComponent,
+        buildDialogOptions({
+          header: "Modifier l'unité",
+          width: '50%',
+          height: '80%',
+          data: unit,
+        })
+      )
       .onClose.subscribe(result => {
         if (!result) {
           return;

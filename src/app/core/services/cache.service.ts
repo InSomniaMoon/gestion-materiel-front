@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { url } from 'inspector';
 
 export interface CacheData<T> {
   expires: Date;
@@ -55,7 +54,7 @@ export class CacheService {
     if (param instanceof RegExp) {
       for (const key of this.cache.keys()) {
         if (param.test(key)) {
-          console.log(`Clearing cache for key: ${key}`);
+          // console.log(`Clearing cache for key: ${key}`);
 
           this.cache.delete(key);
         }

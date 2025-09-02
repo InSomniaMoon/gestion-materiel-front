@@ -19,7 +19,7 @@ import { AppTable } from '@components/ui/table/table.component';
 import { Item } from '@core/types/item.type';
 import { environment } from '@env/environment';
 import { ItemsService } from '@services/items.service';
-import { DIALOG_RESPONSIVE_BREAKPOINTS } from '@utils/constants';
+import { buildDialogOptions } from '@utils/constants';
 import { Badge } from 'primeng/badge';
 import { Button, ButtonDirective } from 'primeng/button';
 import { DialogService } from 'primeng/dynamicdialog';
@@ -197,14 +197,14 @@ export class ItemsListComponent {
 
   openCreateItem() {
     this.dialogService
-      .open(CreateItemComponent, {
-        header: 'Créer un objet',
-        width: '70%',
-        height: '80%',
-        modal: true,
-        dismissableMask: true,
-        breakpoints: DIALOG_RESPONSIVE_BREAKPOINTS,
-      })
+      .open(
+        CreateItemComponent,
+        buildDialogOptions({
+          header: 'Créer un objet',
+          width: '70%',
+          height: '80%',
+        })
+      )
       .onClose.subscribe(created => {
         if (created) {
           this.items.reload();
@@ -214,15 +214,15 @@ export class ItemsListComponent {
 
   openUpdateItem(item: Item) {
     this.dialogService
-      .open(CreateItemComponent, {
-        header: 'Modifier un objet',
-        width: '70%',
-        height: '80%',
-        modal: true,
-        dismissableMask: true,
-        data: item,
-        breakpoints: DIALOG_RESPONSIVE_BREAKPOINTS,
-      })
+      .open(
+        CreateItemComponent,
+        buildDialogOptions({
+          data: item,
+          header: 'Modifier un objet',
+          width: '70%',
+          height: '80%',
+        })
+      )
       .onClose.subscribe(updated => {
         if (updated) {
           this.items.reload();
@@ -232,18 +232,18 @@ export class ItemsListComponent {
 
   deleteItem(item: Item) {
     this.dialogService
-      .open<SimpleModalComponent, SimpleModalData>(SimpleModalComponent, {
-        header: 'Supprimer ' + item.name,
-        width: '50%',
-        modal: true,
-        dismissableMask: true,
-        data: {
-          message: `Êtes-vous sûr de vouloir supprimer l'objet "${item.name}" ?`,
-          cancelText: 'Annuler',
-          confirmText: 'Supprimer',
-          confirm: true,
-        },
-      })
+      .open(
+        SimpleModalComponent,
+        buildDialogOptions<SimpleModalData>({
+          header: 'Supprimer ' + item.name,
+          data: {
+            message: `Êtes-vous sûr de vouloir supprimer l'objet "${item.name}" ?`,
+            cancelText: 'Annuler',
+            confirmText: 'Supprimer',
+            confirm: true,
+          },
+        })
+      )
       .onClose.subscribe(confirmed => {
         if (confirmed) {
           this.itemService.deleteItem(item).subscribe(() => {

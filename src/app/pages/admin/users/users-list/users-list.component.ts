@@ -12,7 +12,7 @@ import { SearchBarComponent } from '@app/components/search-bar/search-bar.compon
 import { AppTable } from '@app/components/ui/table/table.component';
 import { environment } from '@env/environment';
 import { UsersService } from '@services/users.service';
-import { DIALOG_RESPONSIVE_BREAKPOINTS } from '@utils/constants';
+import { buildDialogOptions } from '@utils/constants';
 import { MessageService } from 'primeng/api';
 import { Button } from 'primeng/button';
 import { DialogService } from 'primeng/dynamicdialog';
@@ -85,13 +85,13 @@ export class UsersListComponent {
 
   openAddUser() {
     this.dialogService
-      .open(AddUserModalComponent, {
-        header: 'Ajouter un utilisateur',
-        width: '50%',
-        dismissableMask: true,
-        modal: true,
-        breakpoints: DIALOG_RESPONSIVE_BREAKPOINTS,
-      })
+      .open(
+        AddUserModalComponent,
+        buildDialogOptions({
+          header: 'Ajouter un utilisateur',
+          width: '50%',
+        })
+      )
       .onClose.subscribe(result => {
         if (!result) {
           return;

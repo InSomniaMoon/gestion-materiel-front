@@ -9,7 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { GroupWithPivot } from '@core/types/group.type';
 import { environment } from '@env/environment';
 import { injectQuery } from '@tanstack/angular-query-experimental';
-import { DIALOG_RESPONSIVE_BREAKPOINTS } from '@utils/constants';
+import { buildDialogOptions } from '@utils/constants';
 import { Button } from 'primeng/button';
 import { DialogService } from 'primeng/dynamicdialog';
 import { IconFieldModule } from 'primeng/iconfield';
@@ -128,13 +128,13 @@ export class AppAdminGroupsListComponent {
 
   openCreateGroupDialog() {
     this.dialogService
-      .open(CreateUpdateGroupComponent, {
-        header: 'Créer un groupe',
-        width: '70%',
-        modal: true,
-        dismissableMask: true,
-        breakpoints: DIALOG_RESPONSIVE_BREAKPOINTS,
-      })
+      .open(
+        CreateUpdateGroupComponent,
+        buildDialogOptions({
+          header: 'Créer un groupe',
+          width: '70%',
+        })
+      )
       .onClose.subscribe(created => {
         if (created) {
           this.groupsQuery.refetch();
@@ -144,14 +144,14 @@ export class AppAdminGroupsListComponent {
 
   openUpdateGroupDialog(group: GroupWithPivot) {
     this.dialogService
-      .open(CreateUpdateGroupComponent, {
-        header: `Modifier le groupe ${group.name}`,
-        width: '70%',
-        modal: true,
-        dismissableMask: true,
-        breakpoints: DIALOG_RESPONSIVE_BREAKPOINTS,
-        data: { group },
-      })
+      .open(
+        CreateUpdateGroupComponent,
+        buildDialogOptions({
+          header: `Modifier le groupe ${group.name}`,
+          width: '70%',
+          data: { group },
+        })
+      )
       .onClose.subscribe(updated => {
         if (updated) {
           this.groupsQuery.refetch();

@@ -15,7 +15,7 @@ import { AppTable } from '@app/components/ui/table/table.component';
 import { Item } from '@core/types/item.type';
 import { environment } from '@env/environment';
 import { ItemsService } from '@services/items.service';
-import { DIALOG_RESPONSIVE_BREAKPOINTS } from '@utils/constants';
+import { buildDialogOptions } from '@utils/constants';
 import { Button } from 'primeng/button';
 import { Checkbox } from 'primeng/checkbox';
 import { DialogService } from 'primeng/dynamicdialog';
@@ -111,23 +111,22 @@ export class Step2Component {
         currentValues.filter((item: Item) => item.id !== product.id)
       );
     }
-    console.log(this.formGroup().value);
   }
 
   private readonly dialogService = inject(DialogService);
 
   viewTakenItems() {
-    this.dialogService.open(ModalViewTakenItemsComponent, {
-      header: 'Objets pris',
-      width: '70%',
-      height: '80%',
-      modal: true,
-      dismissableMask: true,
-      breakpoints: DIALOG_RESPONSIVE_BREAKPOINTS,
-      inputValues: {
-        items: this.formGroup().value || [],
-      },
-    });
+    this.dialogService.open(
+      ModalViewTakenItemsComponent,
+      buildDialogOptions({
+        header: 'Objets pris',
+        width: '70%',
+        height: '80%',
+        inputValues: {
+          items: this.formGroup().value || [],
+        },
+      })
+    );
   }
 
   onCategoryChange() {

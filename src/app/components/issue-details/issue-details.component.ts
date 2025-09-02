@@ -13,7 +13,10 @@ import { OptionIssue } from '@core/types/optionIssue.type';
 import { IssueCommentsService } from '@services/issue-comments.service';
 import { OptionIssuesService } from '@services/option-issues.service';
 import { injectQuery } from '@tanstack/angular-query-experimental';
-import { DIALOG_RESPONSIVE_BREAKPOINTS } from '@utils/constants';
+import {
+  buildDialogOptions,
+  DIALOG_RESPONSIVE_BREAKPOINTS,
+} from '@utils/constants';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import {
@@ -83,27 +86,32 @@ export class IssueDetailsComponent implements OnInit {
 
   onResolve() {
     const config: DynamicDialogConfig<SimpleModalData> = {
-      header: 'Résoudre le problème',
-      height: 'auto',
-      data: {
-        confirm: true,
-        cancelText: 'Annuler',
-        confirmText: 'Résoudre',
-        message: 'Voulez-vous vraiment résoudre ce Problème ?',
-      },
       breakpoints: DIALOG_RESPONSIVE_BREAKPOINTS,
     };
-    this.dialog.open(SimpleModalComponent, config).onClose.subscribe(result => {
-      if (!result) {
-        return;
-      }
-      // resolve issue
-      this.issueService.resolve(this.data.issue).subscribe({
-        next: () => {
-          this.ref.close(true);
-        },
+    this.dialog
+      .open(
+        SimpleModalComponent,
+        buildDialogOptions<SimpleModalData>({
+          header: 'Résoudre le problème',
+          data: {
+            confirm: true,
+            cancelText: 'Annuler',
+            confirmText: 'Résoudre',
+            message: 'Voulez-vous vraiment résoudre ce Problème ?',
+          },
+        })
+      )
+      .onClose.subscribe(result => {
+        if (!result) {
+          return;
+        }
+        // resolve issue
+        this.issueService.resolve(this.data.issue).subscribe({
+          next: () => {
+            this.ref.close(true);
+          },
+        });
       });
-    });
   }
 
   onAddComment() {
