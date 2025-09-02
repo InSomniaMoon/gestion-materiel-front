@@ -10,7 +10,7 @@ import { IssueDetailsComponent } from '@app/components/issue-details/issue-detai
 import { ItemOption } from '@core/types/itemOption.type';
 import { OptionIssue } from '@core/types/optionIssue.type';
 import { AuthService } from '@services/auth.service';
-import { DIALOG_RESPONSIVE_BREAKPOINTS } from '@utils/constants';
+import { buildDialogOptions } from '@utils/constants';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { DialogService } from 'primeng/dynamicdialog';
@@ -52,15 +52,14 @@ export class OpenedIssuesComponent {
   itemId = input.required<number>();
   openIssueDetailsModal(issue: OptionIssue) {
     this.dialogService
-      .open(IssueDetailsComponent, {
-        data: { issue, itemId: this.itemId() },
-        header: 'Détails du problème',
-        width: 'auto',
-        dismissableMask: true,
-        modal: true,
-
-        breakpoints: DIALOG_RESPONSIVE_BREAKPOINTS,
-      })
+      .open(
+        IssueDetailsComponent,
+        buildDialogOptions({
+          data: { issue, itemId: this.itemId() },
+          header: 'Détails du problème',
+          width: 'auto',
+        })
+      )
       .onClose.subscribe(event => {
         if (event) {
           this.optionsChange.emit();

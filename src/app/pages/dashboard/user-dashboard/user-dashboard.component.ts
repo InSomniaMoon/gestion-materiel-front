@@ -20,7 +20,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import { AuthService } from '@services/auth.service';
 import { EventsService } from '@services/events.service';
-import { DIALOG_RESPONSIVE_BREAKPOINTS } from '@utils/constants';
+import { buildDialogOptions } from '@utils/constants';
 import { Button, ButtonDirective } from 'primeng/button';
 import { Card } from 'primeng/card';
 import { DialogService } from 'primeng/dynamicdialog';
@@ -106,15 +106,15 @@ export class UserDashboardComponent {
   }
 
   reportDamage(material: Item) {
-    this.dialogService.open(DeclareOptionIssueComponent, {
-      header: 'Signaler un dommage',
-      width: '50%',
-      dismissableMask: true,
-      modal: true,
-      breakpoints: DIALOG_RESPONSIVE_BREAKPOINTS,
-      inputValues: {
-        item: material,
-      },
-    });
+    this.dialogService.open(
+      DeclareOptionIssueComponent,
+      buildDialogOptions({
+        header: 'Signaler un dommage',
+        width: '50%',
+        inputValues: {
+          item: material,
+        },
+      })
+    );
   }
 }

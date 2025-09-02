@@ -8,7 +8,7 @@ import {
 import { Router, RouterLink } from '@angular/router';
 import { environment } from '@env/environment';
 import { AuthService } from '@services/auth.service';
-import { DIALOG_RESPONSIVE_BREAKPOINTS } from '@utils/constants';
+import { buildDialogOptions } from '@utils/constants';
 import { MenuItem } from 'primeng/api';
 import { AvatarModule } from 'primeng/avatar';
 import { Badge } from 'primeng/badge';
@@ -118,13 +118,14 @@ export class HeaderComponent implements OnInit {
 
   showChangeActiveGroup() {
     this.dialogService
-      .open(ChangeActiveGroupComponent, {
-        header: 'Changer de groupe actif',
-        width: '70%',
-        height: '70%',
-        appendTo: 'body',
-        breakpoints: DIALOG_RESPONSIVE_BREAKPOINTS,
-      })
+      .open(
+        ChangeActiveGroupComponent,
+        buildDialogOptions({
+          header: 'Changer de groupe actif',
+          width: '70%',
+          height: '70%',
+        })
+      )
       .onClose.subscribe(data => {
         if (data) {
           this.auth$.setSelectGroupById(data.group_id);

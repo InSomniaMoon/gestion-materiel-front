@@ -19,7 +19,7 @@ import { CreateUserModalComponent } from './create-user-modal/create-user-modal.
 
 import { User } from '@core/types/user.type';
 import { TippyDirective } from '@ngneat/helipopper';
-import { DIALOG_RESPONSIVE_BREAKPOINTS } from '@utils/constants';
+import { buildDialogOptions } from '@utils/constants';
 import { MessageService } from 'primeng/api';
 import { AppAdminUserEditGroupsComponent } from './backoffice-user-edit-groups/backoffice-user-edit-groups.component';
 
@@ -139,14 +139,14 @@ export class AppAdminUsersListComponent {
 
   openAddUserDialog() {
     this.dialogService
-      .open(CreateUserModalComponent, {
-        header: 'Ajouter un utilisateur',
-        width: '50%',
-        height: '80%',
-        modal: true,
-        dismissableMask: true,
-        breakpoints: DIALOG_RESPONSIVE_BREAKPOINTS,
-      })
+      .open(
+        CreateUserModalComponent,
+        buildDialogOptions({
+          header: 'Ajouter un utilisateur',
+          width: '50%',
+          height: '80%',
+        })
+      )
       .onClose.subscribe(value => {
         if (!value) return;
         this.usersQuery.refetch();
@@ -155,15 +155,15 @@ export class AppAdminUsersListComponent {
 
   openEditGroupsDialog(user: User) {
     this.dialogService
-      .open(AppAdminUserEditGroupsComponent, {
-        header: 'Editer les groupes de ' + user.name,
-        width: '50%',
-        height: '80%',
-        modal: true,
-        dismissableMask: true,
-        breakpoints: DIALOG_RESPONSIVE_BREAKPOINTS,
-        data: { userId: user.id },
-      })
+      .open(
+        AppAdminUserEditGroupsComponent,
+        buildDialogOptions({
+          header: `Editer les groupes de ${user.name}`,
+          width: '50%',
+          height: '80%',
+          data: { userId: user.id },
+        })
+      )
       .onClose.subscribe(value => {
         if (!value) return;
         this.messageService.add({

@@ -8,12 +8,15 @@ import {
   output,
 } from '@angular/core';
 import { CreateUpdateItemOptionComponent } from '@app/components/create-update-item-option/create-update-item-option.component';
-import { SimpleModalComponent } from '@app/components/simple-modal/simple-modal.component';
+import {
+  SimpleModalComponent,
+  SimpleModalData,
+} from '@app/components/simple-modal/simple-modal.component';
 import { Item } from '@core/types/item.type';
 import { ItemOption } from '@core/types/itemOption.type';
 import { AuthService } from '@services/auth.service';
 import { ItemOptionService } from '@services/item-option.service';
-import { DIALOG_RESPONSIVE_BREAKPOINTS } from '@utils/constants';
+import { buildDialogOptions } from '@utils/constants';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
@@ -84,18 +87,20 @@ export class OptionsTableComponent {
 
   deleteOption(option: ItemOption) {
     this.dialogService
-      .open(SimpleModalComponent, {
-        header: `Supprimer l'option ${option.name}`,
-        width: 'auto',
-        height: 'auto',
-        breakpoints: DIALOG_RESPONSIVE_BREAKPOINTS,
-        data: {
-          message: `Voulez-vous vraiment supprimer l'option ${option.name} ?`,
-          confirm: true,
-          confirmText: 'Supprimer',
-          cancelText: 'Annuler',
-        },
-      })
+      .open(
+        SimpleModalComponent,
+        buildDialogOptions<SimpleModalData>({
+          header: `Supprimer l'option ${option.name}`,
+          width: 'auto',
+          height: 'auto',
+          data: {
+            message: `Voulez-vous vraiment supprimer l'option ${option.name} ?`,
+            confirm: true,
+            confirmText: 'Supprimer',
+            cancelText: 'Annuler',
+          },
+        })
+      )
       .onClose.subscribe(confirm => {
         if (!confirm) {
           return;
@@ -121,11 +126,13 @@ export class OptionsTableComponent {
   }
 
   openAddOptionDialog(): void {
-    const dialog = this.dialogService.open(CreateUpdateItemOptionComponent, {
-      header: 'Ajouter une option',
-      width: 'auto',
-      breakpoints: DIALOG_RESPONSIVE_BREAKPOINTS,
-    });
+    const dialog = this.dialogService.open(
+      CreateUpdateItemOptionComponent,
+      buildDialogOptions({
+        header: 'Ajouter une option',
+        width: 'auto',
+      })
+    );
     dialog.onClose.subscribe((option: ItemOption) => {
       if (!option) {
         return;
@@ -149,13 +156,14 @@ export class OptionsTableComponent {
   }
   openEditOptionDialog(option: ItemOption): void {
     this.dialogService
-      .open(CreateUpdateItemOptionComponent, {
-        header: 'Modifier ' + option.name,
-        width: 'auto',
-        data: option,
-        appendTo: 'body',
-        breakpoints: DIALOG_RESPONSIVE_BREAKPOINTS,
-      })
+      .open(
+        CreateUpdateItemOptionComponent,
+        buildDialogOptions({
+          header: 'Modifier ' + option.name,
+          width: 'auto',
+          data: option,
+        })
+      )
       .onClose.subscribe((opt: ItemOption) => {
         if (!opt) {
           return;
@@ -183,15 +191,16 @@ export class OptionsTableComponent {
 
   createAvarie(option: ItemOption) {
     this.dialogService
-      .open(DeclareOptionIssueComponent, {
-        header: 'Déclarer une avarie sur ' + option.name,
-        data: {
-          itemId: this.itemId(),
-          optionId: option.id,
-        },
-        dismissableMask: true,
-        breakpoints: DIALOG_RESPONSIVE_BREAKPOINTS,
-      })
+      .open(
+        DeclareOptionIssueComponent,
+        buildDialogOptions({
+          header: 'Déclarer une avarie sur ' + option.name,
+          data: {
+            itemId: this.itemId(),
+            optionId: option.id,
+          },
+        })
+      )
       .onClose.subscribe(success => {
         if (!success) {
           return;

@@ -14,9 +14,9 @@ import { ItemCategory } from '@core/types/item.type';
 import { AuthService } from '@services/auth.service';
 import { CategoriesService } from '@services/categories.service';
 import { injectQuery } from '@tanstack/angular-query-experimental';
-import { DIALOG_RESPONSIVE_BREAKPOINTS } from '@utils/constants';
+import { buildDialogOptions } from '@utils/constants';
 import { Button } from 'primeng/button';
-import { DialogService, DynamicDialogConfig } from 'primeng/dynamicdialog';
+import { DialogService } from 'primeng/dynamicdialog';
 import { Paginator, PaginatorState } from 'primeng/paginator';
 import { Select } from 'primeng/select';
 import { TableModule } from 'primeng/table';
@@ -75,15 +75,14 @@ export class CategoriesListComponent {
 
   openCreateCategroyModal() {
     this.dialogRef
-      .open(CreateUpdateCategoryComponent, {
-        data: { groupId: this.selectedGroup()!.id },
-        header: 'Créer une catégorie',
-        width: '50%',
-        closeOnEscape: true,
-        dismissableMask: true,
-        modal: true,
-        breakpoints: DIALOG_RESPONSIVE_BREAKPOINTS,
-      })
+      .open(
+        CreateUpdateCategoryComponent,
+        buildDialogOptions({
+          data: { groupId: this.selectedGroup()!.id },
+          header: 'Créer une catégorie',
+          width: '50%',
+        })
+      )
       .onClose.subscribe(result => {
         if (result) {
           this.categoriesQuery.refetch();
@@ -93,15 +92,14 @@ export class CategoriesListComponent {
 
   openUpdateCategoryModal(category: ItemCategory) {
     this.dialogRef
-      .open(CreateUpdateCategoryComponent, {
-        data: { category, groupId: this.selectedGroup()!.id },
-        header: 'Modifier la catégorie',
-        width: '50%',
-        closeOnEscape: true,
-        dismissableMask: true,
-        modal: true,
-        breakpoints: DIALOG_RESPONSIVE_BREAKPOINTS,
-      })
+      .open(
+        CreateUpdateCategoryComponent,
+        buildDialogOptions({
+          data: { category, groupId: this.selectedGroup()!.id },
+          header: 'Modifier la catégorie',
+          width: '50%',
+        })
+      )
       .onClose.subscribe(result => {
         if (result) {
           this.categoriesQuery.refetch();
@@ -110,21 +108,19 @@ export class CategoriesListComponent {
   }
 
   deleteCategory(category: ItemCategory) {
-    const config: DynamicDialogConfig<SimpleModalData> = {
-      header: `Supprimer la catégorie ${category.name}`,
-      height: 'auto',
-      modal: true,
-      dismissableMask: true,
-      data: {
-        confirm: true,
-        cancelText: 'Annuler',
-        confirmText: 'Supprimer',
-        message: 'Voulez-vous vraiment supprimer cette catégorie ?',
-      },
-      breakpoints: DIALOG_RESPONSIVE_BREAKPOINTS,
-    };
     this.dialogRef
-      .open(SimpleModalComponent, config)
+      .open(
+        SimpleModalComponent,
+        buildDialogOptions<SimpleModalData>({
+          header: `Supprimer la catégorie ${category.name}`,
+          data: {
+            confirm: true,
+            cancelText: 'Annuler',
+            confirmText: 'Supprimer',
+            message: 'Voulez-vous vraiment supprimer cette catégorie ?',
+          },
+        })
+      )
       .onClose.subscribe(result => {
         if (!result) {
           return;
