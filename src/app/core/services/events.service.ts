@@ -40,4 +40,8 @@ export class EventsService {
     // This method should return an observable of the actual events
     return this.http.get<ActualEvent[]>(url);
   }
+
+  getEventById(id: number | string) {
+    return this.http.get<Event>(`${this.api_url}/events/${id}`);
+  }
 }

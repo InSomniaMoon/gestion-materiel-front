@@ -94,7 +94,6 @@ export class UserDashboardComponent {
     plugins: [dayGridPlugin, timeGridPlugin],
     events: this.events.value(),
     eventClick: event => {
-      console.log(event.event.id);
       this.router.navigate(['/events', event.event.id]);
     },
     handleWindowResize: true,

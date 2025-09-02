@@ -1,0 +1,22 @@
+<div class="header">
+  <h1>{{ event().name }}</h1>
+  <a pButton severity="info" [routerLink]="['/events', event().id, 'edit']">
+    Modifier
+  </a>
+</div>
+
+{{ event().start_date | date: 'short' }} -
+{{ event().end_date | date: 'short' }}
+
+<h2>Matériel emprunté</h2>
+<div class="material">
+  @for (item of event().event_subscriptions; track item.id) {
+    <p-card [header]="item.name">
+      <div>
+        {{ item.category?.name }}
+
+        <!-- {{ item | json }} -->
+      </div>
+    </p-card>
+  }
+</div>

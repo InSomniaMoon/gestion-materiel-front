@@ -5,7 +5,7 @@ import {
   provideAppInitializer,
   provideZonelessChangeDetection,
 } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withComponentInputBinding } from '@angular/router';
 
 import { registerLocaleData } from '@angular/common';
 import {
@@ -46,7 +46,7 @@ export const appConfig: ApplicationConfig = {
     DialogService,
     MessageService,
     provideZonelessChangeDetection(),
-    provideRouter(routes),
+    provideRouter(routes, withComponentInputBinding()),
     provideAnimations(),
     provideQueryClient(new QueryClient()),
     provideHttpClient(
