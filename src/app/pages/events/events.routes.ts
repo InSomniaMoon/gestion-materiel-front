@@ -10,8 +10,8 @@ export const EVENTS_ROUTES: Routes = [
   {
     path: 'create',
     loadComponent: () =>
-      import('./create-event/create-event.component').then(
-        m => m.CreateEventComponent
+      import('./create-edit-event/create-edit-event.component').then(
+        m => m.CreateEditEventComponent
       ),
   },
   {
@@ -19,6 +19,18 @@ export const EVENTS_ROUTES: Routes = [
     loadComponent: () =>
       import('./event-details/event-details.component').then(
         m => m.EventDetailsComponent
+      ),
+    resolve: {
+      event: (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
+        return inject(EventsService).getEventById(route.paramMap.get('id')!);
+      },
+    },
+  },
+  {
+    path: ':id/edit',
+    loadComponent: () =>
+      import('./create-edit-event/create-edit-event.component').then(
+        m => m.CreateEditEventComponent
       ),
     resolve: {
       event: (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {

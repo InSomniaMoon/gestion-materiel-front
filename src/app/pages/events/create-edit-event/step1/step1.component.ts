@@ -61,11 +61,13 @@ export class Step1Component implements OnInit {
     curDate.setMinutes(0, 0, 0);
     // format :2024-11-13 16:01
 
-    this.formGroup().patchValue({
-      start_date: this.formatDate(curDate),
-      end_date: this.formatDate(curDate),
-      unit: this.units()[0] ?? null,
-    });
+    if (!this.formGroup().get('start_date')?.value) {
+      this.formGroup().patchValue({
+        start_date: this.formatDate(curDate),
+        end_date: this.formatDate(curDate),
+        unit: this.units()[0] ?? null,
+      });
+    }
   }
 
   resetEndDate() {

@@ -12,6 +12,7 @@ import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { SearchBarComponent } from '@app/components/search-bar/search-bar.component';
 import { AppTable } from '@app/components/ui/table/table.component';
+import { Event } from '@app/core/types/event.type';
 import { Item } from '@core/types/item.type';
 import { environment } from '@env/environment';
 import { ItemsService } from '@services/items.service';
@@ -50,6 +51,8 @@ export class Step2Component {
   endDate = input.required<Date>();
   formGroup = input.required<FormControl<Item[]>>();
 
+  event = input<Event | null>(null);
+
   options = [
     { label: '10', value: 10 },
     { label: '25', value: 25 },
@@ -76,7 +79,9 @@ export class Step2Component {
 
   itemsResource = resource({
     loader: ({ params }) =>
-      lastValueFrom(this.itemsService.getAvailableItems(params)),
+      lastValueFrom(
+        this.itemsService.getAvailableItems(params, this.event()?.id)
+      ),
     params: () => ({
       page: this.page(),
       size: this.size(),

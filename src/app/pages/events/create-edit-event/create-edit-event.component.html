@@ -20,7 +20,8 @@
           (previousStep)="activateCallback(1)"
           [formGroup]="materialsFormControl"
           [startDate]="informationsFormGroup.get('start_date')!.value"
-          [endDate]="informationsFormGroup.get('end_date')!.value" />
+          [endDate]="informationsFormGroup.get('end_date')!.value"
+          [event]="event()" />
       </ng-template>
     </p-step-panel>
     <p-step-panel [value]="3">

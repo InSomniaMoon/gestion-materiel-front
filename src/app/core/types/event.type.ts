@@ -1,4 +1,5 @@
 import { Item } from './item.type';
+import { Unit } from './unit.type';
 
 export type Event = {
   id: number;
@@ -7,8 +8,10 @@ export type Event = {
   end_date: Date;
   name: string;
   status: 'active' | 'inactive';
+  unit: Unit;
   unit_id: number;
   items: Item[];
+  comment: string | null;
 };
 
 export type ActualEvent = Event & {

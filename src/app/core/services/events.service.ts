@@ -3,15 +3,12 @@ import { inject, Injectable } from '@angular/core';
 import { environment } from '@env/environment';
 import { ActualEvent, Event } from '../types/event.type';
 import { CLEAR_CACHE_CONTEXT_OPTIONS } from '../utils/injectionToken';
-import { CacheService } from './cache.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class EventsService {
   private readonly http = inject(HttpClient);
-
-  private readonly cache = inject(CacheService);
 
   private api_url = environment.api_url;
 
@@ -54,6 +51,14 @@ export class EventsService {
     return this.http.delete(
       `${this.api_url}/events/${event.id}`,
       CLEAR_CACHE_CONTEXT_OPTIONS(new Set([`${this.api_url}/events`]))
+    );
+  }
+
+  updateEvent(id: number | string, data: Partial<Event>) {
+    return this.http.patch(
+      `${this.api_url}/events/${id}`,
+      data,
+      CLEAR_CACHE_CONTEXT_OPTIONS(new Set([`${this.api_url}/events/${id}`]))
     );
   }
 }

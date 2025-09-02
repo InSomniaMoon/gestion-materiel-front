@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  input,
+  OnInit,
+} from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -6,6 +12,8 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ActualEvent } from '@app/core/types/event.type';
+import { Item } from '@app/core/types/item.type';
 import { Unit } from '@core/types/unit.type';
 import { EventsService } from '@services/events.service';
 import { StepperModule } from 'primeng/stepper';
@@ -15,7 +23,7 @@ import { Step3Component } from './step3/step3.component';
 import { Step4Component } from './step4/step4.component';
 
 @Component({
-  selector: 'app-create-event',
+  selector: 'app-create-update-event',
   imports: [
     StepperModule,
     Step1Component,
@@ -23,13 +31,14 @@ import { Step4Component } from './step4/step4.component';
     Step3Component,
     Step4Component,
   ],
-  templateUrl: './create-event.component.html',
-  styleUrl: './create-event.component.scss',
+  templateUrl: './create-edit-event.component.html',
+  styleUrl: './create-edit-event.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CreateEventComponent {
+export class CreateEditEventComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
+  event = input<ActualEvent | null>(null);
   form = this.fb.nonNullable.group({
     informations: this.fb.nonNullable.group(
       {
@@ -37,8 +46,8 @@ export class CreateEventComponent {
         unit: this.fb.nonNullable.control<Unit | null>(null, [
           Validators.required,
         ]),
-        start_date: [null],
-        end_date: [null],
+        start_date: this.fb.nonNullable.control<Date | null>(null),
+        end_date: this.fb.nonNullable.control<Date | null>(null),
       },
       {
         validators: [
@@ -56,7 +65,7 @@ export class CreateEventComponent {
         ],
       }
     ),
-    materials: this.fb.nonNullable.control([], {
+    materials: this.fb.nonNullable.control<Item[]>([], {
       validators: [
         Validators.required,
         form => (form.value.length === 0 ? { empty: true } : null),
@@ -78,6 +87,21 @@ export class CreateEventComponent {
 
   private readonly eventService = inject(EventsService);
 
+  ngOnInit(): void {
+    if (!this.event()) return;
+
+    this.form.setValue({
+      informations: {
+        name: this.event()!.name,
+        unit: this.event()!.unit,
+        start_date: new Date(this.event()!.start_date),
+        end_date: new Date(this.event()!.end_date),
+      },
+      materials: this.event()!.event_subscriptions,
+      comment: this.event()!.comment ?? '',
+    });
+  }
+
   submitForm() {
     const value = this.form.getRawValue();
 
@@ -93,15 +117,24 @@ export class CreateEventComponent {
       comment: value.comment,
     };
 
-    this.eventService.createEvent(data).subscribe({
-      next: () => {
-        console.log('Event created successfully');
-        this.router.navigate(['/dashboard']); // Navigate to the events list or another page
-        // Optionally, you can reset the form or navigate to another page
-      },
-      error: err => {
-        console.error('Error creating event:', err);
-      },
-    });
+    if (this.event()) {
+      this.eventService.updateEvent(this.event()!.id, data).subscribe({
+        next: () => {
+          console.log('Event updated successfully');
+          this.router.navigate(['/events', this.event()!.id]); // Navigate to the events list or another page
+        },
+      });
+    } else {
+      this.eventService.createEvent(data).subscribe({
+        next: () => {
+          console.log('Event created successfully');
+          this.router.navigate(['/dashboard']); // Navigate to the events list or another page
+          // Optionally, you can reset the form or navigate to another page
+        },
+        error: err => {
+          console.error('Error creating event:', err);
+        },
+      });
+    }
   }
 }

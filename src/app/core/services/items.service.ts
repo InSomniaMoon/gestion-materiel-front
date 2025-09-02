@@ -41,7 +41,8 @@ export class ItemsService {
       size: 25,
       start_date: new Date(),
       end_date: new Date(),
-    }
+    },
+    forEvent?: number
   ) {
     let url = `${this.api_url}/items/available`;
 
@@ -50,6 +51,7 @@ export class ItemsService {
         ...opt,
         start_date: opt.start_date.toISOString(),
         end_date: opt.end_date.toISOString(),
+        for_event: forEvent,
       }),
     });
   }
