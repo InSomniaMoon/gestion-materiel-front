@@ -14,6 +14,7 @@ import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { InputTextModule } from 'primeng/inputtext';
+import { Textarea } from 'primeng/textarea';
 import { ToggleSwitch } from 'primeng/toggleswitch';
 
 @Component({
@@ -24,6 +25,7 @@ import { ToggleSwitch } from 'primeng/toggleswitch';
     DialogModule,
     ButtonModule,
     ToggleSwitch,
+    Textarea,
   ],
   templateUrl: './create-update-item-option.component.html',
   styleUrl: './create-update-item-option.component.scss',
