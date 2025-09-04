@@ -9,7 +9,8 @@
     "test": "ng test",
     "serve:ssr:frontend": "node dist/frontend/server/server.mjs",
     "analyze-bundle": "ng build --configuration=analyze-bundle && npx source-map-explorer dist/**/*.js --no-border-checks",
-    "prepare": "husky"
+    "prepare": "husky",
+    "update:ng": "ng update @angular/core @angular/cli @fullcalendar/angular primeng @ngneat/helipopper @tanstack/angular-query-experimental"
   },
   "private": true,
   "dependencies": {
