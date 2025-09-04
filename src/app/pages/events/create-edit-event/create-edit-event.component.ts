@@ -46,18 +46,17 @@ export class CreateEditEventComponent implements OnInit {
         unit: this.fb.nonNullable.control<Unit | null>(null, [
           Validators.required,
         ]),
-        start_date: this.fb.nonNullable.control<Date | null>(null),
-        end_date: this.fb.nonNullable.control<Date | null>(null),
+        start_date: this.fb.nonNullable.control<Date | null>(null, [
+          Validators.required,
+        ]),
+        end_date: this.fb.nonNullable.control<Date | null>(null, [
+          Validators.required,
+        ]),
       },
       {
         validators: [
           form => {
-            if (form.get('start_date')?.value > form.get('end_date')?.value) {
-              return { invalidDate: true };
-            }
-            if (
-              form?.get('start_date')?.value === form?.get('end_date')?.value
-            ) {
+            if (form.get('start_date')?.value >= form.get('end_date')?.value) {
               return { invalidDate: true };
             }
             return null;
@@ -120,16 +119,13 @@ export class CreateEditEventComponent implements OnInit {
     if (this.event()) {
       this.eventService.updateEvent(this.event()!.id, data).subscribe({
         next: () => {
-          console.log('Event updated successfully');
-          this.router.navigate(['/events', this.event()!.id]); // Navigate to the events list or another page
+          this.router.navigate(['/events', this.event()!.id]);
         },
       });
     } else {
       this.eventService.createEvent(data).subscribe({
         next: () => {
-          console.log('Event created successfully');
-          this.router.navigate(['/dashboard']); // Navigate to the events list or another page
-          // Optionally, you can reset the form or navigate to another page
+          this.router.navigate(['/dashboard']);
         },
         error: err => {
           console.error('Error creating event:', err);

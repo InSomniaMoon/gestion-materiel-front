@@ -30,57 +30,37 @@
   <div class="flex wrap">
     <p-float-label variant="on" class="flex-1">
       <p-date-picker
-        appendTo="body"
-        [fluid]="true"
-        showIcon
-        iconDisplay="input"
-        [showTime]="true"
-        hourFormat="24"
-        dateFormat="yy-mm-dd"
         formControlName="start_date"
-        id="start_date"
-        stepMinute="30"
-        readonlyInput
-        #start_date
-        (ngModelChange)="resetEndDate()">
-        <ng-template pTemplate="footer">
-          <button
-            pButton
-            type="button"
-            label="Fermer"
-            (click)="start_date.toggle()"></button>
-        </ng-template>
-      </p-date-picker>
+        fluid
+        showIcon
+        appendTo="body"
+        iconDisplay="input"
+        [disabled]="true"
+        [dateFormat]="dateFormat"
+        id="start_date" />
       <label for="start_date">Début de l'emprunt</label>
     </p-float-label>
 
     <p-float-label variant="on" class="flex-1">
       <p-date-picker
+        formControlName="end_date"
+        fluid
+        [readonlyInput]="true"
         showIcon
-        [fluid]="true"
         appendTo="body"
         iconDisplay="input"
-        [showTime]="true"
-        hourFormat="24"
-        dateFormat="yy-mm-dd"
-        stepMinute="30"
-        formControlName="end_date"
-        id="end_date"
-        readonlyInput
-        [responsiveOptions]="responsiveOptions"
-        [minDate]="minDate()"
-        #end_date>
-        <ng-template pTemplate="footer">
-          <button
-            pButton
-            type="button"
-            label="Fermer"
-            (click)="end_date.toggle()"></button>
-        </ng-template>
-      </p-date-picker>
+        [disabled]="true"
+        [dateFormat]="dateFormat"
+        id="end_date" />
       <label for="end_date">Fin de l'emprunt</label>
     </p-float-label>
   </div>
+  <p-date-picker
+    selectionMode="range"
+    inline
+    [ngModelOptions]="{ standalone: true }"
+    [ngModel]="doubleDates()"
+    (ngModelChange)="datesSelected($event)" />
 </form>
 
 <div class="footer">

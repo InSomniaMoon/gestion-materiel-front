@@ -1,17 +1,14 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  DestroyRef,
+  computed,
   inject,
   input,
   OnInit,
   output,
-  signal,
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '@services/auth.service';
-import { ResponsiveOverlayOptions } from 'primeng/api';
 import { Button } from 'primeng/button';
 import { DatePicker } from 'primeng/datepicker';
 import { FloatLabel } from 'primeng/floatlabel';
@@ -27,6 +24,7 @@ import { Select } from 'primeng/select';
     InputText,
     Select,
     DatePicker,
+    FormsModule,
   ],
   templateUrl: './step1.component.html',
   styleUrl: './step1.component.scss',
@@ -35,57 +33,58 @@ import { Select } from 'primeng/select';
 export class Step1Component implements OnInit {
   private readonly authService = inject(AuthService);
   readonly units = this.authService.userUnits;
-  private readonly destroyRef = inject(DestroyRef);
 
   nextStep = output();
-
+  protected readonly dateFormat = 'dd/mm/yy';
   formGroup = input.required<FormGroup>();
 
-  minDate = signal(new Date());
-  responsiveOptions: ResponsiveOverlayOptions[] = [
-    {
-      breakpoint: '768px',
-    },
-  ];
+  doubleDates = computed(() => {
+    const start = this.formGroup().get('start_date')?.value;
+    const end = this.formGroup().get('end_date')?.value;
+    return start && end ? [start, end] : [];
+  });
+
+  datesSelected(dates: Date[]) {
+    const [start, end] = dates;
+
+    this.formGroup().patchValue({
+      start_date: start,
+      end_date: end,
+    });
+  }
 
   ngOnInit() {
     this.formGroup()
-      .valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(value => {
-        this.minDate.set(this.date(value.start_date!));
+      .get('end_date')
+      ?.valueChanges.subscribe((date: Date) => {
+        if (date) {
+          date = new Date(date);
+          date.setHours(23);
+          date.setMinutes(59);
+          date.setSeconds(59);
+          this.formGroup().patchValue(
+            {
+              end_date: date,
+            },
+            { emitEvent: false }
+          );
+        }
       });
+    this.formGroup()
+      .get('start_date')
+      ?.valueChanges.subscribe(() => {
+        this.formGroup().patchValue({
+          end_date: null,
+        });
+      });
+
     if (this.formGroup().touched) {
       return;
     }
-    let curDate = new Date();
-    curDate.setMinutes(0, 0, 0);
-    // format :2024-11-13 16:01
-
     if (!this.formGroup().get('start_date')?.value) {
       this.formGroup().patchValue({
-        start_date: this.formatDate(curDate),
-        end_date: this.formatDate(curDate),
         unit: this.units()[0] ?? null,
       });
     }
-  }
-
-  resetEndDate() {
-    this.formGroup().patchValue({
-      end_date: this.formGroup().get('start_date')?.value,
-    });
-  }
-  private date(str: string): Date {
-    return new Date(str);
-  }
-
-  private formatDate(date: Date): string {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-
-    return `${year}-${month}-${day} ${hours}:${minutes}`;
   }
 }

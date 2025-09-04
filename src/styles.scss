@@ -96,7 +96,7 @@ table {
 th {
   text-wrap: nowrap;
 }
-td {
+td:not(.p-datepicker-day-cell) {
   vertical-align: middle;
   width: 100%;
   max-width: fit-content;
