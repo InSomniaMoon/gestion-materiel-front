@@ -5,13 +5,14 @@ set -e
 if [ -s "$HOME/.nvm/nvm.sh" ]; then . "$HOME/.nvm/nvm.sh"; fi
 if [ -s "/opt/homebrew/opt/nvm/nvm.sh" ]; then . "/opt/homebrew/opt/nvm/nvm.sh"; fi
 
-# Collect staged files (NUL-delimited)
-FILES=$(git diff --cached --name-only -z --diff-filter=ACMR)
-if [ -n "$FILES" ]; then
-	# Prettify only known text files; Prettier will skip unknown with --ignore-unknown
-	printf "%s" "$FILES" \
-		| xargs -0 npx --yes prettier --write --ignore-unknown --loglevel warn
-	git update-index --again
+# If nothing staged, exit quickly
+if git diff --cached --quiet --diff-filter=ACMR; then
+  exit 0
 fi
 
+# Prettify only known text files; Prettier will skip unknown with --ignore-unknown
+git diff --cached --name-only -z --diff-filter=ACMR \
+  | xargs -0 npx --yes prettier --write --ignore-unknown --loglevel warn
+
+git update-index --again
 exit 0

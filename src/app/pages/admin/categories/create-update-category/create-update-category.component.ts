@@ -12,6 +12,7 @@ import { Button } from 'primeng/button';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { FloatLabel } from 'primeng/floatlabel';
 import { InputText } from 'primeng/inputtext';
+import { ToggleSwitch } from 'primeng/toggleswitch';
 
 @Component({
   selector: 'app-create-update-category',
@@ -21,6 +22,7 @@ import { InputText } from 'primeng/inputtext';
     FloatLabel,
     InputText,
     ReactiveFormsModule,
+    ToggleSwitch,
   ],
   templateUrl: './create-update-category.component.html',
   styleUrl: './create-update-category.component.scss',
@@ -42,6 +44,7 @@ export class CreateUpdateCategoryComponent {
   form = this.fb.nonNullable.group({
     name: [this.data.category?.name, [Validators.required]],
     group_id: [this.data.groupId, Validators.required],
+    identified: [this.data.category?.identified ?? true, Validators.required],
   });
 
   save() {

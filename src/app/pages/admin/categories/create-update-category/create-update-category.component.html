@@ -3,6 +3,15 @@
     <input id="name" pInputText formControlName="name" />
     <label for="name">Titre de la catégorie</label>
   </p-floatlabel>
+  <div class="flex">
+    <p-toggleswitch formControlName="identified" onLabel="Identifié">
+      <ng-template #handle let-checked="checked">
+        <i [class]="['!text-xs', 'pi', checked ? 'pi-check' : 'pi-times']"></i>
+      </ng-template>
+    </p-toggleswitch>
+    Les objets de cette catégorie sont-ils identifiés (avec un nom comme une
+    tente, un marabout, etc.) ?
+  </div>
 </form>
 
 <p-footer>
