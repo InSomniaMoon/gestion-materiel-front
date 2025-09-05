@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable, Optional } from '@angular/core';
-import { PaginationRequest } from '../types/pagination-request.type';
+import { inject, Injectable } from '@angular/core';
+import { environment } from '@env/environment';
 import { ItemCategory } from '../types/item.type';
 import { PaginatedData } from '../types/paginatedData.type';
-import { environment } from '@env/environment';
+import { PaginationRequest } from '../types/pagination-request.type';
 import { CLEAR_CACHE_CONTEXT_OPTIONS } from '../utils/injectionToken';
 
 @Injectable({

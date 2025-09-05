@@ -1,0 +1,13 @@
+:host {
+  border-top: 1px solid hwb(120 55% 44%);
+  display: flex;
+  align-items: center;
+  padding-left: 2rem;
+  gap: 1rem;
+}
+span {
+  display: none;
+  @media screen and (min-width: 768px) {
+    display: inline;
+  }
+}

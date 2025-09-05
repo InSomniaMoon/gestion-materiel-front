@@ -26,11 +26,6 @@ import { lastValueFrom, tap } from 'rxjs';
 export class AdminDashboardComponent {
   private optionIssuesService = inject(OptionIssuesService);
 
-  options = [
-    { label: '10', value: 10 },
-    { label: '25', value: 25 },
-    { label: '50', value: 50 },
-  ];
   baseUrl = environment.api_url + '/storage/';
 
   page = signal(0);
@@ -48,7 +43,7 @@ export class AdminDashboardComponent {
   }
   issuesResource = resource({
     params: () => ({
-      page: this.page(),
+      page: this.page() + 1,
       size: this.size(),
       q: this.searchQuery(),
       order_by: this.orderBy(),

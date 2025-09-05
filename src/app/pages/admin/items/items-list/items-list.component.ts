@@ -15,6 +15,7 @@ import {
   SimpleModalComponent,
   SimpleModalData,
 } from '@app/components/simple-modal/simple-modal.component';
+import { PaginatorComponent } from '@app/components/ui/paginator/paginator.component';
 import { AppTable } from '@components/ui/table/table.component';
 import { Item } from '@core/types/item.type';
 import { environment } from '@env/environment';
@@ -23,8 +24,8 @@ import { buildDialogOptions } from '@utils/constants';
 import { Badge } from 'primeng/badge';
 import { Button, ButtonDirective } from 'primeng/button';
 import { DialogService } from 'primeng/dynamicdialog';
-import { PaginatorModule, PaginatorState } from 'primeng/paginator';
-import { Select, SelectModule } from 'primeng/select';
+import { PaginatorModule } from 'primeng/paginator';
+import { SelectModule } from 'primeng/select';
 import { TableModule } from 'primeng/table';
 import { lastValueFrom } from 'rxjs';
 import { CreateUpdateItemComponent } from './create-update-item/create-update-item.component';
@@ -33,7 +34,6 @@ import { CreateUpdateItemComponent } from './create-update-item/create-update-it
   imports: [
     TableModule,
     PaginatorModule,
-    Select,
     FormsModule,
     AppTable,
     SelectModule,
@@ -43,6 +43,7 @@ import { CreateUpdateItemComponent } from './create-update-item/create-update-it
     Badge,
     RouterLink,
     ButtonDirective,
+    PaginatorComponent,
   ],
   template: `
     <div class="header">
@@ -126,26 +127,10 @@ import { CreateUpdateItemComponent } from './create-update-item/create-update-it
           </tr>
         </ng-template>
       </p-table>
-      <div class="paginator">
-        <span>Items par page: </span>
-        <p-select
-          [options]="options"
-          optionLabel="label"
-          optionValue="value"
-          [ngModel]="size()"
-          (ngModelChange)="page.set(0); size.set($event)" />
-        <p-paginator
-          [first]="first()"
-          [rows]="size()"
-          [totalRecords]="items.value()?.total ?? 0"
-          (onPageChange)="onPageChange($event)"
-          [showCurrentPageReport]="true"
-          currentPageReportTemplate="{first} - {last} sur {totalRecords}"
-          [showPageLinks]="false"
-          [showFirstLastIcon]="false"
-          [alwaysShow]="true"
-          [locale]="'fr'" />
-      </div>
+      <app-paginator
+        [(page)]="page"
+        [(size)]="size"
+        [totalRecords]="items.value()?.total ?? 0" />
     </matos-table>
   `,
   styleUrl: './items-list.component.scss',
@@ -177,8 +162,11 @@ export class ItemsListComponent {
   first = computed(() => this.page() * this.size());
 
   items = resource({
-    loader: ({ params }) =>
-      lastValueFrom(this.itemService.getAdminItems(params)),
+    loader: ({ params }) => {
+      return lastValueFrom(
+        this.itemService.getAdminItems({ ...params, page: params.page + 1 })
+      );
+    },
     params: () => ({
       page: this.page(),
       size: this.size(),
@@ -187,13 +175,6 @@ export class ItemsListComponent {
       sort_by: this.sortBy() === 1 ? 'asc' : 'desc',
     }),
   });
-
-  onPageChange(event: PaginatorState) {
-    console.log('Page changed:', event);
-
-    this.page.set(event.page!);
-    this.size.set(event.rows!);
-  }
 
   openCreateItem() {
     this.dialogService

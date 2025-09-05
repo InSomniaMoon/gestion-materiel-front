@@ -3,6 +3,7 @@ import ThemeBase from '@primeng/themes/lara';
 import { LaraBaseTokenSections } from '@primeuix/themes/lara/base';
 import { ButtonDesignTokens } from '@primeuix/themes/types/button';
 import { DataTableDesignTokens } from '@primeuix/themes/types/datatable';
+import { DatePickerDesignTokens } from '@primeuix/themes/types/datepicker';
 import { MenubarDesignTokens } from '@primeuix/themes/types/menubar';
 import { ProgressSpinnerDesignTokens } from '@primeuix/themes/types/progressspinner';
 import { StepperDesignTokens } from '@primeuix/themes/types/stepper';
@@ -218,16 +219,21 @@ export const SgdfPresetTheme = definePreset(ThemeBase, {
         },
       },
     } as ProgressSpinnerDesignTokens,
+    stepper: {
+      root: {
+        transitionDuration: '{transition.duration}',
+      },
+      steppanel: {
+        padding: '0',
+      },
+    } as StepperDesignTokens,
+    datepicker: {
+      date: {
+        padding: '0px',
+      },
+      panel: {
+        padding: '0px',
+      },
+    } as DatePickerDesignTokens,
   },
-  stepper: {
-    root: {
-      transitionDuration: '{transition.duration}',
-    },
-    steppanel: {
-      padding: '0',
-    },
-    steppanels: {
-      padding: '0',
-    },
-  } as StepperDesignTokens,
 });

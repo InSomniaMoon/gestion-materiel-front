@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SearchBarComponent } from '@app/components/search-bar/search-bar.component';
+import { PaginatorComponent } from '@app/components/ui/paginator/paginator.component';
 import { AppTable } from '@app/components/ui/table/table.component';
 import { environment } from '@env/environment';
 import { UsersService } from '@services/users.service';
@@ -16,8 +17,6 @@ import { buildDialogOptions } from '@utils/constants';
 import { MessageService } from 'primeng/api';
 import { Button } from 'primeng/button';
 import { DialogService } from 'primeng/dynamicdialog';
-import { Paginator, PaginatorState } from 'primeng/paginator';
-import { Select } from 'primeng/select';
 import { TableModule } from 'primeng/table';
 import { lastValueFrom } from 'rxjs';
 import { AddUserModalComponent } from './add-user-modal/add-user-modal.component';
@@ -29,9 +28,8 @@ import { AddUserModalComponent } from './add-user-modal/add-user-modal.component
     TableModule,
     SearchBarComponent,
     Button,
-    Select,
-    Paginator,
     FormsModule,
+    PaginatorComponent,
   ],
   templateUrl: './users-list.component.html',
   styleUrl: './users-list.component.scss',
@@ -46,7 +44,7 @@ export class UsersListComponent {
     effect(() => {
       this.orderBy();
       this.sortBy();
-      this.page.set(0);
+      this.page.set(1);
     });
   }
   options = [
@@ -63,17 +61,11 @@ export class UsersListComponent {
   sortBy = signal<1 | -1>(1);
   first = computed(() => this.page() * this.size());
 
-  onPageChange(event: PaginatorState) {
-    console.log('Page changed:', event);
-
-    this.page.set(event.page!);
-    this.size.set(event.rows!);
-  }
   usersResource = resource({
     loader: ({ params }) =>
       lastValueFrom(this.usersService.getPaginatedUsers(params)),
     params: () => ({
-      page: this.page(),
+      page: this.page() + 1,
       size: this.size(),
       q: this.searchQuery(),
       order_by: this.orderBy(),

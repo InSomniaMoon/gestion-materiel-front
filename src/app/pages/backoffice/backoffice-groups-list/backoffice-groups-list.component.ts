@@ -94,7 +94,7 @@ export class AppAdminGroupsListComponent {
 
   baseUrl = environment.api_url + '/storage/';
 
-  page = signal(1);
+  page = signal(0);
   size = signal(25);
   orderBy = signal('name');
   sortBy = signal('asc');
@@ -116,7 +116,7 @@ export class AppAdminGroupsListComponent {
       lastValueFrom(
         this.backofficeService.getGroups({
           orderBy: this.orderBy(),
-          page: this.page(),
+          page: this.page() + 1,
           q: this.q(),
           size: this.size(),
           sortBy: this.sortBy(),

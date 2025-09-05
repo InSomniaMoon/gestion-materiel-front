@@ -9,6 +9,7 @@ import {
   SimpleModalComponent,
   SimpleModalData,
 } from '@app/components/simple-modal/simple-modal.component';
+import { PaginatorComponent } from '@app/components/ui/paginator/paginator.component';
 import { AppTable } from '@app/components/ui/table/table.component';
 import { ItemCategory } from '@core/types/item.type';
 import { AuthService } from '@services/auth.service';
@@ -17,7 +18,7 @@ import { injectQuery } from '@tanstack/angular-query-experimental';
 import { buildDialogOptions } from '@utils/constants';
 import { Button } from 'primeng/button';
 import { DialogService } from 'primeng/dynamicdialog';
-import { Paginator, PaginatorState } from 'primeng/paginator';
+import { PaginatorState } from 'primeng/paginator';
 import { Select } from 'primeng/select';
 import { TableModule } from 'primeng/table';
 import { lastValueFrom } from 'rxjs';
@@ -25,7 +26,14 @@ import { CreateUpdateCategoryComponent } from '../create-update-category/create-
 
 @Component({
   selector: 'app-categories-list',
-  imports: [Select, Button, AppTable, TableModule, Paginator, FormsModule],
+  imports: [
+    Select,
+    Button,
+    AppTable,
+    TableModule,
+    FormsModule,
+    PaginatorComponent,
+  ],
   templateUrl: './categories-list.component.html',
   styleUrl: './categories-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -35,11 +43,6 @@ export class CategoriesListComponent {
   private readonly dialogRef = inject(DialogService);
   private selectedGroup = inject(AuthService).selectedGroup;
 
-  options = [
-    { label: '10', value: 10 },
-    { label: '25', value: 25 },
-    { label: '50', value: 50 },
-  ];
   page = signal(0);
   size = signal(25);
   searchQuery = signal('');
@@ -57,7 +60,7 @@ export class CategoriesListComponent {
     queryFn: () =>
       lastValueFrom(
         this.categoriesService.getCategories({
-          page: this.page(),
+          page: this.page() + 1,
           size: this.size(),
           q: this.searchQuery(),
           order_by: this.orderBy(),
@@ -69,7 +72,7 @@ export class CategoriesListComponent {
   }));
 
   onPageChange(event: PaginatorState) {
-    this.page.set(event.page! + 1);
+    this.page.set(event.page!);
     this.size.set(event.rows!);
   }
 

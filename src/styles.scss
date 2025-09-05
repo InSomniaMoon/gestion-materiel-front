@@ -120,3 +120,9 @@ td:not(.p-datepicker-day-cell) {
 .text-danger {
   color: var(--p-red-500);
 }
+
+.no-show-mobile {
+  @media screen and (max-width: 768px) {
+    display: none;
+  }
+}
