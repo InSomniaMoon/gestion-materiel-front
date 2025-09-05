@@ -28,7 +28,7 @@ import {
         </ng-content>
       </div>
     } @else {
-      <ng-content select=".paginator" />
+      <ng-content select="app-paginator" />
     }
   `,
   styleUrl: './table.component.scss',

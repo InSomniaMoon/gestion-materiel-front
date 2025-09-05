@@ -2,10 +2,10 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding: 0 2rem;
+  padding: 0;
 
-  @media (max-width: 768px) {
-    margin: 0;
+  @media (min-width: 768px) {
+    padding: 0 2rem;
   }
 }
 
@@ -18,10 +18,15 @@
 .header {
   display: flex;
   justify-content: space-between;
+  overflow-x: auto;
 
   gap: 1rem;
-  padding: 1rem 2rem;
+  padding: 0.5rem 1rem;
   border-bottom: 1px solid hwb(120 55% 44%);
+
+  @media (min-width: 768px) {
+    padding: 1rem 2rem;
+  }
 
   > .flex {
     gap: 1rem;

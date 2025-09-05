@@ -11,16 +11,21 @@ import {
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { SearchBarComponent } from '@app/components/search-bar/search-bar.component';
+import { PaginatorComponent } from '@app/components/ui/paginator/paginator.component';
 import { AppTable } from '@app/components/ui/table/table.component';
 import { Event } from '@app/core/types/event.type';
 import { Item } from '@core/types/item.type';
 import { environment } from '@env/environment';
 import { ItemsService } from '@services/items.service';
 import { buildDialogOptions } from '@utils/constants';
-import { Button } from 'primeng/button';
+import {
+  Button,
+  ButtonDirective,
+  ButtonIcon,
+  ButtonLabel,
+} from 'primeng/button';
 import { Checkbox } from 'primeng/checkbox';
 import { DialogService } from 'primeng/dynamicdialog';
-import { Paginator, PaginatorState } from 'primeng/paginator';
 import { Select } from 'primeng/select';
 import { TableModule } from 'primeng/table';
 import { lastValueFrom } from 'rxjs';
@@ -29,15 +34,19 @@ import { ModalViewTakenItemsComponent } from './modal-view-taken-items/modal-vie
 @Component({
   selector: 'app-step2',
   imports: [
-    Button,
+    ButtonDirective,
     ReactiveFormsModule,
     AppTable,
     TableModule,
-    Paginator,
     Select,
     FormsModule,
     Checkbox,
     SearchBarComponent,
+    PaginatorComponent,
+    Button,
+    ButtonDirective,
+    ButtonLabel,
+    ButtonIcon,
   ],
   templateUrl: './step2.component.html',
   styleUrl: './step2.component.scss',
@@ -53,19 +62,13 @@ export class Step2Component {
 
   event = input<Event | null>(null);
 
-  options = [
-    { label: '10', value: 10 },
-    { label: '25', value: 25 },
-    { label: '50', value: 50 },
-  ];
   baseUrl = environment.api_url + '/storage/';
 
-  page = signal(1);
+  page = signal(0);
   size = signal(25);
   searchQuery = signal('');
   orderBy = signal('name');
   sortBy = signal<1 | -1>(1);
-  first = computed(() => this.page() * this.size());
   categoryId = signal<number | undefined>(undefined);
 
   categoriesResource = resource({
@@ -73,7 +76,7 @@ export class Step2Component {
   });
 
   categories = computed(() => [
-    { name: '-- Sélectionner une catégorie --', id: undefined },
+    { name: '-- Catégorie --', id: undefined },
     ...(this.categoriesResource.value() ?? []),
   ]);
 
@@ -83,7 +86,7 @@ export class Step2Component {
         this.itemsService.getAvailableItems(params, this.event()?.id)
       ),
     params: () => ({
-      page: this.page(),
+      page: this.page() + 1,
       size: this.size(),
       q: this.searchQuery(),
       order_by: this.orderBy(),
@@ -100,11 +103,6 @@ export class Step2Component {
       selected: this.formGroup().value?.some(i => i.id === item.id) || false,
     }));
   });
-
-  onPageChange(event: PaginatorState) {
-    this.page.set(event.page!);
-    this.size.set(event.rows!);
-  }
 
   toggleProductSelection(product: Item) {
     const currentValues = this.formGroup().value || [];
