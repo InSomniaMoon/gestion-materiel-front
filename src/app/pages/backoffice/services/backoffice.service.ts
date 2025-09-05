@@ -49,9 +49,11 @@ export class BackofficeService {
     phone: string | null;
     group_id: string;
   }) {
-    return this.http.post(`${this.apiUrl}/users`, createUser, {
-      ...CLEAR_CACHE_CONTEXT_OPTIONS(),
-    });
+    return this.http.post(
+      `${this.apiUrl}/users`,
+      createUser,
+      CLEAR_CACHE_CONTEXT_OPTIONS()
+    );
   }
 
   getUserGroups(userId: string) {
@@ -67,9 +69,7 @@ export class BackofficeService {
     return this.http.put(
       `${this.apiUrl}/users/${userId}/groups`,
       { groups: userGroups },
-      {
-        ...CLEAR_CACHE_CONTEXT_OPTIONS(),
-      }
+      CLEAR_CACHE_CONTEXT_OPTIONS()
     );
   }
 
@@ -110,9 +110,11 @@ export class BackofficeService {
     description: string | null;
     image: string | null;
   }) {
-    return this.http.post(`${this.apiUrl}/groups`, dto, {
-      ...CLEAR_CACHE_CONTEXT_OPTIONS(),
-    });
+    return this.http.post(
+      `${this.apiUrl}/groups`,
+      dto,
+      CLEAR_CACHE_CONTEXT_OPTIONS()
+    );
   }
 
   uploadGroupImage = (file: File) => {
@@ -122,9 +124,7 @@ export class BackofficeService {
     return this.http.post<{ path: string }>(
       `${this.apiUrl}/groups/image`,
       formData,
-      {
-        ...CLEAR_CACHE_CONTEXT_OPTIONS(),
-      }
+      CLEAR_CACHE_CONTEXT_OPTIONS()
     );
   };
 
@@ -132,8 +132,10 @@ export class BackofficeService {
     id: number,
     dto: { name: string; description: string | null; image: string | null }
   ) {
-    return this.http.put(`${this.apiUrl}/groups/${id}`, dto, {
-      ...CLEAR_CACHE_CONTEXT_OPTIONS(),
-    });
+    return this.http.put(
+      `${this.apiUrl}/groups/${id}`,
+      dto,
+      CLEAR_CACHE_CONTEXT_OPTIONS()
+    );
   }
 }

@@ -97,7 +97,6 @@ export class ItemDetailsComponent implements OnInit {
   }
 
   optionsQuery = injectQuery(() => ({
-    // enabled: this.userAdmin(),
     queryKey: ['options', this.itemId()],
     enabled: this.itemId() !== undefined,
     queryFn: () =>
