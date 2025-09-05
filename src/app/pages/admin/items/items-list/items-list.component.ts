@@ -27,7 +27,7 @@ import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 import { Select, SelectModule } from 'primeng/select';
 import { TableModule } from 'primeng/table';
 import { lastValueFrom } from 'rxjs';
-import { CreateItemComponent } from './create-item/create-item.component';
+import { CreateUpdateItemComponent } from './create-update-item/create-update-item.component';
 @Component({
   selector: 'app-items-list',
   imports: [
@@ -198,7 +198,7 @@ export class ItemsListComponent {
   openCreateItem() {
     this.dialogService
       .open(
-        CreateItemComponent,
+        CreateUpdateItemComponent,
         buildDialogOptions({
           header: 'Créer un objet',
           width: '70%',
@@ -215,7 +215,7 @@ export class ItemsListComponent {
   openUpdateItem(item: Item) {
     this.dialogService
       .open(
-        CreateItemComponent,
+        CreateUpdateItemComponent,
         buildDialogOptions({
           data: item,
           header: 'Modifier un objet',

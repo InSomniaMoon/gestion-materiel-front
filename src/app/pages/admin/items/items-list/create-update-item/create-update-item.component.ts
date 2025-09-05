@@ -26,7 +26,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { Select } from 'primeng/select';
 import { Textarea } from 'primeng/textarea';
 @Component({
-  selector: 'app-create-item',
+  selector: 'app-create-update-item',
   imports: [
     CommonModule,
     InputTextModule,
@@ -124,10 +124,10 @@ import { Textarea } from 'primeng/textarea';
       </button>
     </form>
   `,
-  styleUrl: './create-item.component.scss',
+  styleUrl: './create-update-item.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CreateItemComponent implements OnInit {
+export class CreateUpdateItemComponent implements OnInit {
   private readonly itemService = inject(ItemsService);
   private readonly destroyRef = inject(DestroyRef);
   protected readonly dialogRef = inject(DynamicDialogRef);
