@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '@env/environment';
-import { tap } from 'rxjs';
 import {
   AdminDashboardOptionIssue,
   OptionIssue,
@@ -30,34 +29,29 @@ export class OptionIssuesService {
     itemId: number,
     optionId: number
   ) {
-    return this.http
-      .post<OptionIssue>(
-        `${this.api_url}/items/${itemId}/options/${optionId}/issues`,
-        {
-          value: issue,
-          usable,
-        },
-        {
-          ...CLEAR_CACHE_CONTEXT_OPTIONS(),
-        }
+    return this.http.post<OptionIssue>(
+      `${this.api_url}/items/${itemId}/options/${optionId}/issues/${issue}`,
+      {
+        value: issue,
+        usable,
+      },
+      CLEAR_CACHE_CONTEXT_OPTIONS(
+        new Set([`${this.api_url}/admin/items/${itemId}/options/issues`])
       )
-      .pipe(
-        tap(() => {
-          this.cache.clear(
-            `${this.api_url}/admin/items/${itemId}/options/issues`
-          );
-        })
-      );
+    );
   }
 
-  resolve(issue: OptionIssue) {
+  resolve(itemId: number, issue: OptionIssue) {
     return this.http
       .patch<OptionIssue>(
-        `${this.api_url}/admin/options/${issue.item_option_id}/issues/${issue.id}/resolve`,
+        `${this.api_url}/admin/items/${itemId}/options/${issue.item_option_id}/issues/${issue.id}/resolve`,
         {},
-        {
-          ...CLEAR_CACHE_CONTEXT_OPTIONS(),
-        }
+
+        CLEAR_CACHE_CONTEXT_OPTIONS(
+          new Set([
+            `${this.api_url}/admin/items/${itemId}/options/${issue.item_option_id}`,
+          ])
+        )
       )
       .pipe();
   }
