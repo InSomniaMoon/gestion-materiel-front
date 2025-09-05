@@ -15,9 +15,11 @@ export class ItemsService {
   private api_url = environment.api_url;
 
   createItem(item: Item) {
-    return this.http.post<Item>(`${this.api_url}/admin/items`, item, {
-      ...CLEAR_CACHE_CONTEXT_OPTIONS(new Set([`${this.api_url}/items`])),
-    });
+    return this.http.post<Item>(
+      `${this.api_url}/admin/items`,
+      item,
+      CLEAR_CACHE_CONTEXT_OPTIONS(new Set([`${this.api_url}/items`]))
+    );
   }
 
   getItems(
@@ -83,14 +85,17 @@ export class ItemsService {
   }
 
   updateItem(item: Item) {
-    return this.http.put<Item>(`${this.api_url}/admin/items/${item.id}`, item, {
-      ...CLEAR_CACHE_CONTEXT_OPTIONS(new Set([`${this.api_url}/items`])),
-    });
+    return this.http.put<Item>(
+      `${this.api_url}/admin/items/${item.id}`,
+      item,
+      CLEAR_CACHE_CONTEXT_OPTIONS(new Set([`${this.api_url}/items`]))
+    );
   }
   deleteItem(item: Item) {
-    return this.http.delete<Item>(`${this.api_url}/admin/items/${item.id}`, {
-      ...CLEAR_CACHE_CONTEXT_OPTIONS(new Set([`${this.api_url}/items`])),
-    });
+    return this.http.delete<Item>(
+      `${this.api_url}/admin/items/${item.id}`,
+      CLEAR_CACHE_CONTEXT_OPTIONS(new Set([`${this.api_url}/items`]))
+    );
   }
 
   getCategories() {
@@ -105,9 +110,8 @@ export class ItemsService {
     return this.http.post<{ path: string }>(
       `${this.api_url}/admin/items/images`,
       formData,
-      {
-        ...CLEAR_CACHE_CONTEXT_OPTIONS(),
-      }
+
+      CLEAR_CACHE_CONTEXT_OPTIONS()
     );
   };
 }

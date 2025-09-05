@@ -13,17 +13,10 @@ import { OptionIssue } from '@core/types/optionIssue.type';
 import { IssueCommentsService } from '@services/issue-comments.service';
 import { OptionIssuesService } from '@services/option-issues.service';
 import { injectQuery } from '@tanstack/angular-query-experimental';
-import {
-  buildDialogOptions,
-  DIALOG_RESPONSIVE_BREAKPOINTS,
-} from '@utils/constants';
+import { buildDialogOptions } from '@utils/constants';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
-import {
-  DialogService,
-  DynamicDialogConfig,
-  DynamicDialogRef,
-} from 'primeng/dynamicdialog';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { Inplace, InplaceModule } from 'primeng/inplace';
 import { Textarea } from 'primeng/textarea';
 import { lastValueFrom } from 'rxjs';
@@ -85,9 +78,6 @@ export class IssueDetailsComponent implements OnInit {
   ngOnInit(): void {}
 
   onResolve() {
-    const config: DynamicDialogConfig<SimpleModalData> = {
-      breakpoints: DIALOG_RESPONSIVE_BREAKPOINTS,
-    };
     this.dialog
       .open(
         SimpleModalComponent,
@@ -106,7 +96,7 @@ export class IssueDetailsComponent implements OnInit {
           return;
         }
         // resolve issue
-        this.issueService.resolve(this.data.issue).subscribe({
+        this.issueService.resolve(this.data.itemId, this.data.issue).subscribe({
           next: () => {
             this.ref.close(true);
           },
