@@ -48,9 +48,7 @@ export class OptionIssuesService {
         {},
 
         CLEAR_CACHE_CONTEXT_OPTIONS(
-          new Set([
-            `${this.api_url}/admin/items/${itemId}/options/${issue.item_option_id}`,
-          ])
+          new Set([`${this.api_url}/admin/items/${itemId}/options`])
         )
       )
       .pipe();
