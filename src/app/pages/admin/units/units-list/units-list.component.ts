@@ -3,20 +3,20 @@ import {
   Component,
   inject,
   resource,
+  signal,
 } from '@angular/core';
 import { AppTable } from '@app/components/ui/table/table.component';
 import { UnitsService } from '@services/units.service';
 import { buildDialogOptions } from '@utils/constants';
-import { Button } from 'primeng/button';
+import { Button, ButtonDirective } from 'primeng/button';
 import { DialogService } from 'primeng/dynamicdialog';
-import { Select } from 'primeng/select';
 import { TableModule } from 'primeng/table';
 import { lastValueFrom } from 'rxjs';
 import { CreateUnitComponent } from './create-unit/create-unit.component';
 
 @Component({
   selector: 'app-units-list',
-  imports: [AppTable, Select, Button, TableModule],
+  imports: [AppTable, Button, TableModule, ButtonDirective],
   templateUrl: './units-list.component.html',
   styleUrl: './units-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -100,5 +100,11 @@ export class UnitsListComponent {
             },
           });
       });
+  }
+
+  showChiefsList = signal(false);
+
+  toggleShowChiefsList() {
+    this.showChiefsList.set(!this.showChiefsList());
   }
 }
