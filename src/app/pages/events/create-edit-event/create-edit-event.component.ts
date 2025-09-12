@@ -66,8 +66,8 @@ export class CreateEditEventComponent implements OnInit {
     ),
     materials: this.fb.nonNullable.control<Item[]>([], {
       validators: [
-        Validators.required,
-        form => (form.value.length === 0 ? { empty: true } : null),
+        // Validators.required,
+        // form => (form.value.length === 0 ? { empty: true } : null),
       ],
     }),
     comment: [''],
