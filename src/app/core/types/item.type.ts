@@ -21,6 +21,8 @@ export type Item = {
   image?: string;
 };
 
+export type ItemWithQuantity = Item & { quantity: number };
+
 export type ItemCategory = {
   id: number;
   name: string;

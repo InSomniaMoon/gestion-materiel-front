@@ -14,7 +14,7 @@ import { SearchBarComponent } from '@app/components/search-bar/search-bar.compon
 import { PaginatorComponent } from '@app/components/ui/paginator/paginator.component';
 import { AppTable } from '@app/components/ui/table/table.component';
 import { Event } from '@app/core/types/event.type';
-import { Item } from '@core/types/item.type';
+import { Item, ItemWithQuantity } from '@core/types/item.type';
 import { environment } from '@env/environment';
 import { ItemsService } from '@services/items.service';
 import { buildDialogOptions } from '@utils/constants';
@@ -104,15 +104,17 @@ export class Step2Component {
     }));
   });
 
-  toggleProductSelection(product: Item) {
+  toggleProductSelection(product: ItemWithQuantity) {
     const currentValues = this.formGroup().value || [];
 
-    if (!currentValues.some(item => item.id === product.id)) {
-      this.formGroup().setValue([...currentValues, product]);
-    } else {
+    if (currentValues.some(item => item.id === product.id)) {
       this.formGroup().setValue(
         currentValues.filter((item: Item) => item.id !== product.id)
       );
+    } else {
+      // open the dialog to select quantity and state
+      product = { ...product, quantity: 1 };
+      this.formGroup().setValue([...currentValues, product]);
     }
   }
 
