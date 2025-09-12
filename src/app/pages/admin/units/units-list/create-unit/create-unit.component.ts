@@ -57,6 +57,18 @@ export class CreateUnitComponent implements OnInit {
   ngOnInit(): void {
     const data = this.dialog$.getInstance(this.ref).data;
 
+    // syncro input et colorpicker
+    this.form.get('color')!.valueChanges.subscribe({
+      next: value => {
+        this.form.get('color')!.setValue(value, {
+          onlySelf: true,
+          emitEvent: false,
+          emitModelToViewChange: true,
+        });
+      },
+      error: error => {},
+    });
+
     if (data) {
       this.validateLabel.set('Modifier');
       this.form.patchValue({
