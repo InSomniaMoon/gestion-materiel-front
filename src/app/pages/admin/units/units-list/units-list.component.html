@@ -17,10 +17,13 @@
         <th>Couleur</th>
         <th>Contact matériel</th>
         <th>
-          Chefs
-          <p-button
-            (click)="toggleShowChiefsList()"
-            [icon]="'pi' + (showChiefsList() ? ' pi-eye-slash' : 'pi-eye')" />
+          <div class="chiefs-th">
+            Chefs
+            <p-button
+              (click)="toggleShowChiefsList()"
+              [icon]="`pi ${showChiefsList() ? 'pi-eye-slash' : 'pi-eye'}`"
+              [tp]="`${showChiefsList() ? 'Masquer' : 'Afficher'} les chefs`" />
+          </div>
         </th>
         <th></th>
       </tr>
