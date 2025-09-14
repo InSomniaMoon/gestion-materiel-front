@@ -130,7 +130,8 @@ import { CreateUpdateItemComponent } from './create-update-item/create-update-it
       <app-paginator
         [(page)]="page"
         [(size)]="size"
-        [totalRecords]="items.value()?.total ?? 0" />
+        [totalRecords]="items.value()?.total ?? 0"
+        [options]="options" />
     </matos-table>
   `,
   styleUrl: './items-list.component.scss',
@@ -148,9 +149,9 @@ export class ItemsListComponent {
     });
   }
   options = [
-    { label: '10', value: 10 },
-    { label: '25', value: 25 },
-    { label: '50', value: 50 },
+    { label: '100', value: 100 },
+    { label: '200', value: 200 },
+    { label: '250', value: 250 },
   ];
   baseUrl = environment.api_url + '/storage/';
 

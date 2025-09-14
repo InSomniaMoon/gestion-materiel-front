@@ -8,6 +8,9 @@
       <p-colorpicker id="color" formControlName="color" />
       <label for="color">Couleur</label>
     </div>
+    <div class="row">
+      <input id="color" pInputText formControlName="color" />
+    </div>
   </div>
 
   <p-float-label variant="on">
@@ -20,9 +23,17 @@
       display="chip"
       formControlName="chiefs"
       optionLabel="name" />
-
     <label for="users">Chef•taine•s de l'unité</label>
   </p-float-label>
+  @if (chiefsControl.length === 0) {
+    <small>Aucun chef ou cheftaine sélectionné. Pensez à en ajouter.</small>
+  }
+
+  <ul>
+    @for (chef of chiefsControl; track $index) {
+      <li>{{ chef.name }} ({{ chef.code }})</li>
+    }
+  </ul>
 
   @if (chiefsControl.length > 0) {
     <p-float-label variant="on">
@@ -32,7 +43,7 @@
         optionLabel="name"
         [options]="chiefsControl" />
 
-      <label for="responsible">Responsable matériel</label>
+      <label for="responsible">Contact matériel</label>
     </p-float-label>
   }
 </form>

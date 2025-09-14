@@ -138,8 +138,7 @@ export class AuthService {
     var c_value =
       value +
       '; SameSite=Strict; path=/' +
-      (exdays == null ? '' : '; expires=' + exdate.toUTCString()); //
-    console.log('adding cookie', c_name + '=' + c_value);
+      (exdays == null ? '' : '; expires=' + exdate.toUTCString());
 
     document.cookie = c_name + '=' + c_value;
   }

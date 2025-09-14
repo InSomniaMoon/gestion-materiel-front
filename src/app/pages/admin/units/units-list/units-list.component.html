@@ -1,8 +1,8 @@
 <div class="header">
   <div class="flex">
     <h1>Unités du groupe</h1>
-    <p-select dropdownIcon="pi pi-filter" [checkmark]="true" />
   </div>
+
   <p-button
     icon="pi pi-plus"
     label="Ajouter"
@@ -15,7 +15,16 @@
       <tr>
         <th>Nom</th>
         <th>Couleur</th>
-        <th>Responsable matériel</th>
+        <th>Contact matériel</th>
+        <th>
+          <div class="chiefs-th">
+            Chefs
+            <p-button
+              (click)="toggleShowChiefsList()"
+              [icon]="`pi ${showChiefsList() ? 'pi-eye-slash' : 'pi-eye'}`"
+              [tp]="`${showChiefsList() ? 'Masquer' : 'Afficher'} les chefs`" />
+          </div>
+        </th>
         <th></th>
       </tr>
     </ng-template>
@@ -29,6 +38,17 @@
             "></div>
         </td>
         <td>{{ unit.responsible?.name }}</td>
+        <td>
+          @if (showChiefsList()) {
+            <ul>
+              @for (chef of unit.chiefs; track $index) {
+                <li>{{ chef.name }}</li>
+              }
+            </ul>
+          } @else {
+            {{ unit.chiefs.length }}
+          }
+        </td>
         <td class="actions">
           <p-button
             icon="pi pi-pencil"

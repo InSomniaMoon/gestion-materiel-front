@@ -29,3 +29,13 @@
   padding-left: 2rem;
   gap: 1rem;
 }
+
+li {
+  white-space: nowrap;
+}
+.chiefs-th {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}

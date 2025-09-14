@@ -27,18 +27,18 @@
         }
       </div>
     }
-  } @else {
-    <div class="header">
-      <h1>Mes prochains événements</h1>
-      <a
-        pButton
-        [routerLink]="['/events/create']"
-        icon="pi pi-plus"
-        label="Créer un événement"></a>
-    </div>
-    <full-calendar
-      #calendar
-      [options]="calendarOptions()"
-      style="max-height: 80vh" />
   }
+
+  <div class="header">
+    <h1>Mes prochains événements</h1>
+    <a
+      pButton
+      [routerLink]="['/events/create']"
+      icon="pi pi-plus"
+      label="Créer un événement"></a>
+  </div>
+  <full-calendar
+    #calendar
+    [options]="calendarOptions()"
+    style="max-height: 80vh" />
 }
