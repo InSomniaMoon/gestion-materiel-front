@@ -35,6 +35,7 @@
     <p-step-panel [value]="4">
       <ng-template #content let-activateCallback="activateCallback">
         <app-step4
+          [isUpdate]="!!event()?.id"
           [event]="form.getRawValue()"
           (previousStep)="activateCallback(3)"
           (nextStep)="submitForm()" />

@@ -35,8 +35,8 @@
     iconPos="left"
     (onClick)="previousStep.emit()" />
   <p-button
-    label="Créer l'événement"
-    icon="pi pi-plus"
+    [label]="`${isUpdate() ? 'Modifier' : 'Créer'} l'événement`"
+    [icon]="`pi ${isUpdate() ? 'pi-pencil' : 'pi-plus'}`"
     iconPos="right"
     (onClick)="nextStep.emit()" />
 </div>

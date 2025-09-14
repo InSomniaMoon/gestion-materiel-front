@@ -21,6 +21,7 @@ export class Step4Component {
   previousStep = output();
 
   event = input.required<any>();
+  isUpdate = input.required<boolean>();
 
   groupedItems = computed(() => {
     const grouped: { [key: string]: Item[] } = {};
