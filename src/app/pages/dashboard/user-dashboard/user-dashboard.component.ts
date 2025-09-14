@@ -68,7 +68,7 @@ export class UserDashboardComponent {
                     end: event.end_date,
                     title: event.name,
                     allDay: false,
-                    color: this.authService.selectedUnit()?.color,
+                    color: event.unit?.color,
                     id: `${event.id}`,
                   }) as EventInput
               )
