@@ -14,7 +14,6 @@ import {
 import { Router } from '@angular/router';
 import { ActualEvent } from '@app/core/types/event.type';
 import { Item } from '@app/core/types/item.type';
-import { Unit } from '@core/types/unit.type';
 import { EventsService } from '@services/events.service';
 import { StepperModule } from 'primeng/stepper';
 import { Step1Component } from './step1/step1.component';
@@ -43,7 +42,7 @@ export class CreateEditEventComponent implements OnInit {
     informations: this.fb.nonNullable.group(
       {
         name: ['', [Validators.required]],
-        unit: this.fb.nonNullable.control<Unit | null>(null, [
+        unit: this.fb.nonNullable.control<number | null>(null, [
           Validators.required,
         ]),
         start_date: this.fb.nonNullable.control<Date | null>(null, [
@@ -92,7 +91,7 @@ export class CreateEditEventComponent implements OnInit {
     this.form.setValue({
       informations: {
         name: this.event()!.name,
-        unit: this.event()!.unit,
+        unit: this.event()!.unit.id,
         start_date: new Date(this.event()!.start_date),
         end_date: new Date(this.event()!.end_date),
       },
@@ -106,7 +105,7 @@ export class CreateEditEventComponent implements OnInit {
 
     const data = {
       name: value.informations.name,
-      unit_id: value.informations.unit!.id,
+      unit_id: value.informations.unit!,
       start_date: new Date(value.informations.start_date!),
       end_date: new Date(value.informations.end_date!),
       materials: value.materials.map((item: any) => ({
