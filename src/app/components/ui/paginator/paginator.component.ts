@@ -45,6 +45,8 @@ export class PaginatorComponent {
   first = computed(() => this.page() * this.size());
 
   onPageChangeEvent(size: any) {
+    console.log('change page');
+
     this.size.set(size);
     this.page.set(0);
   }

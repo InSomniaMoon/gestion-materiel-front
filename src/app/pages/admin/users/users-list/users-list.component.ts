@@ -42,18 +42,18 @@ export class UsersListComponent {
     effect(() => {
       this.orderBy();
       this.sortBy();
-      this.page.set(1);
+      this.page.set(0);
     });
   }
   options = [
-    { label: '10', value: 10 },
-    { label: '25', value: 25 },
     { label: '50', value: 50 },
+    { label: '100', value: 100 },
+    { label: '200', value: 200 },
   ];
   baseUrl = environment.api_url + '/storage/';
 
   page = signal(0);
-  size = signal(25);
+  size = signal(100);
   searchQuery = signal('');
   orderBy = signal('name');
   sortBy = signal<1 | -1>(1);
