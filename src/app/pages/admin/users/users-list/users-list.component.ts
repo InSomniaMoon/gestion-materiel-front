@@ -14,7 +14,6 @@ import { AppTable } from '@app/components/ui/table/table.component';
 import { environment } from '@env/environment';
 import { UsersService } from '@services/users.service';
 import { buildDialogOptions } from '@utils/constants';
-import { MessageService } from 'primeng/api';
 import { Button } from 'primeng/button';
 import { DialogService } from 'primeng/dynamicdialog';
 import { TableModule } from 'primeng/table';
@@ -38,34 +37,38 @@ import { AddUserModalComponent } from './add-user-modal/add-user-modal.component
 export class UsersListComponent {
   private readonly usersService = inject(UsersService);
   private readonly dialogService = inject(DialogService);
-  private readonly messageService = inject(MessageService);
 
   constructor() {
     effect(() => {
       this.orderBy();
       this.sortBy();
-      this.page.set(1);
+      this.page.set(0);
     });
   }
   options = [
-    { label: '10', value: 10 },
-    { label: '25', value: 25 },
     { label: '50', value: 50 },
+    { label: '100', value: 100 },
+    { label: '200', value: 200 },
   ];
   baseUrl = environment.api_url + '/storage/';
 
   page = signal(0);
-  size = signal(25);
+  size = signal(100);
   searchQuery = signal('');
-  orderBy = signal('name');
+  orderBy = signal<'name' | 'email' | 'role'>('name');
   sortBy = signal<1 | -1>(1);
   first = computed(() => this.page() * this.size());
 
   usersResource = resource({
     loader: ({ params }) =>
-      lastValueFrom(this.usersService.getPaginatedUsers(params)),
+      lastValueFrom(
+        this.usersService.getPaginatedUsers({
+          ...params,
+          page: params.page + 1,
+        })
+      ),
     params: () => ({
-      page: this.page() + 1,
+      page: this.page(),
       size: this.size(),
       q: this.searchQuery(),
       order_by: this.orderBy(),

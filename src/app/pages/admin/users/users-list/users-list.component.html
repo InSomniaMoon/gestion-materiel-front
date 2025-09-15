@@ -6,12 +6,16 @@
     </div>
     <p-button icon="pi pi-plus" label="Ajouter" (onClick)="openAddUser()" />
   </div>
-  <p-table [value]="users()">
+  <p-table
+    [value]="users()"
+    [sortField]="orderBy()"
+    [sortOrder]="sortBy()"
+    (onSort)="orderBy.set($event.field); sortBy.set($event.order)">
     <ng-template #header>
       <tr>
-        <th>Nom</th>
-        <th>Email</th>
-        <th>Rôle</th>
+        <th pSortableColumn="name">Nom<p-sortIcon field="name" /></th>
+        <th pSortableColumn="email">Email<p-sortIcon field="email" /></th>
+        <th pSortableColumn="role">Rôle<p-sortIcon field="role" /></th>
         <th></th>
       </tr>
     </ng-template>
@@ -20,7 +24,13 @@
       <tr>
         <td>{{ user.name }}</td>
         <td>{{ user.email }}</td>
-        <td>{{ user.role == 'user' ? 'Chef' : 'Responsable matériel' }}</td>
+        <td>
+          {{
+            user.user_groups[0]?.pivot.role == 'admin'
+              ? 'Administrateur'
+              : 'Utilisateur'
+          }}
+        </td>
         <td>
           <!-- Actions can be added here -->
         </td>
@@ -30,5 +40,6 @@
   <app-paginator
     [(page)]="page"
     [(size)]="size"
-    [totalRecords]="usersResource.value()?.total ?? 0" />
+    [totalRecords]="usersResource.value()?.total ?? 0"
+    [options]="options" />
 </matos-table>

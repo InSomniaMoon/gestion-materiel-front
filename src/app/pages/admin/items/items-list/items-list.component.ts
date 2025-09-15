@@ -75,7 +75,6 @@ import { CreateUpdateItemComponent } from './create-update-item/create-update-it
               Avaries
               <p-sortIcon field="open_option_issues_count" />
             </th>
-            <th>Date d'achat</th>
             <th></th>
           </tr>
         </ng-template>
@@ -102,10 +101,9 @@ import { CreateUpdateItemComponent } from './create-update-item/create-update-it
             </td>
             <td>{{ product.name }}</td>
             <td style="text-wrap: nowrap;">{{ product.category.name }}</td>
-            <td style="text-wrap: nowrap;">
+            <td style="text-wrap: nowrap;text-align: center;">
               {{ product.open_option_issues_count }}
             </td>
-            <td style="text-wrap: nowrap;">{{ product.date_of_buy | date }}</td>
             <td class="actions">
               <a
                 pButton
