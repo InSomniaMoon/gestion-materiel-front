@@ -14,10 +14,12 @@
 <h2>Matériel emprunté</h2>
 <div class="material">
   @for (item of event().event_subscriptions; track item.id) {
-    <p-card [header]="item.name">
+    <p-card
+      [header]="
+        `${item.name} ${item?.category?.identified ? '' : `(x${item.quantity})`}`
+      ">
       <div>
         {{ item.category?.name }}
-
         <!-- {{ item | json }} -->
       </div>
     </p-card>
