@@ -14,7 +14,6 @@ import { AppTable } from '@app/components/ui/table/table.component';
 import { environment } from '@env/environment';
 import { UsersService } from '@services/users.service';
 import { buildDialogOptions } from '@utils/constants';
-import { MessageService } from 'primeng/api';
 import { Button } from 'primeng/button';
 import { DialogService } from 'primeng/dynamicdialog';
 import { TableModule } from 'primeng/table';
@@ -38,7 +37,6 @@ import { AddUserModalComponent } from './add-user-modal/add-user-modal.component
 export class UsersListComponent {
   private readonly usersService = inject(UsersService);
   private readonly dialogService = inject(DialogService);
-  private readonly messageService = inject(MessageService);
 
   constructor() {
     effect(() => {
@@ -63,9 +61,14 @@ export class UsersListComponent {
 
   usersResource = resource({
     loader: ({ params }) =>
-      lastValueFrom(this.usersService.getPaginatedUsers(params)),
+      lastValueFrom(
+        this.usersService.getPaginatedUsers({
+          ...params,
+          page: params.page + 1,
+        })
+      ),
     params: () => ({
-      page: this.page() + 1,
+      page: this.page(),
       size: this.size(),
       q: this.searchQuery(),
       order_by: this.orderBy(),

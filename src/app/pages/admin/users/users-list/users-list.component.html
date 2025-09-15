@@ -20,7 +20,13 @@
       <tr>
         <td>{{ user.name }}</td>
         <td>{{ user.email }}</td>
-        <td>{{ user.role == 'user' ? 'Chef' : 'Responsable matériel' }}</td>
+        <td>
+          {{
+            user.user_groups[0]?.role == 'user'
+              ? 'Utilisateur'
+              : 'Administrateur'
+          }}
+        </td>
         <td>
           <!-- Actions can be added here -->
         </td>
@@ -30,5 +36,6 @@
   <app-paginator
     [(page)]="page"
     [(size)]="size"
-    [totalRecords]="usersResource.value()?.total ?? 0" />
+    [totalRecords]="usersResource.value()?.total ?? 0"
+    [options]="options" />
 </matos-table>
