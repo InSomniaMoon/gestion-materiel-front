@@ -75,7 +75,6 @@ import { CreateItemComponent } from './create-item/create-item.component';
               Avaries
               <p-sortIcon field="open_option_issues_count" />
             </th>
-            <th>Date d'achat</th>
             <th></th>
           </tr>
         </ng-template>
@@ -105,7 +104,6 @@ import { CreateItemComponent } from './create-item/create-item.component';
             <td style="text-wrap: nowrap;">
               {{ product.open_option_issues_count }}
             </td>
-            <td style="text-wrap: nowrap;">{{ product.date_of_buy | date }}</td>
             <td class="actions">
               <a
                 pButton
