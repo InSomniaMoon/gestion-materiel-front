@@ -16,6 +16,7 @@ import { AuthService } from '@services/auth.service';
 import { CategoriesService } from '@services/categories.service';
 import { injectQuery } from '@tanstack/angular-query-experimental';
 import { buildDialogOptions } from '@utils/constants';
+import { MessageService } from 'primeng/api';
 import { Button } from 'primeng/button';
 import { DialogService } from 'primeng/dynamicdialog';
 import { PaginatorState } from 'primeng/paginator';
@@ -41,6 +42,7 @@ import { CreateUpdateCategoryComponent } from '../create-update-category/create-
 export class CategoriesListComponent {
   private readonly categoriesService = inject(CategoriesService);
   private readonly dialogRef = inject(DialogService);
+  private readonly messageService = inject(MessageService);
   private selectedGroup = inject(AuthService).selectedGroup;
 
   page = signal(0);
@@ -134,6 +136,13 @@ export class CategoriesListComponent {
             this.categoriesQuery.refetch();
           },
           error: error => {
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Erreur',
+              detail:
+                error?.error?.message ||
+                'Une erreur est survenue lors de la suppression de la catégorie.',
+            });
             console.error('Error deleting category:', error);
           },
         });
