@@ -73,8 +73,13 @@ export class Step2Component implements OnInit {
 
   baseUrl = environment.api_url + '/storage/';
 
+  options = [
+    { label: '100', value: 100 },
+    { label: '200', value: 200 },
+    { label: '250', value: 250 },
+  ];
   page = signal(0);
-  size = signal(25);
+  size = signal(100);
   searchQuery = signal('');
   orderBy = signal('name');
   sortBy = signal<1 | -1>(1);

@@ -13,7 +13,7 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ActualEvent } from '@app/core/types/event.type';
-import { Item } from '@app/core/types/item.type';
+import { ItemWithQuantity } from '@app/core/types/item.type';
 import { EventsService } from '@services/events.service';
 import { StepperModule } from 'primeng/stepper';
 import { Step1Component } from './step1/step1.component';
@@ -22,7 +22,7 @@ import { Step3Component } from './step3/step3.component';
 import { Step4Component } from './step4/step4.component';
 
 export type ItemSelection = {
-  item: Item;
+  item: ItemWithQuantity;
   quantity: number;
 };
 

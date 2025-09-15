@@ -1,4 +1,3 @@
-import { DatePipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -39,7 +38,6 @@ import { CreateUpdateItemComponent } from './create-update-item/create-update-it
     SelectModule,
     Button,
     SearchBarComponent,
-    DatePipe,
     Badge,
     RouterLink,
     ButtonDirective,

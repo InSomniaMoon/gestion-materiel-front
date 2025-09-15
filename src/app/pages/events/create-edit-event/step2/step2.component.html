@@ -56,7 +56,8 @@
   <app-paginator
     [(page)]="page"
     [(size)]="size"
-    [totalRecords]="itemsResource.value()?.total ?? 0" />
+    [totalRecords]="itemsResource.value()?.total ?? 0"
+    [options]="options" />
 </matos-table>
 <div class="footer">
   <p-button

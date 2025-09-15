@@ -4,11 +4,11 @@
       pInputText
       id="quantity"
       type="number"
-      max="{{ item().stock }}"
+      max="{{ item().rest }}"
       min="1"
       [(ngModel)]="quantity" />
     <label for="quantity">
-      Sélectionner la quantité (max: {{ item().stock }})
+      Sélectionner la quantité (max: {{ item().rest }})
     </label>
   </p-float-label>
 </div>
