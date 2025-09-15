@@ -18,9 +18,14 @@
     @for (group of groupedItems(); track group.category) {
       <h3>{{ group.category }}</h3>
       <ul>
-        @for (item of group.items; track item.id) {
+        @for (item of group.items; track item.item.id) {
           <li>
-            <span>{{ item.name }}</span>
+            <span
+              >{{ item.item.name }}
+              @if (!item.item.category?.identified) {
+                (x{{ item.quantity }})
+              }
+            </span>
           </li>
         }
       </ul>

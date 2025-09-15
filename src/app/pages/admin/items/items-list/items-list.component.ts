@@ -1,4 +1,3 @@
-import { DatePipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -28,7 +27,7 @@ import { PaginatorModule } from 'primeng/paginator';
 import { SelectModule } from 'primeng/select';
 import { TableModule } from 'primeng/table';
 import { lastValueFrom } from 'rxjs';
-import { CreateItemComponent } from './create-item/create-item.component';
+import { CreateUpdateItemComponent } from './create-update-item/create-update-item.component';
 @Component({
   selector: 'app-items-list',
   imports: [
@@ -39,7 +38,6 @@ import { CreateItemComponent } from './create-item/create-item.component';
     SelectModule,
     Button,
     SearchBarComponent,
-    DatePipe,
     Badge,
     RouterLink,
     ButtonDirective,
@@ -178,7 +176,7 @@ export class ItemsListComponent {
   openCreateItem() {
     this.dialogService
       .open(
-        CreateItemComponent,
+        CreateUpdateItemComponent,
         buildDialogOptions({
           header: 'Créer un objet',
           width: '70%',
@@ -195,7 +193,7 @@ export class ItemsListComponent {
   openUpdateItem(item: Item) {
     this.dialogService
       .open(
-        CreateItemComponent,
+        CreateUpdateItemComponent,
         buildDialogOptions({
           data: item,
           header: 'Modifier un objet',

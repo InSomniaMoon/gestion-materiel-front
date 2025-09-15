@@ -13,14 +13,18 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ActualEvent } from '@app/core/types/event.type';
-import { Item } from '@app/core/types/item.type';
-import { Unit } from '@core/types/unit.type';
+import { ItemWithQuantity } from '@app/core/types/item.type';
 import { EventsService } from '@services/events.service';
 import { StepperModule } from 'primeng/stepper';
 import { Step1Component } from './step1/step1.component';
 import { Step2Component } from './step2/step2.component';
 import { Step3Component } from './step3/step3.component';
 import { Step4Component } from './step4/step4.component';
+
+export type ItemSelection = {
+  item: ItemWithQuantity;
+  quantity: number;
+};
 
 @Component({
   selector: 'app-create-update-event',
@@ -43,7 +47,7 @@ export class CreateEditEventComponent implements OnInit {
     informations: this.fb.nonNullable.group(
       {
         name: ['', [Validators.required]],
-        unit: this.fb.nonNullable.control<Unit | null>(null, [
+        unit: this.fb.nonNullable.control<number | null>(null, [
           Validators.required,
         ]),
         start_date: this.fb.nonNullable.control<Date | null>(null, [
@@ -64,7 +68,7 @@ export class CreateEditEventComponent implements OnInit {
         ],
       }
     ),
-    materials: this.fb.nonNullable.control<Item[]>([], {
+    materials: this.fb.nonNullable.control<ItemSelection[]>([], {
       validators: [
         // Validators.required,
         // form => (form.value.length === 0 ? { empty: true } : null),
@@ -92,11 +96,14 @@ export class CreateEditEventComponent implements OnInit {
     this.form.setValue({
       informations: {
         name: this.event()!.name,
-        unit: this.event()!.unit,
+        unit: this.event()!.unit.id,
         start_date: new Date(this.event()!.start_date),
         end_date: new Date(this.event()!.end_date),
       },
-      materials: this.event()!.event_subscriptions,
+      materials: this.event()!.event_subscriptions.map(item => ({
+        item: item,
+        quantity: item.quantity,
+      })),
       comment: this.event()!.comment ?? '',
     });
   }
@@ -106,11 +113,11 @@ export class CreateEditEventComponent implements OnInit {
 
     const data = {
       name: value.informations.name,
-      unit_id: value.informations.unit!.id,
+      unit_id: value.informations.unit!,
       start_date: new Date(value.informations.start_date!),
       end_date: new Date(value.informations.end_date!),
       materials: value.materials.map((item: any) => ({
-        id: item.id,
+        id: item.item.id,
         quantity: item.quantity,
       })),
       comment: value.comment,

@@ -1,0 +1,19 @@
+<div class="modal-content">
+  <p-float-label variant="on">
+    <input
+      pInputText
+      id="quantity"
+      type="number"
+      max="{{ item().rest }}"
+      min="1"
+      [(ngModel)]="quantity" />
+    <label for="quantity">
+      Sélectionner la quantité (max: {{ item().rest }})
+    </label>
+  </p-float-label>
+</div>
+
+<p-footer>
+  <p-button label="Annuler" severity="secondary" (onClick)="closeCancel()" />
+  <p-button label="Confirmer" (onClick)="closeConfirm()" />
+</p-footer>

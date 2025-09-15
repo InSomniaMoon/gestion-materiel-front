@@ -4,26 +4,25 @@
       <input pInputText formControlName="name" id="event" [fluid]="true" />
       <label for="event">Nom de l'emprunt</label>
     </p-float-label>
-    <div class="flex flex-1">
+    <div class="flex flex-1" style="width: 100%">
       <span
         [style]="
-          `display:block; width: 40px; height: 28px; background-color: ${formGroup().get('unit')!.value?.color}; border-radius: 4px;`
+          `display:block; width: 40px; height: 28px; background-color: ${selectedUnit()?.color}; border-radius: 4px;`
         "></span>
       @if (units().length > 1) {
-        <p-float-label variant="on">
+        <p-float-label variant="on" style="width: 100%">
           <p-select
             formControlName="unit"
             id="unit_id"
             [options]="units()"
             optionLabel="name"
-            [optionValue]="undefined"
-            [fluid]="true"
-            [showClear]="true"></p-select>
+            optionValue="id"
+            fluid />
           <label for="unit_id">Unité empruntante</label>
         </p-float-label>
       } @else {
         @let unit = units()[0];
-        <p>Unité empruntante : {{ unit.name }}</p>
+        <p>Unité empruntante : {{ unit?.name }}</p>
       }
     </div>
   </div>

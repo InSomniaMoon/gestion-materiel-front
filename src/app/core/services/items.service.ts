@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Item, ItemCategory } from '@core/types/item.type';
+import { Item, ItemCategory, ItemWithQuantity } from '@core/types/item.type';
 import { PaginatedData } from '@core/types/paginatedData.type';
 import { environment } from '@env/environment';
 import { PaginationRequest } from '../types/pagination-request.type';
@@ -48,7 +48,7 @@ export class ItemsService {
   ) {
     let url = `${this.api_url}/items/available`;
 
-    return this.http.get<PaginatedData<Item>>(url, {
+    return this.http.get<PaginatedData<ItemWithQuantity>>(url, {
       params: queryParams({
         ...opt,
         start_date: opt.start_date.toISOString(),

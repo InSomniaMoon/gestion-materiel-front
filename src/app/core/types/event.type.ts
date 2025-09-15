@@ -1,4 +1,4 @@
-import { Item } from './item.type';
+import { Item, ItemWithQuantity } from './item.type';
 import { Unit } from './unit.type';
 
 export type Event = {
@@ -15,5 +15,5 @@ export type Event = {
 };
 
 export type ActualEvent = Event & {
-  event_subscriptions: Item[];
+  event_subscriptions: ItemWithQuantity[];
 };

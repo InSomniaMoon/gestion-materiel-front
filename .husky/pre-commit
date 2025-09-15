@@ -1,3 +1,18 @@
-# .husky/pre-commit
-npx prettier $(git diff --cached --name-only --diff-filter=ACMR | sed 's| |\\ |g') --write --ignore-unknown
+#!/bin/sh
+set -e
+
+# Ensure Node/npx are available in non-interactive shells (e.g., IDE Git env)
+if [ -s "$HOME/.nvm/nvm.sh" ]; then . "$HOME/.nvm/nvm.sh"; fi
+if [ -s "/opt/homebrew/opt/nvm/nvm.sh" ]; then . "/opt/homebrew/opt/nvm/nvm.sh"; fi
+
+# If nothing staged, exit quickly
+if git diff --cached --quiet --diff-filter=ACMR; then
+  exit 0
+fi
+
+# Prettify only known text files; Prettier will skip unknown with --ignore-unknown
+git diff --cached --name-only -z --diff-filter=ACMR \
+  | xargs -0 npx --yes prettier --write --ignore-unknown --loglevel warn
+
 git update-index --again
+exit 0

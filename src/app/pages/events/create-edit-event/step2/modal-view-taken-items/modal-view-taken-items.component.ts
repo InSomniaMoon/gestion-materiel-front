@@ -5,10 +5,10 @@ import {
   inject,
   input,
 } from '@angular/core';
-import { Item } from '@core/types/item.type';
 import { Button } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
+import { ItemSelection } from '../../create-edit-event.component';
 
 @Component({
   selector: 'app-modal-view-taken-items',
@@ -17,9 +17,14 @@ import { DynamicDialogRef } from 'primeng/dynamicdialog';
       @for (group of groupedItems(); track group.category) {
         <h3>{{ group.category }}</h3>
         <ul>
-          @for (item of group.items; track item.id) {
+          @for (item of group.items; track item.item) {
             <li>
-              <span>{{ item.name }}</span>
+              <span
+                >{{ item.item.name }}
+                @if (!item.item.category?.identified) {
+                  (x{{ item.quantity }})
+                }
+              </span>
             </li>
           }
         </ul>
@@ -35,16 +40,16 @@ import { DynamicDialogRef } from 'primeng/dynamicdialog';
 export class ModalViewTakenItemsComponent {
   private ref = inject(DynamicDialogRef);
 
-  items = input.required<Item[]>();
+  items = input.required<ItemSelection[]>();
 
   groupedItems = computed(() => {
-    const grouped: { [key: string]: Item[] } = {};
+    const grouped: { [key: string]: ItemSelection[] } = {};
     this.items().forEach(item => {
-      const categoryName = item.category?.name || 'Sans catégorie';
+      const categoryName = item.item.category?.name || 'Sans catégorie';
       if (!grouped[categoryName]) {
         grouped[categoryName] = [];
       }
-      grouped[categoryName].push(item);
+      grouped[categoryName].push({ item: item.item, quantity: item.quantity });
     });
     return Object.entries(grouped).map(([category, items]) => ({
       category,

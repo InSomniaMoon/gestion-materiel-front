@@ -2,12 +2,13 @@ import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   DestroyRef,
   inject,
   OnInit,
   signal,
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { toSignal } from '@angular/core/rxjs-interop';
 import {
   FormArray,
   FormBuilder,
@@ -15,7 +16,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { UploadFileComponent } from '@app/components/upload-file/upload-file.component';
-import { Item, ItemCategory } from '@core/types/item.type';
+import { Item } from '@core/types/item.type';
 import { ItemsService } from '@services/items.service';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { ButtonModule } from 'primeng/button';
@@ -25,8 +26,9 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { Select } from 'primeng/select';
 import { Textarea } from 'primeng/textarea';
+import { tap } from 'rxjs';
 @Component({
-  selector: 'app-create-item',
+  selector: 'app-create-update-item',
   imports: [
     CommonModule,
     InputTextModule,
@@ -51,18 +53,29 @@ import { Textarea } from 'primeng/textarea';
             id="category"
             placeholder="Catégorie"
             [options]="categories()"
-            [filter]="true"
             optionLabel="name"
             optionValue="id"
             filterBy="name"
-            [scrollHeight]="'200px'"
-            formControlName="category_id" />
+            scrollHeight="200px"
+            formControlName="category_id"
+            filter />
           <label for="category">Catégorie</label>
         </p-float-label>
-        <p-float-label variant="on">
-          <p-date-picker id="date_of_buy" formControlName="date_of_buy" />
-          <label for="date_of_buy">Date d'achat (optionnel)</label>
-        </p-float-label>
+        @if (selectedCategory()?.identified) {
+          <p-float-label variant="on">
+            <p-date-picker id="date_of_buy" formControlName="date_of_buy" />
+            <label for="date_of_buy">Date d'achat (optionnel)</label>
+          </p-float-label>
+        } @else {
+          <p-float-label variant="on">
+            <input
+              type="number"
+              pInputText
+              id="stock"
+              formControlName="stock" />
+            <label for="stock">Stock</label>
+          </p-float-label>
+        }
       </div>
       <div class="flex">
         <p-float-label variant="on" [class]="'w-full'" style="width: 100%;">
@@ -124,10 +137,10 @@ import { Textarea } from 'primeng/textarea';
       </button>
     </form>
   `,
-  styleUrl: './create-item.component.scss',
+  styleUrl: './create-update-item.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CreateItemComponent implements OnInit {
+export class CreateUpdateItemComponent implements OnInit {
   private readonly itemService = inject(ItemsService);
   private readonly destroyRef = inject(DestroyRef);
   protected readonly dialogRef = inject(DynamicDialogRef);
@@ -146,7 +159,21 @@ export class CreateItemComponent implements OnInit {
   }
 
   categoryQuery = signal('');
-  categories = signal<ItemCategory[]>([]);
+  categories = toSignal(
+    this.itemService.getCategories().pipe(
+      tap(c => {
+        if (!this.data) {
+          this.form.patchValue({
+            category_id: c[0]?.id,
+          });
+        }
+      })
+    ),
+    {
+      initialValue: [],
+    }
+  );
+
   fb = inject(FormBuilder);
 
   form = this.fb.group({
@@ -165,26 +192,27 @@ export class CreateItemComponent implements OnInit {
     date_of_buy: this.fb.nonNullable.control<Date | undefined>(undefined, {
       validators: [],
     }),
+    stock: this.fb.nonNullable.control(1, {
+      validators: [Validators.min(1)],
+    }),
   });
 
+  categoryIdValue = toSignal(this.form.get('category_id')!.valueChanges, {
+    initialValue: this.form.value.category_id,
+  });
+  selectedCategory = computed(() =>
+    this.categories().find(cat => cat.id === this.categoryIdValue())
+  );
   get options() {
     return this.form.controls['options'];
   }
 
   ngOnInit(): void {
-    this.itemService
-      .getCategories()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(categories => {
-        this.categories.set(categories);
-        this.form.patchValue({
-          category_id: categories[0]?.id,
-        });
-      });
-
     if (!this.data) {
       return;
     }
+    console.log(this.data);
+
     this.form.patchValue({
       name: this.data.name,
       description: this.data.description,
@@ -192,6 +220,7 @@ export class CreateItemComponent implements OnInit {
       date_of_buy: this.data.date_of_buy
         ? new Date(this.data.date_of_buy)
         : undefined,
+      stock: this.data.stock ?? 1,
     });
     this.options.clear();
     this.data.options?.forEach(option =>

@@ -12,16 +12,20 @@ export type Item = {
   id: number;
   name: string;
   description?: string;
-  image?: string;
-  category?: ItemCategory;
   category_id: number;
   usable: boolean;
+  stock?: number;
   date_of_buy?: Date;
+  category?: ItemCategory;
   options?: ItemOption[];
+  image?: string;
 };
+
+export type ItemWithQuantity = Item & { quantity: number; rest: number };
 
 export type ItemCategory = {
   id: number;
   name: string;
   group_id: number;
+  identified: boolean;
 };
