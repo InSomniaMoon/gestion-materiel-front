@@ -77,7 +77,7 @@ export class AuthService {
 
   logout() {
     // Remove the token from the local storage
-    document.cookie = `${REFRESH_TOKEN_KEY}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; Secure; HttpOnly; SameSite=Strict;`;
+    this.removeCookie(REFRESH_TOKEN_KEY);
     this._isAuth.set(false);
     this.cache.clearAll();
     return true;
@@ -158,6 +158,6 @@ export class AuthService {
   }
 
   removeCookie(c_name: string) {
-    document.cookie = `${c_name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; Secure; HttpOnly; SameSite=Strict;`;
+    document.cookie = `${c_name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; Secure; SameSite=Strict;`;
   }
 }
