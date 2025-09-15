@@ -101,7 +101,7 @@ import { CreateItemComponent } from './create-item/create-item.component';
             </td>
             <td>{{ product.name }}</td>
             <td style="text-wrap: nowrap;">{{ product.category.name }}</td>
-            <td style="text-wrap: nowrap;">
+            <td style="text-wrap: nowrap;text-align: center;">
               {{ product.open_option_issues_count }}
             </td>
             <td class="actions">
