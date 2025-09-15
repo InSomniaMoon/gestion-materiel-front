@@ -66,7 +66,7 @@ export class HeaderComponent implements OnInit {
           : undefined,
     },
     {
-      label: this.selectedUnit()?.name ?? "Pas d'unité ",
+      label: this.selectedUnit()?.name ?? "Pas d'unité",
       color: this.selectedUnit()?.color,
       icon: 'pi pi-building',
       command: undefined,
@@ -81,7 +81,7 @@ export class HeaderComponent implements OnInit {
       icon: 'pi pi-sign-out',
       routerLink: '/auth/login',
       command: () =>
-        this.auth$.logout() && this.router.navigate(['/auth/login']),
+        this.auth$.logout() && this.router.navigateByUrl('/auth/login'),
     },
   ]);
 

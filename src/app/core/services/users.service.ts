@@ -45,4 +45,12 @@ export class UsersService {
       CLEAR_CACHE_CONTEXT_OPTIONS(new Set(['/backoffice/users']))
     );
   }
+
+  sendPasswordReset(email: string) {
+    return this.http.post(
+      `${this.api_url}/users/send-reset-password`,
+      { email },
+      NO_CACHE_CONTEXT_OPTIONS
+    );
+  }
 }
