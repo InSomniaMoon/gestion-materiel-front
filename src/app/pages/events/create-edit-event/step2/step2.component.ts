@@ -3,18 +3,23 @@ import {
   Component,
   computed,
   inject,
+  Injector,
   input,
+  OnInit,
   output,
   resource,
+  runInInjectionContext,
+  Signal,
   signal,
 } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
+import { toSignal } from '@angular/core/rxjs-interop';
 import { SearchBarComponent } from '@app/components/search-bar/search-bar.component';
 import { PaginatorComponent } from '@app/components/ui/paginator/paginator.component';
 import { AppTable } from '@app/components/ui/table/table.component';
 import { Event } from '@app/core/types/event.type';
-import { Item, ItemWithQuantity } from '@core/types/item.type';
+import { ItemWithQuantity } from '@core/types/item.type';
 import { environment } from '@env/environment';
 import { ItemsService } from '@services/items.service';
 import { buildDialogOptions } from '@utils/constants';
@@ -29,7 +34,9 @@ import { DialogService } from 'primeng/dynamicdialog';
 import { Select } from 'primeng/select';
 import { TableModule } from 'primeng/table';
 import { lastValueFrom } from 'rxjs';
+import { ItemSelection } from '../create-edit-event.component';
 import { ModalViewTakenItemsComponent } from './modal-view-taken-items/modal-view-taken-items.component';
+import { SelectQuantityItemsComponent } from './select-quantity-items/select-quantity-items.component';
 
 @Component({
   selector: 'app-step2',
@@ -52,13 +59,15 @@ import { ModalViewTakenItemsComponent } from './modal-view-taken-items/modal-vie
   styleUrl: './step2.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Step2Component {
-  private itemsService = inject(ItemsService);
+export class Step2Component implements OnInit {
+  private readonly itemsService = inject(ItemsService);
+  private readonly injectionContext = inject(Injector);
   nextStep = output();
   previousStep = output();
   startDate = input.required<Date>();
   endDate = input.required<Date>();
-  formGroup = input.required<FormControl<Item[]>>();
+
+  formGroup = input.required<FormControl<ItemSelection[]>>();
 
   event = input<Event | null>(null);
 
@@ -70,6 +79,8 @@ export class Step2Component {
   orderBy = signal('name');
   sortBy = signal<1 | -1>(1);
   categoryId = signal<number | undefined>(undefined);
+  selectedItems!: Signal<ItemSelection[]>;
+  selectedItemsCount = computed(() => this.selectedItems().length);
 
   categoriesResource = resource({
     loader: () => lastValueFrom(this.itemsService.getCategories()),
@@ -80,6 +91,15 @@ export class Step2Component {
     ...(this.categoriesResource.value() ?? []),
   ]);
 
+  ngOnInit() {
+    runInInjectionContext(this.injectionContext, () => {
+      this.selectedItems = toSignal(
+        this.formGroup().valueChanges,
+        // .pipe(map(items => items?.length || 0))
+        { initialValue: this.formGroup().value || [] }
+      );
+    });
+  }
   itemsResource = resource({
     loader: ({ params }) =>
       lastValueFrom(
@@ -98,23 +118,44 @@ export class Step2Component {
   });
 
   items = computed(() => {
+    console.log(this.selectedItems());
+
     return (this.itemsResource.value()?.data ?? []).map(item => ({
       ...item,
-      selected: this.formGroup().value?.some(i => i.id === item.id) || false,
+      selected: this.selectedItems().some(i => i.item.id === item.id) || false,
     }));
   });
 
-  toggleProductSelection(product: ItemWithQuantity) {
-    const currentValues = this.formGroup().value || [];
+  selectUnselectItem(item: ItemWithQuantity) {
+    if (item.category?.identified) {
+      this.toggleProductSelection(item);
+      return;
+    }
 
-    if (currentValues.some(item => item.id === product.id)) {
+    if (this.selectedItems().some(i => item.id === i.item.id)) {
       this.formGroup().setValue(
-        currentValues.filter((item: Item) => item.id !== product.id)
+        this.selectedItems().filter((i: ItemSelection) => i.item.id !== item.id)
+      );
+      return;
+    }
+    this.openSelectQuantityDialog(item);
+  }
+
+  private toggleProductSelection(product: ItemWithQuantity, quantity?: number) {
+    if (this.selectedItems().some(item => item.item.id === product.id)) {
+      this.formGroup().setValue(
+        this.selectedItems().filter(
+          (item: ItemSelection) => item.item.id !== product.id
+        )
       );
     } else {
       // open the dialog to select quantity and state
-      product = { ...product, quantity: 1 };
-      this.formGroup().setValue([...currentValues, product]);
+      this.formGroup().setValue([
+        ...this.selectedItems(),
+        { item: product, quantity: quantity ?? 1 },
+      ]);
+      // mark for check to update the table selection state
+      this.formGroup().markAsDirty();
     }
   }
 
@@ -136,5 +177,24 @@ export class Step2Component {
 
   onCategoryChange() {
     this.page.set(1); // Reset to the first page when category changes
+  }
+
+  openSelectQuantityDialog(item: ItemWithQuantity) {
+    this.dialogService
+      .open(
+        SelectQuantityItemsComponent,
+        buildDialogOptions({
+          header: 'Sélectionner la quantité',
+          width: '50%',
+          inputValues: {
+            item,
+          },
+        })
+      )
+      .onClose.subscribe((result: number | null) => {
+        if (result !== null && result > 0) {
+          this.toggleProductSelection(item, result);
+        }
+      });
   }
 }

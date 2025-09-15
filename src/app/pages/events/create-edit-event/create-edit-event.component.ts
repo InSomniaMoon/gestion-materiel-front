@@ -21,6 +21,11 @@ import { Step2Component } from './step2/step2.component';
 import { Step3Component } from './step3/step3.component';
 import { Step4Component } from './step4/step4.component';
 
+export type ItemSelection = {
+  item: Item;
+  quantity: number;
+};
+
 @Component({
   selector: 'app-create-update-event',
   imports: [
@@ -63,7 +68,7 @@ export class CreateEditEventComponent implements OnInit {
         ],
       }
     ),
-    materials: this.fb.nonNullable.control<Item[]>([], {
+    materials: this.fb.nonNullable.control<ItemSelection[]>([], {
       validators: [
         // Validators.required,
         // form => (form.value.length === 0 ? { empty: true } : null),
@@ -95,7 +100,10 @@ export class CreateEditEventComponent implements OnInit {
         start_date: new Date(this.event()!.start_date),
         end_date: new Date(this.event()!.end_date),
       },
-      materials: this.event()!.event_subscriptions,
+      materials: this.event()!.event_subscriptions.map(item => ({
+        item: item,
+        quantity: item.quantity,
+      })),
       comment: this.event()!.comment ?? '',
     });
   }
@@ -109,7 +117,7 @@ export class CreateEditEventComponent implements OnInit {
       start_date: new Date(value.informations.start_date!),
       end_date: new Date(value.informations.end_date!),
       materials: value.materials.map((item: any) => ({
-        id: item.id,
+        id: item.item.id,
         quantity: item.quantity,
       })),
       comment: value.comment,

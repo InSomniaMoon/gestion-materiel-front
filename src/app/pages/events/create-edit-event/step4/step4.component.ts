@@ -6,8 +6,8 @@ import {
   input,
   output,
 } from '@angular/core';
-import { Item } from '@core/types/item.type';
 import { Button } from 'primeng/button';
+import { ItemSelection } from '../create-edit-event.component';
 
 @Component({
   selector: 'app-step4',
@@ -24,13 +24,13 @@ export class Step4Component {
   isUpdate = input.required<boolean>();
 
   groupedItems = computed(() => {
-    const grouped: { [key: string]: Item[] } = {};
-    this.event().materials.forEach((item: Item) => {
-      const categoryName = item.category?.name || 'Sans catégorie';
+    const grouped: { [key: string]: ItemSelection[] } = {};
+    this.event().materials.forEach((item: ItemSelection) => {
+      const categoryName = item.item.category?.name || 'Sans catégorie';
       if (!grouped[categoryName]) {
         grouped[categoryName] = [];
       }
-      grouped[categoryName].push(item);
+      grouped[categoryName].push({ item: item.item, quantity: item.quantity });
     });
     return Object.entries(grouped).map(([category, items]) => ({
       category,

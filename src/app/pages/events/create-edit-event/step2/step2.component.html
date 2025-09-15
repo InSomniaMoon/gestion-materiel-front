@@ -16,12 +16,12 @@
       <app-search-bar (queryChange)="searchQuery.set($event)" />
     </div>
 
-    @if (formGroup().value.length > 0) {
+    @if (selectedItemsCount() > 0) {
       <button pButton (click)="viewTakenItems()">
         <i class="pi pi-eye" pButtonIcon></i>
         <span class="no-show-mobile" pButtonLabel
-          >{{ formGroup().value.length }} objet{{
-            formGroup().value.length > 1 ? 's' : ''
+          >{{ selectedItemsCount() }} objet{{
+            selectedItemsCount() > 1 ? 's' : ''
           }}</span
         >
       </button>
@@ -41,7 +41,12 @@
           <p-check-box
             [binary]="true"
             [ngModel]="product.selected"
-            (ngModelChange)="toggleProductSelection(product)" />
+            (onChange)="
+              $event.originalEvent?.stopPropagation();
+              $event.originalEvent?.preventDefault();
+              selectUnselectItem(product)
+            " />
+          <!-- (ngModelChange)="selectUnselectItem(product)" -->
         </td>
         <td>{{ product.name }}</td>
         <td style="text-wrap: nowrap">{{ product.category.name }}</td>
