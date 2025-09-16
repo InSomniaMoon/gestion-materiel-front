@@ -77,10 +77,13 @@ export class CreateUnitComponent implements OnInit {
         chiefs:
           (data.chiefs as User[]).map(c => ({
             code: c.id,
-            name: c.name,
+            name: `${c.firstname} ${c.lastname}`,
           })) || [],
         responsible: data.responsible
-          ? { name: data.responsible.name, code: data.responsible.id }
+          ? {
+              name: `${data.responsible.firstname} ${data.responsible.lastname}`,
+              code: data.responsible.id,
+            }
           : null,
       });
     }
@@ -119,7 +122,7 @@ export class CreateUnitComponent implements OnInit {
           .pipe(
             map(data =>
               data.data.map(user => ({
-                name: user.name,
+                name: `${user.firstname} ${user.lastname}`,
                 code: user.id,
               }))
             )

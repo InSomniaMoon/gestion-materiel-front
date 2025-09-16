@@ -158,7 +158,7 @@ export class AppAdminUsersListComponent {
       .open(
         AppAdminUserEditGroupsComponent,
         buildDialogOptions({
-          header: `Editer les groupes de ${user.name}`,
+          header: `Editer les groupes de ${user.firstname} ${user.lastname}`,
           width: '50%',
           height: '80%',
           data: { userId: user.id },
