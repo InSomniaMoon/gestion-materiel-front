@@ -12,6 +12,7 @@ import { SearchBarComponent } from '@app/components/search-bar/search-bar.compon
 import { PaginatorComponent } from '@app/components/ui/paginator/paginator.component';
 import { AppTable } from '@app/components/ui/table/table.component';
 import { environment } from '@env/environment';
+import { TippyDirective } from '@ngneat/helipopper';
 import { UsersService } from '@services/users.service';
 import { buildDialogOptions } from '@utils/constants';
 import { Button } from 'primeng/button';
@@ -29,6 +30,7 @@ import { AddUserModalComponent } from './add-user-modal/add-user-modal.component
     Button,
     FormsModule,
     PaginatorComponent,
+    TippyDirective,
   ],
   templateUrl: './users-list.component.html',
   styleUrl: './users-list.component.scss',

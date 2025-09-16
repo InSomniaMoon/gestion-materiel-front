@@ -17,6 +17,7 @@
         <th pSortableColumn="firstname">
           Prénom <p-sortIcon field="firstname" />
         </th>
+        <th>Structures</th>
         <th pSortableColumn="email">Email <p-sortIcon field="email" /></th>
         <th pSortableColumn="role">Rôle <p-sortIcon field="role" /></th>
         <th></th>
@@ -27,10 +28,21 @@
       <tr>
         <td>{{ user.lastname }}</td>
         <td>{{ user.firstname }}</td>
+        <td>
+          <div class="flex">
+            @for (unit of user.user_structures; track $index) {
+              <div
+                [tp]="unit.structure.name"
+                [style]="
+                  `width: 40px; height: 28px; background-color: ${unit.color}; border-radius: 4px;`
+                "></div>
+            }
+          </div>
+        </td>
         <td>{{ user.email }}</td>
         <td>
           {{
-            user.user_groups[0]?.pivot.role == 'admin'
+            user.user_structures[0]?.pivot.role == 'admin'
               ? 'Administrateur'
               : 'Utilisateur'
           }}
