@@ -55,7 +55,7 @@ export class UsersListComponent {
   page = signal(0);
   size = signal(100);
   searchQuery = signal('');
-  orderBy = signal<'name' | 'email' | 'role'>('name');
+  orderBy = signal<'lastname' | 'firstname' | 'email' | 'role'>('lastname');
   sortBy = signal<1 | -1>(1);
   first = computed(() => this.page() * this.size());
 

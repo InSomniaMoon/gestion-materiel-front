@@ -41,12 +41,10 @@ export class HeaderComponent implements OnInit {
 
   protected readonly apiUrl = environment.api_url + '/storage/';
 
-  lettres = computed(
-    () =>
-      this.user()
-        ?.name.split(' ')
-        .map(n => n[0])
-        .join('') ?? ''
+  lettres = computed(() =>
+    this.user()
+      ? `${this.user()?.firstname[0].toUpperCase()}${this.user()?.lastname[0].toUpperCase()}`
+      : ''
   );
 
   authItems = computed<MenuItemWithImage[]>(() => [

@@ -13,16 +13,20 @@
     (onSort)="orderBy.set($event.field); sortBy.set($event.order)">
     <ng-template #header>
       <tr>
-        <th pSortableColumn="name">Nom<p-sortIcon field="name" /></th>
-        <th pSortableColumn="email">Email<p-sortIcon field="email" /></th>
-        <th pSortableColumn="role">Rôle<p-sortIcon field="role" /></th>
+        <th pSortableColumn="lastname">Nom <p-sortIcon field="lastname" /></th>
+        <th pSortableColumn="firstname">
+          Prénom <p-sortIcon field="firstname" />
+        </th>
+        <th pSortableColumn="email">Email <p-sortIcon field="email" /></th>
+        <th pSortableColumn="role">Rôle <p-sortIcon field="role" /></th>
         <th></th>
       </tr>
     </ng-template>
 
     <ng-template #body let-user>
       <tr>
-        <td>{{ user.name }}</td>
+        <td>{{ user.lastname }}</td>
+        <td>{{ user.firstname }}</td>
         <td>{{ user.email }}</td>
         <td>
           {{

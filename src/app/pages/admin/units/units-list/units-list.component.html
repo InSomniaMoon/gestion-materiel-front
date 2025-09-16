@@ -37,12 +37,14 @@
               `width: 40px; height: 28px; background-color: ${unit.color}; border-radius: 4px;`
             "></div>
         </td>
-        <td>{{ unit.responsible?.name }}</td>
+        <td>
+          {{ unit.responsible?.firstname }} {{ unit.responsible?.lastname }}
+        </td>
         <td>
           @if (showChiefsList()) {
             <ul>
               @for (chef of unit.chiefs; track $index) {
-                <li>{{ chef.name }}</li>
+                <li>{{ chef.firstname }} {{ chef.lastname }}</li>
               }
             </ul>
           } @else {
