@@ -1,10 +1,10 @@
-import { Group } from './group.type';
+import { Structure } from './structure.type';
 import { User } from './user.type';
 
 export type UserGroup = {
   user_id: number;
-  group_id: number;
+  structure_id: number;
   role: 'string';
   user?: User;
-  group?: Group;
+  structure?: Structure;
 };

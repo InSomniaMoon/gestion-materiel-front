@@ -43,7 +43,7 @@ export class CreateUpdateCategoryComponent {
 
   form = this.fb.nonNullable.group({
     name: [this.data.category?.name, [Validators.required]],
-    group_id: [this.data.groupId, Validators.required],
+    structure_id: [this.data.structureId, Validators.required],
     identified: [this.data.category?.identified ?? true, Validators.required],
   });
 

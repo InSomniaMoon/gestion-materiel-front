@@ -34,9 +34,8 @@ export class HeaderComponent implements OnInit {
   private readonly dialogService = inject(DialogService);
 
   readonly user = this.auth$.user;
-  readonly groups = this.auth$.groups;
-  readonly selectedGroup = this.auth$.selectedGroup;
-  readonly selectedUnit = this.auth$.selectedUnit;
+  readonly groups = this.auth$.structures;
+  readonly selectedGroup = this.auth$.selectedStructure;
   private readonly router = inject(Router);
 
   protected readonly apiUrl = environment.api_url + '/storage/';
@@ -62,12 +61,6 @@ export class HeaderComponent implements OnInit {
               command: () => this.auth$.setSelectGroupById(group.id),
             }))
           : undefined,
-    },
-    {
-      label: this.selectedUnit()?.name ?? "Pas d'unité",
-      color: this.selectedUnit()?.color,
-      icon: 'pi pi-building',
-      command: undefined,
     },
     // {
     //   label: 'Mon compte',
@@ -126,7 +119,7 @@ export class HeaderComponent implements OnInit {
       )
       .onClose.subscribe(data => {
         if (data) {
-          this.auth$.setSelectGroupById(data.group_id);
+          this.auth$.setSelectGroupById(data.structure_id);
         }
       });
   }

@@ -26,6 +26,6 @@ export type ItemWithQuantity = Item & { quantity: number; rest: number };
 export type ItemCategory = {
   id: number;
   name: string;
-  group_id: number;
+  structure_id: number;
   identified: boolean;
 };

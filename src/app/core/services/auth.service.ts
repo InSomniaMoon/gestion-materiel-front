@@ -1,17 +1,10 @@
 import { HttpClient } from '@angular/common/http';
-import {
-  computed,
-  inject,
-  Injectable,
-  linkedSignal,
-  signal,
-} from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { LoginDTO } from '@core/types/loginDTO.type';
 import { User } from '@core/types/user.type';
 import { environment } from '@env/environment';
 import { catchError, map, of, tap } from 'rxjs';
-import { GroupWithPivot } from '../types/group.type';
-import { Unit } from '../types/unit.type';
+import { StructureWithPivot } from '../types/structure.type';
 import { REFRESH_TOKEN_KEY } from '../utils/constants';
 import { CacheService } from './cache.service';
 
@@ -25,31 +18,12 @@ export class AuthService {
   private _isAuth = signal(false);
   jwt = signal<string | null>(null);
   user = signal<User | null>(null);
-  groups = computed(() => this._userGroups());
+  structures = computed(() => this._userStructures());
 
-  private _userGroups = signal<GroupWithPivot[]>([]);
-  private _selectedGroup = signal<GroupWithPivot | null>(null);
+  private _userStructures = signal<StructureWithPivot[]>([]);
+  private _selectedStructure = signal<StructureWithPivot | null>(null);
 
-  private _userUnits = signal<Unit[]>([]);
-  private _groupUnits = computed(() => {
-    if (!this.selectedGroup()) {
-      return [];
-    }
-    return this._userUnits().filter(
-      unit => unit.group_id == this.selectedGroup()?.id
-    );
-  });
-  private _selectedUnit = linkedSignal<Unit | null>(
-    () => this._groupUnits()[0] || null
-  );
-  selectedUnit = this._selectedUnit.asReadonly();
-  setSelectedUnit(unit: Unit | null) {
-    this._selectedUnit.set(unit);
-  }
-
-  userUnits = this._groupUnits;
-
-  selectedGroup = this._selectedGroup.asReadonly();
+  selectedStructure = this._selectedStructure.asReadonly();
   isAuth = this._isAuth.asReadonly();
   isAppAdmin = computed(
     () => JSON.parse(atob(this.jwt()?.split('.')[1] || '{}')).role == 'admin'
@@ -59,7 +33,7 @@ export class AuthService {
     if (!this.user()) {
       return false;
     }
-    return this.selectedGroup()?.pivot.role == ('admin' as string);
+    return this.selectedStructure()?.pivot.role == ('admin' as string);
   });
 
   private api_url = environment.api_url;
@@ -116,17 +90,15 @@ export class AuthService {
   }
 
   setSelectGroupById(id: number) {
-    this._selectedGroup.set(this._userGroups().find(g => g.id == id)!);
+    this._selectedStructure.set(this._userStructures().find(g => g.id == id)!);
   }
 
   private processLoginDTO(DTO: LoginDTO) {
     this.user.set(DTO.user);
-    this._userGroups.set(DTO.groups);
+    this._userStructures.set(DTO.structures);
     this._isAuth.set(true);
-    this._selectedGroup.set(DTO.groups[0]);
+    this._selectedStructure.set(DTO.structures[0]);
     this.jwt.set(DTO.token);
-
-    this._userUnits.set(DTO.units);
 
     this.removeCookie(REFRESH_TOKEN_KEY);
     this.setCookie(REFRESH_TOKEN_KEY, DTO.refresh_token, 14);

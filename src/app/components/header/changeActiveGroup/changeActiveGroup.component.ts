@@ -16,7 +16,7 @@ import { Select } from 'primeng/select';
   imports: [DialogModule, Button, Select, ReactiveFormsModule],
   template: `
     <form class="modal-content" [formGroup]="form">
-      <p-select [options]="opt()" formControlName="group_id" />
+      <p-select [options]="opt()" formControlName="structure_id" />
     </form>
     <p-footer>
       <p-button label="Fermer" severity="secondary" (onClick)="ref.close()" />
@@ -32,14 +32,14 @@ export class ChangeActiveGroupComponent {
   authService = inject(AuthService);
   fb = inject(FormBuilder);
 
-  selectedGroup = this.authService.selectedGroup;
+  selectedGroup = this.authService.selectedStructure;
 
   form = this.fb.group({
-    group_id: [this.selectedGroup()?.id],
+    structure_id: [this.selectedGroup()?.id],
   });
 
   opt = computed(() =>
-    this.authService.groups().map(g => ({ label: g.name, value: g.id }))
+    this.authService.structures().map(g => ({ label: g.name, value: g.id }))
   );
 
   onResolve() {

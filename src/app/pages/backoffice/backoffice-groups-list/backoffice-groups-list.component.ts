@@ -6,7 +6,7 @@ import {
   signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { GroupWithPivot } from '@core/types/group.type';
+import { StructureWithPivot } from '@app/core/types/structure.type';
 import { environment } from '@env/environment';
 import { injectQuery } from '@tanstack/angular-query-experimental';
 import { buildDialogOptions } from '@utils/constants';
@@ -142,7 +142,7 @@ export class AppAdminGroupsListComponent {
       });
   }
 
-  openUpdateGroupDialog(group: GroupWithPivot) {
+  openUpdateGroupDialog(group: StructureWithPivot) {
     this.dialogService
       .open(
         CreateUpdateGroupComponent,

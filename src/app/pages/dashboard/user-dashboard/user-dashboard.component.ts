@@ -58,7 +58,7 @@ export class UserDashboardComponent {
     loader: () =>
       lastValueFrom(
         this.eventsService
-          .getEventsForUnit(this.authService.selectedUnit()!.id)
+          .getEventsForStructure(this.authService.selectedStructure()!.id)
           .pipe(
             map(events =>
               events.map(
@@ -68,7 +68,7 @@ export class UserDashboardComponent {
                     end: event.end_date,
                     title: event.name,
                     allDay: false,
-                    color: event.unit?.color,
+                    color: event.structure?.color,
                     id: `${event.id}`,
                   }) as EventInput
               )

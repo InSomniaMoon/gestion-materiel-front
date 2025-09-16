@@ -7,20 +7,18 @@ import {
   input,
   OnInit,
   output,
-  resource,
   runInInjectionContext,
   Signal,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { UnitsService } from '@app/core/services/units.service';
+import { Structure } from '@app/core/types/structure.type';
 import { AuthService } from '@services/auth.service';
 import { Button } from 'primeng/button';
 import { DatePicker } from 'primeng/datepicker';
 import { FloatLabel } from 'primeng/floatlabel';
 import { InputText } from 'primeng/inputtext';
 import { Select } from 'primeng/select';
-import { lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-step1',
@@ -39,25 +37,25 @@ import { lastValueFrom } from 'rxjs';
 })
 export class Step1Component implements OnInit {
   private readonly authService = inject(AuthService);
-  private readonly unitsService = inject(UnitsService);
 
-  private groupUnits = resource({
-    loader: () => lastValueFrom(this.unitsService.getUnits()),
-    defaultValue: [],
-  });
+  // private readonly StructureChildren = resource({
+  //   loader: () => lastValueFrom(this.unitsService.getUnits()),
+  //   defaultValue: [],
+  // });
 
-  units = computed(() =>
-    this.authService.isAdmin()
-      ? this.groupUnits.value()
-      : this.authService.userUnits()
+  // TODO replace by structures
+  structures = computed<Structure[]>(() =>
+    this.authService.isAdmin() ? this.authService.structures() : []
   );
 
   nextStep = output();
   protected readonly dateFormat = 'dd/mm/yy';
   formGroup = input.required<FormGroup>();
-  selectedUnitId!: Signal<number | null>;
-  selectedUnit = computed(() =>
-    this.units().find(unit => unit.id === this.selectedUnitId())
+  selectedStructureId!: Signal<number | null>;
+  selectedStructure = computed(() =>
+    this.structures().find(
+      structure => structure.id === this.selectedStructureId()
+    )
   );
 
   doubleDates = computed(() => {
@@ -79,9 +77,9 @@ export class Step1Component implements OnInit {
 
   ngOnInit() {
     runInInjectionContext(this.injectionContext, () => {
-      this.selectedUnitId = toSignal(
-        this.formGroup().get('unit')!.valueChanges,
-        { initialValue: this.formGroup().get('unit')!.value }
+      this.selectedStructureId = toSignal(
+        this.formGroup().get('structure')!.valueChanges,
+        { initialValue: this.formGroup().get('structure')!.value }
       );
     });
     this.formGroup()
@@ -113,7 +111,7 @@ export class Step1Component implements OnInit {
     }
     if (!this.formGroup().get('start_date')?.value) {
       this.formGroup().patchValue({
-        unit: this.units()[0] ?? null,
+        structure: this.structures()[0] ?? null,
       });
     }
   }

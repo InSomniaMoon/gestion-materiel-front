@@ -8,8 +8,8 @@ import {
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Group } from '@core/types/group.type';
-import { UserGroup } from '@core/types/userGroup.type';
+import { Structure } from '@app/core/types/structure.type';
+import { UserGroup } from '@app/core/types/userStructure.type';
 import { Button } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
@@ -21,19 +21,19 @@ import { BackofficeService } from '../../services/backoffice.service';
   imports: [DialogModule, Button, ReactiveFormsModule, Select, FormsModule],
   template: `
     <div>
-      @for (group of userGroups(); track group.id) {
+      @for (structure of userStructures(); track structure.id) {
         <div class="group">
-          <span>{{ group.name }}</span>
+          <span>{{ structure.name }}</span>
           <p-select
             [options]="rolesOptions"
-            [(ngModel)]="group.pivot.role"
+            [(ngModel)]="structure.pivot.role"
             optionLabel="label"
             optionValue="value" />
           <p-button
             icon="pi pi-times"
             severity="danger"
             iconPos="right"
-            (onClick)="removeGroup(group)" />
+            (onClick)="removeGroup(structure)" />
         </div>
       }
       @if (toggleSelectNewGroup()) {
@@ -76,26 +76,26 @@ export class AppAdminUserEditGroupsComponent {
   toggleSelectNewGroup = signal(true);
 
   private _userGroups = this.backofficeService.getUserGroups(this.data.userId);
-  userGroups = linkedSignal(() => this._userGroups.value());
+  userStructures = linkedSignal(() => this._userGroups.value());
 
   private _groups = toSignal(this.backofficeService.getGroups(), {
     initialValue: [],
   });
 
   groupsWithoutUserGroups = linkedSignal(() => {
-    const userGroupIds = this.userGroups().map(g => g.id);
+    const userGroupIds = this.userStructures().map(g => g.id);
     return this._groups().filter(group => !userGroupIds.includes(group.id));
   });
-  groups = computed<Group[]>(() => this._groups());
+  groups = computed<Structure[]>(() => this._groups());
 
-  removeGroup(group: Group) {
-    this.userGroups.update(groups => groups.filter(g => g.id !== group.id));
+  removeGroup(group: Structure) {
+    this.userStructures.update(groups => groups.filter(g => g.id !== group.id));
   }
 
   addGroup(groupId: number) {
     const group = this.groupsWithoutUserGroups().find(g => g.id === groupId);
     if (group) {
-      this.userGroups.update(groups => [
+      this.userStructures.update(groups => [
         ...groups,
         { ...group, pivot: { role: 'user' } },
       ]);
@@ -110,11 +110,11 @@ export class AppAdminUserEditGroupsComponent {
     this.backofficeService
       .updateUserGroups(
         this.data.userId,
-        this.userGroups().map(
+        this.userStructures().map(
           g =>
             ({
               user_id: this.data.userId,
-              group_id: g.id,
+              structure_id: g.id,
               role: g.pivot.role,
             }) as UserGroup
         )

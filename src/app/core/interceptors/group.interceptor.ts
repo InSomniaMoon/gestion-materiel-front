@@ -5,9 +5,12 @@ import { AuthService } from '../services/auth.service';
 export const groupInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
 
-  if (authService.isAuth() && authService.selectedGroup()) {
+  if (authService.isAuth() && authService.selectedStructure()) {
     req = req.clone({
-      params: req.params.append('group_id', authService.selectedGroup()!.id),
+      params: req.params.append(
+        'structure_id',
+        authService.selectedStructure()!.id
+      ),
     });
   }
 

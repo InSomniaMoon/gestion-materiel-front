@@ -1,9 +1,9 @@
 import { HttpClient, httpResource } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Group, GroupWithPivot } from '@core/types/group.type';
+import { Structure, StructureWithPivot } from '@app/core/types/structure.type';
+import { UserGroup } from '@app/core/types/userStructure.type';
 import { PaginatedData } from '@core/types/paginatedData.type';
 import { User } from '@core/types/user.type';
-import { UserGroup } from '@core/types/userGroup.type';
 import { environment } from '@env/environment';
 import { CLEAR_CACHE_CONTEXT_OPTIONS } from '@utils/injectionToken';
 import { Observable } from 'rxjs';
@@ -47,7 +47,7 @@ export class BackofficeService {
     email: string;
     role: string;
     phone: string | null;
-    group_id: string;
+    structure_id: string;
   }) {
     return this.http.post(
       `${this.apiUrl}/users`,
@@ -57,7 +57,7 @@ export class BackofficeService {
   }
 
   getUserGroups(userId: string) {
-    return httpResource<GroupWithPivot[]>(
+    return httpResource<StructureWithPivot[]>(
       () => `${this.apiUrl}/users/${userId}/groups`,
       {
         defaultValue: [],
@@ -73,28 +73,28 @@ export class BackofficeService {
     );
   }
 
-  getGroups(): Observable<GroupWithPivot[]>;
+  getGroups(): Observable<StructureWithPivot[]>;
   getGroups(params?: {
     size?: number;
     page?: number;
     orderBy: string;
     sortBy: string;
     q?: string;
-  }): Observable<PaginatedData<Group>>;
+  }): Observable<PaginatedData<Structure>>;
   getGroups(params?: {
     size?: number;
     page?: number;
     orderBy: string;
     sortBy?: string;
     q?: string;
-  }): Observable<Group[] | PaginatedData<Group>> {
+  }): Observable<Structure[] | PaginatedData<Structure>> {
     if (!params) {
-      return this.http.get<Group[]>(`${this.apiUrl}/groups?all=true`);
+      return this.http.get<Structure[]>(`${this.apiUrl}/groups?all=true`);
     }
 
     const { size = 25, page = 1, q = '', orderBy, sortBy = 'asc' } = params!;
 
-    return this.http.get<PaginatedData<Group>>(`${this.apiUrl}/groups`, {
+    return this.http.get<PaginatedData<Structure>>(`${this.apiUrl}/groups`, {
       params: {
         size,
         page,

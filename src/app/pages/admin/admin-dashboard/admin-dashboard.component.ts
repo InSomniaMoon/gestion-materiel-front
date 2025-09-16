@@ -33,7 +33,7 @@ export class AdminDashboardComponent {
   items = [
     { label: 'Mes Objets', link: '/admin/items' },
     { label: "Mes catégories d'objets", link: '/admin/categories' },
-    { label: 'Mes unités', link: '/admin/units' },
+    { label: 'Mon groupe', link: '/admin/my-group' },
     { label: 'Mes utilisateurs', link: '/admin/users' },
   ];
 }

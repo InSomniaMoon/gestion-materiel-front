@@ -40,15 +40,13 @@ export const ADMIN_ROUTES: Routes = [
     ],
   },
   {
-    path: 'units',
+    path: 'my-group',
     children: [
       {
-        title: 'Unités',
+        title: 'Mon groupe',
         path: '',
         loadComponent: () =>
-          import('./units/units-list/units-list.component').then(
-            m => m.UnitsListComponent
-          ),
+          import('./my-group/my-group.component').then(m => m.MyGroupComponent),
       },
     ],
   },
