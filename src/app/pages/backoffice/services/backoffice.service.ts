@@ -58,7 +58,7 @@ export class BackofficeService {
 
   getUserGroups(userId: string) {
     return httpResource<StructureWithPivot[]>(
-      () => `${this.apiUrl}/users/${userId}/groups`,
+      () => `${this.apiUrl}/users/${userId}/strctures`,
       {
         defaultValue: [],
       }
@@ -67,7 +67,7 @@ export class BackofficeService {
 
   updateUserGroups(userId: string, userGroups: UserGroup[]) {
     return this.http.put(
-      `${this.apiUrl}/users/${userId}/groups`,
+      `${this.apiUrl}/users/${userId}/structures`,
       { groups: userGroups },
       CLEAR_CACHE_CONTEXT_OPTIONS()
     );
@@ -89,20 +89,23 @@ export class BackofficeService {
     q?: string;
   }): Observable<Structure[] | PaginatedData<Structure>> {
     if (!params) {
-      return this.http.get<Structure[]>(`${this.apiUrl}/groups?all=true`);
+      return this.http.get<Structure[]>(`${this.apiUrl}/structures?all=true`);
     }
 
     const { size = 25, page = 1, q = '', orderBy, sortBy = 'asc' } = params!;
 
-    return this.http.get<PaginatedData<Structure>>(`${this.apiUrl}/groups`, {
-      params: {
-        size,
-        page,
-        orderBy,
-        sortBy,
-        q,
-      },
-    });
+    return this.http.get<PaginatedData<Structure>>(
+      `${this.apiUrl}/structures`,
+      {
+        params: {
+          size,
+          page,
+          orderBy,
+          sortBy,
+          q,
+        },
+      }
+    );
   }
 
   createGroup(dto: {
