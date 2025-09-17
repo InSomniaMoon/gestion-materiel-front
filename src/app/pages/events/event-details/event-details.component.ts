@@ -2,6 +2,7 @@ import { DatePipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   inject,
   input,
 } from '@angular/core';
@@ -31,13 +32,17 @@ export class EventDetailsComponent {
   private readonly eventsService = inject(EventsService);
   private readonly router = inject(Router);
 
-  event = input.required<ActualEvent>();
-
-  isAdmin = this.authService.isAdmin;
+  readonly isAdmin = this.authService.isAdmin;
+  readonly event = input.required<ActualEvent>();
+  readonly canUpdate = computed(
+    () =>
+      this.authService.isAdmin() ||
+      this.event().structure.code_structure ===
+        this.authService.selectedStructure()?.code_structure
+  );
 
   deleteEvent() {
     // Logic to delete the event
-
     this.dialogService
       .open(
         SimpleModalComponent,
