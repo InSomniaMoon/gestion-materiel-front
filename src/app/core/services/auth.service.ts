@@ -102,7 +102,6 @@ export class AuthService {
           );
         },
       });
-    // this._selectedStructure.set(this._userStructures().find(g => g.id == id)!);
   }
 
   private processLoginDTO(DTO: LoginDTO) {

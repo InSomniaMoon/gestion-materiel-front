@@ -56,7 +56,9 @@ export class Step1Component implements OnInit {
   structures = computed<Structure[]>(() =>
     this.authService.isAdmin()
       ? this.structureChildren.value()
-      : this.authService.structures()
+      : ([this.authService.selectedStructure() ?? null].filter(
+          s => s !== null
+        ) as Structure[])
   );
 
   nextStep = output();
