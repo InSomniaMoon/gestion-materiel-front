@@ -89,8 +89,20 @@ export class AuthService {
     return this.http.post(`${this.api_url}/auth/reset-password`, dto);
   }
 
-  setSelectGroupById(id: number) {
-    this._selectedStructure.set(this._userStructures().find(g => g.id == id)!);
+  setSelectStructureById(id: number) {
+    this.http
+      .post<LoginDTO>(`${this.api_url}/auth/${id}/select-structure`, {
+        refresh_token: this.getCookie(REFRESH_TOKEN_KEY),
+      })
+      .subscribe({
+        next: result => {
+          this.jwt.set(result.token);
+          this._selectedStructure.set(
+            this._userStructures().find(g => g.id == id)!
+          );
+        },
+      });
+    // this._selectedStructure.set(this._userStructures().find(g => g.id == id)!);
   }
 
   private processLoginDTO(DTO: LoginDTO) {

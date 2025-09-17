@@ -7,11 +7,13 @@ import {
   input,
   OnInit,
   output,
+  resource,
   runInInjectionContext,
   Signal,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { StructuresService } from '@app/core/services/structures.service';
 import { Structure } from '@app/core/types/structure.type';
 import { AuthService } from '@services/auth.service';
 import { Button } from 'primeng/button';
@@ -19,6 +21,7 @@ import { DatePicker } from 'primeng/datepicker';
 import { FloatLabel } from 'primeng/floatlabel';
 import { InputText } from 'primeng/inputtext';
 import { Select } from 'primeng/select';
+import { lastValueFrom, map } from 'rxjs';
 
 @Component({
   selector: 'app-step1',
@@ -37,15 +40,23 @@ import { Select } from 'primeng/select';
 })
 export class Step1Component implements OnInit {
   private readonly authService = inject(AuthService);
+  private readonly structuresService = inject(StructuresService);
 
-  // private readonly StructureChildren = resource({
-  //   loader: () => lastValueFrom(this.unitsService.getUnits()),
-  //   defaultValue: [],
-  // });
+  private readonly structureChildren = resource({
+    loader: () =>
+      lastValueFrom(
+        this.structuresService
+          .getStructures()
+          .pipe(map(structures => structures.children as Structure[]))
+      ),
+    defaultValue: [],
+  });
 
   // TODO replace by structures
   structures = computed<Structure[]>(() =>
-    this.authService.isAdmin() ? this.authService.structures() : []
+    this.authService.isAdmin()
+      ? this.structureChildren.value()
+      : this.authService.structures()
   );
 
   nextStep = output();

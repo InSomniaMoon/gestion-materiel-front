@@ -34,7 +34,7 @@ import { routes } from './app.routes';
 import { init } from './core/init';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { cacheInterceptor } from './core/interceptors/cache.interceptor';
-import { groupInterceptor } from './core/interceptors/group.interceptor';
+import { structureInterceptor } from './core/interceptors/structure.interceptor';
 import { AuthService } from './core/services/auth.service';
 import { FRENCH_TRANSLATIONS } from './fr.translation';
 import { SgdfPresetTheme } from './theme/theme';
@@ -51,7 +51,11 @@ export const appConfig: ApplicationConfig = {
     provideQueryClient(new QueryClient()),
     provideHttpClient(
       withFetch(),
-      withInterceptors([authInterceptor, groupInterceptor, cacheInterceptor])
+      withInterceptors([
+        authInterceptor,
+        structureInterceptor,
+        cacheInterceptor,
+      ])
     ),
     { provide: LOCALE_ID, useValue: 'fr-FR' },
     provideAppInitializer(() => init(inject(AuthService), inject(HttpClient))),
