@@ -152,9 +152,9 @@ export class ItemsListComponent {
   baseUrl = environment.api_url + '/storage/';
 
   page = signal(0);
-  size = signal(25);
+  size = signal(100);
   searchQuery = signal('');
-  orderBy = signal('name');
+  orderBy = signal('category_id');
   sortBy = signal<1 | -1>(1);
   first = computed(() => this.page() * this.size());
 
