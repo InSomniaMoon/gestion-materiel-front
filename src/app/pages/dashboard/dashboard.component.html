@@ -1,3 +1,7 @@
+<a [routerLink]="isGroupResp() ? '/admin/items' : '/items'" pButton>
+  Tous les objets
+</a>
+
 @defer (when isGroupResp()) {
   <app-admin-dashboard />
 }

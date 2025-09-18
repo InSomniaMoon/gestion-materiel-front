@@ -7,8 +7,9 @@ import {
   resource,
   signal,
 } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { SearchBarComponent } from '@app/components/search-bar/search-bar.component';
 import {
   SimpleModalComponent,
@@ -20,14 +21,15 @@ import { Item } from '@core/types/item.type';
 import { environment } from '@env/environment';
 import { ItemsService } from '@services/items.service';
 import { buildDialogOptions } from '@utils/constants';
-import { Badge } from 'primeng/badge';
-import { Button, ButtonDirective } from 'primeng/button';
+import { Button } from 'primeng/button';
+import { DataView } from 'primeng/dataview';
 import { DialogService } from 'primeng/dynamicdialog';
 import { PaginatorModule } from 'primeng/paginator';
 import { SelectModule } from 'primeng/select';
 import { TableModule } from 'primeng/table';
-import { lastValueFrom } from 'rxjs';
+import { fromEvent, lastValueFrom, map } from 'rxjs';
 import { CreateUpdateItemComponent } from './create-update-item/create-update-item.component';
+import { ListItemComponent } from './list-item/list-item.component';
 @Component({
   selector: 'app-items-list',
   imports: [
@@ -38,10 +40,10 @@ import { CreateUpdateItemComponent } from './create-update-item/create-update-it
     SelectModule,
     Button,
     SearchBarComponent,
-    Badge,
-    RouterLink,
-    ButtonDirective,
     PaginatorComponent,
+    DataView,
+    ListItemComponent,
+    RouterLink,
   ],
   template: `
     <div class="header">
@@ -49,13 +51,40 @@ import { CreateUpdateItemComponent } from './create-update-item/create-update-it
         <h1>Objets</h1>
         <app-search-bar (queryChange)="searchQuery.set($event)" />
       </div>
-      <p-button
-        icon="pi pi-plus"
-        label="Ajouter"
-        (onClick)="openCreateItem()" />
+      @if (isAdmin()) {
+        <p-button
+          icon="pi pi-plus"
+          label="Ajouter"
+          (onClick)="openCreateItem()" />
+      }
     </div>
+
     <matos-table [status]="items.status()">
-      <p-table
+      <p-data-view
+        [value]="items.value()?.data ?? []"
+        [layout]="isMobile() ? 'list' : 'grid'">
+        <ng-template #list let-items>
+          @for (item of items; track $index) {
+            <a routerLink="/items/{{ item.id }}" class="flex">
+              <app-list-item [item]="item" />
+            </a>
+            @if (!$last) {
+              <hr style="margin: 0 1rem;" />
+            }
+          }
+        </ng-template>
+        <ng-template #grid let-items>
+          <div class="grid">
+            @for (item of items; track $index) {
+              <a routerLink="/items/{{ item.id }}">
+                <app-list-item [item]="item" />
+              </a>
+            }
+          </div>
+        </ng-template>
+      </p-data-view>
+
+      <!-- <p-table
         [value]="items.value()?.data ?? []"
         stripedRows
         [sortField]="orderBy()"
@@ -76,53 +105,42 @@ import { CreateUpdateItemComponent } from './create-update-item/create-update-it
             <th></th>
           </tr>
         </ng-template>
-        <ng-template #body let-product>
-          <tr>
+        <ng-template #body let-item>
+          <tr (click)="isAdmin() ? openItemUpdate(item) : openItemView(item)">
             <td class="image">
               <p-badge
                 size="small"
                 value=" "
                 [severity]="
-                  product.state === 'OK'
+                  item.state === 'OK'
                     ? 'success'
-                    : product.state === 'NOK'
+                    : item.state === 'NOK'
                       ? 'warn'
-                      : product.state === 'KO'
+                      : item.state === 'KO'
                         ? 'danger'
                         : 'info'
                 " />
             </td>
             <td class="image">
-              @if (product.image) {
-                <img [src]="baseUrl + product.image" alt="" />
+              @if (item.image) {
+                <img [src]="baseUrl + item.image" alt="" />
               }
             </td>
-            <td>{{ product.name }}</td>
-            <td style="text-wrap: nowrap;">{{ product.category.name }}</td>
+            <td>{{ item.name }}</td>
+            <td style="text-wrap: nowrap;">{{ item.category.name }}</td>
             <td style="text-wrap: nowrap;text-align: center;">
-              {{ product.open_option_issues_count }}
+              {{ item.open_option_issues_count }}
             </td>
             <td class="actions">
-              <a
-                pButton
-                [routerLink]="['/items', product.id]"
-                size="small"
-                severity="info"
-                icon="pi pi-eye">
-              </a>
-              <p-button
-                icon="pi pi-pencil"
-                size="small"
-                (onClick)="openUpdateItem(product)" />
               <p-button
                 icon="pi pi-trash"
                 size="small"
                 severity="danger"
-                (onClick)="deleteItem(product)" />
+                (onClick)="deleteItem(item)" />
             </td>
           </tr>
         </ng-template>
-      </p-table>
+      </p-table> -->
       <app-paginator
         [(page)]="page"
         [(size)]="size"
@@ -136,6 +154,18 @@ import { CreateUpdateItemComponent } from './create-update-item/create-update-it
 export class ItemsListComponent {
   private readonly itemService = inject(ItemsService);
   private readonly dialogService = inject(DialogService);
+  isAdmin = toSignal(
+    inject(ActivatedRoute).data.pipe(map(data => data['isAdmin'] || false)),
+    { initialValue: false }
+  );
+  private windowSize = toSignal(
+    fromEvent(window, 'resize').pipe(
+      map((event: Event) => (event.target as Window).innerWidth)
+    ),
+    { initialValue: window.innerWidth }
+  );
+
+  isMobile = computed(() => this.windowSize() < 768);
 
   constructor() {
     effect(() => {
@@ -229,5 +259,14 @@ export class ItemsListComponent {
           });
         }
       });
+  }
+
+  private readonly router = inject(Router);
+  openItemUpdate(item: Item) {
+    this.openUpdateItem(item);
+  }
+
+  openItemView(item: Item) {
+    this.router.navigate(['/items', item.id]);
   }
 }

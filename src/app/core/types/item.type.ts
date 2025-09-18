@@ -1,14 +1,6 @@
-// {
-//   "id": 1,
-//   "name": "Salle 10 places",
-//   "description": "Salle 10 places",
-//   "category": "salle",
-//   "usable": true
-
 import { ItemOption } from './itemOption.type';
 import { Structure } from './structure.type';
 
-// },
 export type Item = {
   id: number;
   name: string;
@@ -22,6 +14,7 @@ export type Item = {
   image?: string;
   structure_id: number;
   structure?: Structure;
+  state?: 'OK' | 'NOK' | 'KO' | 'UNKNOWN';
 };
 
 export type ItemWithQuantity = Item & { quantity: number; rest: number };

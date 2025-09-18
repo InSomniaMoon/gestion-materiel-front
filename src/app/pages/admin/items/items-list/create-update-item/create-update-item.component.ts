@@ -78,14 +78,14 @@ import { tap } from 'rxjs';
         }
       </div>
       <div class="flex">
-        <p-float-label variant="on" [class]="'w-full'" style="width: 100%;">
+        <p-float-label variant="on" style="flex:1;">
           <textarea
             pTextarea
             id="description"
+            fluid
             autoResize
-            formControlName="description"
-            rows="5"></textarea>
-
+            rows="6"
+            formControlName="description"></textarea>
           <label for="description">Description (optionnel)</label>
         </p-float-label>
         <app-upload-file

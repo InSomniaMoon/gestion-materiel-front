@@ -38,3 +38,10 @@ textarea {
     gap: 1rem;
   }
 }
+
+.flex {
+  @media screen and (max-width: 768px) {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

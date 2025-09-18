@@ -13,7 +13,8 @@ import {
     <ng-content select="[header]" />
     @if (!isLoading() && !isError()) {
       <div class="table-container">
-        <ng-content select="p-table]" />
+        <ng-content select="p-table" />
+        <ng-content select="p-data-view" />
       </div>
     }
     @if (isLoading()) {
