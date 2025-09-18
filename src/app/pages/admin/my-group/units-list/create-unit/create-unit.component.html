@@ -4,6 +4,7 @@
       <input pInputText type="text" id="name" formControlName="name" />
       <label for="name">Nom</label>
     </p-floatLabel>
+
     <div class="row">
       <p-colorpicker id="color" formControlName="color" />
       <label for="color">Couleur</label>
@@ -12,6 +13,8 @@
       <input id="color" pInputText formControlName="color" />
     </div>
   </div>
+
+  <span> <b>Nom intranet :</b> {{ structure()!.nom_structure }} </span>
 
   <p-float-label variant="on">
     <p-multiselect
@@ -35,7 +38,7 @@
     }
   </ul>
 
-  @if (chiefsControl.length > 0) {
+  <!-- @if (chiefsControl.length > 0) {
     <p-float-label variant="on">
       <p-select
         [style]="{ width: '100%' }"
@@ -46,7 +49,7 @@
 
       <label for="responsible">Contact matériel</label>
     </p-float-label>
-  }
+  } -->
 </form>
 <p-footer>
   <p-button label="Annuler" severity="secondary" (onClick)="closeCancel()" />

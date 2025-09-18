@@ -2,18 +2,20 @@ import {
   ChangeDetectionStrategy,
   Component,
   inject,
+  input,
   OnInit,
   resource,
   signal,
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Structure } from '@app/core/types/structure.type';
 import { User } from '@core/types/user.type';
 import { UsersService } from '@services/users.service';
 import { debounceTimeSignal } from '@utils/signals.utils';
 import { Button } from 'primeng/button';
 import { ColorPicker } from 'primeng/colorpicker';
 import { DialogModule } from 'primeng/dialog';
-import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { FloatLabel } from 'primeng/floatlabel';
 import { InputText } from 'primeng/inputtext';
 import { MultiSelect } from 'primeng/multiselect';
@@ -39,15 +41,15 @@ export class CreateUnitComponent implements OnInit {
   private ref = inject(DynamicDialogRef);
   private readonly usersService = inject(UsersService);
   private readonly fb = inject(FormBuilder);
-  private dialog$ = inject(DialogService);
 
   validateLabel = signal('Créer');
+  structure = input<Structure>();
 
   form = this.fb.nonNullable.group({
     name: ['', [Validators.required]],
     color: ['#000000', [Validators.required]],
     chiefs: this.fb.nonNullable.control<{ name: string; code: number }[]>([]),
-    responsible: this.fb.control<{ name: string; code: number } | null>(null),
+    // responsible: this.fb.control<{ name: string; code: number } | null>(null),
   });
 
   get chiefsControl() {
@@ -55,8 +57,9 @@ export class CreateUnitComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const data = this.dialog$.getInstance(this.ref).data;
-
+    if (!this.structure()) {
+      return;
+    }
     // syncro input et colorpicker
     this.form.get('color')!.valueChanges.subscribe({
       next: value => {
@@ -69,40 +72,34 @@ export class CreateUnitComponent implements OnInit {
       error: error => {},
     });
 
-    if (data) {
+    if (this.structure() !== undefined) {
       this.validateLabel.set('Modifier');
       this.form.patchValue({
-        name: data.name || '',
-        color: data.color || '#000000',
+        name: this.structure()!.name || '',
+        color: this.structure()!.color || '#000000',
         chiefs:
-          (data.chiefs as User[]).map(c => ({
+          (this.structure()!.members as User[]).map(c => ({
             code: c.id,
             name: `${c.firstname} ${c.lastname}`,
           })) || [],
-        responsible: data.responsible
-          ? {
-              name: `${data.responsible.firstname} ${data.responsible.lastname}`,
-              code: data.responsible.id,
-            }
-          : null,
       });
     }
 
-    this.form.get('chiefs')?.valueChanges.subscribe(value => {
-      if (value.length == 0) {
-        this.form.get('responsible')!.setValue(null);
-      }
-    });
+    // this.form.get('chiefs')?.valueChanges.subscribe(value => {
+    //   if (value.length == 0) {
+    //     this.form.get('responsible')!.setValue(null);
+    //   }
+    // });
   }
 
   closeConfirm() {
     const value = this.form.getRawValue();
     const chiefs = value.chiefs.map(chief => chief.code);
-    const resp = value.responsible?.code;
+    // const resp = value.responsible?.code;
     this.ref.close({
       ...value,
       chiefs: chiefs,
-      responsible: resp ? resp : undefined,
+      // responsible: resp ? resp : undefined,
     });
   }
 

@@ -9,6 +9,7 @@ export type Structure = {
   image?: string;
   color?: string;
   members?: User[];
+  nom_structure: string;
 };
 
 export type StructureWithPivot = Structure & {

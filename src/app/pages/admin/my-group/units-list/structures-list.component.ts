@@ -26,42 +26,7 @@ export class StructuresListComponent {
 
   units = input.required<Structure[]>();
 
-  openCreateUnitDialog() {
-    this.dialogService
-      .open(
-        CreateUnitComponent,
-        buildDialogOptions({
-          header: 'Créer une unité',
-          width: '50%',
-          height: '80%',
-        })
-      )
-      .onClose.subscribe(result => {
-        if (!result) {
-          return;
-        }
-
-        console.log('Creating unit with data:', result);
-
-        // this.unitsService
-        //   .createUnit({
-        //     color: result.color,
-        //     name: result.name,
-        //     chiefs: result.chiefs,
-        //     responsible: result.responsible,
-        //   })
-        //   .subscribe({
-        //     next: () => {
-        //       this.units.reload();
-        //     },
-        //     error: error => {
-        //       console.error("Erreur pendant la création de l'unité :", error);
-        //     },
-        //   });
-      });
-  }
-
-  openUpdateUnitDialog(unit: any) {
+  openUpdateUnitDialog(structure: any) {
     this.dialogService
       .open(
         CreateUnitComponent,
@@ -69,7 +34,10 @@ export class StructuresListComponent {
           header: "Modifier l'unité",
           width: '50%',
           height: '80%',
-          data: unit,
+          data: structure,
+          inputValues: {
+            structure,
+          },
         })
       )
       .onClose.subscribe(result => {
