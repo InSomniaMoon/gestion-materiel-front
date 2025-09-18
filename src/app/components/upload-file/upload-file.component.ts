@@ -27,7 +27,9 @@ export class UploadFileComponent {
   fileUploaded = output<string>();
 
   file = signal<File | null>(null);
-  fileUrl = model(this.file() ? URL.createObjectURL(this.file()!) : '');
+  fileUrl = model<string | null>(
+    this.file() ? URL.createObjectURL(this.file()!) : ''
+  );
 
   handler = input.required<HandlerFunc>();
 

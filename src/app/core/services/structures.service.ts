@@ -18,7 +18,7 @@ export class StructuresService {
   }
 
   updateStructure(id: number, data: Partial<Structure>) {
-    return this.http.patch<Structure>(
+    return this.http.patch<{ message: string; structure: Structure }>(
       `${this.baseUrl}/admin/structures/${id}`,
       data,
       CLEAR_CACHE_CONTEXT_OPTIONS(new Set([`${this.baseUrl}/structures`]))

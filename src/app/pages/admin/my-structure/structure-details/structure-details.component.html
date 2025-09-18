@@ -8,14 +8,20 @@
     <input pInputText id="name" formControlName="name" />
     <label for="name">Nom de la structure</label>
   </p-float-label>
-  <p-float-label variant="on">
+  <p-floatlabel variant="on">
     <textarea
+      rows="5"
+      cols="30"
       pTextarea
       id="description"
       formControlName="description"></textarea>
     <label for="description">Description</label>
-  </p-float-label>
+  </p-floatlabel>
 </form>
-<button pButton type="submit" [disabled]="form.invalid || !form.dirty">
+<button
+  pButton
+  type="submit"
+  (click)="updateStructure()"
+  [disabled]="form.invalid || !form.touched">
   Enregistrer
 </button>
