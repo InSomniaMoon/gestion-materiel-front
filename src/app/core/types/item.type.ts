@@ -6,6 +6,7 @@
 //   "usable": true
 
 import { ItemOption } from './itemOption.type';
+import { Structure } from './structure.type';
 
 // },
 export type Item = {
@@ -19,6 +20,8 @@ export type Item = {
   category?: ItemCategory;
   options?: ItemOption[];
   image?: string;
+  structure_id: number;
+  structure?: Structure;
 };
 
 export type ItemWithQuantity = Item & { quantity: number; rest: number };
