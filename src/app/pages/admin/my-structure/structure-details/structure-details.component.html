@@ -1,0 +1,21 @@
+<app-upload-file
+  [handler]="fileUploadHandler"
+  [fileUrl]="image()"
+  (fileUploaded)="setImagePath($event)"
+  [maxFileSize]="1024 * 1024 * 2" />
+<form class="flex wrap" [formGroup]="form">
+  <p-float-label variant="on">
+    <input pInputText id="name" formControlName="name" />
+    <label for="name">Nom de la structure</label>
+  </p-float-label>
+  <p-float-label variant="on">
+    <textarea
+      pTextarea
+      id="description"
+      formControlName="description"></textarea>
+    <label for="description">Description</label>
+  </p-float-label>
+</form>
+<button pButton type="submit" [disabled]="form.invalid || !form.dirty">
+  Enregistrer
+</button>

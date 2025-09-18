@@ -12,16 +12,16 @@ import { buildDialogOptions } from '@utils/constants';
 import { Button } from 'primeng/button';
 import { DialogService } from 'primeng/dynamicdialog';
 import { TableModule } from 'primeng/table';
-import { CreateUnitComponent } from './create-unit/create-unit.component';
+import { CreateUnitComponent } from './create-structure/create-unit.component';
 
 @Component({
   selector: 'app-units-list',
   imports: [AppTable, Button, TableModule, TippyDirective],
-  templateUrl: './structures-list.component.html',
-  styleUrl: './structures-list.component.scss',
+  templateUrl: './children-structures-list.component.html',
+  styleUrl: './children-structures-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class StructuresListComponent {
+export class ChildrenStructuresListComponent {
   private readonly dialogService = inject(DialogService);
 
   units = input.required<Structure[]>();

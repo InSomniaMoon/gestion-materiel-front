@@ -42,13 +42,15 @@ export const ADMIN_ROUTES: Routes = [
     ],
   },
   {
-    path: 'my-group',
+    path: 'my-structure',
     children: [
       {
-        title: 'Mon groupe',
+        title: 'Ma structure',
         path: '',
         loadComponent: () =>
-          import('./my-group/my-group.component').then(m => m.MyGroupComponent),
+          import('./my-structure/my-structure.component').then(
+            m => m.MyStructureComponent
+          ),
       },
     ],
   },

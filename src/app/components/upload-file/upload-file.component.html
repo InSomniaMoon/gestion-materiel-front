@@ -1,4 +1,4 @@
-@if (file()) {
+@if (fileUrl()) {
   <img
     [src]="fileUrl()"
     alt="Uploaded Image"
@@ -9,6 +9,7 @@
 
 <p-fileupload
   name="image"
+  [style]="{ width: 'auto' }"
   #fileUploader
   [multiple]="false"
   [customUpload]="true"

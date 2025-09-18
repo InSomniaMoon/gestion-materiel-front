@@ -3,7 +3,7 @@ import {
   Component,
   inject,
   input,
-  linkedSignal,
+  model,
   output,
   signal,
   viewChild,
@@ -27,10 +27,7 @@ export class UploadFileComponent {
   fileUploaded = output<string>();
 
   file = signal<File | null>(null);
-  fileUrl = linkedSignal(() => {
-    const file = this.file();
-    return file ? URL.createObjectURL(file) : '';
-  });
+  fileUrl = model(this.file() ? URL.createObjectURL(this.file()!) : '');
 
   handler = input.required<HandlerFunc>();
 
