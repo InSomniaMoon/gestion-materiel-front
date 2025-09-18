@@ -7,22 +7,22 @@
     <div class="flex flex-1" style="width: 100%">
       <span
         [style]="
-          `display:block; width: 40px; height: 28px; background-color: ${selectedUnit()?.color}; border-radius: 4px;`
+          `display:block; width: 40px; height: 28px; border-radius: 4px; background-color: ${selectedStructure()?.color ?? 'black'}; `
         "></span>
-      @if (units().length > 1) {
+      @if (structures().length > 1) {
         <p-float-label variant="on" style="width: 100%">
           <p-select
-            formControlName="unit"
-            id="unit_id"
-            [options]="units()"
+            formControlName="structure"
+            id="structure_id"
+            [options]="structures()"
             optionLabel="name"
             optionValue="id"
             fluid />
-          <label for="unit_id">Unité empruntante</label>
+          <label for="structure_id">Unité empruntante</label>
         </p-float-label>
       } @else {
-        @let unit = units()[0];
-        <p>Unité empruntante : {{ unit?.name }}</p>
+        @let structure = selectedStructure();
+        <p>Structure empruntante : {{ structure?.name }}</p>
       }
     </div>
   </div>

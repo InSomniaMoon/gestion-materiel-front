@@ -8,14 +8,12 @@ import {
 import { Router, RouterLink } from '@angular/router';
 import { environment } from '@env/environment';
 import { AuthService } from '@services/auth.service';
-import { buildDialogOptions } from '@utils/constants';
 import { MenuItem } from 'primeng/api';
 import { AvatarModule } from 'primeng/avatar';
 import { Badge } from 'primeng/badge';
 import { DialogService } from 'primeng/dynamicdialog';
 import { MenubarModule } from 'primeng/menubar';
 import { TieredMenuModule } from 'primeng/tieredmenu';
-import { ChangeActiveGroupComponent } from './changeActiveGroup/changeActiveGroup.component';
 
 export type MenuItemWithImage = MenuItem & {
   img?: string;
@@ -34,9 +32,8 @@ export class HeaderComponent implements OnInit {
   private readonly dialogService = inject(DialogService);
 
   readonly user = this.auth$.user;
-  readonly groups = this.auth$.groups;
-  readonly selectedGroup = this.auth$.selectedGroup;
-  readonly selectedUnit = this.auth$.selectedUnit;
+  readonly structures = this.auth$.structures;
+  readonly selectedStructure = this.auth$.selectedStructure;
   private readonly router = inject(Router);
 
   protected readonly apiUrl = environment.api_url + '/storage/';
@@ -49,25 +46,19 @@ export class HeaderComponent implements OnInit {
 
   authItems = computed<MenuItemWithImage[]>(() => [
     {
-      label: this.selectedGroup()?.name ?? 'Groupe Actif',
-      img: this.selectedGroup()?.image,
+      label: this.selectedStructure()?.name ?? 'Groupe Actif',
+      img: this.selectedStructure()?.image,
       icon: 'pi pi-users',
       command: undefined,
       items:
-        this.groups().length > 1
-          ? this.groups().map(group => ({
-              label: group.name,
-              img: group.image,
+        this.structures().length > 1
+          ? this.structures().map(structure => ({
+              label: structure.name,
+              img: structure.image,
               icon: 'pi pi-users',
-              command: () => this.auth$.setSelectGroupById(group.id),
+              command: () => this.auth$.setSelectStructureById(structure.id),
             }))
           : undefined,
-    },
-    {
-      label: this.selectedUnit()?.name ?? "Pas d'unité",
-      color: this.selectedUnit()?.color,
-      icon: 'pi pi-building',
-      command: undefined,
     },
     // {
     //   label: 'Mon compte',
@@ -113,21 +104,4 @@ export class HeaderComponent implements OnInit {
     },
   ]);
   ngOnInit(): void {}
-
-  showChangeActiveGroup() {
-    this.dialogService
-      .open(
-        ChangeActiveGroupComponent,
-        buildDialogOptions({
-          header: 'Changer de groupe actif',
-          width: '70%',
-          height: '70%',
-        })
-      )
-      .onClose.subscribe(data => {
-        if (data) {
-          this.auth$.setSelectGroupById(data.group_id);
-        }
-      });
-  }
 }

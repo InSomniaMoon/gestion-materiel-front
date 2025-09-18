@@ -16,7 +16,7 @@ export class EventsService {
 
   createEvent(data: {
     name: string;
-    unit_id: number;
+    structure_id: number;
     start_date: Date | null;
     end_date: Date | null;
     materials: { id: number; quantity: number }[];
@@ -31,9 +31,9 @@ export class EventsService {
     );
   }
 
-  getEventsForUnit(unitId: number) {
-    const url = `${this.api_url}/events?unit_id=${unitId}`;
-    // This method should return an observable of the unit events
+  getEventsForStructure(structureId: number) {
+    const url = `${this.api_url}/events?structure_id=${structureId}`;
+    // This method should return an observable of the structure events
     return this.http.get<Event[]>(url);
   }
 

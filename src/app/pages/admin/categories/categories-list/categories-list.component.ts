@@ -43,7 +43,7 @@ export class CategoriesListComponent {
   private readonly categoriesService = inject(CategoriesService);
   private readonly dialogRef = inject(DialogService);
   private readonly messageService = inject(MessageService);
-  private selectedGroup = inject(AuthService).selectedGroup;
+  private selectedStructure = inject(AuthService).selectedStructure;
 
   page = signal(0);
   size = signal(25);
@@ -57,7 +57,7 @@ export class CategoriesListComponent {
       this.size(),
       this.searchQuery(),
       this.orderBy(),
-      this.selectedGroup(),
+      this.selectedStructure(),
     ],
     queryFn: () =>
       lastValueFrom(
@@ -83,7 +83,7 @@ export class CategoriesListComponent {
       .open(
         CreateUpdateCategoryComponent,
         buildDialogOptions({
-          data: { groupId: this.selectedGroup()!.id },
+          data: { structureId: this.selectedStructure()!.id },
           header: 'Créer une catégorie',
           width: '50%',
         })
@@ -100,7 +100,7 @@ export class CategoriesListComponent {
       .open(
         CreateUpdateCategoryComponent,
         buildDialogOptions({
-          data: { category, groupId: this.selectedGroup()!.id },
+          data: { category, groupId: this.selectedStructure()!.id },
           header: 'Modifier la catégorie',
           width: '50%',
         })

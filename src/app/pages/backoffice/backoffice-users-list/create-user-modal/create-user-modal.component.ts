@@ -15,7 +15,7 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { FloatLabel } from 'primeng/floatlabel';
 import { InputText } from 'primeng/inputtext';
 import { Select } from 'primeng/select';
-import { delay, lastValueFrom } from 'rxjs';
+import { lastValueFrom } from 'rxjs';
 import { BackofficeService } from '../../services/backoffice.service';
 
 @Component({
@@ -36,7 +36,7 @@ import { BackofficeService } from '../../services/backoffice.service';
             optionLabel="name"
             optionValue="code"
             placeholder="Groupe"
-            formControlName="group_id" />
+            formControlName="structure_id" />
           <label for="role">Groupe</label>
         </p-floatlabel>
         <p-floatlabel>
@@ -117,7 +117,7 @@ export class CreateUserModalComponent {
     role: this.fb.nonNullable.control<string>('', {
       validators: [Validators.required],
     }),
-    group_id: this.fb.nonNullable.control('', {
+    structure_id: this.fb.nonNullable.control('', {
       validators: [Validators.required],
     }),
     phone: this.fb.control('', {}),

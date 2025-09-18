@@ -17,6 +17,8 @@ import { lastValueFrom } from 'rxjs';
 import { BackofficeService } from '../services/backoffice.service';
 import { CreateUserModalComponent } from './create-user-modal/create-user-modal.component';
 
+import { PaginatorComponent } from '@app/components/ui/paginator/paginator.component';
+import { AppTable } from '@app/components/ui/table/table.component';
 import { User } from '@core/types/user.type';
 import { TippyDirective } from '@ngneat/helipopper';
 import { buildDialogOptions } from '@utils/constants';
@@ -33,62 +35,71 @@ import { AppAdminUserEditGroupsComponent } from './backoffice-user-edit-groups/b
     InputIcon,
     Button,
     TippyDirective,
+    AppTable,
+    PaginatorComponent,
   ],
 
   template: `
-    <p-table
-      [value]="users()"
-      [paginator]="true"
-      [rows]="size()"
-      [rowsPerPageOptions]="[10, 25, 50]"
-      [sortField]="orderBy()"
-      [sortOrder]="sortOrder()"
-      (onPage)="pageChange($event)">
-      <ng-template #caption>
-        <div class="caption">
-          <p-iconfield iconPosition="left">
-            <p-inputicon>
-              <i class="pi pi-search"></i>
-            </p-inputicon>
-            <input
-              pInputText
-              type="text"
-              (ngModelChange)="q.set($event)"
-              ngModel
-              placeholder="Rechercher un utilisateur" />
-          </p-iconfield>
+    <matos-table [status]="usersQuery.status()">
+      <p-table
+        [value]="users()"
+        [rows]="size()"
+        [rowsPerPageOptions]="[10, 25, 50]"
+        [sortField]="orderBy()"
+        [sortOrder]="sortOrder()"
+        (onPage)="pageChange($event)">
+        <ng-template #caption>
+          <div class="caption">
+            <p-iconfield iconPosition="left">
+              <p-inputicon>
+                <i class="pi pi-search"></i>
+              </p-inputicon>
+              <input
+                pInputText
+                type="text"
+                (ngModelChange)="q.set($event)"
+                ngModel
+                placeholder="Rechercher un utilisateur" />
+            </p-iconfield>
 
-          <p-button
-            label="Ajouter"
-            icon="pi pi-plus"
-            (onClick)="openAddUserDialog()" />
-        </div>
-      </ng-template>
-      <ng-template #header>
-        <tr>
-          <th>Nom</th>
-          <th>Mail</th>
-          <th>Role</th>
-          <th></th>
-        </tr>
-      </ng-template>
-      <ng-template #body let-user>
-        <tr>
-          <td>{{ user.name }}</td>
-          <td>{{ user.email }}</td>
-          <td>{{ user.role }}</td>
-          <td class="actions">
             <p-button
-              icon="pi pi-users"
-              text
-              rounded
-              aria-label="Editer les groupes de l'utilisateur"
-              tp="Editer les groupes de l'utilisateur"
-              (onClick)="openEditGroupsDialog(user)" />
-          </td>
-        </tr>
-      </ng-template>
-    </p-table>
+              label="Ajouter"
+              icon="pi pi-plus"
+              (onClick)="openAddUserDialog()" />
+          </div>
+        </ng-template>
+        <ng-template #header>
+          <tr>
+            <th>Nom</th>
+            <th>Prénom</th>
+            <th>Mail</th>
+            <th>Role</th>
+            <th></th>
+          </tr>
+        </ng-template>
+        <ng-template #body let-user>
+          <tr>
+            <td>{{ user.lastname }}</td>
+            <td>{{ user.firstname }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.role }}</td>
+            <td class="actions">
+              <p-button
+                icon="pi pi-users"
+                text
+                rounded
+                aria-label="Editer les groupes de l'utilisateur"
+                tp="Editer les groupes de l'utilisateur"
+                (onClick)="openEditGroupsDialog(user)" />
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+      <app-paginator
+        [(page)]="page"
+        [(size)]="size"
+        [totalRecords]="usersQuery.data()?.total ?? 0" />
+    </matos-table>
   `,
   styleUrl: './backoffice-users-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

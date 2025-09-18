@@ -3,7 +3,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  DestroyRef,
   inject,
   OnInit,
   signal,
@@ -16,6 +15,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { UploadFileComponent } from '@app/components/upload-file/upload-file.component';
+import { AuthService } from '@app/core/services/auth.service';
 import { Item } from '@core/types/item.type';
 import { ItemsService } from '@services/items.service';
 import { AutoCompleteModule } from 'primeng/autocomplete';
@@ -142,9 +142,9 @@ import { tap } from 'rxjs';
 })
 export class CreateUpdateItemComponent implements OnInit {
   private readonly itemService = inject(ItemsService);
-  private readonly destroyRef = inject(DestroyRef);
   protected readonly dialogRef = inject(DynamicDialogRef);
   private readonly dialogService = inject(DialogService);
+  private readonly authService = inject(AuthService);
 
   protected data: Item | undefined = this.dialogService.getInstance(
     this.dialogRef
@@ -273,6 +273,7 @@ export class CreateUpdateItemComponent implements OnInit {
         description: this.form.value.description,
         category_id: this.form.value.category_id!,
         date_of_buy: this.form.value.date_of_buy,
+        structure_id: this.authService.selectedStructure()?.id!,
         image: this.form.value.image,
         options: this.form.getRawValue().options.map(option => ({
           id: option.id ?? null,

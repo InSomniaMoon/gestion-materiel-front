@@ -55,29 +55,28 @@ export class UserDashboardComponent {
   });
 
   events = resource<EventInput[], any>({
-    loader: () =>
+    params: () => ({ structureId: this.authService.selectedStructure() }),
+    loader: ({ params }) =>
       lastValueFrom(
-        this.eventsService
-          .getEventsForUnit(this.authService.selectedUnit()!.id)
-          .pipe(
-            map(events =>
-              events.map(
-                event =>
-                  ({
-                    start: event.start_date,
-                    end: event.end_date,
-                    title: event.name,
-                    allDay: false,
-                    color: event.unit?.color,
-                    id: `${event.id}`,
-                  }) as EventInput
-              )
-            ),
-            catchError(() => {
-              console.error('Error loading events');
-              return [];
-            })
-          )
+        this.eventsService.getEventsForStructure(params.structureId!.id).pipe(
+          map(events =>
+            events.map(
+              event =>
+                ({
+                  start: event.start_date,
+                  end: event.end_date,
+                  title: event.name,
+                  allDay: false,
+                  color: event.structure?.color,
+                  id: `${event.id}`,
+                }) as EventInput
+            )
+          ),
+          catchError(() => {
+            console.error('Error loading events');
+            return [];
+          })
+        )
       ),
     defaultValue: [],
   });

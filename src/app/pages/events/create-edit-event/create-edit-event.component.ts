@@ -47,7 +47,7 @@ export class CreateEditEventComponent implements OnInit {
     informations: this.fb.nonNullable.group(
       {
         name: ['', [Validators.required]],
-        unit: this.fb.nonNullable.control<number | null>(null, [
+        structure: this.fb.nonNullable.control<number | null>(null, [
           Validators.required,
         ]),
         start_date: this.fb.nonNullable.control<Date | null>(null, [
@@ -96,7 +96,7 @@ export class CreateEditEventComponent implements OnInit {
     this.form.setValue({
       informations: {
         name: this.event()!.name,
-        unit: this.event()!.unit.id,
+        structure: this.event()!.structure.id,
         start_date: new Date(this.event()!.start_date),
         end_date: new Date(this.event()!.end_date),
       },
@@ -113,7 +113,7 @@ export class CreateEditEventComponent implements OnInit {
 
     const data = {
       name: value.informations.name,
-      unit_id: value.informations.unit!,
+      structure_id: value.informations.structure!,
       start_date: new Date(value.informations.start_date!),
       end_date: new Date(value.informations.end_date!),
       materials: value.materials.map((item: any) => ({
