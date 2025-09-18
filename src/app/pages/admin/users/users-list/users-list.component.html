@@ -30,11 +30,11 @@
         <td>{{ user.firstname }}</td>
         <td>
           <div class="flex">
-            @for (unit of user.user_structures; track $index) {
+            @for (structure of user.user_structures; track $index) {
               <div
-                [tp]="unit.structure.name"
+                [tp]="structure.name"
                 [style]="
-                  `width: 40px; height: 28px; background-color: ${unit.color}; border-radius: 4px;`
+                  `width: 40px; height: 28px; background-color: ${structure.color}; border-radius: 4px;`
                 "></div>
             }
           </div>
