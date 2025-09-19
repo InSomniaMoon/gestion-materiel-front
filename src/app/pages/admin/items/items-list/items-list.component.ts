@@ -60,14 +60,12 @@ import { ListItemComponent } from './list-item/list-item.component';
     </div>
 
     <matos-table [status]="items.status()">
-      <p-data-view
-        [value]="items.value()?.data ?? []"
-        [layout]="isMobile() ? 'list' : 'grid'">
+      <p-data-view [value]="items.value()?.data ?? []" layout="list">
         <ng-template #list let-items>
           @for (item of items; track $index) {
-            <a routerLink="/items/{{ item.id }}" class="flex">
-              <app-list-item [item]="item" />
-            </a>
+            <app-list-item
+              (click)="isAdmin() ? openItemUpdate(item) : openItemView(item)"
+              [item]="item" />
             @if (!$last) {
               <hr style="margin: 0 1rem;" />
             }
@@ -84,63 +82,6 @@ import { ListItemComponent } from './list-item/list-item.component';
         </ng-template>
       </p-data-view>
 
-      <!-- <p-table
-        [value]="items.value()?.data ?? []"
-        stripedRows
-        [sortField]="orderBy()"
-        [sortOrder]="sortBy()"
-        (onSort)="orderBy.set($event.field); sortBy.set($event.order)">
-        <ng-template #header>
-          <tr>
-            <th pSortableColumn="state">Etat<p-sortIcon field="state" /></th>
-            <th></th>
-            <th pSortableColumn="name">Nom<p-sortIcon field="name" /></th>
-            <th pSortableColumn="category_id">
-              Categorie <p-sortIcon field="category_id" />
-            </th>
-            <th pSortableColumn="open_option_issues_count">
-              Avaries
-              <p-sortIcon field="open_option_issues_count" />
-            </th>
-            <th></th>
-          </tr>
-        </ng-template>
-        <ng-template #body let-item>
-          <tr (click)="isAdmin() ? openItemUpdate(item) : openItemView(item)">
-            <td class="image">
-              <p-badge
-                size="small"
-                value=" "
-                [severity]="
-                  item.state === 'OK'
-                    ? 'success'
-                    : item.state === 'NOK'
-                      ? 'warn'
-                      : item.state === 'KO'
-                        ? 'danger'
-                        : 'info'
-                " />
-            </td>
-            <td class="image">
-              @if (item.image) {
-                <img [src]="baseUrl + item.image" alt="" />
-              }
-            </td>
-            <td>{{ item.name }}</td>
-            <td style="text-wrap: nowrap;">{{ item.category.name }}</td>
-            <td style="text-wrap: nowrap;text-align: center;">
-              {{ item.open_option_issues_count }}
-            </td>
-            <td class="actions">
-              <p-button
-                icon="pi pi-trash"
-                size="small"
-                severity="danger"
-                (onClick)="deleteItem(item)" />
-            </td>
-          </tr>
-        </ng-template>
-      </p-table> -->
       <app-paginator
         [(page)]="page"
         [(size)]="size"

@@ -81,7 +81,7 @@ export class Step2Component implements OnInit {
   page = signal(0);
   size = signal(100);
   searchQuery = signal('');
-  orderBy = signal('name');
+  orderBy = signal('items.name');
   sortBy = signal<1 | -1>(1);
   categoryId = signal<number | undefined>(undefined);
   selectedItems!: Signal<ItemSelection[]>;

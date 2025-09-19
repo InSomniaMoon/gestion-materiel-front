@@ -27,12 +27,21 @@
       </button>
     }
   </div>
-  <p-table [value]="items()">
+  <p-table
+    [value]="items()"
+    stripedRows
+    [sortField]="orderBy()"
+    [sortOrder]="sortBy()"
+    (onSort)="orderBy.set($event.field); sortBy.set($event.order)">
     <ng-template #header>
       <tr>
         <th></th>
-        <th>Nom</th>
-        <th>Catégorie</th>
+        <th pSortableColumn="items.name">
+          Nom<p-sortIcon field="items.name" />
+        </th>
+        <th pSortableColumn="category_id">
+          Categorie <p-sortIcon field="category_id" />
+        </th>
       </tr>
     </ng-template>
     <ng-template #body let-product>

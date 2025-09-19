@@ -34,19 +34,6 @@
       <li>{{ chef.name }} ({{ chef.code }})</li>
     }
   </ul>
-
-  @if (chiefsControl.length > 0) {
-    <p-float-label variant="on">
-      <p-select
-        [style]="{ width: '100%' }"
-        formControlName="responsible"
-        optionLabel="name"
-        [options]="chiefsControl"
-        showClear />
-
-      <label for="responsible">Contact matériel</label>
-    </p-float-label>
-  }
 </form>
 <p-footer>
   <p-button label="Annuler" severity="secondary" (onClick)="closeCancel()" />
