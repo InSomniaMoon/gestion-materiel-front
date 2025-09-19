@@ -30,7 +30,8 @@
   gap: 1rem;
 }
 
-app-list-item {
+app-list-item,
+tr {
   cursor: pointer;
   text-decoration: none;
   &:hover {

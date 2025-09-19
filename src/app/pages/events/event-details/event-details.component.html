@@ -15,6 +15,9 @@
 {{ event().start_date | date: 'short' }} -
 {{ event().end_date | date: 'short' }}
 
+<h2>Commentaire</h2>
+<pre>{{ event().comment }}</pre>
+
 <h2>Matériel emprunté</h2>
 <div class="material">
   @for (item of event().event_subscriptions; track item.id) {
