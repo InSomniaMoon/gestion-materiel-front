@@ -130,3 +130,10 @@ td:not(.p-datepicker-day-cell) {
     display: none;
   }
 }
+
+p-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 1rem;
+}

@@ -4,6 +4,7 @@ import {
   computed,
   effect,
   inject,
+  OnInit,
   resource,
   signal,
 } from '@angular/core';
@@ -11,16 +12,14 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { SearchBarComponent } from '@app/components/search-bar/search-bar.component';
-import {
-  SimpleModalComponent,
-  SimpleModalData,
-} from '@app/components/simple-modal/simple-modal.component';
 import { PaginatorComponent } from '@app/components/ui/paginator/paginator.component';
+import { CategoriesService } from '@app/core/services/categories.service';
 import { AppTable } from '@components/ui/table/table.component';
 import { Item } from '@core/types/item.type';
 import { environment } from '@env/environment';
 import { ItemsService } from '@services/items.service';
 import { buildDialogOptions } from '@utils/constants';
+import { Badge } from 'primeng/badge';
 import { Button } from 'primeng/button';
 import { DataView } from 'primeng/dataview';
 import { DialogService } from 'primeng/dynamicdialog';
@@ -29,6 +28,7 @@ import { SelectModule } from 'primeng/select';
 import { TableModule } from 'primeng/table';
 import { fromEvent, lastValueFrom, map } from 'rxjs';
 import { CreateUpdateItemComponent } from './create-update-item/create-update-item.component';
+import { ItemsReloaderService } from './items-reloader.service';
 import { ListItemComponent } from './list-item/list-item.component';
 @Component({
   selector: 'app-items-list',
@@ -43,12 +43,23 @@ import { ListItemComponent } from './list-item/list-item.component';
     PaginatorComponent,
     DataView,
     ListItemComponent,
+    FormsModule,
     RouterLink,
+    Badge,
   ],
+  providers: [ItemsReloaderService],
   template: `
     <div class="header">
-      <div class="flex">
+      <div class="flex wrap">
         <h1>Objets</h1>
+        <p-select
+          [options]="categories()"
+          optionLabel="label"
+          optionValue="code"
+          placeholder="Catégorie"
+          [style]="{ width: isMobile() ? '100%' : '200px' }"
+          [ngModel]="selectedCategory()"
+          (ngModelChange)="selectedCategory.set($event)" />
         <app-search-bar (queryChange)="searchQuery.set($event)" />
       </div>
       @if (isAdmin()) {
@@ -60,7 +71,7 @@ import { ListItemComponent } from './list-item/list-item.component';
     </div>
 
     <matos-table [status]="items.status()">
-      <p-data-view [value]="items.value()?.data ?? []" layout="list">
+      <!-- <p-data-view [value]="items.value()?.data ?? []" layout="list">
         <ng-template #list let-items>
           @for (item of items; track $index) {
             <app-list-item
@@ -80,7 +91,57 @@ import { ListItemComponent } from './list-item/list-item.component';
             }
           </div>
         </ng-template>
-      </p-data-view>
+      </p-data-view> -->
+
+      <p-table
+        [value]="items.value()?.data ?? []"
+        stripedRows
+        [sortField]="orderBy()"
+        [sortOrder]="sortBy()"
+        (onSort)="orderBy.set($event.field); sortBy.set($event.order)">
+        <ng-template #header>
+          <tr>
+            <th pSortableColumn="state">Etat<p-sortIcon field="state" /></th>
+            <th></th>
+            <th pSortableColumn="name">Nom<p-sortIcon field="name" /></th>
+            <th pSortableColumn="category_id">
+              Categorie <p-sortIcon field="category_id" />
+            </th>
+            <th pSortableColumn="open_option_issues_count">
+              Avaries
+              <p-sortIcon field="open_option_issues_count" />
+            </th>
+          </tr>
+        </ng-template>
+        <ng-template #body let-item>
+          <tr (click)="isAdmin() ? openItemUpdate(item) : openItemView(item)">
+            <td class="image">
+              <p-badge
+                size="small"
+                value=" "
+                [severity]="
+                  item.state === 'OK'
+                    ? 'success'
+                    : item.state === 'NOK'
+                      ? 'warn'
+                      : item.state === 'KO'
+                        ? 'danger'
+                        : 'info'
+                " />
+            </td>
+            <td class="image">
+              @if (item.image) {
+                <img [src]="baseUrl + item.image" alt="" />
+              }
+            </td>
+            <td>{{ item.name }}</td>
+            <td style="text-wrap: nowrap;">{{ item.category.name }}</td>
+            <td style="text-wrap: nowrap;text-align: center;">
+              {{ item.open_option_issues_count }}
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
 
       <app-paginator
         [(page)]="page"
@@ -92,9 +153,30 @@ import { ListItemComponent } from './list-item/list-item.component';
   styleUrl: './items-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ItemsListComponent {
+export class ItemsListComponent implements OnInit {
   private readonly itemService = inject(ItemsService);
   private readonly dialogService = inject(DialogService);
+  private readonly categoriesService = inject(CategoriesService);
+
+  categories = toSignal(
+    this.categoriesService
+      .getCategories({
+        size: 50,
+        order_by: 'name',
+        sort_by: 'asc',
+        page: 1,
+        q: '',
+      })
+      .pipe(
+        map(categories =>
+          categories.data.map(cat => ({ label: cat.name, code: cat.id }))
+        )
+      ),
+    { initialValue: [] }
+  );
+
+  selectedCategory = signal<number | undefined>(undefined);
+
   isAdmin = toSignal(
     inject(ActivatedRoute).data.pipe(map(data => data['isAdmin'] || false)),
     { initialValue: false }
@@ -141,8 +223,17 @@ export class ItemsListComponent {
       q: this.searchQuery(),
       order_by: this.orderBy(),
       sort_by: this.sortBy() === 1 ? 'asc' : 'desc',
+      selected_category: this.selectedCategory(),
     }),
   });
+
+  private readonly reoladItemService = inject(ItemsReloaderService);
+
+  ngOnInit(): void {
+    this.reoladItemService.reloadItem.subscribe(() => {
+      this.items.reload();
+    });
+  }
 
   openCreateItem() {
     this.dialogService
@@ -175,29 +266,6 @@ export class ItemsListComponent {
       .onClose.subscribe(updated => {
         if (updated) {
           this.items.reload();
-        }
-      });
-  }
-
-  deleteItem(item: Item) {
-    this.dialogService
-      .open(
-        SimpleModalComponent,
-        buildDialogOptions<SimpleModalData>({
-          header: 'Supprimer ' + item.name,
-          data: {
-            message: `Êtes-vous sûr de vouloir supprimer l'objet "${item.name}" ?`,
-            cancelText: 'Annuler',
-            confirmText: 'Supprimer',
-            confirm: true,
-          },
-        })
-      )
-      .onClose.subscribe(confirmed => {
-        if (confirmed) {
-          this.itemService.deleteItem(item).subscribe(() => {
-            this.items.reload();
-          });
         }
       });
   }

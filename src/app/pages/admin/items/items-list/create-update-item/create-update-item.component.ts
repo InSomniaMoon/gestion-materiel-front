@@ -11,11 +11,18 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import {
   FormArray,
   FormBuilder,
+  FormControl,
+  FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import {
+  SimpleModalComponent,
+  SimpleModalData,
+} from '@app/components/simple-modal/simple-modal.component';
 import { UploadFileComponent } from '@app/components/upload-file/upload-file.component';
 import { AuthService } from '@app/core/services/auth.service';
+import { buildDialogOptions } from '@app/core/utils/constants';
 import { Item } from '@core/types/item.type';
 import { ItemsService } from '@services/items.service';
 import { AutoCompleteModule } from 'primeng/autocomplete';
@@ -27,6 +34,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { Select } from 'primeng/select';
 import { Textarea } from 'primeng/textarea';
 import { tap } from 'rxjs';
+import { ItemsReloaderService } from '../items-reloader.service';
 @Component({
   selector: 'app-create-update-item',
   imports: [
@@ -127,7 +135,17 @@ import { tap } from 'rxjs';
         }
         <p-button label="Option" icon="pi pi-plus" (onClick)="addOption()" />
       </div>
-
+    </form>
+    <p-footer>
+      @if (data) {
+        <p-button
+          icon="pi pi-trash"
+          severity="danger"
+          label="Supprimer"
+          (onClick)="deleteItem()" />
+      } @else {
+        <div></div>
+      }
       <button
         pButton
         [disabled]="!form.valid"
@@ -135,7 +153,7 @@ import { tap } from 'rxjs';
         (click)="onSubmit()">
         {{ data ? 'Modifier' : 'Créer' }}
       </button>
-    </form>
+    </p-footer>
   `,
   styleUrl: './create-update-item.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -188,7 +206,14 @@ export class CreateUpdateItemComponent implements OnInit {
     category_id: this.fb.nonNullable.control<number | undefined>(undefined, {
       validators: [Validators.required],
     }),
-    options: this.fb.nonNullable.array([this.newOption()]),
+    options: this.fb.nonNullable.array<
+      FormGroup<{
+        id: FormControl<number | null>;
+        name: FormControl<string>;
+        description: FormControl<string>;
+        item_id: FormControl<number | null>;
+      }>
+    >([]),
     date_of_buy: this.fb.nonNullable.control<Date | undefined>(undefined, {
       validators: [],
     }),
@@ -292,5 +317,32 @@ export class CreateUpdateItemComponent implements OnInit {
         },
       });
     }
+  }
+
+  reoladItemService = inject(ItemsReloaderService);
+
+  deleteItem() {
+    this.dialogService
+      .open(
+        SimpleModalComponent,
+        buildDialogOptions<SimpleModalData>({
+          header: 'Supprimer ' + this.data!.name,
+          data: {
+            message: `Êtes-vous sûr de vouloir supprimer l'objet "${this.data!.name}" ?`,
+            cancelText: 'Annuler',
+            confirmText: 'Supprimer',
+            confirm: true,
+            severity: 'danger',
+          },
+        })
+      )
+      .onClose.subscribe(confirmed => {
+        if (confirmed) {
+          this.itemService.deleteItem(this.data!).subscribe(() => {
+            // this.items.reload();
+            this.reoladItemService.reloadItem.next();
+          });
+        }
+      });
   }
 }

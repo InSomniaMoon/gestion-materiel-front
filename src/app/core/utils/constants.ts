@@ -13,6 +13,7 @@ export function buildDialogOptions<T>(
   options: DynamicDialogConfig<T>
 ): DynamicDialogConfig {
   return {
+    closable: true,
     ...options,
     closeOnEscape: true,
     dismissableMask: true,

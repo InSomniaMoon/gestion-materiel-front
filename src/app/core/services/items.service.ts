@@ -66,6 +66,7 @@ export class ItemsService {
       order_by?: string;
       category_id?: number;
       sort_by?: string;
+      selected_category?: number;
     } = {
       page: 1,
       size: 25,
