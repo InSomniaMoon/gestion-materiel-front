@@ -38,6 +38,9 @@ input
   &.wrap {
     flex-wrap: wrap;
   }
+  &.justify-end {
+    justify-content: end;
+  }
 }
 .flex-column {
   display: flex;

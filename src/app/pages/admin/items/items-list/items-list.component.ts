@@ -25,6 +25,7 @@ import { DataView } from 'primeng/dataview';
 import { DialogService } from 'primeng/dynamicdialog';
 import { PaginatorModule } from 'primeng/paginator';
 import { SelectModule } from 'primeng/select';
+import { SelectButton } from 'primeng/selectbutton';
 import { TableModule } from 'primeng/table';
 import { fromEvent, lastValueFrom, map } from 'rxjs';
 import { CreateUpdateItemComponent } from './create-update-item/create-update-item.component';
@@ -46,6 +47,7 @@ import { ListItemComponent } from './list-item/list-item.component';
     FormsModule,
     RouterLink,
     Badge,
+    SelectButton,
   ],
   providers: [ItemsReloaderService],
   template: `
@@ -71,16 +73,85 @@ import { ListItemComponent } from './list-item/list-item.component';
     </div>
 
     <matos-table [status]="items.status()">
-      <!-- <p-data-view [value]="items.value()?.data ?? []" layout="list">
+      <p-data-view [value]="items.value()?.data ?? []" [layout]="layout()">
+        <ng-template #header>
+          <div class="flex justify-end">
+            <p-select-button
+              [(ngModel)]="layout"
+              [options]="dataViewType"
+              [allowEmpty]="false"
+              size="small">
+              <ng-template #item let-option>
+                <i
+                  [class]="
+                    option.value === 'list' ? 'pi pi-bars' : 'pi pi-table'
+                  "></i>
+              </ng-template>
+            </p-select-button>
+          </div>
+        </ng-template>
         <ng-template #list let-items>
-          @for (item of items; track $index) {
+          <p-table
+            [value]="items ?? []"
+            stripedRows
+            [sortField]="orderBy()"
+            [sortOrder]="sortBy()"
+            (onSort)="orderBy.set($event.field); sortBy.set($event.order)">
+            <ng-template #header>
+              <tr>
+                <th pSortableColumn="state">
+                  Etat<p-sortIcon field="state" />
+                </th>
+                <th></th>
+                <th pSortableColumn="name">Nom<p-sortIcon field="name" /></th>
+                <th pSortableColumn="category_id">
+                  Categorie <p-sortIcon field="category_id" />
+                </th>
+                <th pSortableColumn="open_option_issues_count">
+                  Avaries
+                  <p-sortIcon field="open_option_issues_count" />
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template #body let-item>
+              <tr
+                (click)="isAdmin() ? openItemUpdate(item) : openItemView(item)">
+                <td class="image">
+                  <p-badge
+                    size="small"
+                    value=" "
+                    [severity]="
+                      item.state === 'OK'
+                        ? 'success'
+                        : item.state === 'NOK'
+                          ? 'warn'
+                          : item.state === 'KO'
+                            ? 'danger'
+                            : 'info'
+                    " />
+                </td>
+                <td class="image">
+                  @if (item.image) {
+                    <img [src]="baseUrl + item.image" alt="" />
+                  }
+                </td>
+                <td>{{ item.name }}</td>
+                <td style="text-wrap: nowrap;">{{ item.category.name }}</td>
+                <td style="text-wrap: nowrap;text-align: center;">
+                  {{ item.open_option_issues_count }}
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+
+          <!-- @for (item of items; track $index) {
             <app-list-item
               (click)="isAdmin() ? openItemUpdate(item) : openItemView(item)"
               [item]="item" />
             @if (!$last) {
               <hr style="margin: 0 1rem;" />
             }
-          }
+          } -->
         </ng-template>
         <ng-template #grid let-items>
           <div class="grid">
@@ -91,57 +162,7 @@ import { ListItemComponent } from './list-item/list-item.component';
             }
           </div>
         </ng-template>
-      </p-data-view> -->
-
-      <p-table
-        [value]="items.value()?.data ?? []"
-        stripedRows
-        [sortField]="orderBy()"
-        [sortOrder]="sortBy()"
-        (onSort)="orderBy.set($event.field); sortBy.set($event.order)">
-        <ng-template #header>
-          <tr>
-            <th pSortableColumn="state">Etat<p-sortIcon field="state" /></th>
-            <th></th>
-            <th pSortableColumn="name">Nom<p-sortIcon field="name" /></th>
-            <th pSortableColumn="category_id">
-              Categorie <p-sortIcon field="category_id" />
-            </th>
-            <th pSortableColumn="open_option_issues_count">
-              Avaries
-              <p-sortIcon field="open_option_issues_count" />
-            </th>
-          </tr>
-        </ng-template>
-        <ng-template #body let-item>
-          <tr (click)="isAdmin() ? openItemUpdate(item) : openItemView(item)">
-            <td class="image">
-              <p-badge
-                size="small"
-                value=" "
-                [severity]="
-                  item.state === 'OK'
-                    ? 'success'
-                    : item.state === 'NOK'
-                      ? 'warn'
-                      : item.state === 'KO'
-                        ? 'danger'
-                        : 'info'
-                " />
-            </td>
-            <td class="image">
-              @if (item.image) {
-                <img [src]="baseUrl + item.image" alt="" />
-              }
-            </td>
-            <td>{{ item.name }}</td>
-            <td style="text-wrap: nowrap;">{{ item.category.name }}</td>
-            <td style="text-wrap: nowrap;text-align: center;">
-              {{ item.open_option_issues_count }}
-            </td>
-          </tr>
-        </ng-template>
-      </p-table>
+      </p-data-view>
 
       <app-paginator
         [(page)]="page"
@@ -175,6 +196,11 @@ export class ItemsListComponent implements OnInit {
     { initialValue: [] }
   );
 
+  dataViewType = [
+    { label: 'Liste', value: 'list' },
+    { label: 'Tableau', value: 'grid' },
+  ];
+  layout = signal<'list' | 'grid'>('list');
   selectedCategory = signal<number | undefined>(undefined);
 
   isAdmin = toSignal(

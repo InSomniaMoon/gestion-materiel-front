@@ -3,6 +3,7 @@ import ThemeBase from '@primeng/themes/lara';
 import { LaraBaseTokenSections } from '@primeuix/themes/lara/base';
 import { ButtonDesignTokens } from '@primeuix/themes/types/button';
 import { DataTableDesignTokens } from '@primeuix/themes/types/datatable';
+import { DataViewDesignTokens } from '@primeuix/themes/types/dataview';
 import { DatePickerDesignTokens } from '@primeuix/themes/types/datepicker';
 import { MenubarDesignTokens } from '@primeuix/themes/types/menubar';
 import { ProgressSpinnerDesignTokens } from '@primeuix/themes/types/progressspinner';
@@ -235,5 +236,11 @@ export const SgdfPresetTheme = definePreset(ThemeBase, {
         padding: '0px',
       },
     } as DatePickerDesignTokens,
+    dataview: {
+      header: {
+        padding: '0.25rem 1rem',
+        background: 'white',
+      },
+    } as DataViewDesignTokens,
   },
 });

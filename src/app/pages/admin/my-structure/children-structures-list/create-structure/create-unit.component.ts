@@ -19,7 +19,6 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { FloatLabel } from 'primeng/floatlabel';
 import { InputText } from 'primeng/inputtext';
 import { MultiSelect } from 'primeng/multiselect';
-import { Select } from 'primeng/select';
 import { lastValueFrom, map } from 'rxjs';
 @Component({
   selector: 'app-create-unit',
@@ -31,7 +30,6 @@ import { lastValueFrom, map } from 'rxjs';
     ReactiveFormsModule,
     FloatLabel,
     MultiSelect,
-    Select,
   ],
   templateUrl: './create-unit.component.html',
   styleUrl: './create-unit.component.scss',
