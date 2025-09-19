@@ -2,11 +2,13 @@ import {
   ChangeDetectionStrategy,
   Component,
   inject,
+  input,
   OnInit,
   resource,
   signal,
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { StructureWithPivot } from '@app/core/types/structure.type';
 import { User } from '@core/types/user.type';
 import { UsersService } from '@services/users.service';
 import { debounceTimeSignal } from '@utils/signals.utils';
@@ -43,6 +45,8 @@ export class CreateUnitComponent implements OnInit {
 
   validateLabel = signal('Créer');
 
+  structure = input<StructureWithPivot>();
+
   form = this.fb.nonNullable.group({
     name: ['', [Validators.required]],
     color: ['#000000', [Validators.required]],
@@ -55,8 +59,6 @@ export class CreateUnitComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const data = this.dialog$.getInstance(this.ref).data;
-
     // syncro input et colorpicker
     this.form.get('color')!.valueChanges.subscribe({
       next: value => {
@@ -69,22 +71,16 @@ export class CreateUnitComponent implements OnInit {
       error: error => {},
     });
 
-    if (data) {
+    if (this.structure()) {
       this.validateLabel.set('Modifier');
       this.form.patchValue({
-        name: data.name || '',
-        color: data.color || '#000000',
+        name: this.structure()!.name || '',
+        color: this.structure()!.color || '#000000',
         chiefs:
-          (data.chiefs as User[]).map(c => ({
+          (this.structure()!.members as User[]).map(c => ({
             code: c.id,
             name: `${c.firstname} ${c.lastname}`,
           })) || [],
-        responsible: data.responsible
-          ? {
-              name: `${data.responsible.firstname} ${data.responsible.lastname}`,
-              code: data.responsible.id,
-            }
-          : null,
       });
     }
 

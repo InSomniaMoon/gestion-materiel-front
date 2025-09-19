@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import { LoginDTO } from '@core/types/loginDTO.type';
 import { User } from '@core/types/user.type';
 import { environment } from '@env/environment';
@@ -88,7 +89,7 @@ export class AuthService {
   }) {
     return this.http.post(`${this.api_url}/auth/reset-password`, dto);
   }
-
+  private readonly router = inject(Router);
   setSelectStructureById(id: number) {
     this.http
       .post<LoginDTO>(`${this.api_url}/auth/${id}/select-structure`, {
@@ -97,9 +98,15 @@ export class AuthService {
       .subscribe({
         next: result => {
           this.jwt.set(result.token);
-          this._selectedStructure.set(
-            this._userStructures().find(g => g.id == id)!
-          );
+          const structure = this.structures().find(g => g.id == id)!;
+
+          if (
+            this.router.url.includes('/admin') &&
+            structure.pivot.role !== 'admin'
+          ) {
+            this.router.navigateByUrl('/dashboard');
+          }
+          this._selectedStructure.set(structure);
         },
       });
   }

@@ -11,6 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { SearchBarComponent } from '@app/components/search-bar/search-bar.component';
 import { PaginatorComponent } from '@app/components/ui/paginator/paginator.component';
 import { AppTable } from '@app/components/ui/table/table.component';
+import { AuthService } from '@app/core/services/auth.service';
 import { environment } from '@env/environment';
 import { TippyDirective } from '@ngneat/helipopper';
 import { UsersService } from '@services/users.service';
@@ -39,7 +40,7 @@ import { AddUserModalComponent } from './add-user-modal/add-user-modal.component
 export class UsersListComponent {
   private readonly usersService = inject(UsersService);
   private readonly dialogService = inject(DialogService);
-
+  private readonly selectedStructure = inject(AuthService).selectedStructure;
   constructor() {
     effect(() => {
       this.orderBy();
@@ -65,7 +66,10 @@ export class UsersListComponent {
     loader: ({ params }) =>
       lastValueFrom(
         this.usersService.getPaginatedUsers({
-          ...params,
+          size: params.size,
+          q: params.q,
+          order_by: params.order_by,
+          sort_by: params.sort_by,
           page: params.page + 1,
         })
       ),
@@ -75,6 +79,7 @@ export class UsersListComponent {
       q: this.searchQuery(),
       order_by: this.orderBy(),
       sort_by: this.sortBy() === 1 ? 'asc' : 'desc',
+      selected_structure: this.selectedStructure(),
     }),
   });
 

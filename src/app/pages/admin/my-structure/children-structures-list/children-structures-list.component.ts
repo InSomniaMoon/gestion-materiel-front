@@ -42,22 +42,6 @@ export class ChildrenStructuresListComponent {
         }
 
         console.log('Creating unit with data:', result);
-
-        // this.unitsService
-        //   .createUnit({
-        //     color: result.color,
-        //     name: result.name,
-        //     chiefs: result.chiefs,
-        //     responsible: result.responsible,
-        //   })
-        //   .subscribe({
-        //     next: () => {
-        //       this.units.reload();
-        //     },
-        //     error: error => {
-        //       console.error("Erreur pendant la création de l'unité :", error);
-        //     },
-        //   });
       });
   }
 
@@ -70,6 +54,9 @@ export class ChildrenStructuresListComponent {
           width: '50%',
           height: '80%',
           data: unit,
+          inputValues: {
+            structure: unit,
+          },
         })
       )
       .onClose.subscribe(result => {
