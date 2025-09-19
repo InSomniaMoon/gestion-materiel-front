@@ -16,5 +16,5 @@
 
 <p-footer>
   <p-button label="Fermer" severity="secondary" (onClick)="ref.close()" />
-  <p-button [label]="saveType()" [disabled]="!form.valid" (onClick)="save()" />
+  <p-button [label]="saveType()" [disabled]="form.invalid" (onClick)="save()" />
 </p-footer>

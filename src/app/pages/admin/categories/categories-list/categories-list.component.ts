@@ -100,7 +100,7 @@ export class CategoriesListComponent {
       .open(
         CreateUpdateCategoryComponent,
         buildDialogOptions({
-          data: { category, groupId: this.selectedStructure()!.id },
+          data: { category, structureId: this.selectedStructure()!.id },
           header: 'Modifier la catégorie',
           width: '50%',
         })
