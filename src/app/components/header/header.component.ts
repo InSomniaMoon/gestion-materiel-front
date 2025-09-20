@@ -5,6 +5,7 @@ import {
   inject,
   OnInit,
 } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { environment } from '@env/environment';
 import { AuthService } from '@services/auth.service';
@@ -13,6 +14,7 @@ import { AvatarModule } from 'primeng/avatar';
 import { Badge } from 'primeng/badge';
 import { DialogService } from 'primeng/dynamicdialog';
 import { MenubarModule } from 'primeng/menubar';
+import { Select } from 'primeng/select';
 import { TieredMenuModule } from 'primeng/tieredmenu';
 
 export type MenuItemWithImage = MenuItem & {
@@ -22,7 +24,15 @@ export type MenuItemWithImage = MenuItem & {
 };
 @Component({
   selector: 'app-header',
-  imports: [AvatarModule, TieredMenuModule, MenubarModule, RouterLink, Badge],
+  imports: [
+    AvatarModule,
+    TieredMenuModule,
+    MenubarModule,
+    RouterLink,
+    Badge,
+    Select,
+    FormsModule,
+  ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -36,7 +46,7 @@ export class HeaderComponent implements OnInit {
   readonly selectedStructure = this.auth$.selectedStructure;
   private readonly router = inject(Router);
 
-  protected readonly apiUrl = environment.api_url + '/storage/';
+  protected readonly imgBaseUrl = environment.api_url + '/storage/';
 
   lettres = computed(() =>
     this.user()
@@ -44,27 +54,17 @@ export class HeaderComponent implements OnInit {
       : ''
   );
 
+  setSelectStructureById(id: number) {
+    this.auth$.setSelectStructureById(id);
+  }
+  selectedStructureId = computed(() => this.auth$.selectedStructure()?.id);
   authItems = computed<MenuItemWithImage[]>(() => [
     {
       label: this.selectedStructure()?.name ?? 'Groupe Actif',
       img: this.selectedStructure()?.image,
       icon: 'pi pi-users',
       command: undefined,
-      items:
-        this.structures().length > 1
-          ? this.structures().map(structure => ({
-              label: structure.name,
-              img: structure.image,
-              icon: 'pi pi-users',
-              command: () => this.auth$.setSelectStructureById(structure.id),
-            }))
-          : undefined,
     },
-    // {
-    //   label: 'Mon compte',
-    //   routerLink: '/account',
-    //   icon: 'pi pi-user',
-    // },
     {
       label: 'Déconnexion',
       icon: 'pi pi-sign-out',
@@ -80,18 +80,30 @@ export class HeaderComponent implements OnInit {
       routerLink: '/dashboard',
       icon: 'pi pi-home',
     },
-
+    { label: 'Matériel', routerLink: '/items', icon: 'pi pi-box' },
     {
       label: 'Administration',
       icon: 'pi pi-cog',
-      routerLink: '/admin',
+      // routerLink: '/admin',
       visible: this.auth$.isAdmin(),
-      // style: {
-      //   display:
-      //     this.selectedGroup()?.pivot.role == ('admin' as string)
-      //       ? 'block'
-      //       : 'none',
-      // },
+      items: [
+        { label: 'Objets', icon: 'pi pi-box', routerLink: '/admin/items' },
+        {
+          label: 'Catégories',
+          icon: 'pi pi-tags',
+          routerLink: '/admin/categories',
+        },
+        {
+          label: 'Ma Structure',
+          icon: 'pi pi-building',
+          routerLink: '/admin/structures',
+        },
+        {
+          label: 'Utilisateurs',
+          icon: 'pi pi-users',
+          routerLink: '/admin/users',
+        },
+      ],
     },
     {
       label: 'App Admininistration',
@@ -102,6 +114,7 @@ export class HeaderComponent implements OnInit {
       //   display: this.auth$.isAppAdmin() ? 'block' : 'none',
       // },
     },
+    { separator: true },
   ]);
   ngOnInit(): void {}
 }
