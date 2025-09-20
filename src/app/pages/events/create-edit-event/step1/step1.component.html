@@ -27,39 +27,48 @@
     </div>
   </div>
   <div class="flex wrap">
-    <p-float-label variant="on" class="flex-1">
-      <p-date-picker
-        formControlName="start_date"
-        fluid
-        showIcon
-        appendTo="body"
-        iconDisplay="input"
-        [disabled]="true"
-        [dateFormat]="dateFormat"
-        id="start_date" />
-      <label for="start_date">Début de l'emprunt</label>
-    </p-float-label>
-
-    <p-float-label variant="on" class="flex-1">
-      <p-date-picker
-        formControlName="end_date"
-        fluid
-        [readonlyInput]="true"
-        showIcon
-        appendTo="body"
-        iconDisplay="input"
-        [disabled]="true"
-        [dateFormat]="dateFormat"
-        id="end_date" />
-      <label for="end_date">Fin de l'emprunt</label>
-    </p-float-label>
+    <div class="flex flex-1">
+      <p-float-label variant="on" class="flex-1">
+        <p-date-picker
+          formControlName="start_date"
+          fluid
+          showIcon
+          appendTo="body"
+          iconDisplay="input"
+          [dateFormat]="dateFormat"
+          id="start_date" />
+        <label for="start_date">Début de l'emprunt</label>
+      </p-float-label>
+      <p-select
+        [options]="predefinedDurations"
+        [(ngModel)]="startTime"
+        [ngModelOptions]="{ standalone: true }" />
+    </div>
+    <div class="flex flex-1">
+      <p-float-label variant="on" class="flex-1">
+        <p-date-picker
+          formControlName="end_date"
+          fluid
+          [readonlyInput]="true"
+          showIcon
+          appendTo="body"
+          iconDisplay="input"
+          [dateFormat]="dateFormat"
+          id="end_date" />
+        <label for="end_date">Fin de l'emprunt</label>
+      </p-float-label>
+      <p-select
+        [options]="predefinedDurations"
+        [(ngModel)]="endTime"
+        [ngModelOptions]="{ standalone: true }" />
+    </div>
   </div>
   <p-date-picker
     selectionMode="range"
     inline
     fluid
     [ngModelOptions]="{ standalone: true }"
-    [ngModel]="doubleDates()"
+    [(ngModel)]="doubleDates"
     (ngModelChange)="datesSelected($event)" />
 </form>
 

@@ -11,7 +11,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ActualEvent } from '@app/core/types/event.type';
 import { ItemWithQuantity } from '@app/core/types/item.type';
 import { EventsService } from '@services/events.service';
@@ -90,7 +90,12 @@ export class CreateEditEventComponent implements OnInit {
 
   private readonly eventService = inject(EventsService);
 
+  activatedRoute = inject(ActivatedRoute);
+  step = 1;
   ngOnInit(): void {
+    const step = this.activatedRoute.snapshot.queryParamMap.get('step');
+
+    if (step) this.step = Number.parseInt(step);
     if (!this.event()) return;
 
     this.form.setValue({

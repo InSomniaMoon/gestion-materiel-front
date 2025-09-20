@@ -98,11 +98,9 @@ export class Step2Component implements OnInit {
 
   ngOnInit() {
     runInInjectionContext(this.injectionContext, () => {
-      this.selectedItems = toSignal(
-        this.formGroup().valueChanges,
-        // .pipe(map(items => items?.length || 0))
-        { initialValue: this.formGroup().value || [] }
-      );
+      this.selectedItems = toSignal(this.formGroup().valueChanges, {
+        initialValue: this.formGroup().value || [],
+      });
     });
   }
   itemsResource = resource({
@@ -123,8 +121,6 @@ export class Step2Component implements OnInit {
   });
 
   items = computed(() => {
-    console.log(this.selectedItems());
-
     return (this.itemsResource.value()?.data ?? []).map(item => ({
       ...item,
       selected: this.selectedItems().some(i => i.item.id === item.id) || false,
