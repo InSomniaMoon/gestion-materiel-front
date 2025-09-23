@@ -13,6 +13,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { SearchBarComponent } from '@app/components/search-bar/search-bar.component';
 import { PaginatorComponent } from '@app/components/ui/paginator/paginator.component';
+import { AuthService } from '@app/core/services/auth.service';
 import { CategoriesService } from '@app/core/services/categories.service';
 import { AppTable } from '@components/ui/table/table.component';
 import { Item } from '@core/types/item.type';
@@ -230,6 +231,10 @@ export class ItemsListComponent implements OnInit {
   ];
   baseUrl = environment.api_url + '/storage/';
 
+  selectedStructure = computed(
+    () => inject(AuthService).selectedStructure()?.id
+  );
+
   page = signal(0);
   size = signal(100);
   searchQuery = signal('');
@@ -240,7 +245,15 @@ export class ItemsListComponent implements OnInit {
   items = resource({
     loader: ({ params }) => {
       return lastValueFrom(
-        this.itemService.getAdminItems({ ...params, page: params.page + 1 })
+        this.itemService.getAdminItems({
+          page: params.page + 1,
+          category_id: params.selected_category,
+          order_by: params.order_by,
+          sort_by: params.sort_by,
+          size: params.size,
+          q: params.q,
+          selected_category: params.selected_category,
+        })
       );
     },
     params: () => ({
@@ -250,6 +263,7 @@ export class ItemsListComponent implements OnInit {
       order_by: this.orderBy(),
       sort_by: this.sortBy() === 1 ? 'asc' : 'desc',
       selected_category: this.selectedCategory(),
+      structure_id: this.selectedStructure(),
     }),
   });
 
