@@ -109,9 +109,9 @@ import { ListItemComponent } from './list-item/list-item.component';
                 <th pSortableColumn="category_id">
                   Categorie <p-sortIcon field="category_id" />
                 </th>
-                <th pSortableColumn="open_option_issues_count">
-                  Avaries
-                  <p-sortIcon field="open_option_issues_count" />
+                <th pSortableColumn="open_issues_count">
+                  Problèmes
+                  <p-sortIcon field="open_issues_count" />
                 </th>
               </tr>
             </ng-template>
