@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ItemIssuesService } from '@app/core/services/item-issues.service';
-import { ItemIssue } from '@core/types/optionIssue.type';
+import { ItemIssue } from '@app/core/types/itemIssue.type';
 import { IssueCommentsService } from '@services/issue-comments.service';
 import { injectQuery } from '@tanstack/angular-query-experimental';
 import { buildDialogOptions } from '@utils/constants';

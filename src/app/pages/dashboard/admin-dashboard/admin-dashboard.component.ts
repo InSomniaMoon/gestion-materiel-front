@@ -9,8 +9,8 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ItemIssuesService } from '@app/core/services/item-issues.service';
+import { AdminDashboardItemIssue } from '@app/core/types/itemIssue.type';
 import { SortBy } from '@app/core/types/pagination-request.type';
-import { AdminDashboardItemIssue } from '@core/types/optionIssue.type';
 import { environment } from '@env/environment';
 import { ButtonDirective } from 'primeng/button';
 import { Card } from 'primeng/card';
@@ -25,7 +25,7 @@ import { lastValueFrom, tap } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminDashboardComponent {
-  private optionIssuesService = inject(ItemIssuesService);
+  private itemIssuesService = inject(ItemIssuesService);
 
   baseUrl = environment.api_url + '/storage/';
 
@@ -52,7 +52,7 @@ export class AdminDashboardComponent {
     }),
     loader: ({ params }) =>
       lastValueFrom(
-        this.optionIssuesService.getPaginatedOpenedIssues(params).pipe(
+        this.itemIssuesService.getPaginatedOpenedIssues(params).pipe(
           tap(issues => {
             this._issues.update(v => [...v, ...issues.data]);
           })

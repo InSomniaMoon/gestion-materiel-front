@@ -72,11 +72,11 @@ import { ToggleSwitch } from 'primeng/toggleswitch';
 export class DeclareIssueComponent {
   ref = inject(DynamicDialogRef);
   dialogService = inject(DialogService);
-  private readonly optionIssuesService = inject(ItemIssuesService);
+  private readonly itemIssuesService = inject(ItemIssuesService);
   private readonly messageService = inject(MessageService);
 
   item = input.required<Item>();
-  options = computed(() => this.item()?.options || []);
+  options = computed(() => this.item()?.options ?? []);
 
   fb = inject(FormBuilder);
   form = this.fb.nonNullable.group({
@@ -85,14 +85,14 @@ export class DeclareIssueComponent {
       validators: [Validators.required],
     }),
     usable: this.fb.nonNullable.control(true),
-    optionId: this.fb.nonNullable.control(null, {
+    itemId: this.fb.nonNullable.control(null, {
       validators: [Validators.required],
     }),
   });
 
   declareIssue() {
     if (!this.form.valid) return;
-    this.optionIssuesService
+    this.itemIssuesService
       .create(this.form.getRawValue(), this.item().id)
       .subscribe({
         next: () => {

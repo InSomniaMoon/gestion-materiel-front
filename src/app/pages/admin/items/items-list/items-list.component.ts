@@ -82,18 +82,20 @@ import { ItemsReloaderService } from './items-reloader.service';
             (onClick)="switchSortOrder()" />
         }
       </div>
-      @if (isAdmin()) {
-        <p-button
-          icon="pi pi-plus"
-          label="Ajouter"
-          (onClick)="openCreateItem()" />
-      }
     </div>
 
     <matos-table [status]="items.status()">
       <p-data-view [value]="items.value()?.data ?? []" [layout]="layout()">
         <ng-template #header>
-          <div class="flex justify-end">
+          <div class="flex space-between">
+            @if (isAdmin()) {
+              <p-button
+                icon="pi pi-plus"
+                label="Ajouter"
+                (onClick)="openCreateItem()" />
+            } @else {
+              <div></div>
+            }
             <p-select-button
               [(ngModel)]="layout"
               [options]="dataViewType"

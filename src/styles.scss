@@ -41,6 +41,9 @@ input
   &.justify-end {
     justify-content: end;
   }
+  &.space-between {
+    justify-content: space-between;
+  }
 }
 .flex-column {
   display: flex;

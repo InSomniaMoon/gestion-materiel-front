@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '@env/environment';
-import { AdminDashboardItemIssue, ItemIssue } from '../types/optionIssue.type';
+import { AdminDashboardItemIssue, ItemIssue } from '../types/itemIssue.type';
 import { PaginatedData } from '../types/paginatedData.type';
 import { PaginationRequest } from '../types/pagination-request.type';
 import { queryParams } from '../utils/http.utils';

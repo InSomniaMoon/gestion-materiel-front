@@ -5,7 +5,7 @@
 //   "description": "Chaise",
 //   "usable": true
 
-import { ItemIssue } from './optionIssue.type';
+import { ItemIssue } from './itemIssue.type';
 
 // },
 export type ItemOption = {

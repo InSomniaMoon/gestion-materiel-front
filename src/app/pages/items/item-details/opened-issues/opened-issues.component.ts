@@ -7,7 +7,7 @@ import {
   output,
 } from '@angular/core';
 import { IssueDetailsComponent } from '@app/components/issue-details/issue-details.component';
-import { ItemIssue } from '@core/types/optionIssue.type';
+import { ItemIssue } from '@app/core/types/itemIssue.type';
 import { AuthService } from '@services/auth.service';
 import { buildDialogOptions } from '@utils/constants';
 import { ButtonModule } from 'primeng/button';
