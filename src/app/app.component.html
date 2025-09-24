@@ -1,1 +1,6 @@
-<router-outlet /> <p-toast />
+<router-outlet />
+<p-toast
+  [breakpoints]="{
+    '750px': { width: 'calc(100% - 1rem)', right: '.5rem', left: '.5rem' },
+  }"
+  life="5000" />

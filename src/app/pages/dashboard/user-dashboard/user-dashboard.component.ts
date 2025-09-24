@@ -104,14 +104,14 @@ export class UserDashboardComponent {
     // TODO: Implement this
   }
 
-  reportDamage(material: Item) {
+  reportDamage(item: Item) {
     this.dialogService.open(
       DeclareIssueComponent,
       buildDialogOptions({
         header: 'Signaler un dommage',
         width: '50%',
         inputValues: {
-          item: material,
+          itemId: item.id,
         },
       })
     );
