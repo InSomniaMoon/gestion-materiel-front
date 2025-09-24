@@ -39,8 +39,6 @@ export class RequestResetPasswordComponent {
           severity: 'success',
           summary: 'Email envoyé',
           detail: 'Un email de réinitialisation a été envoyé.',
-          closable: true,
-          life: 5000,
         });
         this.router.navigate(['/auth/login']);
         this.loading.set(false);

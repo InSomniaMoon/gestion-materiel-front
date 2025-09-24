@@ -1,20 +1,18 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  computed,
   inject,
   input,
+  OnInit,
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Item } from '@core/types/item.type';
-import { OptionIssuesService } from '@services/option-issues.service';
+import { ItemIssuesService } from '@app/core/services/item-issues.service';
 import { MessageService } from 'primeng/api';
 import { Button } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { FloatLabel } from 'primeng/floatlabel';
-import { Select } from 'primeng/select';
 import { Textarea } from 'primeng/textarea';
 import { ToggleSwitch } from 'primeng/toggleswitch';
 
@@ -27,20 +25,8 @@ import { ToggleSwitch } from 'primeng/toggleswitch';
     Textarea,
     FloatLabel,
     ToggleSwitch,
-    Select,
   ],
   template: `<form [formGroup]="form">
-      <p-float-label variant="on">
-        <p-select
-          formControlName="optionId"
-          [options]="options()"
-          optionLabel="name"
-          optionValue="id"
-          fluid
-          id="option" />
-        <label for="option">Option</label>
-      </p-float-label>
-
       <p-float-label variant="on">
         <textarea
           pTextarea
@@ -49,7 +35,7 @@ import { ToggleSwitch } from 'primeng/toggleswitch';
           fluid
           rows="5"></textarea>
 
-        <label for="issue">Avarie repérée</label>
+        <label for="issue">Problème repéré</label>
       </p-float-label>
 
       <label
@@ -64,19 +50,18 @@ import { ToggleSwitch } from 'primeng/toggleswitch';
       <p-button
         label="Déclarer"
         [disabled]="form.invalid"
-        (onClick)="declareAvarie()" />
+        (onClick)="declareIssue()" />
     </p-footer>`,
-  styleUrl: './declareOptionIssue.component.scss',
+  styleUrl: './declareIssue.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DeclareOptionIssueComponent {
+export class DeclareIssueComponent implements OnInit {
   ref = inject(DynamicDialogRef);
   dialogService = inject(DialogService);
-  private readonly optionIssuesService = inject(OptionIssuesService);
+  private readonly itemIssuesService = inject(ItemIssuesService);
   private readonly messageService = inject(MessageService);
 
-  item = input.required<Item>();
-  options = computed(() => this.item()?.options || []);
+  itemId = input.required<number>();
 
   fb = inject(FormBuilder);
   form = this.fb.nonNullable.group({
@@ -85,19 +70,19 @@ export class DeclareOptionIssueComponent {
       validators: [Validators.required],
     }),
     usable: this.fb.nonNullable.control(true),
-    optionId: this.fb.nonNullable.control(null, {
+    itemId: this.fb.nonNullable.control<number>(0, {
       validators: [Validators.required],
     }),
   });
 
-  declareAvarie() {
+  ngOnInit(): void {
+    this.form.patchValue({ itemId: this.itemId() });
+  }
+
+  declareIssue() {
     if (!this.form.valid) return;
-    this.optionIssuesService
-      .create(
-        this.form.getRawValue(),
-        this.item().id,
-        this.form.value.optionId!
-      )
+    this.itemIssuesService
+      .create(this.form.getRawValue(), this.itemId())
       .subscribe({
         next: () => {
           this.ref.close(this.form.getRawValue().usable);

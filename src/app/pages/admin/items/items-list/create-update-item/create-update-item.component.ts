@@ -8,14 +8,7 @@ import {
   signal,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import {
-  FormArray,
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
   SimpleModalComponent,
   SimpleModalData,
@@ -100,41 +93,6 @@ import { ItemsReloaderService } from '../items-reloader.service';
           [handler]="fileUploadHandler"
           (fileUploaded)="setImagePath($event)" />
       </div>
-      <div formArray="options">
-        @for (item of options.controls; track $index) {
-          <h3 class="option-title">Option {{ $index + 1 }}</h3>
-          <div [formGroup]="item" class="option">
-            <div class="option-form">
-              <p-float-label variant="on">
-                <input
-                  pInputText
-                  type="text"
-                  id="option-name-{{ $index }}"
-                  formControlName="name" />
-                <label for="option-name-{{ $index }}">Nom</label>
-              </p-float-label>
-              <p-float-label variant="on">
-                <textarea
-                  pInputTextarea
-                  id="option-description-{{ $index }}"
-                  autoResize
-                  formControlName="description"
-                  rows="5"></textarea>
-                <label for="option-description-{{ $index }}"
-                  >Description (optionnel)</label
-                >
-              </p-float-label>
-            </div>
-            <p-button
-              type="button"
-              (click)="removeOption($index)"
-              icon="pi pi-trash"
-              severity="danger"
-              outlined />
-          </div>
-        }
-        <p-button label="Option" icon="pi pi-plus" (onClick)="addOption()" />
-      </div>
     </form>
     <p-footer>
       @if (data) {
@@ -206,14 +164,7 @@ export class CreateUpdateItemComponent implements OnInit {
     category_id: this.fb.nonNullable.control<number | undefined>(undefined, {
       validators: [Validators.required],
     }),
-    options: this.fb.nonNullable.array<
-      FormGroup<{
-        id: FormControl<number | null>;
-        name: FormControl<string>;
-        description: FormControl<string>;
-        item_id: FormControl<number | null>;
-      }>
-    >([]),
+
     date_of_buy: this.fb.nonNullable.control<Date | undefined>(undefined, {
       validators: [],
     }),
@@ -228,15 +179,11 @@ export class CreateUpdateItemComponent implements OnInit {
   selectedCategory = computed(() =>
     this.categories().find(cat => cat.id === this.categoryIdValue())
   );
-  get options() {
-    return this.form.controls['options'];
-  }
 
   ngOnInit(): void {
     if (!this.data) {
       return;
     }
-    console.log(this.data);
 
     this.form.patchValue({
       name: this.data.name,
@@ -247,22 +194,6 @@ export class CreateUpdateItemComponent implements OnInit {
         : undefined,
       stock: this.data.stock ?? 1,
     });
-    this.options.clear();
-    this.data.options?.forEach(option =>
-      this.options.push(
-        this.fb.group({
-          id: this.fb.control(option.id ?? null),
-          name: this.fb.control(option.name, {
-            nonNullable: true,
-            validators: [Validators.required],
-          }),
-          description: this.fb.control(option.description ?? '', {
-            nonNullable: true,
-          }),
-          item_id: this.fb.control(option.item_id ?? null),
-        })
-      )
-    );
   }
 
   newOption() {
@@ -279,16 +210,6 @@ export class CreateUpdateItemComponent implements OnInit {
     });
   }
 
-  addOption() {
-    const options = this.form.get('options') as FormArray;
-    options.push(this.newOption());
-  }
-
-  removeOption(index: number) {
-    const options = this.form.get('options') as FormArray;
-    options.removeAt(index);
-  }
-
   onSubmit() {
     if (this.form.valid) {
       const item: Item = {
@@ -300,13 +221,6 @@ export class CreateUpdateItemComponent implements OnInit {
         date_of_buy: this.form.value.date_of_buy,
         structure_id: this.authService.selectedStructure()?.id!,
         image: this.form.value.image,
-        options: this.form.getRawValue().options.map(option => ({
-          id: option.id ?? null,
-          name: option.name,
-          description: option.description,
-          usable: true,
-          item_id: this.data ? this.data.id : null,
-        })),
       };
       (this.data
         ? this.itemService.updateItem({ ...item, id: this.data.id })

@@ -11,9 +11,9 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
+import { ItemIssuesService } from '@app/core/services/item-issues.service';
 import { Item } from '@core/types/item.type';
 import { AuthService } from '@services/auth.service';
-import { ItemOptionService } from '@services/item-option.service';
 import { ItemsService } from '@services/items.service';
 import { injectQuery } from '@tanstack/angular-query-experimental';
 import { MessageService } from 'primeng/api';
@@ -24,7 +24,6 @@ import { TagModule } from 'primeng/tag';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { lastValueFrom } from 'rxjs';
 import { OpenedIssuesComponent } from './opened-issues/opened-issues.component';
-import { OptionsTableComponent } from './options-table/options-table.component';
 
 @Component({
   selector: 'app-item-details',
@@ -35,7 +34,6 @@ import { OptionsTableComponent } from './options-table/options-table.component';
     ButtonModule,
     ToggleButtonModule,
     FormsModule,
-    OptionsTableComponent,
     OpenedIssuesComponent,
   ],
   templateUrl: './item-details.component.html',
@@ -49,7 +47,7 @@ export class ItemDetailsComponent implements OnInit {
 
   private readonly titleService = inject(Title);
   private readonly auth$ = inject(AuthService);
-  private readonly itemOptionService = inject(ItemOptionService);
+  private readonly itemIssuesService = inject(ItemIssuesService);
   private readonly message = inject(MessageService);
 
   item = signal<Item | null>(null);
@@ -95,14 +93,10 @@ export class ItemDetailsComponent implements OnInit {
     });
   }
 
-  optionsQuery = injectQuery(() => ({
-    queryKey: ['options', this.itemId()],
-    enabled: this.itemId() !== undefined,
+  issuesQuery = injectQuery(() => ({
+    queryKey: ['issues', this.itemId()],
+    enabled: this.itemId() !== undefined && this.userAdmin(),
     queryFn: () =>
-      lastValueFrom(
-        this.itemOptionService.getItemOptions(this.itemId()!, {
-          withIssues: this.userAdmin(),
-        })
-      ),
+      lastValueFrom(this.itemIssuesService.getItemIssues(this.itemId()!)),
   }));
 }

@@ -10,11 +10,12 @@ import {
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { SearchBarComponent } from '@app/components/search-bar/search-bar.component';
 import { PaginatorComponent } from '@app/components/ui/paginator/paginator.component';
 import { AuthService } from '@app/core/services/auth.service';
 import { CategoriesService } from '@app/core/services/categories.service';
+import { TableLayoutService } from '@app/core/services/table-layout.service';
 import { ItemDetailsComponent } from '@app/pages/items/item-details/item-details.component';
 import { AppTable } from '@components/ui/table/table.component';
 import { Item } from '@core/types/item.type';
@@ -23,6 +24,7 @@ import { ItemsService } from '@services/items.service';
 import { buildDialogOptions } from '@utils/constants';
 import { Badge } from 'primeng/badge';
 import { Button } from 'primeng/button';
+import { Card } from 'primeng/card';
 import { DataView } from 'primeng/dataview';
 import { DialogService } from 'primeng/dynamicdialog';
 import { PaginatorModule } from 'primeng/paginator';
@@ -32,7 +34,6 @@ import { TableModule } from 'primeng/table';
 import { fromEvent, lastValueFrom, map } from 'rxjs';
 import { CreateUpdateItemComponent } from './create-update-item/create-update-item.component';
 import { ItemsReloaderService } from './items-reloader.service';
-import { ListItemComponent } from './list-item/list-item.component';
 @Component({
   selector: 'app-items-list',
   imports: [
@@ -45,41 +46,60 @@ import { ListItemComponent } from './list-item/list-item.component';
     SearchBarComponent,
     PaginatorComponent,
     DataView,
-    ListItemComponent,
     FormsModule,
-    RouterLink,
     Badge,
     SelectButton,
+    Card,
   ],
   providers: [ItemsReloaderService],
   template: `
     <div class="header">
       <div class="flex wrap">
-        <h1>Objets</h1>
-        <p-select
-          [options]="categories()"
-          optionLabel="label"
-          optionValue="code"
-          placeholder="Catégorie"
-          [style]="{ width: isMobile() ? '100%' : '200px' }"
-          [ngModel]="selectedCategory()"
-          (ngModelChange)="selectedCategory.set($event)" />
-        <app-search-bar (queryChange)="searchQuery.set($event)" />
+        @if (!isMobile()) {
+          <h1>Objets</h1>
+        }
+        <div class="flex">
+          <p-select
+            [options]="categories()"
+            optionLabel="label"
+            optionValue="code"
+            fluid
+            placeholder="Catégorie"
+            [style]="{ width: isMobile() ? '50%' : '200px' }"
+            [ngModel]="selectedCategory()"
+            (ngModelChange)="selectedCategory.set($event)" />
+          <app-search-bar (queryChange)="searchQuery.set($event)" />
+        </div>
+
+        @if (layout() == 'grid') {
+          <p-select
+            [options]="sortOptions"
+            [ngModel]="orderBy()"
+            dropdownIcon="pi pi-sort" />
+
+          <p-button
+            outlined
+            [icon]="'pi pi-sort-alpha-down' + (sortBy() === 1 ? '' : '-alt')"
+            (onClick)="switchSortOrder()" />
+        }
       </div>
-      @if (isAdmin()) {
-        <p-button
-          icon="pi pi-plus"
-          label="Ajouter"
-          (onClick)="openCreateItem()" />
-      }
     </div>
 
     <matos-table [status]="items.status()">
       <p-data-view [value]="items.value()?.data ?? []" [layout]="layout()">
         <ng-template #header>
-          <div class="flex justify-end">
+          <div class="flex space-between">
+            @if (isAdmin()) {
+              <p-button
+                icon="pi pi-plus"
+                label="Ajouter"
+                (onClick)="openCreateItem()" />
+            } @else {
+              <div></div>
+            }
             <p-select-button
-              [(ngModel)]="layout"
+              [ngModel]="layout()"
+              (ngModelChange)="setLayout($event)"
               [options]="dataViewType"
               [allowEmpty]="false"
               size="small">
@@ -109,9 +129,9 @@ import { ListItemComponent } from './list-item/list-item.component';
                 <th pSortableColumn="category_id">
                   Categorie <p-sortIcon field="category_id" />
                 </th>
-                <th pSortableColumn="open_option_issues_count">
-                  Avaries
-                  <p-sortIcon field="open_option_issues_count" />
+                <th pSortableColumn="open_issues_count">
+                  Problèmes
+                  <p-sortIcon field="open_issues_count" />
                 </th>
               </tr>
             </ng-template>
@@ -140,7 +160,7 @@ import { ListItemComponent } from './list-item/list-item.component';
                 <td>{{ item.name }}</td>
                 <td style="text-wrap: nowrap;">{{ item.category.name }}</td>
                 <td style="text-wrap: nowrap;text-align: center;">
-                  {{ item.open_option_issues_count }}
+                  {{ item.open_issues_count }}
                 </td>
               </tr>
             </ng-template>
@@ -158,9 +178,37 @@ import { ListItemComponent } from './list-item/list-item.component';
         <ng-template #grid let-items>
           <div class="grid">
             @for (item of items; track $index) {
-              <a routerLink="/items/{{ item.id }}">
-                <app-list-item [item]="item" />
-              </a>
+              <p-card
+                (click)="isAdmin() ? openItemUpdate(item) : openItemView(item)">
+                <div class="flex">
+                  <p-badge
+                    size="small"
+                    value=" "
+                    [severity]="
+                      item.state === 'OK'
+                        ? 'success'
+                        : item.state === 'NOK'
+                          ? 'warn'
+                          : item.state === 'KO'
+                            ? 'danger'
+                            : 'info'
+                    " />
+                  @if (item.image) {
+                    <img
+                      [src]="imageBaseUrl + item.image"
+                      alt="{{ item.name }}"
+                      class="item-image" />
+                  }
+                  <div class="item-details">
+                    <span class="item-category">
+                      {{ item.category?.name }}
+                    </span>
+                    <span class="item-name">
+                      {{ item.name }}
+                    </span>
+                  </div>
+                </div>
+              </p-card>
             }
           </div>
         </ng-template>
@@ -181,8 +229,14 @@ export class ItemsListComponent implements OnInit {
   private readonly dialogService = inject(DialogService);
   private readonly categoriesService = inject(CategoriesService);
   private readonly authService = inject(AuthService);
-  private readonly router = inject(Router);
+  private readonly tableLayoutService = inject(TableLayoutService);
+  readonly imageBaseUrl = `${environment.api_url}/storage`;
 
+  readonly sortOptions = [{ label: 'Catégorie', value: 'category_id' }];
+
+  switchSortOrder() {
+    this.sortBy.set(this.sortBy() === 1 ? -1 : 1);
+  }
   categories = toSignal(
     this.categoriesService
       .getCategories({
@@ -205,7 +259,11 @@ export class ItemsListComponent implements OnInit {
     { label: 'Liste', value: 'list' },
     { label: 'Tableau', value: 'grid' },
   ];
-  layout = signal<'list' | 'grid'>('list');
+  layout = this.tableLayoutService.layout;
+  setLayout(layout: 'list' | 'grid') {
+    this.tableLayoutService.setLayout(layout);
+  }
+
   selectedCategory = signal<number | undefined>(undefined);
 
   isAdmin = toSignal(

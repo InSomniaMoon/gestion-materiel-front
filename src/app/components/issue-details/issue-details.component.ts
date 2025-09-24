@@ -9,9 +9,9 @@ import {
   viewChild,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { OptionIssue } from '@core/types/optionIssue.type';
+import { ItemIssuesService } from '@app/core/services/item-issues.service';
+import { ItemIssue } from '@app/core/types/itemIssue.type';
 import { IssueCommentsService } from '@services/issue-comments.service';
-import { OptionIssuesService } from '@services/option-issues.service';
 import { injectQuery } from '@tanstack/angular-query-experimental';
 import { buildDialogOptions } from '@utils/constants';
 import { ButtonModule } from 'primeng/button';
@@ -27,7 +27,7 @@ import {
 
 type IssueDetailsComponentData = {
   itemId: number;
-  issue: OptionIssue;
+  issue: ItemIssue;
 };
 
 @Component({
@@ -48,7 +48,7 @@ export class IssueDetailsComponent implements OnInit {
   ref = inject(DynamicDialogRef);
   dialog = inject(DialogService);
   private readonly issueCommentsService = inject(IssueCommentsService);
-  private readonly issueService = inject(OptionIssuesService);
+  private readonly issueService = inject(ItemIssuesService);
 
   inplace = viewChild.required<Inplace>('inplace');
 
@@ -60,7 +60,6 @@ export class IssueDetailsComponent implements OnInit {
       lastValueFrom(
         this.issueCommentsService.getComments(
           this.data.itemId,
-          this.data.issue.item_option_id,
           this.data.issue.id
         )
       ),
@@ -106,12 +105,7 @@ export class IssueDetailsComponent implements OnInit {
 
   onAddComment() {
     this.issueCommentsService
-      .addComment(
-        this.data.itemId,
-        this.data.issue.item_option_id,
-        this.data.issue.id,
-        this.newComment()
-      )
+      .addComment(this.data.itemId, this.data.issue.id, this.newComment())
       .subscribe({
         next: () => {
           this.newComment.set('');

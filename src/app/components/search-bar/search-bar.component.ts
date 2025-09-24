@@ -18,12 +18,13 @@ import { InputTextModule } from 'primeng/inputtext';
   imports: [InputTextModule, InputIconModule, IconFieldModule],
   template: `
     <p-iconField iconPosition="left">
-      <p-inputIcon [styleClass]="icon()" />
       <input
         pInputText
+        fluid
         #searchInput
         type="text"
         [placeholder]="placeholder()" />
+      <p-inputIcon [class]="icon()" />
     </p-iconField>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
