@@ -13,11 +13,11 @@ export class IssueCommentsService {
 
   private api_url = environment.api_url;
 
-  getComments(itemId: number, optionId: number, issueId: number) {
+  getComments(itemId: number, issueId: number) {
     return this.http
       .get<
         IssueComment[]
-      >(`${this.api_url}/admin/items/${itemId}/options/${optionId}/issues/${issueId}/comments`)
+      >(`${this.api_url}/admin/items/${itemId}/issues/${issueId}/comments`)
       .pipe(
         map(comments =>
           comments.map(comment => {
@@ -28,21 +28,14 @@ export class IssueCommentsService {
       );
   }
 
-  addComment(
-    itemId: number,
-    optionId: number,
-    issueId: number,
-    comment: string
-  ) {
+  addComment(itemId: number, issueId: number, comment: string) {
     return this.http.post<IssueComment>(
-      `${this.api_url}/admin/items/${itemId}/options/${optionId}/issues/${issueId}/comments`,
+      `${this.api_url}/admin/items/${itemId}/issues/${issueId}/comments`,
       {
         comment,
       },
       CLEAR_CACHE_CONTEXT_OPTIONS(
-        new Set([
-          `${this.api_url}/admin/items/${itemId}/options/${optionId}/issues/${issueId}`,
-        ])
+        new Set([`${this.api_url}/admin/items/${itemId}/issues/${issueId}`])
       )
     );
   }

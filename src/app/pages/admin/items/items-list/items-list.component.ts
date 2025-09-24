@@ -140,7 +140,7 @@ import { ListItemComponent } from './list-item/list-item.component';
                 <td>{{ item.name }}</td>
                 <td style="text-wrap: nowrap;">{{ item.category.name }}</td>
                 <td style="text-wrap: nowrap;text-align: center;">
-                  {{ item.open_option_issues_count }}
+                  {{ item.open_issues_count }}
                 </td>
               </tr>
             </ng-template>

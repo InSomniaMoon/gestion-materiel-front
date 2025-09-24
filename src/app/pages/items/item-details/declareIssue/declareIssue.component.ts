@@ -6,8 +6,8 @@ import {
   input,
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ItemIssuesService } from '@app/core/services/item-issues.service';
 import { Item } from '@core/types/item.type';
-import { OptionIssuesService } from '@services/option-issues.service';
 import { MessageService } from 'primeng/api';
 import { Button } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
@@ -66,13 +66,13 @@ import { ToggleSwitch } from 'primeng/toggleswitch';
         [disabled]="form.invalid"
         (onClick)="declareAvarie()" />
     </p-footer>`,
-  styleUrl: './declareOptionIssue.component.scss',
+  styleUrl: './declareIssue.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DeclareOptionIssueComponent {
+export class DeclareIssueComponent {
   ref = inject(DynamicDialogRef);
   dialogService = inject(DialogService);
-  private readonly optionIssuesService = inject(OptionIssuesService);
+  private readonly optionIssuesService = inject(ItemIssuesService);
   private readonly messageService = inject(MessageService);
 
   item = input.required<Item>();
@@ -93,11 +93,7 @@ export class DeclareOptionIssueComponent {
   declareAvarie() {
     if (!this.form.valid) return;
     this.optionIssuesService
-      .create(
-        this.form.getRawValue(),
-        this.item().id,
-        this.form.value.optionId!
-      )
+      .create(this.form.getRawValue(), this.item().id)
       .subscribe({
         next: () => {
           this.ref.close(this.form.getRawValue().usable);

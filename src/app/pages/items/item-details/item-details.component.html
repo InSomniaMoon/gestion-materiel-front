@@ -19,14 +19,6 @@
         (ngModelChange)="updateItem()" />
     </div>
   </section>
-
-  <section>
-    <app-options-table
-      [options]="optionsQuery.data() ?? []"
-      [itemId]="itemId()!"
-      [item]="item()"
-      (optionsChange)="optionsQuery.refetch()" />
-  </section>
 } @else {
   <p-progressSpinner ariaLabel="loading" />
 }
@@ -34,7 +26,7 @@
   <section>
     <app-opened-issues
       [itemId]="itemId()!"
-      [options]="optionsQuery.data() ?? []"
-      (optionsChange)="optionsQuery.refetch()" />
+      [issues]="issuesQuery.data() ?? []"
+      (issuesChange)="issuesQuery.refetch()" />
   </section>
 }

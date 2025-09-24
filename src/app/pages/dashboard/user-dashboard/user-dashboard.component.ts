@@ -8,7 +8,7 @@ import {
   viewChild,
 } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { DeclareOptionIssueComponent } from '@app/pages/items/item-details/options-table/declareOptionIssue/declareOptionIssue.component';
+import { DeclareIssueComponent } from '@app/pages/items/item-details/declareIssue/declareIssue.component';
 import { Item } from '@core/types/item.type';
 import {
   FullCalendarComponent,
@@ -106,7 +106,7 @@ export class UserDashboardComponent {
 
   reportDamage(material: Item) {
     this.dialogService.open(
-      DeclareOptionIssueComponent,
+      DeclareIssueComponent,
       buildDialogOptions({
         header: 'Signaler un dommage',
         width: '50%',

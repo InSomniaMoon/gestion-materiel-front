@@ -8,10 +8,10 @@ import {
   signal,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { ItemIssuesService } from '@app/core/services/item-issues.service';
 import { SortBy } from '@app/core/types/pagination-request.type';
-import { AdminDashboardOptionIssue } from '@core/types/optionIssue.type';
+import { AdminDashboardItemIssue } from '@core/types/optionIssue.type';
 import { environment } from '@env/environment';
-import { OptionIssuesService } from '@services/option-issues.service';
 import { ButtonDirective } from 'primeng/button';
 import { Card } from 'primeng/card';
 import { PaginatorState } from 'primeng/paginator';
@@ -25,7 +25,7 @@ import { lastValueFrom, tap } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminDashboardComponent {
-  private optionIssuesService = inject(OptionIssuesService);
+  private optionIssuesService = inject(ItemIssuesService);
 
   baseUrl = environment.api_url + '/storage/';
 
@@ -60,13 +60,13 @@ export class AdminDashboardComponent {
       ),
   });
 
-  private _issues = signal<AdminDashboardOptionIssue[]>([]);
+  private _issues = signal<AdminDashboardItemIssue[]>([]);
 
   issues = computed(() => {
-    const items: Record<string, AdminDashboardOptionIssue[]> = {};
+    const items: Record<string, AdminDashboardItemIssue[]> = {};
     if (!this._issues()) return [];
     this._issues().forEach(issue => {
-      const key = issue.item_option!.item!.name;
+      const key = issue.item!.name;
       if (!items[key]) {
         items[key] = [];
       }
@@ -76,7 +76,7 @@ export class AdminDashboardComponent {
 
     return Object.entries(items).map(([key, value]) => ({
       name: key,
-      id: value[0].item_option!.item!.id,
+      id: value[0].item!.id,
       issues: value,
     }));
   });
