@@ -1,11 +1,18 @@
 <div class="header">
   <div class="flex">
     <h1>Catégories</h1>
-    <p-select
-      dropdownIcon="pi pi-filter"
-      [checkmark]="true"
-      [options]="[{ label: 'Nom', value: 'name' }]"
-      [(ngModel)]="orderBy" />
+
+    @if (layout() == 'grid') {
+      <p-select
+        [options]="sortOptions"
+        [ngModel]="orderBy()"
+        dropdownIcon="pi pi-sort" />
+
+      <p-button
+        outlined
+        [icon]="`pi pi-sort-alpha-down${sortBy() === 1 ? '' : '-alt'}`"
+        (onClick)="switchSortOrder()" />
+    }
   </div>
   <p-button
     icon="pi pi-plus"
@@ -13,34 +20,67 @@
     (onClick)="openCreateCategroyModal()" />
 </div>
 <matos-table [status]="categoriesQuery.status()">
-  <p-table
-    [value]="categoriesQuery.data()?.data ?? []"
-    stripedRows
-    [sortField]="orderBy()"
-    (onSort)="orderBy.set($event.field)">
+  <p-data-view [value]="categoriesQuery.data()?.data ?? []" [layout]="layout()">
     <ng-template #header>
-      <tr>
-        <th pSortableColumn="name">Nom <p-sortIcon field="name" /></th>
-        <th></th>
-      </tr>
+      <div class="flex justify-end">
+        <p-select-button
+          [(ngModel)]="layout"
+          [options]="dataViewType"
+          [allowEmpty]="false"
+          size="small">
+          <ng-template #item let-option>
+            <i
+              [class]="
+                option.value === 'list' ? 'pi pi-bars' : 'pi pi-table'
+              "></i>
+          </ng-template>
+        </p-select-button>
+      </div>
     </ng-template>
-    <ng-template #body let-category>
-      <tr>
-        <td>{{ category.name }}</td>
-        <td class="actions">
-          <p-button
-            icon="pi pi-pencil"
-            size="small"
-            (onClick)="openUpdateCategoryModal(category)" />
-          <p-button
-            size="small"
-            icon="pi pi-trash"
-            severity="danger"
-            (onClick)="deleteCategory(category)" />
-        </td>
-      </tr>
+    <ng-template #list let-items>
+      <p-table
+        [value]="categoriesQuery.data()?.data ?? []"
+        stripedRows
+        [sortField]="orderBy()"
+        (onSort)="orderBy.set($event.field); sortBy.set($event.order)">
+        <ng-template #header>
+          <tr>
+            <th pSortableColumn="name">Nom <p-sortIcon field="name" /></th>
+          </tr>
+        </ng-template>
+        <ng-template #body let-category>
+          <tr
+            (click)="openUpdateCategoryModal(category)"
+            class="cursor-pointer">
+            <td>{{ category.name }}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+
+      <!-- @for (item of items; track $index) {
+            <app-list-item
+              (click)="isAdmin() ? openItemUpdate(item) : openItemView(item)"
+              [item]="item" />
+            @if (!$last) {
+              <hr style="margin: 0 1rem;" />
+            }
+          } -->
     </ng-template>
-  </p-table>
+    <ng-template #grid let-items>
+      <div class="grid">
+        @for (item of items; track $index) {
+          <p-card (click)="openUpdateCategoryModal(item)">
+            <ng-template #header> </ng-template>
+            <h3>{{ item.name }}</h3>
+            <div>
+              {{ item.description }}
+            </div>
+          </p-card>
+        }
+      </div>
+    </ng-template>
+  </p-data-view>
+
   <app-paginator
     [(page)]="page"
     [(size)]="size"

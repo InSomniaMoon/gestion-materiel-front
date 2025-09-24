@@ -3,59 +3,120 @@
     <div class="flex">
       <h1>Utilisateurs</h1>
       <app-search-bar (queryChange)="searchQuery.set($event)" />
+      @if (layout() == 'grid') {
+        <p-select
+          [options]="sortOptions"
+          [ngModel]="orderBy()"
+          dropdownIcon="pi pi-sort" />
+
+        <p-button
+          outlined
+          [icon]="`pi pi-sort-alpha-down${sortBy() === 1 ? '' : '-alt'}`"
+          (onClick)="switchSortOrder()" />
+      }
     </div>
     <p-button icon="pi pi-plus" label="Ajouter" (onClick)="openAddUser()" />
   </div>
-  <p-table
-    [value]="users()"
-    [sortField]="orderBy()"
-    [sortOrder]="sortBy()"
-    (onSort)="orderBy.set($event.field); sortBy.set($event.order)">
-    <ng-template #header>
-      <tr>
-        <th pSortableColumn="lastname">Nom <p-sortIcon field="lastname" /></th>
-        <th pSortableColumn="firstname">
-          Prénom <p-sortIcon field="firstname" />
-        </th>
-        <th>Structures</th>
-        <th pSortableColumn="email">Email <p-sortIcon field="email" /></th>
-        <th pSortableColumn="role">Rôle <p-sortIcon field="role" /></th>
-        <th></th>
-      </tr>
-    </ng-template>
 
-    <ng-template #body let-user>
-      <tr>
-        <td>{{ user.lastname }}</td>
-        <td>{{ user.firstname }}</td>
-        <td>
-          <div class="flex">
-            @for (structure of user.user_structures; track $index) {
-              <div
-                [tp]="structure.name"
-                [style]="
-                  `width: 40px; height: 28px; background-color: ${structure.color}; border-radius: 4px;`
-                "></div>
-            }
-          </div>
-        </td>
-        <td>{{ user.email }}</td>
-        <td>
-          {{
-            user.user_structures[0]?.pivot.role == 'admin'
-              ? 'Administrateur'
-              : 'Utilisateur'
-          }}
-        </td>
-        <td>
-          <!-- Actions can be added here -->
-        </td>
-      </tr>
+  <p-data-view [value]="users()" [layout]="layout()">
+    <ng-template #header>
+      <div class="flex justify-end">
+        <p-select-button
+          [(ngModel)]="layout"
+          [options]="dataViewType"
+          [allowEmpty]="false"
+          size="small">
+          <ng-template #item let-option>
+            <i
+              [class]="
+                option.value === 'list' ? 'pi pi-bars' : 'pi pi-table'
+              "></i>
+          </ng-template>
+        </p-select-button>
+      </div>
     </ng-template>
-  </p-table>
+    <ng-template #list let-items>
+      <p-table
+        [value]="users()"
+        [sortField]="orderBy()"
+        [sortOrder]="sortBy()"
+        (onSort)="orderBy.set($event.field); sortBy.set($event.order)">
+        <ng-template #header>
+          <tr>
+            <th pSortableColumn="lastname">
+              Nom <p-sortIcon field="lastname" />
+            </th>
+            <th pSortableColumn="firstname">
+              Prénom <p-sortIcon field="firstname" />
+            </th>
+            <th>Structures</th>
+            <th pSortableColumn="email">Email <p-sortIcon field="email" /></th>
+            <th pSortableColumn="role">Rôle <p-sortIcon field="role" /></th>
+            <th></th>
+          </tr>
+        </ng-template>
+
+        <ng-template #body let-user>
+          <tr>
+            <td>{{ user.lastname }}</td>
+            <td>{{ user.firstname }}</td>
+            <td>
+              <div class="flex">
+                @for (structure of user.user_structures; track $index) {
+                  <div
+                    [tp]="structure.name"
+                    [style]="
+                      `width: 40px; height: 28px; background-color: ${structure.color}; border-radius: 4px;`
+                    "></div>
+                }
+              </div>
+            </td>
+            <td>{{ user.email }}</td>
+            <td>
+              {{ user.user_structures[0]?.pivot.role | userRole }}
+            </td>
+            <td>
+              <!-- Actions can be added here -->
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+
+      <!-- @for (item of items; track $index) {
+            <app-list-item
+              (click)="isAdmin() ? openItemUpdate(item) : openItemView(item)"
+              [item]="item" />
+            @if (!$last) {
+              <hr style="margin: 0 1rem;" />
+            }
+          } -->
+    </ng-template>
+    <ng-template #grid let-users>
+      <div class="grid">
+        @for (user of users; track $index) {
+          <p-card>
+            <ng-template #header> </ng-template>
+            <h3>{{ user.lastname }} {{ user.firstname }}</h3>
+            <p>{{ user.email }}</p>
+            <p>{{ user.user_structures[0]?.pivot.role | userRole }}</p>
+            <div class="flex">
+              @for (structure of user.user_structures; track $index) {
+                <div
+                  [tp]="structure.name"
+                  [style]="
+                    `width: 40px; height: 28px; background-color: ${structure.color}; border-radius: 4px;`
+                  "></div>
+              }
+            </div>
+          </p-card>
+        }
+      </div>
+    </ng-template>
+  </p-data-view>
+
   <app-paginator
     [(page)]="page"
     [(size)]="size"
     [totalRecords]="usersResource.value()?.total ?? 0"
-    [options]="options" />
+    [options]="pageSizeOptions" />
 </matos-table>

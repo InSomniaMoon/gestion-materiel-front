@@ -179,6 +179,7 @@ export class ItemsListComponent implements OnInit {
   private readonly itemService = inject(ItemsService);
   private readonly dialogService = inject(DialogService);
   private readonly categoriesService = inject(CategoriesService);
+  private readonly authService = inject(AuthService);
 
   categories = toSignal(
     this.categoriesService
@@ -190,9 +191,10 @@ export class ItemsListComponent implements OnInit {
         q: '',
       })
       .pipe(
-        map(categories =>
-          categories.data.map(cat => ({ label: cat.name, code: cat.id }))
-        )
+        map(categories => [
+          { label: 'Toutes les catégories', code: undefined },
+          ...categories.data.map(cat => ({ label: cat.name, code: cat.id })),
+        ])
       ),
     { initialValue: [] }
   );
@@ -231,9 +233,7 @@ export class ItemsListComponent implements OnInit {
   ];
   baseUrl = environment.api_url + '/storage/';
 
-  selectedStructure = computed(
-    () => inject(AuthService).selectedStructure()?.id
-  );
+  selectedStructure = computed(() => this.authService.selectedStructure()?.id);
 
   page = signal(0);
   size = signal(100);

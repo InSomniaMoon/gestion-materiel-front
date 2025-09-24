@@ -1,10 +1,18 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   inject,
-  signal,
+  input,
+  OnInit,
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  SimpleModalComponent,
+  SimpleModalData,
+} from '@app/components/simple-modal/simple-modal.component';
+import { ItemCategory } from '@app/core/types/item.type';
+import { buildDialogOptions } from '@app/core/utils/constants';
 import { CategoriesService } from '@services/categories.service';
 import { AccordionModule } from 'primeng/accordion';
 import { MessageService } from 'primeng/api';
@@ -28,29 +36,40 @@ import { ToggleSwitch } from 'primeng/toggleswitch';
   styleUrl: './create-update-category.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CreateUpdateCategoryComponent {
+export class CreateUpdateCategoryComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly categoriesService = inject(CategoriesService);
   readonly ref = inject(DynamicDialogRef);
   private readonly dialogRef = inject(DialogService);
   private readonly messageService = inject(MessageService);
 
-  readonly data = this.dialogRef.getInstance(this.ref).data;
+  readonly category = input<ItemCategory | null>();
+  readonly structureId = input.required<number>();
 
-  saveType = signal<'Modifier' | 'Créer'>(
-    this.data.category ? 'Modifier' : 'Créer'
+  saveType = computed<'Modifier' | 'Créer'>(() =>
+    this.category() ? 'Modifier' : 'Créer'
   );
 
   form = this.fb.nonNullable.group({
-    name: [this.data.category?.name, [Validators.required]],
-    structure_id: [this.data.structureId, Validators.required],
-    identified: [this.data.category?.identified ?? true, Validators.required],
+    name: ['', [Validators.required]],
+    structure_id: [0, Validators.required],
+    identified: [true, Validators.required],
   });
 
+  ngOnInit() {
+    if (this.category()) {
+      this.form.patchValue({
+        name: this.category()!.name,
+        structure_id: this.structureId(),
+        identified: this.category()!.identified,
+      });
+    }
+  }
+
   save() {
-    if (this.data.category) {
+    if (this.category()) {
       this.categoriesService
-        .updateCategory(this.data.category.id, this.form.getRawValue())
+        .updateCategory(this.category()!.id, this.form.getRawValue())
         .subscribe({
           next: () => {
             this.messageService.add({
@@ -92,5 +111,48 @@ export class CreateUpdateCategoryComponent {
         });
       },
     });
+  }
+
+  deleteCategory() {
+    this.dialogRef
+      .open(
+        SimpleModalComponent,
+        buildDialogOptions<SimpleModalData>({
+          header: `Supprimer la catégorie ${this.category()!.name}`,
+          data: {
+            confirm: true,
+            cancelText: 'Annuler',
+            confirmText: 'Supprimer',
+            severity: 'danger',
+            message: 'Voulez-vous vraiment supprimer cette catégorie ?',
+          },
+        })
+      )
+      .onClose.subscribe(result => {
+        if (!result) {
+          return;
+        }
+
+        this.categoriesService.deleteCategory(this.category()!.id).subscribe({
+          next: () => {
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Succès',
+              detail: 'La catégorie a été supprimée avec succès.',
+            });
+            this.ref.close(true);
+          },
+          error: error => {
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Erreur',
+              detail:
+                error?.error?.message ||
+                'Une erreur est survenue lors de la suppression de la catégorie.',
+            });
+            console.error('Error deleting category:', error);
+          },
+        });
+      });
   }
 }

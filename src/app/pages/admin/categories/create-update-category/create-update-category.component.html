@@ -15,6 +15,17 @@
 </form>
 
 <p-footer>
-  <p-button label="Fermer" severity="secondary" (onClick)="ref.close()" />
-  <p-button [label]="saveType()" [disabled]="form.invalid" (onClick)="save()" />
+  @if (category()) {
+    <p-button
+      label="Supprimer"
+      severity="danger"
+      (onClick)="deleteCategory()" />
+  }
+  <div class="flex">
+    <p-button label="Fermer" severity="secondary" (onClick)="ref.close()" />
+    <p-button
+      [label]="saveType()"
+      [disabled]="form.invalid"
+      (onClick)="save()" />
+  </div>
 </p-footer>

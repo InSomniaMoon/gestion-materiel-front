@@ -96,7 +96,7 @@ export class HeaderComponent implements OnInit {
         {
           label: 'Ma Structure',
           icon: 'pi pi-building',
-          routerLink: '/admin/structures',
+          routerLink: '/admin/my-structure',
         },
         {
           label: 'Utilisateurs',

@@ -29,3 +29,11 @@
   padding-left: 2rem;
   gap: 1rem;
 }
+
+tr {
+  cursor: pointer;
+  text-decoration: none;
+  &:hover {
+    background-color: hwb(120 55% 44% / 0.1);
+  }
+}

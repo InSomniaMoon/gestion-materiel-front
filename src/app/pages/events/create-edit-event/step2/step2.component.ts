@@ -19,6 +19,7 @@ import { SearchBarComponent } from '@app/components/search-bar/search-bar.compon
 import { PaginatorComponent } from '@app/components/ui/paginator/paginator.component';
 import { AppTable } from '@app/components/ui/table/table.component';
 import { Event } from '@app/core/types/event.type';
+import { SortBy } from '@app/core/types/pagination-request.type';
 import { ItemWithQuantity } from '@core/types/item.type';
 import { environment } from '@env/environment';
 import { ItemsService } from '@services/items.service';
@@ -113,7 +114,7 @@ export class Step2Component implements OnInit {
       size: this.size(),
       q: this.searchQuery(),
       order_by: this.orderBy(),
-      sort_by: this.sortBy() === 1 ? 'asc' : 'desc',
+      sort_by: (this.sortBy() === 1 ? 'asc' : 'desc') as SortBy,
       category_id: this.categoryId(),
       start_date: new Date(this.startDate()),
       end_date: new Date(this.endDate()),

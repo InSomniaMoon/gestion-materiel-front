@@ -38,22 +38,3 @@ tr {
     background-color: hwb(120 55% 44% / 0.1);
   }
 }
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 1rem;
-  padding: 1rem 2rem;
-
-  a {
-    border-radius: 0.5rem;
-    // border: 1px solid hwb(120 84% 14%);
-    box-shadow: 4px 4px 10px 1px hsl(0deg 0% 46% / 9%);
-    transition: background-color 0.2s ease-in-out;
-  }
-  @media (max-width: 768px) {
-    padding: 1rem;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 0.5rem;
-  }
-}

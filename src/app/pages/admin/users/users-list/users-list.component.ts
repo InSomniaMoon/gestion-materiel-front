@@ -12,14 +12,20 @@ import { SearchBarComponent } from '@app/components/search-bar/search-bar.compon
 import { PaginatorComponent } from '@app/components/ui/paginator/paginator.component';
 import { AppTable } from '@app/components/ui/table/table.component';
 import { AuthService } from '@app/core/services/auth.service';
+import { SortBy } from '@app/core/types/pagination-request.type';
 import { environment } from '@env/environment';
 import { TippyDirective } from '@ngneat/helipopper';
 import { UsersService } from '@services/users.service';
 import { buildDialogOptions } from '@utils/constants';
 import { Button } from 'primeng/button';
+import { Card } from 'primeng/card';
+import { DataView } from 'primeng/dataview';
 import { DialogService } from 'primeng/dynamicdialog';
+import { Select } from 'primeng/select';
+import { SelectButton } from 'primeng/selectbutton';
 import { TableModule } from 'primeng/table';
 import { lastValueFrom } from 'rxjs';
+import { UserRolePipe } from '../user-role.pipe';
 import { AddUserModalComponent } from './add-user-modal/add-user-modal.component';
 
 @Component({
@@ -32,6 +38,11 @@ import { AddUserModalComponent } from './add-user-modal/add-user-modal.component
     FormsModule,
     PaginatorComponent,
     TippyDirective,
+    Card,
+    DataView,
+    SelectButton,
+    UserRolePipe,
+    Select,
   ],
   templateUrl: './users-list.component.html',
   styleUrl: './users-list.component.scss',
@@ -48,7 +59,7 @@ export class UsersListComponent {
       this.page.set(0);
     });
   }
-  options = [
+  pageSizeOptions = [
     { label: '50', value: 50 },
     { label: '100', value: 100 },
     { label: '200', value: 200 },
@@ -61,6 +72,19 @@ export class UsersListComponent {
   orderBy = signal<'lastname' | 'firstname' | 'email' | 'role'>('lastname');
   sortBy = signal<1 | -1>(1);
   first = computed(() => this.page() * this.size());
+
+  dataViewType = [
+    { label: 'Liste', value: 'list' },
+    { label: 'Tableau', value: 'grid' },
+  ];
+  layout = signal<'list' | 'grid'>('list');
+
+  sortOptions = [
+    { label: 'Nom', value: 'lastname' },
+    { label: 'Prénom', value: 'firstname' },
+    { label: 'Email', value: 'email' },
+    { label: 'Rôle', value: 'role' },
+  ];
 
   usersResource = resource({
     loader: ({ params }) =>
@@ -78,7 +102,7 @@ export class UsersListComponent {
       size: this.size(),
       q: this.searchQuery(),
       order_by: this.orderBy(),
-      sort_by: this.sortBy() === 1 ? 'asc' : 'desc',
+      sort_by: this.sortBy() === 1 ? 'asc' : ('desc' as SortBy),
       selected_structure: this.selectedStructure(),
     }),
   });
@@ -100,5 +124,9 @@ export class UsersListComponent {
         }
         this.usersResource.reload();
       });
+  }
+
+  switchSortOrder() {
+    this.sortBy.set(this.sortBy() === 1 ? -1 : 1);
   }
 }

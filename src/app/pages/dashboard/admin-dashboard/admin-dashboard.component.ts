@@ -8,6 +8,7 @@ import {
   signal,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { SortBy } from '@app/core/types/pagination-request.type';
 import { AdminDashboardOptionIssue } from '@core/types/optionIssue.type';
 import { environment } from '@env/environment';
 import { OptionIssuesService } from '@services/option-issues.service';
@@ -47,7 +48,7 @@ export class AdminDashboardComponent {
       size: this.size(),
       q: this.searchQuery(),
       order_by: this.orderBy(),
-      sort_by: this.sortBy() === 1 ? 'asc' : 'desc',
+      sort_by: (this.sortBy() === 1 ? 'asc' : 'desc') as SortBy,
     }),
     loader: ({ params }) =>
       lastValueFrom(
