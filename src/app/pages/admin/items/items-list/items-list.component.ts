@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { SearchBarComponent } from '@app/components/search-bar/search-bar.component';
 import { PaginatorComponent } from '@app/components/ui/paginator/paginator.component';
 import { AuthService } from '@app/core/services/auth.service';
@@ -23,6 +23,7 @@ import { ItemsService } from '@services/items.service';
 import { buildDialogOptions } from '@utils/constants';
 import { Badge } from 'primeng/badge';
 import { Button } from 'primeng/button';
+import { Card } from 'primeng/card';
 import { DataView } from 'primeng/dataview';
 import { DialogService } from 'primeng/dynamicdialog';
 import { PaginatorModule } from 'primeng/paginator';
@@ -32,7 +33,6 @@ import { TableModule } from 'primeng/table';
 import { fromEvent, lastValueFrom, map } from 'rxjs';
 import { CreateUpdateItemComponent } from './create-update-item/create-update-item.component';
 import { ItemsReloaderService } from './items-reloader.service';
-import { ListItemComponent } from './list-item/list-item.component';
 @Component({
   selector: 'app-items-list',
   imports: [
@@ -45,26 +45,42 @@ import { ListItemComponent } from './list-item/list-item.component';
     SearchBarComponent,
     PaginatorComponent,
     DataView,
-    ListItemComponent,
     FormsModule,
-    RouterLink,
     Badge,
     SelectButton,
+    Card,
   ],
   providers: [ItemsReloaderService],
   template: `
     <div class="header">
       <div class="flex wrap">
-        <h1>Objets</h1>
-        <p-select
-          [options]="categories()"
-          optionLabel="label"
-          optionValue="code"
-          placeholder="Catégorie"
-          [style]="{ width: isMobile() ? '100%' : '200px' }"
-          [ngModel]="selectedCategory()"
-          (ngModelChange)="selectedCategory.set($event)" />
-        <app-search-bar (queryChange)="searchQuery.set($event)" />
+        @if (!isMobile()) {
+          <h1>Objets</h1>
+        }
+        <div class="flex">
+          <p-select
+            [options]="categories()"
+            optionLabel="label"
+            optionValue="code"
+            fluid
+            placeholder="Catégorie"
+            [style]="{ width: isMobile() ? '50%' : '200px' }"
+            [ngModel]="selectedCategory()"
+            (ngModelChange)="selectedCategory.set($event)" />
+          <app-search-bar (queryChange)="searchQuery.set($event)" />
+        </div>
+
+        @if (layout() == 'grid') {
+          <p-select
+            [options]="sortOptions"
+            [ngModel]="orderBy()"
+            dropdownIcon="pi pi-sort" />
+
+          <p-button
+            outlined
+            [icon]="'pi pi-sort-alpha-down' + (sortBy() === 1 ? '' : '-alt')"
+            (onClick)="switchSortOrder()" />
+        }
       </div>
       @if (isAdmin()) {
         <p-button
@@ -158,9 +174,37 @@ import { ListItemComponent } from './list-item/list-item.component';
         <ng-template #grid let-items>
           <div class="grid">
             @for (item of items; track $index) {
-              <a routerLink="/items/{{ item.id }}">
-                <app-list-item [item]="item" />
-              </a>
+              <p-card
+                (click)="isAdmin() ? openItemUpdate(item) : openItemView(item)">
+                <div class="flex">
+                  <p-badge
+                    size="small"
+                    value=" "
+                    [severity]="
+                      item.state === 'OK'
+                        ? 'success'
+                        : item.state === 'NOK'
+                          ? 'warn'
+                          : item.state === 'KO'
+                            ? 'danger'
+                            : 'info'
+                    " />
+                  @if (item.image) {
+                    <img
+                      [src]="imageBaseUrl + item.image"
+                      alt="{{ item.name }}"
+                      class="item-image" />
+                  }
+                  <div class="item-details">
+                    <span class="item-category">
+                      {{ item.category?.name }}
+                    </span>
+                    <span class="item-name">
+                      {{ item.name }}
+                    </span>
+                  </div>
+                </div>
+              </p-card>
             }
           </div>
         </ng-template>
@@ -183,6 +227,12 @@ export class ItemsListComponent implements OnInit {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
 
+  readonly imageBaseUrl = `${environment.api_url}/storage`;
+
+  readonly sortOptions = [{ label: 'Catégorie', value: 'category_id' }];
+  switchSortOrder() {
+    this.sortBy.set(this.sortBy() === 1 ? -1 : 1);
+  }
   categories = toSignal(
     this.categoriesService
       .getCategories({

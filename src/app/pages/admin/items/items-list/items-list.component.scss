@@ -38,3 +38,19 @@ tr {
     background-color: hwb(120 55% 44% / 0.1);
   }
 }
+
+.item-details {
+  flex: 1;
+  gap: 0.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-left: 16px;
+
+  .item-name {
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
+    color: #111827;
+  }
+}
