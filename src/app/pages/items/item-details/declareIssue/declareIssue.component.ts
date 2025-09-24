@@ -1,20 +1,18 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  computed,
   inject,
   input,
+  OnInit,
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ItemIssuesService } from '@app/core/services/item-issues.service';
-import { Item } from '@core/types/item.type';
 import { MessageService } from 'primeng/api';
 import { Button } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { FloatLabel } from 'primeng/floatlabel';
-import { Select } from 'primeng/select';
 import { Textarea } from 'primeng/textarea';
 import { ToggleSwitch } from 'primeng/toggleswitch';
 
@@ -27,20 +25,8 @@ import { ToggleSwitch } from 'primeng/toggleswitch';
     Textarea,
     FloatLabel,
     ToggleSwitch,
-    Select,
   ],
   template: `<form [formGroup]="form">
-      <p-float-label variant="on">
-        <p-select
-          formControlName="optionId"
-          [options]="options()"
-          optionLabel="name"
-          optionValue="id"
-          fluid
-          id="option" />
-        <label for="option">Option</label>
-      </p-float-label>
-
       <p-float-label variant="on">
         <textarea
           pTextarea
@@ -69,14 +55,13 @@ import { ToggleSwitch } from 'primeng/toggleswitch';
   styleUrl: './declareIssue.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DeclareIssueComponent {
+export class DeclareIssueComponent implements OnInit {
   ref = inject(DynamicDialogRef);
   dialogService = inject(DialogService);
   private readonly itemIssuesService = inject(ItemIssuesService);
   private readonly messageService = inject(MessageService);
 
-  item = input.required<Item>();
-  options = computed(() => this.item()?.options ?? []);
+  itemId = input.required<number>();
 
   fb = inject(FormBuilder);
   form = this.fb.nonNullable.group({
@@ -85,15 +70,19 @@ export class DeclareIssueComponent {
       validators: [Validators.required],
     }),
     usable: this.fb.nonNullable.control(true),
-    itemId: this.fb.nonNullable.control(null, {
+    itemId: this.fb.nonNullable.control<number>(0, {
       validators: [Validators.required],
     }),
   });
 
+  ngOnInit(): void {
+    this.form.patchValue({ itemId: this.itemId() });
+  }
+
   declareIssue() {
     if (!this.form.valid) return;
     this.itemIssuesService
-      .create(this.form.getRawValue(), this.item().id)
+      .create(this.form.getRawValue(), this.itemId())
       .subscribe({
         next: () => {
           this.ref.close(this.form.getRawValue().usable);

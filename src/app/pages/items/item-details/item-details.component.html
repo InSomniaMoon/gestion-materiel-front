@@ -22,11 +22,10 @@
 } @else {
   <p-progressSpinner ariaLabel="loading" />
 }
-@if (userAdmin()) {
-  <section>
-    <app-opened-issues
-      [itemId]="itemId()!"
-      [issues]="issuesQuery.data() ?? []"
-      (issuesChange)="issuesQuery.refetch()" />
-  </section>
-}
+
+<section>
+  <app-opened-issues
+    [itemId]="itemId()!"
+    [issues]="issuesQuery.data() ?? []"
+    (issuesChange)="issuesQuery.refetch()" />
+</section>

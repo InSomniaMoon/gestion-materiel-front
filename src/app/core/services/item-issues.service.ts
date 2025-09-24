@@ -26,7 +26,7 @@ export class ItemIssuesService {
     itemId: number
   ) {
     return this.http.post<ItemIssue>(
-      `${this.api_url}/items/${itemId}/issues/${issue}`,
+      `${this.api_url}/items/${itemId}/issues`,
       {
         value: issue,
         usable,

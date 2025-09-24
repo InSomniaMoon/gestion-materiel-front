@@ -13,13 +13,20 @@ import { buildDialogOptions } from '@utils/constants';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { DialogService } from 'primeng/dynamicdialog';
+import { DeclareIssueComponent } from '../declareIssue/declareIssue.component';
 
 @Component({
   selector: 'app-opened-issues',
   imports: [ButtonModule, CardModule, DatePipe],
   template: `<div class="title">
       <h2>Problèmes non résolus</h2>
-      <!-- <p-button outlined icon="pi pi-plus" iconPos="right" label="" /> -->
+      <p-button
+        outlined
+        icon="pi pi-plus"
+        iconPos="right"
+        severity="danger"
+        (onClick)="openDeclareIssueDialog()"
+        label="" />
     </div>
 
     @for (issue of issues(); track $index) {
@@ -59,6 +66,22 @@ export class OpenedIssuesComponent {
       )
       .onClose.subscribe(event => {
         if (event) {
+          this.issuesChange.emit();
+        }
+      });
+  }
+
+  openDeclareIssueDialog() {
+    this.dialogService
+      .open(
+        DeclareIssueComponent,
+        buildDialogOptions({
+          header: 'Déclarer un problème',
+          inputValues: { itemId: this.itemId() },
+        })
+      )
+      .onClose.subscribe((somethingHappened: boolean) => {
+        if (somethingHappened) {
           this.issuesChange.emit();
         }
       });
