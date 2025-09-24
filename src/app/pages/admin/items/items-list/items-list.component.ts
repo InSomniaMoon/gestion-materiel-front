@@ -15,6 +15,7 @@ import { SearchBarComponent } from '@app/components/search-bar/search-bar.compon
 import { PaginatorComponent } from '@app/components/ui/paginator/paginator.component';
 import { AuthService } from '@app/core/services/auth.service';
 import { CategoriesService } from '@app/core/services/categories.service';
+import { ItemDetailsComponent } from '@app/pages/items/item-details/item-details.component';
 import { AppTable } from '@components/ui/table/table.component';
 import { Item } from '@core/types/item.type';
 import { environment } from '@env/environment';
@@ -180,6 +181,7 @@ export class ItemsListComponent implements OnInit {
   private readonly dialogService = inject(DialogService);
   private readonly categoriesService = inject(CategoriesService);
   private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
 
   categories = toSignal(
     this.categoriesService
@@ -310,12 +312,18 @@ export class ItemsListComponent implements OnInit {
       });
   }
 
-  private readonly router = inject(Router);
   openItemUpdate(item: Item) {
     this.openUpdateItem(item);
   }
 
   openItemView(item: Item) {
-    this.router.navigate(['/items', item.id]);
+    this.dialogService.open(
+      ItemDetailsComponent,
+      buildDialogOptions({
+        inputValues: {
+          itemId: item.id,
+        },
+      })
+    );
   }
 }

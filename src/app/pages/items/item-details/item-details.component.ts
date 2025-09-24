@@ -3,6 +3,7 @@ import {
   Component,
   DestroyRef,
   inject,
+  input,
   OnInit,
   signal,
 } from '@angular/core';
@@ -54,11 +55,9 @@ export class ItemDetailsComponent implements OnInit {
   item = signal<Item | null>(null);
 
   userAdmin = this.auth$.isAdmin;
-  itemId = signal<number | undefined>(undefined);
+  itemId = input.required<number>();
 
   ngOnInit(): void {
-    this.itemId.set(this.routeSnapshot.params['itemId']);
-
     // get itemid from route
     this.itemService
       .getItem(this.itemId()!)
