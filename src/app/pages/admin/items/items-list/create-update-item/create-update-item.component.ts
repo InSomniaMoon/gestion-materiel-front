@@ -236,7 +236,6 @@ export class CreateUpdateItemComponent implements OnInit {
     if (!this.data) {
       return;
     }
-    console.log(this.data);
 
     this.form.patchValue({
       name: this.data.name,

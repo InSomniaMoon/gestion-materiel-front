@@ -64,7 +64,7 @@ import { ToggleSwitch } from 'primeng/toggleswitch';
       <p-button
         label="Déclarer"
         [disabled]="form.invalid"
-        (onClick)="declareAvarie()" />
+        (onClick)="declareIssue()" />
     </p-footer>`,
   styleUrl: './declareIssue.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -90,7 +90,7 @@ export class DeclareIssueComponent {
     }),
   });
 
-  declareAvarie() {
+  declareIssue() {
     if (!this.form.valid) return;
     this.optionIssuesService
       .create(this.form.getRawValue(), this.item().id)
