@@ -7,6 +7,7 @@ import {
 import { FormsModule } from '@angular/forms';
 import { PaginatorComponent } from '@app/components/ui/paginator/paginator.component';
 import { AppTable } from '@app/components/ui/table/table.component';
+import { TableLayoutService } from '@app/core/services/table-layout.service';
 import { ItemCategory } from '@core/types/item.type';
 import { AuthService } from '@services/auth.service';
 import { CategoriesService } from '@services/categories.service';
@@ -43,7 +44,7 @@ import { CreateUpdateCategoryComponent } from '../create-update-category/create-
 export class CategoriesListComponent {
   private readonly categoriesService = inject(CategoriesService);
   private readonly dialogRef = inject(DialogService);
-
+  private readonly tableLayoutService = inject(TableLayoutService);
   private selectedStructure = inject(AuthService).selectedStructure;
 
   sortOptions = [{ label: 'Nom', value: 'name' }];
@@ -61,7 +62,10 @@ export class CategoriesListComponent {
     { label: 'Liste', value: 'list' },
     { label: 'Tableau', value: 'grid' },
   ];
-  layout = signal<'list' | 'grid'>('list');
+  layout = this.tableLayoutService.layout;
+  setLayout(layout: 'list' | 'grid') {
+    this.tableLayoutService.setLayout(layout);
+  }
 
   categoriesQuery = injectQuery(() => ({
     queryKey: [

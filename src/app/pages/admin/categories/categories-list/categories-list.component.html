@@ -24,7 +24,8 @@
     <ng-template #header>
       <div class="flex justify-end">
         <p-select-button
-          [(ngModel)]="layout"
+          [ngModel]="layout"
+          (ngModelChange)="setLayout($event)"
           [options]="dataViewType"
           [allowEmpty]="false"
           size="small">

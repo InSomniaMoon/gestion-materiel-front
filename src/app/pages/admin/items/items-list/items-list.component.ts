@@ -10,11 +10,12 @@ import {
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { SearchBarComponent } from '@app/components/search-bar/search-bar.component';
 import { PaginatorComponent } from '@app/components/ui/paginator/paginator.component';
 import { AuthService } from '@app/core/services/auth.service';
 import { CategoriesService } from '@app/core/services/categories.service';
+import { TableLayoutService } from '@app/core/services/table-layout.service';
 import { ItemDetailsComponent } from '@app/pages/items/item-details/item-details.component';
 import { AppTable } from '@components/ui/table/table.component';
 import { Item } from '@core/types/item.type';
@@ -97,7 +98,8 @@ import { ItemsReloaderService } from './items-reloader.service';
               <div></div>
             }
             <p-select-button
-              [(ngModel)]="layout"
+              [ngModel]="layout()"
+              (ngModelChange)="setLayout($event)"
               [options]="dataViewType"
               [allowEmpty]="false"
               size="small">
@@ -227,11 +229,11 @@ export class ItemsListComponent implements OnInit {
   private readonly dialogService = inject(DialogService);
   private readonly categoriesService = inject(CategoriesService);
   private readonly authService = inject(AuthService);
-  private readonly router = inject(Router);
-
+  private readonly tableLayoutService = inject(TableLayoutService);
   readonly imageBaseUrl = `${environment.api_url}/storage`;
 
   readonly sortOptions = [{ label: 'Catégorie', value: 'category_id' }];
+
   switchSortOrder() {
     this.sortBy.set(this.sortBy() === 1 ? -1 : 1);
   }
@@ -257,7 +259,11 @@ export class ItemsListComponent implements OnInit {
     { label: 'Liste', value: 'list' },
     { label: 'Tableau', value: 'grid' },
   ];
-  layout = signal<'list' | 'grid'>('list');
+  layout = this.tableLayoutService.layout;
+  setLayout(layout: 'list' | 'grid') {
+    this.tableLayoutService.setLayout(layout);
+  }
+
   selectedCategory = signal<number | undefined>(undefined);
 
   isAdmin = toSignal(

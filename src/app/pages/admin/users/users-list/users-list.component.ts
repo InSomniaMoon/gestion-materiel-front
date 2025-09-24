@@ -12,6 +12,7 @@ import { SearchBarComponent } from '@app/components/search-bar/search-bar.compon
 import { PaginatorComponent } from '@app/components/ui/paginator/paginator.component';
 import { AppTable } from '@app/components/ui/table/table.component';
 import { AuthService } from '@app/core/services/auth.service';
+import { TableLayoutService } from '@app/core/services/table-layout.service';
 import { SortBy } from '@app/core/types/pagination-request.type';
 import { environment } from '@env/environment';
 import { TippyDirective } from '@ngneat/helipopper';
@@ -52,6 +53,7 @@ export class UsersListComponent {
   private readonly usersService = inject(UsersService);
   private readonly dialogService = inject(DialogService);
   private readonly selectedStructure = inject(AuthService).selectedStructure;
+  private readonly tableLayoutService = inject(TableLayoutService);
   constructor() {
     effect(() => {
       this.orderBy();
@@ -77,8 +79,10 @@ export class UsersListComponent {
     { label: 'Liste', value: 'list' },
     { label: 'Tableau', value: 'grid' },
   ];
-  layout = signal<'list' | 'grid'>('list');
-
+  layout = this.tableLayoutService.layout;
+  setLayout(layout: 'list' | 'grid') {
+    this.tableLayoutService.setLayout(layout);
+  }
   sortOptions = [
     { label: 'Nom', value: 'lastname' },
     { label: 'Prénom', value: 'firstname' },
