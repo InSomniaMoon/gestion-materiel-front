@@ -133,6 +133,7 @@ import { ItemsReloaderService } from './items-reloader.service';
                   Problèmes
                   <p-sortIcon field="open_issues_count" />
                 </th>
+                <th>Stock</th>
               </tr>
             </ng-template>
             <ng-template #body let-item>
@@ -162,6 +163,7 @@ import { ItemsReloaderService } from './items-reloader.service';
                 <td style="text-wrap: nowrap;text-align: center;">
                   {{ item.open_issues_count }}
                 </td>
+                <td>{{ item.stock }}</td>
               </tr>
             </ng-template>
           </p-table>
