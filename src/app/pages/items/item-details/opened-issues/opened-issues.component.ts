@@ -7,13 +7,14 @@ import {
   output,
 } from '@angular/core';
 import { IssueDetailsComponent } from '@app/components/issue-details/issue-details.component';
+import { Item } from '@app/core/types/item.type';
 import { ItemIssue } from '@app/core/types/itemIssue.type';
 import { AuthService } from '@services/auth.service';
 import { buildDialogOptions } from '@utils/constants';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { DialogService } from 'primeng/dynamicdialog';
-import { DeclareIssueComponent } from '../declareIssue/declareIssue.component';
+import { DeclareIssueComponent } from '../declare-issue/declare-issue.component';
 
 @Component({
   selector: 'app-opened-issues',
@@ -53,13 +54,13 @@ export class OpenedIssuesComponent {
 
   issues = input<ItemIssue[]>([]);
   issuesChange = output<void>();
-  itemId = input.required<number>();
+  item = input.required<Item>();
   openIssueDetailsModal(issue: ItemIssue) {
     this.dialogService
       .open(
         IssueDetailsComponent,
         buildDialogOptions({
-          data: { issue, itemId: this.itemId() },
+          inputValues: { issue, item: this.item() },
           header: 'Détails du problème',
           width: 'auto',
         })
@@ -77,7 +78,7 @@ export class OpenedIssuesComponent {
         DeclareIssueComponent,
         buildDialogOptions({
           header: 'Déclarer un problème',
-          inputValues: { itemId: this.itemId() },
+          inputValues: { item: this.item() },
         })
       )!
       .onClose.subscribe((somethingHappened: boolean) => {

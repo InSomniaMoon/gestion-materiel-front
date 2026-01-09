@@ -4,12 +4,14 @@ import {
   Component,
   computed,
   inject,
+  input,
   OnInit,
   signal,
   viewChild,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ItemIssuesService } from '@app/core/services/item-issues.service';
+import { Item } from '@app/core/types/item.type';
 import { ItemIssue } from '@app/core/types/itemIssue.type';
 import { IssueCommentsService } from '@services/issue-comments.service';
 import { injectQuery } from '@tanstack/angular-query-experimental';
@@ -52,16 +54,14 @@ export class IssueDetailsComponent implements OnInit {
 
   inplace = viewChild.required<Inplace>('inplace');
 
-  data: IssueDetailsComponentData = this.dialog.getInstance(this.ref)!.data;
+  issue = input.required<ItemIssue>();
+  item = input.required<Item>();
 
   commentsQuery = injectQuery(() => ({
-    queryKey: ['issueComments', this.data.issue.id],
+    queryKey: ['issueComments', this.issue().id],
     queryFn: () =>
       lastValueFrom(
-        this.issueCommentsService.getComments(
-          this.data.itemId,
-          this.data.issue.id
-        )
+        this.issueCommentsService.getComments(this.item().id, this.issue().id)
       ),
   }));
 
@@ -95,7 +95,7 @@ export class IssueDetailsComponent implements OnInit {
           return;
         }
         // resolve issue
-        this.issueService.resolve(this.data.itemId, this.data.issue).subscribe({
+        this.issueService.resolve(this.item().id, this.issue()).subscribe({
           next: () => {
             this.ref.close(true);
           },
@@ -105,7 +105,7 @@ export class IssueDetailsComponent implements OnInit {
 
   onAddComment() {
     this.issueCommentsService
-      .addComment(this.data.itemId, this.data.issue.id, this.newComment())
+      .addComment(this.item().id, this.issue().id, this.newComment())
       .subscribe({
         next: () => {
           this.newComment.set('');

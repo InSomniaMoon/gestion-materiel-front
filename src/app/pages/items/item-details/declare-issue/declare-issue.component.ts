@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ItemIssuesService } from '@app/core/services/item-issues.service';
+import { Item } from '@app/core/types/item.type';
 import { MessageService } from 'primeng/api';
 import { Button } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
@@ -52,7 +53,7 @@ import { ToggleSwitch } from 'primeng/toggleswitch';
         [disabled]="form.invalid"
         (onClick)="declareIssue()" />
     </p-footer>`,
-  styleUrl: './declareIssue.component.scss',
+  styleUrl: './declare-issue.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DeclareIssueComponent implements OnInit {
@@ -61,7 +62,7 @@ export class DeclareIssueComponent implements OnInit {
   private readonly itemIssuesService = inject(ItemIssuesService);
   private readonly messageService = inject(MessageService);
 
-  itemId = input.required<number>();
+  item = input.required<Item>();
 
   fb = inject(FormBuilder);
   form = this.fb.nonNullable.group({
@@ -76,13 +77,13 @@ export class DeclareIssueComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    this.form.patchValue({ itemId: this.itemId() });
+    this.form.patchValue({ itemId: this.item().id });
   }
 
   declareIssue() {
     if (!this.form.valid) return;
     this.itemIssuesService
-      .create(this.form.getRawValue(), this.itemId())
+      .create(this.form.getRawValue(), this.item().id)
       .subscribe({
         next: () => {
           this.ref.close(this.form.getRawValue().usable);

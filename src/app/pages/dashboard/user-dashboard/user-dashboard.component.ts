@@ -10,7 +10,7 @@ import {
   viewChild,
 } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { DeclareIssueComponent } from '@app/pages/items/item-details/declareIssue/declareIssue.component';
+import { DeclareIssueComponent } from '@app/pages/items/item-details/declare-issue/declare-issue.component';
 import { Item } from '@core/types/item.type';
 import {
   FullCalendarComponent,
@@ -133,7 +133,7 @@ export class UserDashboardComponent implements AfterViewInit {
         header: 'Signaler un dommage',
         width: '50%',
         inputValues: {
-          itemId: item.id,
+          item,
         },
       })
     );

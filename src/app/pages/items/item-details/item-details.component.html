@@ -25,7 +25,7 @@
 
 <section>
   <app-opened-issues
-    [itemId]="itemId()!"
+    [item]="item()!"
     [issues]="issuesQuery.data() ?? []"
     (issuesChange)="issuesQuery.refetch()" />
 </section>
