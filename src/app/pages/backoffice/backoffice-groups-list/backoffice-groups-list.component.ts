@@ -134,7 +134,7 @@ export class AppAdminGroupsListComponent {
           header: 'Créer un groupe',
           width: '70%',
         })
-      )
+      )!
       .onClose.subscribe(created => {
         if (created) {
           this.groupsQuery.refetch();
@@ -151,7 +151,7 @@ export class AppAdminGroupsListComponent {
           width: '70%',
           data: { group },
         })
-      )
+      )!
       .onClose.subscribe(updated => {
         if (updated) {
           this.groupsQuery.refetch();

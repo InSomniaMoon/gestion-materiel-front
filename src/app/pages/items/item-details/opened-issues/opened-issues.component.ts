@@ -63,7 +63,7 @@ export class OpenedIssuesComponent {
           header: 'Détails du problème',
           width: 'auto',
         })
-      )
+      )!
       .onClose.subscribe(event => {
         if (event) {
           this.issuesChange.emit();
@@ -79,7 +79,7 @@ export class OpenedIssuesComponent {
           header: 'Déclarer un problème',
           inputValues: { itemId: this.itemId() },
         })
-      )
+      )!
       .onClose.subscribe((somethingHappened: boolean) => {
         if (somethingHappened) {
           this.issuesChange.emit();

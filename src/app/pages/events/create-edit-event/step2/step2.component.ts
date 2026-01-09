@@ -192,7 +192,7 @@ export class Step2Component implements OnInit {
             item,
           },
         })
-      )
+      )!
       .onClose.subscribe((result: number | null) => {
         if (result !== null && result > 0) {
           this.toggleProductSelection(item, result);

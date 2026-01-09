@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -31,7 +30,6 @@ import { ItemsReloaderService } from '../items-reloader.service';
 @Component({
   selector: 'app-create-update-item',
   imports: [
-    CommonModule,
     InputTextModule,
     FloatLabelModule,
     ButtonModule,
@@ -124,7 +122,7 @@ export class CreateUpdateItemComponent implements OnInit {
 
   protected data: Item | undefined = this.dialogService.getInstance(
     this.dialogRef
-  ).data;
+  )?.data;
 
   fileUploadHandler = this.itemService.uploadImage;
 
@@ -249,7 +247,7 @@ export class CreateUpdateItemComponent implements OnInit {
             severity: 'danger',
           },
         })
-      )
+      )!
       .onClose.subscribe(confirmed => {
         if (confirmed) {
           this.itemService.deleteItem(this.data!).subscribe(() => {

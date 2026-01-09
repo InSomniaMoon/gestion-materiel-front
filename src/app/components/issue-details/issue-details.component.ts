@@ -52,7 +52,7 @@ export class IssueDetailsComponent implements OnInit {
 
   inplace = viewChild.required<Inplace>('inplace');
 
-  data: IssueDetailsComponentData = this.dialog.getInstance(this.ref).data;
+  data: IssueDetailsComponentData = this.dialog.getInstance(this.ref)!.data;
 
   commentsQuery = injectQuery(() => ({
     queryKey: ['issueComments', this.data.issue.id],
@@ -89,7 +89,7 @@ export class IssueDetailsComponent implements OnInit {
             message: 'Voulez-vous vraiment résoudre ce Problème ?',
           },
         })
-      )
+      )!
       .onClose.subscribe(result => {
         if (!result) {
           return;

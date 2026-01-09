@@ -73,7 +73,7 @@ export class CreateUpdateGroupComponent implements OnInit {
   private readonly backofficeService = inject(BackofficeService);
   private readonly toast = inject(MessageService);
 
-  protected readonly data = this.dialogRef.getInstance(this.ref).data;
+  protected readonly data = this.dialogRef.getInstance(this.ref)!.data;
 
   protected readonly uploadGroupImage = this.backofficeService.uploadGroupImage;
 

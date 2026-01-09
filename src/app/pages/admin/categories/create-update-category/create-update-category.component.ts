@@ -127,7 +127,7 @@ export class CreateUpdateCategoryComponent implements OnInit {
             message: 'Voulez-vous vraiment supprimer cette catégorie ?',
           },
         })
-      )
+      )!
       .onClose.subscribe(result => {
         if (!result) {
           return;

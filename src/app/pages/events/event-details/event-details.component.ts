@@ -55,7 +55,7 @@ export class EventDetailsComponent {
             cancelText: 'Annuler',
           },
         })
-      )
+      )!
       .onClose.subscribe(result => {
         if (result) {
           this.eventsService.delete(this.event()).subscribe({

@@ -157,7 +157,7 @@ export class AppAdminUsersListComponent {
           width: '50%',
           height: '80%',
         })
-      )
+      )!
       .onClose.subscribe(value => {
         if (!value) return;
         this.usersQuery.refetch();
@@ -174,7 +174,7 @@ export class AppAdminUsersListComponent {
           height: '80%',
           data: { userId: user.id },
         })
-      )
+      )!
       .onClose.subscribe(value => {
         if (!value) return;
         this.messageService.add({

@@ -346,7 +346,7 @@ export class ItemsListComponent implements OnInit {
           width: '70%',
           height: '80%',
         })
-      )
+      )!
       .onClose.subscribe(created => {
         if (created) {
           this.items.reload();
@@ -364,7 +364,7 @@ export class ItemsListComponent implements OnInit {
           width: '70%',
           height: '80%',
         })
-      )
+      )!
       .onClose.subscribe(updated => {
         if (updated) {
           this.items.reload();

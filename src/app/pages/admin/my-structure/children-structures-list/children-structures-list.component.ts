@@ -35,7 +35,7 @@ export class ChildrenStructuresListComponent {
           width: '50%',
           height: '80%',
         })
-      )
+      )!
       .onClose.subscribe(result => {
         if (!result) {
           return;
@@ -58,7 +58,7 @@ export class ChildrenStructuresListComponent {
             structure: unit,
           },
         })
-      )
+      )!
       .onClose.subscribe(result => {
         if (!result) {
           return;

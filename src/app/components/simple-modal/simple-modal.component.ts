@@ -37,7 +37,7 @@ export class SimpleModalComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    this.data.set(this.dialog$.getInstance(this.ref).data);
+    this.data.set(this.dialog$.getInstance(this.ref)!.data);
   }
 
   closeConfirm() {

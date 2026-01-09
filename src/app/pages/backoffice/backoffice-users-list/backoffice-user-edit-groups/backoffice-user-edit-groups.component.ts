@@ -71,7 +71,7 @@ export class AppAdminUserEditGroupsComponent {
   private readonly ref = inject(DynamicDialogRef);
   private readonly backofficeService = inject(BackofficeService);
   private readonly dialogRef = inject(DialogService);
-  private data = this.dialogRef.getInstance(this.ref).data;
+  private data = this.dialogRef.getInstance(this.ref)!.data;
 
   toggleSelectNewGroup = signal(true);
 

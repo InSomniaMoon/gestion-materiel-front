@@ -105,7 +105,7 @@ export class CategoriesListComponent {
           width: '50%',
           inputValues: { structureId: this.selectedStructure()!.id },
         })
-      )
+      )!
       .onClose.subscribe(result => {
         if (result) {
           this.categoriesQuery.refetch();
@@ -125,7 +125,7 @@ export class CategoriesListComponent {
             structureId: this.selectedStructure()!.id,
           },
         })
-      )
+      )!
       .onClose.subscribe(result => {
         if (result) {
           this.categoriesQuery.refetch();

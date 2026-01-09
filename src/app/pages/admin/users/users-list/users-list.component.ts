@@ -121,7 +121,7 @@ export class UsersListComponent {
           header: 'Ajouter un utilisateur',
           width: '50%',
         })
-      )
+      )!
       .onClose.subscribe(result => {
         if (!result) {
           return;
