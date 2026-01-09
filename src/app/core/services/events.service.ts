@@ -2,7 +2,11 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '@env/environment';
 import { ActualEvent, Event } from '../types/event.type';
-import { CLEAR_CACHE_CONTEXT_OPTIONS } from '../utils/injectionToken';
+import { queryParams } from '../utils/http.utils';
+import {
+  CLEAR_CACHE_CONTEXT_OPTIONS,
+  NO_CACHE_CONTEXT_OPTIONS,
+} from '../utils/injectionToken';
 
 @Injectable({
   providedIn: 'root',
@@ -31,10 +35,19 @@ export class EventsService {
     );
   }
 
-  getEventsForStructure(structureId: number) {
-    const url = `${this.api_url}/events?structure_id=${structureId}`;
+  getEventsForStructure(structureId: number, startDate?: Date, endDate?: Date) {
+    const url = `${this.api_url}/events`;
+    console.log('get events');
+
     // This method should return an observable of the structure events
-    return this.http.get<Event[]>(url);
+    return this.http.get<Event[]>(url, {
+      params: queryParams({
+        structure_id: structureId,
+        start_date: startDate?.toISOString(),
+        end_date: endDate?.toISOString(),
+      }),
+      ...NO_CACHE_CONTEXT_OPTIONS,
+    });
   }
 
   getActualEvents() {

@@ -1,44 +1,41 @@
-@if (actualEvents.isLoading()) {
-  <p-progressSpinner />
-} @else {
-  @if (actualEvents.value().length > 0) {
-    <h2>Mes événements à actuels</h2>
-    @for (event of actualEvents.value(); track event.id) {
-      <div class="event-item">
-        <h3>{{ event.name }}</h3>
-        <p>Début : {{ event.start_date | date: 'short' }}</p>
-        <p>Fin : {{ event.end_date | date: 'short' }}</p>
-      </div>
-      <h4>Objets</h4>
-      <div class="objets">
-        @for (material of event.event_subscriptions; track material.id) {
-          <p-card [header]="material.name">
-            <ng-template #footer>
-              <div class="flex gap-4 mt-1">
-                <p-button
-                  label="Problème"
-                  severity="danger"
-                  icon="pi pi-plus"
-                  (onClick)="reportDamage(material)"
-                  [outlined]="true" />
-              </div>
-            </ng-template>
-          </p-card>
-        }
-      </div>
-    }
+@if (actualEvents.value().length > 0) {
+  <h2>Mes événements à actuels</h2>
+  @for (event of actualEvents.value(); track event.id) {
+    <div class="event-item">
+      <h3>{{ event.name }}</h3>
+      <p>Début : {{ event.start_date | date: 'short' }}</p>
+      <p>Fin : {{ event.end_date | date: 'short' }}</p>
+    </div>
+    <h4>Objets</h4>
+    <div class="objets">
+      @for (material of event.event_subscriptions; track material.id) {
+        <p-card [header]="material.name">
+          <ng-template #footer>
+            <div class="flex gap-4 mt-1">
+              <p-button
+                label="Problème"
+                severity="danger"
+                icon="pi pi-plus"
+                (onClick)="reportDamage(material)"
+                [outlined]="true" />
+            </div>
+          </ng-template>
+        </p-card>
+      }
+    </div>
   }
-
-  <div class="header">
-    <h1>Mes prochains événements</h1>
-    <a
-      pButton
-      [routerLink]="['/events/create']"
-      icon="pi pi-plus"
-      label="Créer un événement"></a>
-  </div>
-  <full-calendar
-    #calendar
-    [options]="calendarOptions()"
-    style="max-height: 80vh" />
 }
+
+<div class="header">
+  <h1>Mes prochains événements</h1>
+  <a
+    pButton
+    [routerLink]="['/events/create']"
+    icon="pi pi-plus"
+    label="Créer un événement"></a>
+</div>
+<full-calendar
+  #calendar
+  [options]="calendarOptions()"
+  [deepChangeDetection]="true"
+  style="max-height: 80vh" />

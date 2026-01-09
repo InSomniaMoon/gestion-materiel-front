@@ -1,10 +1,12 @@
 import { DatePipe } from '@angular/common';
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   computed,
   inject,
   resource,
+  signal,
   viewChild,
 } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
@@ -24,7 +26,6 @@ import { buildDialogOptions } from '@utils/constants';
 import { Button, ButtonDirective } from 'primeng/button';
 import { Card } from 'primeng/card';
 import { DialogService } from 'primeng/dynamicdialog';
-import { ProgressSpinner } from 'primeng/progressspinner';
 import { catchError, lastValueFrom, map } from 'rxjs';
 
 @Component({
@@ -33,21 +34,23 @@ import { catchError, lastValueFrom, map } from 'rxjs';
     ButtonDirective,
     RouterLink,
     FullCalendarModule,
-    ProgressSpinner,
     DatePipe,
     Card,
     Button,
   ],
   templateUrl: './user-dashboard.component.html',
-  styleUrl: './user-dashboard.component.scss',
+  styleUrls: ['./user-dashboard.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserDashboardComponent {
+export class UserDashboardComponent implements AfterViewInit {
   private readonly router = inject(Router);
   private readonly eventsService = inject(EventsService);
   private readonly authService = inject(AuthService);
   private readonly dialogService = inject(DialogService);
-  calendar = viewChild<FullCalendarComponent>('calendar');
+  readonly calendar = viewChild.required<FullCalendarComponent>('calendar');
+
+  startDate = signal<Date | null>(null);
+  endDate = signal<Date | null>(null);
 
   actualEvents = resource({
     loader: () => lastValueFrom(this.eventsService.getActualEvents()),
@@ -55,29 +58,41 @@ export class UserDashboardComponent {
   });
 
   events = resource<EventInput[], any>({
-    params: () => ({ structureId: this.authService.selectedStructure() }),
+    params: () => ({
+      structureId: this.authService.selectedStructure(),
+      startDate: this.startDate(),
+      endDate: this.endDate(),
+    }),
     loader: ({ params }) =>
-      lastValueFrom(
-        this.eventsService.getEventsForStructure(params.structureId!.id).pipe(
-          map(events =>
-            events.map(
-              event =>
-                ({
-                  start: event.start_date,
-                  end: event.end_date,
-                  title: event.name,
-                  allDay: false,
-                  color: event.structure?.color,
-                  id: `${event.id}`,
-                }) as EventInput
-            )
+      this.startDate() === null || this.endDate() === null
+        ? Promise.resolve([])
+        : lastValueFrom(
+            this.eventsService
+              .getEventsForStructure(
+                params.structureId!.id,
+                params.startDate,
+                params.endDate
+              )
+              .pipe(
+                map(events =>
+                  events.map(
+                    event =>
+                      ({
+                        start: event.start_date,
+                        end: event.end_date,
+                        title: event.name,
+                        allDay: false,
+                        color: event.structure?.color,
+                        id: `${event.id}`,
+                      }) as EventInput
+                  )
+                ),
+                catchError(() => {
+                  console.error('Error loading events');
+                  return [];
+                })
+              )
           ),
-          catchError(() => {
-            console.error('Error loading events');
-            return [];
-          })
-        )
-      ),
     defaultValue: [],
   });
 
@@ -95,9 +110,16 @@ export class UserDashboardComponent {
     eventClick: event => {
       this.router.navigate(['/events', event.event.id]);
     },
+    datesSet: set => {
+      this.startDate.set(set.start);
+      this.endDate.set(set.end);
+    },
+
     handleWindowResize: true,
   }));
-
+  ngAfterViewInit(): void {
+    console.log(this.calendar().getApi().getDate());
+  }
   dayClicked(event: any) {
     console.log(event);
     this.calendar()?.getApi().changeView('timeGridDay', event.dateStr);
