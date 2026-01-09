@@ -18,7 +18,9 @@ import { StructureDetailsComponent } from './structure-details/structure-details
     @if (structure()) {
       <app-structure-details [structure]="structure()!" />
     }
-    <app-units-list [units]="children()" /> `,
+    <app-children-structures-list
+      [structures]="children()"
+      (structuresChanged)="structureResource.reload()" /> `,
   styleUrl: './my-structure.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

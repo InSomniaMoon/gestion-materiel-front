@@ -10,7 +10,7 @@
 </div>
 
 <matos-table status="success">
-  <p-table [value]="units()" stripedRows>
+  <p-table [value]="structures()" stripedRows>
     <ng-template #header>
       <tr>
         <th>Nom</th>
@@ -27,30 +27,30 @@
         <th></th>
       </tr>
     </ng-template>
-    <ng-template #body let-unit>
+    <ng-template #body let-structure>
       <tr>
-        <td>{{ unit.name }}</td>
+        <td>{{ structure.name }}</td>
         <td style="vertical-align: middle">
           <div
             [style]="
-              `width: 40px; height: 28px; background-color: ${unit.color}; border-radius: 4px;`
+              `width: 40px; height: 28px; background-color: ${structure.color}; border-radius: 4px;`
             "></div>
         </td>
         <td>
           @if (showChiefsList()) {
             <ul>
-              @for (chef of unit.members; track $index) {
+              @for (chef of structure.members; track $index) {
                 <li>{{ chef.firstname }} {{ chef.lastname }}</li>
               }
             </ul>
           } @else {
-            {{ unit.members.length }}
+            {{ structure.members.length }}
           }
         </td>
         <td class="actions">
           <p-button
             icon="pi pi-pencil"
-            (onClick)="openUpdateUnitDialog(unit)"
+            (onClick)="openUpdateUnitDialog(structure)"
             size="small" />
           <!-- <p-button size="small" icon="pi pi-trash" severity="danger" /> -->
         </td>

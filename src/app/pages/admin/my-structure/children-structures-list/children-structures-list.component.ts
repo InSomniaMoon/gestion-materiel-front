@@ -2,10 +2,11 @@ import {
   ChangeDetectionStrategy,
   Component,
   inject,
-  input,
+  model,
   signal,
 } from '@angular/core';
 import { AppTable } from '@app/components/ui/table/table.component';
+import { StructuresService } from '@app/core/services/structures.service';
 import { Structure } from '@app/core/types/structure.type';
 import { TippyDirective } from '@ngneat/helipopper';
 import { buildDialogOptions } from '@utils/constants';
@@ -15,7 +16,7 @@ import { TableModule } from 'primeng/table';
 import { CreateUnitComponent } from './create-structure/create-unit.component';
 
 @Component({
-  selector: 'app-units-list',
+  selector: 'app-children-structures-list',
   imports: [AppTable, Button, TableModule, TippyDirective],
   templateUrl: './children-structures-list.component.html',
   styleUrl: './children-structures-list.component.scss',
@@ -24,7 +25,8 @@ import { CreateUnitComponent } from './create-structure/create-unit.component';
 export class ChildrenStructuresListComponent {
   private readonly dialogService = inject(DialogService);
 
-  units = input.required<Structure[]>();
+  structures = model.required<Structure[]>();
+  private readonly structuresService = inject(StructuresService);
 
   openCreateUnitDialog() {
     this.dialogService
@@ -63,25 +65,29 @@ export class ChildrenStructuresListComponent {
         if (!result) {
           return;
         }
+        console.log(result);
 
-        //   this.unitsService
-        //     .updateUnit(unit.id, {
-        //       color: result.color,
-        //       name: result.name,
-        //       chiefs: result.chiefs,
-        //       responsible: result.responsible,
-        //     })
-        //     .subscribe({
-        //       next: () => {
-        //         this.units.reload();
-        //       },
-        //       error: error => {
-        //         console.error(
-        //           "Erreur pendant la mise à jour de l'unité :",
-        //           error
-        //         );
-        //       },
-        //     });
+        this.structuresService
+          .updateStructure(unit.id, {
+            color: result.color,
+            name: result.name,
+            members: result.chiefs,
+          })
+          .subscribe({
+            next: struct => {
+              this.structures.set([
+                ...this.structures().map(s =>
+                  s.id === unit.id ? struct.structure : s
+                ),
+              ]);
+            },
+            error: error => {
+              console.error(
+                "Erreur pendant la mise à jour de l'unité :",
+                error
+              );
+            },
+          });
       });
   }
 
