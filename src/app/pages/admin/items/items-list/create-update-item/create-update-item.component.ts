@@ -17,6 +17,7 @@ import { AuthService } from '@app/core/services/auth.service';
 import { buildDialogOptions } from '@app/core/utils/constants';
 import { Item } from '@core/types/item.type';
 import { ItemsService } from '@services/items.service';
+import { MessageService } from 'primeng/api';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { ButtonModule } from 'primeng/button';
 import { DatePicker } from 'primeng/datepicker';
@@ -25,7 +26,6 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { Select } from 'primeng/select';
 import { Textarea } from 'primeng/textarea';
-import { tap } from 'rxjs';
 import { ItemsReloaderService } from '../items-reloader.service';
 @Component({
   selector: 'app-create-update-item',
@@ -119,6 +119,8 @@ export class CreateUpdateItemComponent implements OnInit {
   protected readonly dialogRef = inject(DynamicDialogRef);
   private readonly dialogService = inject(DialogService);
   private readonly authService = inject(AuthService);
+  private readonly reloadItemService = inject(ItemsReloaderService);
+  private readonly messageService = inject(MessageService);
 
   protected data: Item | undefined = this.dialogService.getInstance(
     this.dialogRef
@@ -133,20 +135,9 @@ export class CreateUpdateItemComponent implements OnInit {
   }
 
   categoryQuery = signal('');
-  categories = toSignal(
-    this.itemService.getCategories().pipe(
-      tap(c => {
-        if (!this.data) {
-          this.form.patchValue({
-            category_id: c[0]?.id,
-          });
-        }
-      })
-    ),
-    {
-      initialValue: [],
-    }
-  );
+  categories = toSignal(this.itemService.getCategories(), {
+    initialValue: [],
+  });
 
   fb = inject(FormBuilder);
 
@@ -181,6 +172,10 @@ export class CreateUpdateItemComponent implements OnInit {
   ngOnInit(): void {
     if (!this.data) {
       return;
+    } else {
+      this.form.patchValue({
+        category_id: this.categories()[0]?.id,
+      });
     }
 
     this.form.patchValue({
@@ -210,18 +205,20 @@ export class CreateUpdateItemComponent implements OnInit {
 
   onSubmit() {
     if (this.form.valid) {
+      const value = this.form.getRawValue();
       const item: Item = {
-        id: 0,
+        id: this.data?.id ?? 0,
         usable: true,
-        name: this.form.value.name!,
-        description: this.form.value.description,
-        category_id: this.form.value.category_id!,
-        date_of_buy: this.form.value.date_of_buy,
+        name: value.name!,
+        description: value.description,
+        category_id: value.category_id!,
+        date_of_buy: value.date_of_buy,
         structure_id: this.authService.selectedStructure()?.id!,
-        image: this.form.value.image,
+        image: value.image,
+        stock: value.stock,
       };
       (this.data
-        ? this.itemService.updateItem({ ...item, id: this.data.id })
+        ? this.itemService.updateItem(item)
         : this.itemService.createItem(item)
       ).subscribe({
         next: () => {
@@ -230,8 +227,6 @@ export class CreateUpdateItemComponent implements OnInit {
       });
     }
   }
-
-  reoladItemService = inject(ItemsReloaderService);
 
   deleteItem() {
     this.dialogService
@@ -252,7 +247,13 @@ export class CreateUpdateItemComponent implements OnInit {
         if (confirmed) {
           this.itemService.deleteItem(this.data!).subscribe(() => {
             // this.items.reload();
-            this.reoladItemService.reloadItem.next();
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Succès',
+              detail: "L'objet a été supprimé avec succès.",
+            });
+            this.dialogRef.close(true);
+            this.reloadItemService.reloadItem.next();
           });
         }
       });

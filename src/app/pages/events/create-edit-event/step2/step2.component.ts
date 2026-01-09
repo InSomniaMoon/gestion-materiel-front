@@ -106,9 +106,11 @@ export class Step2Component implements OnInit {
   }
   itemsResource = resource({
     loader: ({ params }) =>
-      lastValueFrom(
-        this.itemsService.getAvailableItems(params, this.event()?.id)
-      ),
+      params.end_date > params.start_date
+        ? lastValueFrom(
+            this.itemsService.getAvailableItems(params, this.event()?.id)
+          )
+        : Promise.resolve(null),
     params: () => ({
       page: this.page() + 1,
       size: this.size(),
