@@ -84,7 +84,6 @@ export class HeaderComponent implements OnInit {
     {
       label: 'Administration',
       icon: 'pi pi-cog',
-      // routerLink: '/admin',
       visible: this.auth$.isAdmin(),
       items: [
         { label: 'Objets', icon: 'pi pi-box', routerLink: '/admin/items' },

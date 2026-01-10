@@ -27,11 +27,6 @@ import {
   SimpleModalData,
 } from '../simple-modal/simple-modal.component';
 
-type IssueDetailsComponentData = {
-  itemId: number;
-  issue: ItemIssue;
-};
-
 @Component({
   selector: 'app-issue-details',
   imports: [

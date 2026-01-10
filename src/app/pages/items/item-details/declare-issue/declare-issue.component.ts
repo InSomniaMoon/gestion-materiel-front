@@ -14,6 +14,7 @@ import { DialogModule } from 'primeng/dialog';
 
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { FloatLabel } from 'primeng/floatlabel';
+import { InputText } from 'primeng/inputtext';
 import { Textarea } from 'primeng/textarea';
 import { ToggleSwitch } from 'primeng/toggleswitch';
 
@@ -26,8 +27,9 @@ import { ToggleSwitch } from 'primeng/toggleswitch';
     Textarea,
     FloatLabel,
     ToggleSwitch,
+    InputText,
   ],
-  template: `<form [formGroup]="form">
+  template: ` <form [formGroup]="form">
       <p-float-label variant="on">
         <textarea
           pTextarea
@@ -38,6 +40,20 @@ import { ToggleSwitch } from 'primeng/toggleswitch';
 
         <label for="issue">Problème repéré</label>
       </p-float-label>
+
+      @if (!item().category?.identified) {
+        <p-float-label variant="on">
+          <input
+            type="number"
+            formControlName="affected_quantity"
+            id="affected_quantity"
+            max="{{ item().stock }}"
+            pInputText />
+          <label for="affected_quantity"
+            >Quantité affectée (max. {{ item().stock }})</label
+          >
+        </p-float-label>
+      }
 
       <label
         for="usable"
@@ -61,7 +77,6 @@ export class DeclareIssueComponent implements OnInit {
   dialogService = inject(DialogService);
   private readonly itemIssuesService = inject(ItemIssuesService);
   private readonly messageService = inject(MessageService);
-
   item = input.required<Item>();
 
   fb = inject(FormBuilder);
@@ -73,6 +88,9 @@ export class DeclareIssueComponent implements OnInit {
     usable: this.fb.nonNullable.control(true),
     itemId: this.fb.nonNullable.control<number>(0, {
       validators: [Validators.required],
+    }),
+    affected_quantity: this.fb.nonNullable.control<number>(1, {
+      validators: [Validators.required, Validators.min(1)],
     }),
   });
 

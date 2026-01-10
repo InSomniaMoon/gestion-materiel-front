@@ -77,22 +77,6 @@ export class ItemDetailsComponent implements OnInit {
       });
   }
 
-  updateItem() {
-    const item = JSON.parse(JSON.stringify(this.item()!));
-    item.usable = !item.usable;
-
-    this.itemService.updateItem(item).subscribe({
-      next: item => {
-        this.item.set(item);
-        this.message.add({
-          severity: 'success',
-          summary: 'Objet mis à jour',
-          detail: `${item.name} a été mis à jour avec succès`,
-        });
-      },
-    });
-  }
-
   issuesQuery = injectQuery(() => ({
     queryKey: ['issues', this.itemId()],
     enabled: this.itemId() !== undefined && this.userAdmin(),

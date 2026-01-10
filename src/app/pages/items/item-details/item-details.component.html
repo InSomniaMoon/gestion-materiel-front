@@ -6,18 +6,6 @@
   </header>
   <section>
     <p>{{ item()?.description }}</p>
-    <div class="flex">
-      <label for="usable"> Utilisable: </label>
-      <p-toggleButton
-        onLabel="Oui"
-        offLabel="Non"
-        [disabled]="!userAdmin()"
-        role="button"
-        onIcon="pi pi-check"
-        offIcon="pi pi-times"
-        [ngModel]="item()?.usable"
-        (ngModelChange)="updateItem()" />
-    </div>
   </section>
 } @else {
   <p-progressSpinner ariaLabel="loading" />

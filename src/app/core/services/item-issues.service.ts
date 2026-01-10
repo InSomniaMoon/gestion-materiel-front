@@ -22,7 +22,11 @@ export class ItemIssuesService {
   }
 
   create(
-    { issue, usable }: { issue: string; usable: boolean },
+    {
+      issue,
+      usable,
+      affected_quantity,
+    }: { issue: string; usable: boolean; affected_quantity: number },
     itemId: number
   ) {
     return this.http.post<ItemIssue>(
@@ -30,6 +34,7 @@ export class ItemIssuesService {
       {
         value: issue,
         usable,
+        affected_quantity,
       },
       CLEAR_CACHE_CONTEXT_OPTIONS(
         new Set([`${this.api_url}/admin/items/${itemId}/issues`])
@@ -44,7 +49,7 @@ export class ItemIssuesService {
         {},
 
         CLEAR_CACHE_CONTEXT_OPTIONS(
-          new Set([`${this.api_url}/admin/items/${itemId}/options`])
+          new Set([`${this.api_url}/admin/items/${itemId}/issues`])
         )
       )
       .pipe();
