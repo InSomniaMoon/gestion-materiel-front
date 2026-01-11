@@ -9,6 +9,7 @@ import {
 import { IssueDetailsComponent } from '@app/components/issue-details/issue-details.component';
 import { Item } from '@app/core/types/item.type';
 import { ItemIssue } from '@app/core/types/itemIssue.type';
+import { ItemsReloaderService } from '@app/pages/admin/items/items-list/items-reloader.service';
 import { AuthService } from '@services/auth.service';
 import { buildDialogOptions } from '@utils/constants';
 import { ButtonModule } from 'primeng/button';
@@ -49,6 +50,7 @@ import { DeclareIssueComponent } from '../declare-issue/declare-issue.component'
 })
 export class OpenedIssuesComponent {
   readonly userAdmin = inject(AuthService).isAdmin;
+  private readonly itemsReloaderService = inject(ItemsReloaderService);
 
   readonly dialogService = inject(DialogService);
 
@@ -84,6 +86,7 @@ export class OpenedIssuesComponent {
       .onClose.subscribe((somethingHappened: boolean) => {
         if (somethingHappened) {
           this.issuesChange.emit();
+          this.itemsReloaderService.reloadItem.next();
         }
       });
   }

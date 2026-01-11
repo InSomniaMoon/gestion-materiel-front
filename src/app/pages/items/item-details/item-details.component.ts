@@ -10,7 +10,6 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
-import { ActivatedRoute } from '@angular/router';
 import { ItemIssuesService } from '@app/core/services/item-issues.service';
 import { Item } from '@core/types/item.type';
 import { AuthService } from '@services/auth.service';
@@ -41,7 +40,6 @@ import { OpenedIssuesComponent } from './opened-issues/opened-issues.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ItemDetailsComponent implements OnInit {
-  private readonly routeSnapshot = inject(ActivatedRoute).snapshot;
   private readonly itemService = inject(ItemsService);
   private readonly destroyRef = inject(DestroyRef);
 

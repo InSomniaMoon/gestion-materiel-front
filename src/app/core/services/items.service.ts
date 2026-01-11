@@ -56,18 +56,18 @@ export class ItemsService {
     });
   }
 
-  // getAdminItems(
-  //   opt: Partial<PaginationRequest> & { category_id?: number } = {
-  //     page: 1,
-  //     size: 25,
-  //   }
-  // ) {
-  //   let url = `${this.api_url}/admin/items`;
+  getAdminItems(
+    opt: Partial<PaginationRequest> & { category_id?: number } = {
+      page: 1,
+      size: 25,
+    }
+  ) {
+    let url = `${this.api_url}/admin/items`;
 
-  //   return this.http.get<PaginatedData<Item>>(url, {
-  //     params: queryParams(opt),
-  //   });
-  // }
+    return this.http.get<PaginatedData<Item>>(url, {
+      params: queryParams(opt),
+    });
+  }
 
   getItem(id: number) {
     const url = `${this.api_url}/items/${id}`;

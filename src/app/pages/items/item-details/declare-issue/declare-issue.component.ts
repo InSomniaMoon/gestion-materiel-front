@@ -104,7 +104,7 @@ export class DeclareIssueComponent implements OnInit {
       .create(this.form.getRawValue(), this.item().id)
       .subscribe({
         next: () => {
-          this.ref.close(this.form.getRawValue().usable);
+          this.ref.close(true);
           this.messageService.add({
             severity: 'success',
             summary: 'Succès',
