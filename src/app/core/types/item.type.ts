@@ -8,6 +8,7 @@ export type Item = {
   category_id: number;
   usable: boolean;
   stock?: number;
+  usable_stock?: number;
   date_of_buy?: Date;
   category?: ItemCategory;
   options?: ItemOption[];

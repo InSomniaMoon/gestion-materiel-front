@@ -7,13 +7,15 @@ import {
   output,
 } from '@angular/core';
 import { IssueDetailsComponent } from '@app/components/issue-details/issue-details.component';
+import { Item } from '@app/core/types/item.type';
 import { ItemIssue } from '@app/core/types/itemIssue.type';
+import { ItemsReloaderService } from '@app/pages/admin/items/items-list/items-reloader.service';
 import { AuthService } from '@services/auth.service';
 import { buildDialogOptions } from '@utils/constants';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { DialogService } from 'primeng/dynamicdialog';
-import { DeclareIssueComponent } from '../declareIssue/declareIssue.component';
+import { DeclareIssueComponent } from '../declare-issue/declare-issue.component';
 
 @Component({
   selector: 'app-opened-issues',
@@ -48,18 +50,19 @@ import { DeclareIssueComponent } from '../declareIssue/declareIssue.component';
 })
 export class OpenedIssuesComponent {
   readonly userAdmin = inject(AuthService).isAdmin;
+  private readonly itemsReloaderService = inject(ItemsReloaderService);
 
   readonly dialogService = inject(DialogService);
 
   issues = input<ItemIssue[]>([]);
   issuesChange = output<void>();
-  itemId = input.required<number>();
+  item = input.required<Item>();
   openIssueDetailsModal(issue: ItemIssue) {
     this.dialogService
       .open(
         IssueDetailsComponent,
         buildDialogOptions({
-          data: { issue, itemId: this.itemId() },
+          inputValues: { issue, item: this.item() },
           header: 'Détails du problème',
           width: 'auto',
         })
@@ -77,12 +80,13 @@ export class OpenedIssuesComponent {
         DeclareIssueComponent,
         buildDialogOptions({
           header: 'Déclarer un problème',
-          inputValues: { itemId: this.itemId() },
+          inputValues: { item: this.item() },
         })
       )!
       .onClose.subscribe((somethingHappened: boolean) => {
         if (somethingHappened) {
           this.issuesChange.emit();
+          this.itemsReloaderService.reloadItem.next();
         }
       });
   }

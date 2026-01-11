@@ -6,14 +6,12 @@ import { PaginatedData } from '../types/paginatedData.type';
 import { PaginationRequest } from '../types/pagination-request.type';
 import { queryParams } from '../utils/http.utils';
 import { CLEAR_CACHE_CONTEXT_OPTIONS } from '../utils/injectionToken';
-import { CacheService } from './cache.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ItemIssuesService {
   private readonly http = inject(HttpClient);
-  private readonly cache = inject(CacheService);
   private api_url = environment.api_url;
 
   getItemIssues(itemId: number) {
@@ -22,7 +20,11 @@ export class ItemIssuesService {
   }
 
   create(
-    { issue, usable }: { issue: string; usable: boolean },
+    {
+      issue,
+      usable,
+      affected_quantity,
+    }: { issue: string; usable: boolean; affected_quantity: number },
     itemId: number
   ) {
     return this.http.post<ItemIssue>(
@@ -30,9 +32,14 @@ export class ItemIssuesService {
       {
         value: issue,
         usable,
+        affected_quantity,
       },
       CLEAR_CACHE_CONTEXT_OPTIONS(
-        new Set([`${this.api_url}/admin/items/${itemId}/issues`])
+        new Set([
+          `${this.api_url}/admin/items/${itemId}/issues`,
+          `${this.api_url}/items/${itemId}`,
+          `${this.api_url}/items`,
+        ])
       )
     );
   }
@@ -44,7 +51,7 @@ export class ItemIssuesService {
         {},
 
         CLEAR_CACHE_CONTEXT_OPTIONS(
-          new Set([`${this.api_url}/admin/items/${itemId}/options`])
+          new Set([`${this.api_url}/admin/items/${itemId}/issues`])
         )
       )
       .pipe();

@@ -20,16 +20,15 @@
     "target": "es2024",
     "module": "esnext",
     "lib": ["es2024", "dom"],
-    "baseUrl": "src",
     "paths": {
-      "@app/*": ["app/*"],
-      "@services/*": ["app/core/services/*"],
-      "@components/*": ["app/components/*"],
-      "@models/*": ["app/core/models/*"],
-      "@types/*": ["app/core/types/*"],
-      "@utils/*": ["app/core/utils/*"],
-      "@core/*": ["app/core/*"],
-      "@env/*": ["environments/*"]
+      "@app/*": ["./src/app/*"],
+      "@services/*": ["./src/app/core/services/*"],
+      "@components/*": ["./src/app/components/*"],
+      "@models/*": ["./src/app/core/models/*"],
+      "@types/*": ["./src/app/core/types/*"],
+      "@utils/*": ["./src/app/core/utils/*"],
+      "@core/*": ["./src/app/core/*"],
+      "@env/*": ["./src/environments/*"]
     }
   },
   "angularCompilerOptions": {

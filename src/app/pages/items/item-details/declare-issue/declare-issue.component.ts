@@ -7,12 +7,14 @@ import {
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ItemIssuesService } from '@app/core/services/item-issues.service';
+import { Item } from '@app/core/types/item.type';
 import { MessageService } from 'primeng/api';
 import { Button } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { FloatLabel } from 'primeng/floatlabel';
+import { InputText } from 'primeng/inputtext';
 import { Textarea } from 'primeng/textarea';
 import { ToggleSwitch } from 'primeng/toggleswitch';
 
@@ -25,8 +27,9 @@ import { ToggleSwitch } from 'primeng/toggleswitch';
     Textarea,
     FloatLabel,
     ToggleSwitch,
+    InputText,
   ],
-  template: `<form [formGroup]="form">
+  template: ` <form [formGroup]="form">
       <p-float-label variant="on">
         <textarea
           pTextarea
@@ -37,6 +40,20 @@ import { ToggleSwitch } from 'primeng/toggleswitch';
 
         <label for="issue">Problème repéré</label>
       </p-float-label>
+
+      @if (!item().category?.identified) {
+        <p-float-label variant="on">
+          <input
+            type="number"
+            formControlName="affected_quantity"
+            id="affected_quantity"
+            max="{{ item().stock }}"
+            pInputText />
+          <label for="affected_quantity"
+            >Quantité affectée (max. {{ item().stock }})</label
+          >
+        </p-float-label>
+      }
 
       <label
         for="usable"
@@ -52,7 +69,7 @@ import { ToggleSwitch } from 'primeng/toggleswitch';
         [disabled]="form.invalid"
         (onClick)="declareIssue()" />
     </p-footer>`,
-  styleUrl: './declareIssue.component.scss',
+  styleUrl: './declare-issue.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DeclareIssueComponent implements OnInit {
@@ -60,8 +77,7 @@ export class DeclareIssueComponent implements OnInit {
   dialogService = inject(DialogService);
   private readonly itemIssuesService = inject(ItemIssuesService);
   private readonly messageService = inject(MessageService);
-
-  itemId = input.required<number>();
+  item = input.required<Item>();
 
   fb = inject(FormBuilder);
   form = this.fb.nonNullable.group({
@@ -73,19 +89,22 @@ export class DeclareIssueComponent implements OnInit {
     itemId: this.fb.nonNullable.control<number>(0, {
       validators: [Validators.required],
     }),
+    affected_quantity: this.fb.nonNullable.control<number>(1, {
+      validators: [Validators.required, Validators.min(1)],
+    }),
   });
 
   ngOnInit(): void {
-    this.form.patchValue({ itemId: this.itemId() });
+    this.form.patchValue({ itemId: this.item().id });
   }
 
   declareIssue() {
     if (!this.form.valid) return;
     this.itemIssuesService
-      .create(this.form.getRawValue(), this.itemId())
+      .create(this.form.getRawValue(), this.item().id)
       .subscribe({
         next: () => {
-          this.ref.close(this.form.getRawValue().usable);
+          this.ref.close(true);
           this.messageService.add({
             severity: 'success',
             summary: 'Succès',

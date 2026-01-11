@@ -163,7 +163,12 @@ import { ItemsReloaderService } from './items-reloader.service';
                 <td style="text-wrap: nowrap;text-align: center;">
                   {{ item.open_issues_count }}
                 </td>
-                <td>{{ item.stock }}</td>
+                <td>
+                  {{ item.stock }}
+                  @if (item.stock !== item.usable_stock) {
+                    ({{ item.usable_stock }})
+                  }
+                </td>
               </tr>
             </ng-template>
           </p-table>
@@ -307,14 +312,13 @@ export class ItemsListComponent implements OnInit {
   items = resource({
     loader: ({ params }) => {
       return lastValueFrom(
-        this.itemService.getAdminItems({
+        this.itemService.getItems({
           page: params.page + 1,
-          category_id: params.selected_category,
           order_by: params.order_by,
           sort_by: params.sort_by,
           size: params.size,
           q: params.q,
-          selected_category: params.selected_category,
+          category_id: params.category_id,
         })
       );
     },
@@ -323,8 +327,8 @@ export class ItemsListComponent implements OnInit {
       size: this.size(),
       q: this.searchQuery(),
       order_by: this.orderBy(),
-      sort_by: this.sortBy() === 1 ? 'asc' : 'desc',
-      selected_category: this.selectedCategory(),
+      sort_by: this.sortBy() === 1 ? 'asc' : ('desc' as 'asc' | 'desc'),
+      category_id: this.selectedCategory(),
       structure_id: this.selectedStructure(),
     }),
   });

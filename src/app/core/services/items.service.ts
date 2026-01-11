@@ -23,9 +23,7 @@ export class ItemsService {
   }
 
   getItems(
-    opt: {
-      category_id?: number;
-    } & Partial<PaginationRequest> = {
+    opt: Partial<PaginationRequest> & { category_id?: number } = {
       page: 1,
       size: 25,
     }
@@ -59,15 +57,7 @@ export class ItemsService {
   }
 
   getAdminItems(
-    opt: {
-      q?: string;
-      size?: number;
-      page?: number;
-      order_by?: string;
-      category_id?: number;
-      sort_by?: string;
-      selected_category?: number;
-    } = {
+    opt: Partial<PaginationRequest> & { category_id?: number } = {
       page: 1,
       size: 25,
     }
