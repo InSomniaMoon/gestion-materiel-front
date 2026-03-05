@@ -21,7 +21,7 @@ export class CategoriesService {
 
   getCategories(pagination: Partial<PaginationRequest>) {
     return this.http.get<PaginatedData<ItemCategory>>(
-      `${this.baseUrl}/admin/items/categories`,
+      `${this.baseUrl}/items/categories`,
       {
         params: pagination,
       }

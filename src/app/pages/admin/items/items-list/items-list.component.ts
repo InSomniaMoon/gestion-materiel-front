@@ -277,7 +277,7 @@ export class ItemsListComponent implements OnInit {
     inject(ActivatedRoute).data.pipe(map(data => data['isAdmin'] || false)),
     { initialValue: false }
   );
-  private windowSize = toSignal(
+  private readonly windowSize = toSignal(
     fromEvent(window, 'resize').pipe(
       map((event: Event) => (event.target as Window).innerWidth)
     ),
