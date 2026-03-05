@@ -21,6 +21,7 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { FloatLabel } from 'primeng/floatlabel';
 import { InputText } from 'primeng/inputtext';
 import { ToggleSwitch } from 'primeng/toggleswitch';
+import { MassImportComponent } from './mass-import/mass-import.component';
 
 @Component({
   selector: 'app-create-update-category',
@@ -153,6 +154,22 @@ export class CreateUpdateCategoryComponent implements OnInit {
             console.error('Error deleting category:', error);
           },
         });
+      });
+  }
+  openMassImport() {
+    this.dialogRef
+      .open(
+        MassImportComponent,
+        buildDialogOptions({
+          header: 'Import de masse des catégories',
+          width: '50%',
+          inputValues: { structureId: this.structureId() },
+        })
+      )
+      ?.onClose.subscribe(result => {
+        if (result) {
+          this.ref.close(true);
+        }
       });
   }
 }

@@ -11,8 +11,8 @@ import {
 import { MessageService } from 'primeng/api';
 import { FileUpload, FileUploadHandlerEvent } from 'primeng/fileupload';
 import { Observable } from 'rxjs';
-
-type HandlerFunc = (file: File) => Observable<{ path: string }>;
+const ONE_MB = 1024 * 1024;
+export type HandlerFunc = (file: File) => Observable<{ path: string }>;
 
 @Component({
   selector: 'app-upload-file',
@@ -20,6 +20,7 @@ type HandlerFunc = (file: File) => Observable<{ path: string }>;
   templateUrl: './upload-file.component.html',
   styleUrl: './upload-file.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [MessageService],
 })
 export class UploadFileComponent {
   private readonly messageService = inject(MessageService);
@@ -32,10 +33,11 @@ export class UploadFileComponent {
   );
 
   handler = input.required<HandlerFunc>();
+  label = input<string>('Choisir une image');
 
   fileUploader = viewChild.required('fileUploader', { read: FileUpload });
 
-  maxFileSize = input(5 * 1024 * 1024); // 5 MB
+  maxFileSize = input(5 * ONE_MB); // 5 MB
   accept = input('image/*');
   progress = signal(0);
 
@@ -50,12 +52,14 @@ export class UploadFileComponent {
 
   protected async handleUpload(event: FileUploadHandlerEvent) {
     const file = event.files[0];
+
     if (!file) {
       this.messageService.add({
         severity: 'error',
         summary: 'Aucun fichier sélectionné',
         detail: 'Veuillez sélectionner un fichier à télécharger.',
       });
+      console.error('No file selected');
       return;
     }
     if (file.size > this.maxFileSize()) {
@@ -66,20 +70,25 @@ export class UploadFileComponent {
           this.maxFileSize() / 1024 / 1024
         } Mo.`,
       });
+      console.error('Invalid file size');
       return;
     }
-    const { height, width } = await this.getHeightAndWidthFromDataUrl(
-      URL.createObjectURL(file)
-    );
-    if (height !== width) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Image non carrée',
-        detail: "L'image doit être carrée (hauteur = largeur).",
-      });
+    const fileType = file.type;
+    if (['image/png', 'image/jpeg', 'image/jpg'].includes(fileType)) {
+      const { height, width } = await this.getHeightAndWidthFromDataUrl(
+        URL.createObjectURL(file)
+      );
+      if (height !== width) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Image non carrée',
+          detail: "L'image doit être carrée (hauteur = largeur).",
+        });
 
-      this.fileUploader()!.clear();
-      return;
+        this.fileUploader().clear();
+        console.error('Image is not square');
+        return;
+      }
     }
     this.fileUploader().progress = 50; // Simulate progress
     this.uploadFile(file);

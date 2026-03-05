@@ -1,0 +1,11 @@
+<p>mass-import works! {{ text() }}</p>
+
+<p-fileUpload
+  accept=".csv, .xlsx"
+  uploadLabel="utiliser"
+  (uploadHandler)="handleUpload($event.files)"
+  (onError)="handleError($event)"
+  [auto]="true"
+  [customUpload]="true"
+  [multiple]="false"
+  mode="basic" />

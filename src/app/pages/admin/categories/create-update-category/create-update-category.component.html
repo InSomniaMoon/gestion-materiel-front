@@ -1,3 +1,9 @@
+<p-button
+  icon="pi pi-file-import"
+  label="Importer des catégories depuis un fichier CSV"
+  severity="secondary"
+  (onClick)="openMassImport()" />
+
 <form [formGroup]="form">
   <p-floatlabel variant="on">
     <input id="name" pInputText formControlName="name" />
