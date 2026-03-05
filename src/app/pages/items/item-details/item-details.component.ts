@@ -61,7 +61,6 @@ export class ItemDetailsComponent implements OnInit {
       .subscribe({
         next: item => {
           this.item.set(item);
-          this.titleService.setTitle(item.name);
         },
         error: error => {
           console.error(error);
