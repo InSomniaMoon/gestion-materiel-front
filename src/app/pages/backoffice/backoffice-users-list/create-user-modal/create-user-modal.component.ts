@@ -49,21 +49,28 @@ import { BackofficeService } from '../../services/backoffice.service';
           <label for="role">Role</label>
         </p-floatlabel>
       </div>
-      <p-floatlabel>
-        <input id="username" pInputText formControlName="name" />
-        <label for="username">Prénom et nom</label>
-      </p-floatlabel>
+      <div class="row">
+        <p-floatlabel>
+          <input id="firstname" pInputText formControlName="firstname" />
+          <label for="firstname">Prénom</label>
+        </p-floatlabel>
+        <p-floatlabel>
+          <input id="lastname" pInputText formControlName="lastname" />
+          <label for="lastname">Nom</label>
+        </p-floatlabel>
+      </div>
       <p-floatlabel>
         <p-select
+          id="app_role"
           [options]="roles"
           optionLabel="name"
           optionValue="code"
           formControlName="app_role" />
-        <label for="role">Rôle appli</label>
+        <label for="app_role">Rôle appli</label>
       </p-floatlabel>
       <p-floatlabel>
         <input id="email" type="email" pInputText formControlName="email" />
-        <label for="emial">E-mail</label>
+        <label for="email">E-mail</label>
       </p-floatlabel>
 
       <p-floatlabel>
@@ -93,7 +100,7 @@ export class CreateUserModalComponent {
     { name: 'Administrateur', code: 'admin' },
   ];
 
-  private groupsResource = resource({
+  private readonly groupsResource = resource({
     loader: () => lastValueFrom(this.backofficeService.getGroups()),
   });
 
@@ -105,7 +112,10 @@ export class CreateUserModalComponent {
   );
 
   form = this.fb.nonNullable.group({
-    name: this.fb.nonNullable.control('', {
+    firstname: this.fb.nonNullable.control('', {
+      validators: [Validators.required],
+    }),
+    lastname: this.fb.nonNullable.control('', {
       validators: [Validators.required],
     }),
     email: this.fb.nonNullable.control('', {

@@ -48,4 +48,4 @@ jobs:
           name: dist
       - name: sync code to server
         run: rsync -e 'ssh -p 2222' -rt --delete frontend/browser/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:~/gestion_materiel/front/dist/frontend/browser/
-      - run: ssh -p 2222 -o StrictHostKeyChecking=no -x ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} 'cd ~/gestion_materiel/front && git pull'
+      - run: ssh -p 2222 -o StrictHostKeyChecking=no -x ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} 'cd ~/gestion_materiel/front && git clean -f && git pull'

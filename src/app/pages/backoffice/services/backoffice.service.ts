@@ -9,7 +9,7 @@ import { CLEAR_CACHE_CONTEXT_OPTIONS } from '@utils/injectionToken';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'any',
+  providedIn: 'root',
 })
 export class BackofficeService {
   private readonly apiUrl = `${environment.api_url}/backoffice`;
@@ -43,7 +43,8 @@ export class BackofficeService {
   }
 
   createUser(createUser: {
-    name: string;
+    firstname: string;
+    lastname: string;
     email: string;
     role: string;
     phone: string | null;
@@ -58,7 +59,7 @@ export class BackofficeService {
 
   getUserGroups(userId: string) {
     return httpResource<StructureWithPivot[]>(
-      () => `${this.apiUrl}/users/${userId}/strctures`,
+      () => `${this.apiUrl}/users/${userId}/structures`,
       {
         defaultValue: [],
       }
