@@ -1,6 +1,7 @@
 import {
   ApplicationConfig,
   inject,
+  isDevMode,
   LOCALE_ID,
   provideAppInitializer,
   provideZonelessChangeDetection,
@@ -27,6 +28,7 @@ import {
   QueryClient,
 } from '@tanstack/angular-query-experimental';
 
+import { provideServiceWorker } from '@angular/service-worker';
 import { MessageService } from 'primeng/api';
 import { providePrimeNG } from 'primeng/config';
 import { DialogService } from 'primeng/dynamicdialog';
@@ -96,6 +98,10 @@ export const appConfig: ApplicationConfig = {
         },
         popper: { ...popperVariation },
       },
+    }),
+    provideServiceWorker('ngsw-worker.js', {
+      enabled: !isDevMode(),
+      registrationStrategy: 'registerWhenStable:30000',
     }),
   ],
 };
