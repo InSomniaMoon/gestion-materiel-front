@@ -18,3 +18,13 @@ export type PaginatedData<T> = {
   to: number;
   from: number;
 };
+
+export const EMPTY_PAGINATED_DATA: PaginatedData<any> = {
+  data: [],
+  total: 0,
+  per_page: 0,
+  current_page: 0,
+  last_page: 0,
+  to: 0,
+  from: 0,
+};

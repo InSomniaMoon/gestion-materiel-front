@@ -5,6 +5,7 @@ import {
   inject,
   input,
   OnInit,
+  signal,
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
@@ -45,6 +46,7 @@ export class CreateUpdateCategoryComponent implements OnInit {
 
   readonly category = input<ItemCategory | null>();
   readonly structureId = input.required<number>();
+  loading = signal(false);
 
   saveType = computed<'Modifier' | 'Créer'>(() =>
     this.category() ? 'Modifier' : 'Créer'
@@ -67,6 +69,7 @@ export class CreateUpdateCategoryComponent implements OnInit {
   }
 
   save() {
+    this.loading.set(true);
     if (this.category()) {
       this.categoriesService
         .updateCategory(this.category()!.id, this.form.getRawValue())
@@ -88,8 +91,8 @@ export class CreateUpdateCategoryComponent implements OnInit {
                 'Une erreur est survenue lors de la mise à jour de la catégorie.',
             });
           },
+          complete: () => this.loading.set(false),
         });
-
       return;
     }
     this.categoriesService.createCategory(this.form.getRawValue()).subscribe({
@@ -110,6 +113,7 @@ export class CreateUpdateCategoryComponent implements OnInit {
             'Une erreur est survenue lors de la création de la catégorie.',
         });
       },
+      complete: () => this.loading.set(false),
     });
   }
 

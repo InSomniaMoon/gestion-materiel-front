@@ -4,7 +4,10 @@
     <label for="name">Titre de la catégorie</label>
   </p-floatlabel>
   <div class="flex">
-    <p-toggleswitch formControlName="identified" onLabel="Identifié">
+    <p-toggleswitch
+      formControlName="identified"
+      onLabel="Identifié"
+      style="flex-shrink: 0">
       <ng-template #handle let-checked="checked">
         <i [class]="['!text-xs', 'pi', checked ? 'pi-check' : 'pi-times']"></i>
       </ng-template>
@@ -26,6 +29,7 @@
     <p-button
       [label]="saveType()"
       [disabled]="form.invalid"
+      [loading]="loading()"
       (onClick)="save()" />
   </div>
 </p-footer>

@@ -89,9 +89,11 @@ export class ItemsService {
     );
   }
 
-  getCategories() {
+  getCategories(search?: string) {
     const url = `${this.api_url}/items/categories`;
-    return this.http.get<ItemCategory[]>(url);
+    return this.http.get<PaginatedData<ItemCategory>>(url, {
+      params: queryParams({ q: search }),
+    });
   }
 
   uploadImage = (file: File) => {

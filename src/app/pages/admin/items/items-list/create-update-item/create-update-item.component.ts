@@ -4,6 +4,7 @@ import {
   computed,
   inject,
   OnInit,
+  resource,
   signal,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -14,7 +15,9 @@ import {
 } from '@app/components/simple-modal/simple-modal.component';
 import { UploadFileComponent } from '@app/components/upload-file/upload-file.component';
 import { AuthService } from '@app/core/services/auth.service';
+import { EMPTY_PAGINATED_DATA } from '@app/core/types/paginatedData.type';
 import { buildDialogOptions } from '@app/core/utils/constants';
+import { debounceTimeSignal } from '@app/core/utils/signals.utils';
 import { Item } from '@core/types/item.type';
 import { ItemsService } from '@services/items.service';
 import { MessageService } from 'primeng/api';
@@ -26,6 +29,7 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { Select } from 'primeng/select';
 import { Textarea } from 'primeng/textarea';
+import { lastValueFrom } from 'rxjs';
 import { ItemsReloaderService } from '../items-reloader.service';
 @Component({
   selector: 'app-create-update-item',
@@ -51,13 +55,15 @@ import { ItemsReloaderService } from '../items-reloader.service';
           <p-select
             id="category"
             placeholder="Catégorie"
-            [options]="categories()"
+            [options]="categories.value().data"
             optionLabel="name"
             optionValue="id"
             filterBy="name"
             scrollHeight="200px"
             formControlName="category_id"
-            filter />
+            [loading]="categories.isLoading()"
+            [filter]="true"
+            (onFilter)="categoryQuery.set($event.filter)" />
           <label for="category">Catégorie</label>
         </p-float-label>
         @if (selectedCategory()?.identified) {
@@ -134,9 +140,20 @@ export class CreateUpdateItemComponent implements OnInit {
     });
   }
 
-  categoryQuery = signal('');
-  categories = toSignal(this.itemService.getCategories(), {
-    initialValue: [],
+  readonly categoryQuery = signal('');
+
+  private readonly debouncedCategoryQuery = debounceTimeSignal(
+    this.categoryQuery,
+    300
+  );
+
+  categories = resource({
+    loader: ({ params }) =>
+      lastValueFrom(this.itemService.getCategories(params.q)),
+    params: () => ({
+      q: this.debouncedCategoryQuery(),
+    }),
+    defaultValue: EMPTY_PAGINATED_DATA,
   });
 
   fb = inject(FormBuilder);
@@ -166,17 +183,16 @@ export class CreateUpdateItemComponent implements OnInit {
     initialValue: this.form.value.category_id,
   });
   selectedCategory = computed(() =>
-    this.categories().find(cat => cat.id === this.categoryIdValue())
+    this.categories.value()?.data.find(cat => cat.id === this.categoryIdValue())
   );
 
   ngOnInit(): void {
     if (!this.data) {
       return;
-    } else {
-      this.form.patchValue({
-        category_id: this.categories()[0]?.id,
-      });
     }
+    this.form.patchValue({
+      category_id: this.categories.value()?.data[0]?.id,
+    });
 
     this.form.patchValue({
       name: this.data.name,
@@ -209,7 +225,7 @@ export class CreateUpdateItemComponent implements OnInit {
       const item: Item = {
         id: this.data?.id ?? 0,
         usable: true,
-        name: value.name!,
+        name: value.name,
         description: value.description,
         category_id: value.category_id!,
         date_of_buy: value.date_of_buy,
@@ -246,7 +262,6 @@ export class CreateUpdateItemComponent implements OnInit {
       .onClose.subscribe(confirmed => {
         if (confirmed) {
           this.itemService.deleteItem(this.data!).subscribe(() => {
-            // this.items.reload();
             this.messageService.add({
               severity: 'success',
               summary: 'Succès',

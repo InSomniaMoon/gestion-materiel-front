@@ -94,7 +94,7 @@ export class Step2Component implements OnInit {
 
   categories = computed(() => [
     { name: '-- Catégorie --', id: undefined },
-    ...(this.categoriesResource.value() ?? []),
+    ...(this.categoriesResource.value()?.data ?? []),
   ]);
 
   ngOnInit() {
