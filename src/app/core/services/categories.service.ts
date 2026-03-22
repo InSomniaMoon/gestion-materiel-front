@@ -15,8 +15,8 @@ export class CategoriesService {
   private readonly baseUrl = environment.api_url;
 
   private readonly urlSet = new Set([
-    this.baseUrl + '/admin/items/categories',
-    this.baseUrl + 'items/categories',
+    `${this.baseUrl}/admin/items/categories`,
+    `${this.baseUrl}/items/categories`,
   ]);
 
   getCategories(pagination: Partial<PaginationRequest>) {

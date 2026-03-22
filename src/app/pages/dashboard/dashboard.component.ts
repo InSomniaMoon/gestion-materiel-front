@@ -4,20 +4,13 @@ import {
   computed,
   inject,
 } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import { AuthService } from '@services/auth.service';
-import { ButtonDirective } from 'primeng/button';
 import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
 import { UserDashboardComponent } from './user-dashboard/user-dashboard.component';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [
-    UserDashboardComponent,
-    AdminDashboardComponent,
-    RouterLink,
-    ButtonDirective,
-  ],
+  imports: [UserDashboardComponent, AdminDashboardComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

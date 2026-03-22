@@ -33,7 +33,6 @@ export const cacheInterceptor: HttpInterceptorFn = (req, next) => {
     tap({
       next: event => {
         checkClearCache(req, cacheService);
-
         if (!(event instanceof HttpResponse)) {
           return;
         }
@@ -54,7 +53,8 @@ const checkClearCache = (
     const exploededUrl = req.url.split('/');
 
     // check if the last part of the URL is a number (e.g., an ID)
-    if (Number.isInteger(+exploededUrl[exploededUrl.length - 1])) {
+    const lastPart = exploededUrl.at(-1);
+    if (lastPart && Number.isInteger(+lastPart)) {
       exploededUrl.pop(); // remove the last part if it's an ID
     }
 
