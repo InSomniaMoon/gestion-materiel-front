@@ -1,3 +1,16 @@
+@if (showButton()) {
+  <div class="install-pwa-prompt">
+    <p-button (click)="installPwa()" (keydown.enter)="installPwa()">
+      installer l'app</p-button
+    >
+    <p-button
+      (click)="closeToast()"
+      (keydown.enter)="closeToast()"
+      icon="pi pi-times"
+      [rounded]="true"
+      [text]="true" />
+  </div>
+}
 <router-outlet />
 <p-toast
   [breakpoints]="{

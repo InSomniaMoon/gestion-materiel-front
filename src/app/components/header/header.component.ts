@@ -3,16 +3,15 @@ import {
   Component,
   computed,
   inject,
-  OnInit,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { PwaService } from '@app/core/services/pwa.service';
 import { environment } from '@env/environment';
 import { AuthService } from '@services/auth.service';
 import { MenuItem } from 'primeng/api';
 import { AvatarModule } from 'primeng/avatar';
 import { Badge } from 'primeng/badge';
-import { DialogService } from 'primeng/dynamicdialog';
 import { MenubarModule } from 'primeng/menubar';
 import { Select } from 'primeng/select';
 import { TieredMenuModule } from 'primeng/tieredmenu';
@@ -37,9 +36,9 @@ export type MenuItemWithImage = MenuItem & {
   styleUrl: './header.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent {
   private readonly auth$ = inject(AuthService);
-  private readonly dialogService = inject(DialogService);
+  private readonly pwaService = inject(PwaService);
 
   readonly user = this.auth$.user;
   readonly structures = this.auth$.structures;
@@ -66,11 +65,20 @@ export class HeaderComponent implements OnInit {
       command: undefined,
     },
     {
+      label: "installer l'app",
+      icon: 'pi pi-download',
+      command: () => {
+        this.pwaService.installPwa();
+      },
+      visible: !this.pwaService.appInstalled(),
+    },
+    {
       label: 'Déconnexion',
       icon: 'pi pi-sign-out',
       routerLink: '/auth/login',
-      command: () =>
-        this.auth$.logout() && this.router.navigateByUrl('/auth/login'),
+      command: () => {
+        this.auth$.logout() && this.router.navigateByUrl('/auth/login');
+      },
     },
   ]);
 
@@ -115,5 +123,4 @@ export class HeaderComponent implements OnInit {
     },
     { separator: true },
   ]);
-  ngOnInit(): void {}
 }
