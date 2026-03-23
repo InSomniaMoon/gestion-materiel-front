@@ -155,7 +155,7 @@ import { ItemsReloaderService } from './items-reloader.service';
                 </td>
                 <td class="image">
                   @if (item.image) {
-                    <img [src]="baseUrl + item.image" alt="" />
+                    <img [src]="imageBaseUrl + item.image" alt="" />
                   }
                 </td>
                 <td>{{ item.name }}</td>
@@ -172,22 +172,13 @@ import { ItemsReloaderService } from './items-reloader.service';
               </tr>
             </ng-template>
           </p-table>
-
-          <!-- @for (item of items; track $index) {
-            <app-list-item
-              (click)="isAdmin() ? openItemUpdate(item) : openItemView(item)"
-              [item]="item" />
-            @if (!$last) {
-              <hr style="margin: 0 1rem;" />
-            }
-          } -->
         </ng-template>
         <ng-template #grid let-items>
           <div class="grid">
             @for (item of items; track $index) {
               <p-card
                 (click)="isAdmin() ? openItemUpdate(item) : openItemView(item)">
-                <div class="flex">
+                <div class="flex" style="height: 100%;">
                   <p-badge
                     size="small"
                     value=" "
@@ -213,6 +204,17 @@ import { ItemsReloaderService } from './items-reloader.service';
                     <span class="item-name">
                       {{ item.name }}
                     </span>
+                    <span>qté : {{ item.stock }}</span>
+                    @if (item.stock !== item.usable_stock) {
+                      <span>({{ item.usable_stock }} utilisables)</span>
+                    }
+                    @if (item.open_issues_count > 0) {
+                      <span class="item-issues">
+                        {{ item.open_issues_count }} problème
+                        {{ item.open_issues_count > 1 ? 's' : '' }}
+                      </span>
+                    }
+                    <span></span>
                   </div>
                 </div>
               </p-card>
@@ -237,7 +239,7 @@ export class ItemsListComponent implements OnInit {
   private readonly categoriesService = inject(CategoriesService);
   private readonly authService = inject(AuthService);
   private readonly tableLayoutService = inject(TableLayoutService);
-  readonly imageBaseUrl = `${environment.api_url}/storage`;
+  readonly imageBaseUrl = `${environment.api_url}/storage/`;
 
   readonly sortOptions = [{ label: 'Catégorie', value: 'category_id' }];
 
@@ -278,7 +280,7 @@ export class ItemsListComponent implements OnInit {
     { initialValue: false }
   );
   private readonly windowSize = toSignal(
-    fromEvent(window, 'resize').pipe(
+    fromEvent(globalThis, 'resize').pipe(
       map((event: Event) => (event.target as Window).innerWidth)
     ),
     { initialValue: window.innerWidth }
@@ -298,7 +300,6 @@ export class ItemsListComponent implements OnInit {
     { label: '200', value: 200 },
     { label: '250', value: 250 },
   ];
-  baseUrl = environment.api_url + '/storage/';
 
   selectedStructure = computed(() => this.authService.selectedStructure()?.id);
 

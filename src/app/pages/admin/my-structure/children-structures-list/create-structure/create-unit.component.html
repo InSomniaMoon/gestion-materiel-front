@@ -1,4 +1,7 @@
 <form [formGroup]="form" class="modal-content">
+  @if (structure()) {
+    {{ structure()?.nom_structure }}
+  }
   <div class="row">
     <p-floatLabel variant="on">
       <input pInputText type="text" id="name" formControlName="name" />
@@ -31,7 +34,7 @@
 
   <ul>
     @for (chef of chiefsControl; track $index) {
-      <li>{{ chef.name }} ({{ chef.code }})</li>
+      <li>{{ chef.name }}</li>
     }
   </ul>
 </form>

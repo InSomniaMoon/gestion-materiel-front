@@ -15,7 +15,7 @@ import { debounceTimeSignal } from '@utils/signals.utils';
 import { Button } from 'primeng/button';
 import { ColorPicker } from 'primeng/colorpicker';
 import { DialogModule } from 'primeng/dialog';
-import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { FloatLabel } from 'primeng/floatlabel';
 import { InputText } from 'primeng/inputtext';
 import { MultiSelect } from 'primeng/multiselect';
@@ -36,10 +36,9 @@ import { lastValueFrom, map } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreateUnitComponent implements OnInit {
-  private ref = inject(DynamicDialogRef);
+  private readonly ref = inject(DynamicDialogRef);
   private readonly usersService = inject(UsersService);
   private readonly fb = inject(FormBuilder);
-  private dialog$ = inject(DialogService);
 
   validateLabel = signal('Créer');
 
@@ -96,7 +95,7 @@ export class CreateUnitComponent implements OnInit {
     this.ref.close({
       ...value,
       chiefs: chiefs,
-      responsible: resp ? resp : undefined,
+      responsible: resp || undefined,
     });
   }
 

@@ -54,3 +54,9 @@ tr {
     color: #111827;
   }
 }
+:host::ng-deep {
+  .p-card-content,
+  .p-card-body {
+    height: 100%;
+  }
+}

@@ -12,7 +12,7 @@ import { CLEAR_CACHE_CONTEXT_OPTIONS } from '../utils/injectionToken';
 })
 export class ItemsService {
   private readonly http = inject(HttpClient);
-  private api_url = environment.api_url;
+  private readonly api_url = environment.api_url;
 
   createItem(item: Item) {
     return this.http.post<Item>(
@@ -22,50 +22,44 @@ export class ItemsService {
     );
   }
 
-  getItems(
-    opt: Partial<PaginationRequest> & { category_id?: number } = {
-      page: 1,
-      size: 25,
-    }
-  ) {
+  getItems(opt?: Partial<PaginationRequest> & { category_id?: number }) {
     let url = `${this.api_url}/items`;
+    const options = opt ?? { page: 1, size: 25 };
 
     return this.http.get<PaginatedData<Item>>(url, {
-      params: queryParams(opt),
+      params: queryParams(options),
     });
   }
 
   getAvailableItems(
-    opt: Partial<PaginationRequest> & { start_date: Date; end_date: Date } = {
+    opt?: Partial<PaginationRequest> & { start_date?: Date; end_date?: Date },
+    forEvent?: number
+  ) {
+    let url = `${this.api_url}/items/available`;
+    const options = {
       page: 1,
       size: 25,
       start_date: new Date(),
       end_date: new Date(),
-    },
-    forEvent?: number
-  ) {
-    let url = `${this.api_url}/items/available`;
+      ...opt,
+    };
 
     return this.http.get<PaginatedData<ItemWithQuantity>>(url, {
       params: queryParams({
-        ...opt,
-        start_date: opt.start_date.toISOString(),
-        end_date: opt.end_date.toISOString(),
+        ...options,
+        start_date: options.start_date.toISOString(),
+        end_date: options.end_date.toISOString(),
         for_event: forEvent,
       }),
     });
   }
 
-  getAdminItems(
-    opt: Partial<PaginationRequest> & { category_id?: number } = {
-      page: 1,
-      size: 25,
-    }
-  ) {
+  getAdminItems(opt?: Partial<PaginationRequest> & { category_id?: number }) {
     let url = `${this.api_url}/admin/items`;
+    const options = opt ?? { page: 1, size: 25 };
 
     return this.http.get<PaginatedData<Item>>(url, {
-      params: queryParams(opt),
+      params: queryParams(options),
     });
   }
 
