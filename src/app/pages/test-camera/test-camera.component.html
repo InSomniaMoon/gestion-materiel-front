@@ -1,15 +1,19 @@
-<ngx-scanner-qrcode #action="scanner"></ngx-scanner-qrcode>
+<zxing-scanner
+  [autofocusEnabled]="true"
+  [formats]="[11]"
+  [(device)]="desiredDevice"
+  (scanSuccess)="alert($event)"
+  (camerasFound)="onCamerasFound($event)" />
+actual device: {{ desiredDevice()?.label || 'null' }}
+<button (click)="switchCamera()">switch camera</button>
 
-<!-- data  -->
-<span>{{ action.data.value | json }}</span
-><!-- value -->
-<span>{{ action.data | async | json }}</span
-><!-- async -->
-
-@if (action.isLoading) {
-  <!-- Loading -->
-  <p>⌛ Loading...</p>
-}
-<button (click)="action.isStart ? action.stop() : action.start()">
-  {{ action.isStart ? 'Stop' : 'Start' }}
-</button>
+<br />
+usable devices:
+<ul>
+  @for (camera of devices(); track $index) {
+    <li>
+      {{ camera.label || 'unknown' }}
+      <button (click)="desiredDevice.set(camera)">use</button>
+    </li>
+  }
+</ul>

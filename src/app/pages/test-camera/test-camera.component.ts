@@ -1,14 +1,35 @@
-import { AsyncPipe, JsonPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ZXingScannerModule } from '@zxing/ngx-scanner';
 
-import { LOAD_WASM, NgxScannerQrcodeComponent } from 'ngx-scanner-qrcode';
-
-LOAD_WASM('assets/wasm/ngx-scanner-qrcode.wasm').subscribe();
 @Component({
   selector: 'app-test-camera',
-  imports: [NgxScannerQrcodeComponent, JsonPipe, AsyncPipe],
+  imports: [ZXingScannerModule],
   templateUrl: './test-camera.component.html',
   styleUrls: ['./test-camera.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TestCameraComponent {}
+export class TestCameraComponent {
+  alert(result: string | undefined) {
+    if (result) {
+      alert(result);
+    }
+  }
+  devices = signal<MediaDeviceInfo[]>([]);
+  desiredDevice = signal<MediaDeviceInfo | undefined>(undefined);
+  value = signal('');
+  switchCamera() {
+    const currentIndex = this.devices().findIndex(
+      device => device.deviceId === this.desiredDevice()?.deviceId
+    );
+    const nextIndex = (currentIndex + 1) % this.devices().length;
+    this.desiredDevice.set(this.devices()[nextIndex]);
+  }
+
+  onCamerasFound(devices: MediaDeviceInfo[]) {
+    console.log('Devices: ', devices);
+    this.devices.set(devices);
+    // if (devices.length > 0) {
+    //   this.desiredDevice.set(devices[0]);
+    // }
+  }
+}
