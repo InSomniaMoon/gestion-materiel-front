@@ -16,6 +16,14 @@ export const routes: Routes = [
     component: AuthenticatedShellComponent,
     children: [
       {
+        path: 'test-camera',
+        loadComponent: () =>
+          import('./pages/test-camera/test-camera.component').then(
+            m => m.TestCameraComponent
+          ),
+        title: 'Test Camera',
+      },
+      {
         path: 'dashboard',
         loadComponent: () =>
           import('./pages/dashboard/dashboard.component').then(

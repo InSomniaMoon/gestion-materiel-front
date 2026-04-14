@@ -1,0 +1,15 @@
+<ngx-scanner-qrcode #action="scanner"></ngx-scanner-qrcode>
+
+<!-- data  -->
+<span>{{ action.data.value | json }}</span
+><!-- value -->
+<span>{{ action.data | async | json }}</span
+><!-- async -->
+
+@if (action.isLoading) {
+  <!-- Loading -->
+  <p>⌛ Loading...</p>
+}
+<button (click)="action.isStart ? action.stop() : action.start()">
+  {{ action.isStart ? 'Stop' : 'Start' }}
+</button>
