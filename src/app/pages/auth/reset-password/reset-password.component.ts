@@ -3,7 +3,6 @@ import {
   Component,
   DestroyRef,
   inject,
-  OnInit,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
@@ -60,7 +59,7 @@ import { Password } from 'primeng/password';
   styleUrl: './reset-password.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ResetPasswordComponent implements OnInit {
+export class ResetPasswordComponent {
   constructor() {}
 
   private readonly fb = inject(FormBuilder);
@@ -91,10 +90,6 @@ export class ResetPasswordComponent implements OnInit {
     { validators: [this.passwordMatchValidator] }
   );
 
-  ngOnInit(): void {
-    // get the token from the url
-    const token = this.activatedRoute.snapshot.queryParams['token'];
-  }
   private readonly authService = inject(AuthService);
   private readonly toast = inject(MessageService);
   private readonly router = inject(Router);
