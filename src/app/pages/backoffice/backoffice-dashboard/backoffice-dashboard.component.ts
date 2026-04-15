@@ -33,7 +33,7 @@ export class AppAdminDashboardComponent {
       link: '/backoffice/users',
     },
     {
-      label: 'Gestion des structurees',
+      label: 'Gestion des structures',
       icon: 'persons',
       link: '/backoffice/structures',
     },

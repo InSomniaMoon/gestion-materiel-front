@@ -74,7 +74,7 @@ export class AddUserModalComponent {
           next: () => {
             this.messageService.add({
               severity: 'success',
-              summary: 'Utilisateur ajouté au structuree',
+              summary: 'Utilisateur ajouté au structure',
               detail: 'L’utilisateur a été ajouté avec succès.',
             });
             this.dialogRef.close(true);
@@ -117,7 +117,7 @@ export class AddUserModalComponent {
       if (res.exists && res.already_in_structure) {
         this.messageService.add({
           severity: 'info',
-          summary: "L'utilisateur est déjà dans le structuree.",
+          summary: "L'utilisateur est déjà dans le structure.",
         });
         this.dialogRef.close();
       }

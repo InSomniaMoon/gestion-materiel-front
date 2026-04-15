@@ -88,8 +88,8 @@ import { AppAdminUserEditStructuresComponent } from './backoffice-user-edit-stru
                 icon="pi pi-users"
                 text
                 rounded
-                aria-label="Editer les structurees de l'utilisateur"
-                tp="Editer les structurees de l'utilisateur"
+                aria-label="Editer les structures de l'utilisateur"
+                tp="Editer les structures de l'utilisateur"
                 (onClick)="openEditStructuresDialog(user)" />
             </td>
           </tr>
@@ -169,7 +169,7 @@ export class AppAdminUsersListComponent {
       .open(
         AppAdminUserEditStructuresComponent,
         buildDialogOptions({
-          header: `Editer les structurees de ${user.firstname} ${user.lastname}`,
+          header: `Editer les structures de ${user.firstname} ${user.lastname}`,
           width: '50%',
           height: '80%',
           data: { userId: user.id },
@@ -180,7 +180,7 @@ export class AppAdminUsersListComponent {
         this.messageService.add({
           severity: 'success',
           summary: 'Succès',
-          detail: "Structurees de l'utilisateur mis à jour avec succès",
+          detail: "Structures de l'utilisateur mis à jour avec succès",
         });
         this.usersQuery.refetch();
       });

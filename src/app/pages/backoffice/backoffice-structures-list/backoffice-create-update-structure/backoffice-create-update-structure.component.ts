@@ -31,7 +31,7 @@ import { BackofficeService } from '../../services/backoffice.service';
   template: ` <form [formGroup]="form">
       <p-float-label>
         <input pInputText formControlName="name" />
-        <label>Nom du structuree</label>
+        <label>Nom du structure</label>
       </p-float-label>
       <p-float-label>
         <textarea
@@ -110,8 +110,8 @@ export class CreateUpdateStructureComponent implements OnInit {
         this.ref.close(true);
         this.toast.add({
           severity: 'success',
-          summary: `Structuree ${this.data ? 'mis à jour' : 'créé'}`,
-          detail: `Le structuree a été ${
+          summary: `Structure ${this.data ? 'mis à jour' : 'créé'}`,
+          detail: `Le structure a été ${
             this.data ? 'mis à jour' : 'créé'
           } avec succès`,
         });
@@ -122,7 +122,7 @@ export class CreateUpdateStructureComponent implements OnInit {
           summary: 'Erreur',
           detail: `Une erreur est survenue lors de la ${
             this.data ? 'mise à jour' : 'création'
-          } du structuree`,
+          } du structure`,
         });
         this.saveClicked.set(false);
       },

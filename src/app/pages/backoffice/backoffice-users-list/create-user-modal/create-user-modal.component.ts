@@ -35,9 +35,9 @@ import { BackofficeService } from '../../services/backoffice.service';
             [options]="structures()"
             optionLabel="name"
             optionValue="code"
-            placeholder="Structuree"
+            placeholder="Structure"
             formControlName="structure_id" />
-          <label for="role">Structuree</label>
+          <label for="role">Structure</label>
         </p-floatlabel>
         <p-floatlabel>
           <p-select

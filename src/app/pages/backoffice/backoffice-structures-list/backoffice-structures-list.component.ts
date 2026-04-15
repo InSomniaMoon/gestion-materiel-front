@@ -220,7 +220,7 @@ export class AppAdminStructuresListComponent {
       .open(
         CreateUpdateStructureComponent,
         buildDialogOptions({
-          header: `Modifier le structuree ${structure.name}`,
+          header: `Modifier le structure ${structure.name}`,
           width: '70%',
           data: { structure },
         })

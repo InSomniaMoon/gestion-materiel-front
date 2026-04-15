@@ -13,7 +13,7 @@
 
   <h3>Liste du matériel :</h3>
   <div class="content">
-    @for (structure of structureedItems(); track structure.category) {
+    @for (structure of structuredItems(); track structure.category) {
       <h3>{{ structure.category }}</h3>
       <ul>
         @for (item of structure.items; track item.item.id) {

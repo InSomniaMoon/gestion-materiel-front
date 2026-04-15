@@ -62,7 +62,7 @@
         </p-select>
       } @else {
         <span class="mr-4" style="color: white">
-          {{ selectedStructure()?.name ?? 'Structuree Actif' }}
+          {{ selectedStructure()?.name ?? 'Structure Active' }}
         </span>
       }
       <p-tieredMenu #userMenu [popup]="true" [model]="authItems()">

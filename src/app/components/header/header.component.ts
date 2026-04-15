@@ -59,7 +59,7 @@ export class HeaderComponent {
   selectedStructureId = computed(() => this.auth$.selectedStructure()?.id);
   authItems = computed<MenuItemWithImage[]>(() => [
     {
-      label: this.selectedStructure()?.name ?? 'Structuree Actif',
+      label: this.selectedStructure()?.name ?? 'Structure Active',
       img: this.selectedStructure()?.image,
       icon: 'pi pi-users',
       command: undefined,
