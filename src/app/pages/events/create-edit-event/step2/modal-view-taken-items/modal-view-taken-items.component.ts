@@ -19,8 +19,8 @@ import { ItemSelection } from '../../create-edit-event.component';
         <ul>
           @for (item of structure.items; track item.item) {
             <li>
-              <span
-                >{{ item.item.name }}
+              <span>
+                {{ item.item.name }}
                 @if (!item.item.category?.identified) {
                   (x{{ item.quantity }})
                 }
@@ -38,7 +38,7 @@ import { ItemSelection } from '../../create-edit-event.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ModalViewTakenItemsComponent {
-  private ref = inject(DynamicDialogRef);
+  private readonly ref = inject(DynamicDialogRef);
 
   items = input.required<ItemSelection[]>();
 

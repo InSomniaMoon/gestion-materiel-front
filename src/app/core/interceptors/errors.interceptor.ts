@@ -1,7 +1,7 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { MessageService } from 'primeng/api';
-import { catchError } from 'rxjs';
+import { catchError, throwError } from 'rxjs';
 
 export const errorsInterceptor: HttpInterceptorFn = (req, next) => {
   const messageService = inject(MessageService);
@@ -12,7 +12,7 @@ export const errorsInterceptor: HttpInterceptorFn = (req, next) => {
         summary: 'Erreur',
         detail: error.error?.message || 'Une erreur est survenue',
       });
-      throw error;
+      return throwError(() => error);
     })
   );
 };

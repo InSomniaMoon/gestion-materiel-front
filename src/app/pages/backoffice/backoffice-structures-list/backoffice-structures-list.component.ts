@@ -67,7 +67,7 @@ import { CreateUpdateStructureComponent } from './backoffice-create-update-struc
                 (onClick)="openCreateStructureDialog()" />
             </div>
             <p-select-button
-              [ngModel]="layout"
+              [ngModel]="layout()"
               (ngModelChange)="setLayout($event)"
               [options]="dataViewType"
               [allowEmpty]="false"
@@ -102,6 +102,7 @@ import { CreateUpdateStructureComponent } from './backoffice-create-update-struc
                   @if (structure.image) {
                     <img
                       [src]="baseUrl + structure.image"
+                      [alt]="'Image de ' + structure.name"
                       width="32px"
                       height="32px" />
                   }
@@ -121,7 +122,9 @@ import { CreateUpdateStructureComponent } from './backoffice-create-update-struc
         <ng-template #grid let-items>
           <div class="grid">
             @for (structure of items; track structure.id) {
-              <p-card (click)="openUpdateStructureDialog(structure)">
+              <p-card
+                (click)="openUpdateStructureDialog(structure)"
+                tabindex="0">
                 <ng-template #header>
                   <div class="flex">
                     <p-badge
@@ -233,9 +236,7 @@ export class AppAdminStructuresListComponent {
   }
 
   pageChange(event: TablePageEvent) {
-    console.log(event);
     this.size.set(event.rows);
-
-    this.page.set(Math.floor(event.first / event.rows) + 1);
+    this.page.set(Math.floor(event.first / event.rows));
   }
 }

@@ -56,6 +56,7 @@
             (click)="openUpdateCategoryModal(category)"
             (keydown.enter)="openUpdateCategoryModal(category)"
             (keydown.space)="openUpdateCategoryModal(category)"
+            tabindex="0"
             class="cursor-pointer">
             <td>{{ category.name }}</td>
           </tr>
@@ -68,7 +69,9 @@
           <p-card
             (click)="openUpdateCategoryModal(item)"
             (keydown.enter)="openUpdateCategoryModal(item)"
-            (keydown.space)="openUpdateCategoryModal(item)">
+            (keydown.space)="openUpdateCategoryModal(item)"
+            role="button"
+            tabindex="0">
             <ng-template #header> </ng-template>
             <h3>{{ item.name }}</h3>
             <div>
