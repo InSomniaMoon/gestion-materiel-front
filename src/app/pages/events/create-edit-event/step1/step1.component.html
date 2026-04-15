@@ -21,8 +21,7 @@
           <label for="structure_id">Unité empruntante</label>
         </p-float-label>
       } @else {
-        @let structure = selectedStructure();
-        <p>Structure empruntante : {{ structure?.name }}</p>
+        <p>Structure empruntante : {{ selectedStructure()?.name }}</p>
       }
     </div>
   </div>
