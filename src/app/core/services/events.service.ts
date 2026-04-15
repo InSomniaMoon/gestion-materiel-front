@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '@env/environment';
+import { DeepPartial } from '../types/deepPartial';
 import { ActualEvent, Event } from '../types/event.type';
 import { queryParams } from '../utils/http.utils';
 import {
@@ -14,7 +15,7 @@ import {
 export class EventsService {
   private readonly http = inject(HttpClient);
 
-  private api_url = environment.api_url;
+  private readonly api_url = environment.api_url;
 
   constructor() {}
 
@@ -23,7 +24,7 @@ export class EventsService {
     structure_id: number;
     start_date: Date | null;
     end_date: Date | null;
-    materials: { id: number; quantity: number }[];
+    items: { id: number; quantity: number }[];
     comment: string;
   }) {
     const url = `${this.api_url}/events`;
@@ -37,7 +38,6 @@ export class EventsService {
 
   getEventsForStructure(structureId: number, startDate?: Date, endDate?: Date) {
     const url = `${this.api_url}/events`;
-    console.log('get events');
 
     // This method should return an observable of the structure events
     return this.http.get<Event[]>(url, {
@@ -67,7 +67,7 @@ export class EventsService {
     );
   }
 
-  updateEvent(id: number | string, data: Partial<Event>) {
+  updateEvent(id: number | string, data: DeepPartial<Event>) {
     return this.http.patch(
       `${this.api_url}/events/${id}`,
       data,

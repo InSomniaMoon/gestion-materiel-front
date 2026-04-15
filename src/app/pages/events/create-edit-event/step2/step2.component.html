@@ -35,14 +35,14 @@
     (onSort)="orderBy.set($event.field); sortBy.set($event.order)">
     <ng-template #header>
       <tr>
-        <th></th>
-        <th pSortableColumn="items.name">
+        <th scope="col"></th>
+        <th scope="col" pSortableColumn="items.name">
           Nom<p-sortIcon field="items.name" />
         </th>
-        <th pSortableColumn="category_id">
+        <th scope="col" pSortableColumn="category_id">
           Categorie <p-sortIcon field="category_id" />
         </th>
-        <th>Restant</th>
+        <th scope="col">Restant</th>
       </tr>
     </ng-template>
     <ng-template #body let-product>
@@ -56,7 +56,6 @@
               $event.originalEvent?.preventDefault();
               selectUnselectItem(product)
             " />
-          <!-- (ngModelChange)="selectUnselectItem(product)" -->
         </td>
         <td>{{ product.name }}</td>
         <td style="text-wrap: nowrap">{{ product.category.name }}</td>

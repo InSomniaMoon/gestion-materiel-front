@@ -13,16 +13,16 @@ import { CacheService } from './cache.service';
   providedIn: 'root',
 })
 export class AuthService {
-  private http = inject(HttpClient);
-  private cache = inject(CacheService);
+  private readonly http = inject(HttpClient);
+  private readonly cache = inject(CacheService);
 
-  private _isAuth = signal(false);
+  private readonly _isAuth = signal(false);
   jwt = signal<string | null>(null);
   user = signal<User | null>(null);
   structures = computed(() => this._userStructures());
 
-  private _userStructures = signal<StructureWithPivot[]>([]);
-  private _selectedStructure = signal<StructureWithPivot | null>(null);
+  private readonly _userStructures = signal<StructureWithPivot[]>([]);
+  private readonly _selectedStructure = signal<StructureWithPivot | null>(null);
 
   selectedStructure = this._selectedStructure.asReadonly();
   isAuth = this._isAuth.asReadonly();

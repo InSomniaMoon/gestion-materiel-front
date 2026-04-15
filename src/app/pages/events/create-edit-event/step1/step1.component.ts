@@ -72,16 +72,19 @@ export class Step1Component implements OnInit {
   readonly predefinedDurations = PREDEFINED_DDURATIONS;
 
   private readonly structureChildren = resource({
-    loader: () =>
-      lastValueFrom(
+    loader: async () => {
+      if (!this.authService.isAdmin()) {
+        return [];
+      }
+      return lastValueFrom(
         this.structuresService
-          .getStructures()
-          .pipe(map(structures => structures.children as Structure[]))
-      ),
+          .getAdminStructures()
+          .pipe(map(structures => structures.children))
+      );
+    },
     defaultValue: [],
   });
 
-  // TODO replace by structures
   structures = computed<Structure[]>(() =>
     this.authService.isAdmin()
       ? this.structureChildren.value()
@@ -93,7 +96,9 @@ export class Step1Component implements OnInit {
   nextStep = output();
   protected readonly dateFormat = 'dd/mm/yy';
   formGroup = input.required<FormGroup>();
-  selectedStructureId!: Signal<number | null>;
+  selectedStructureId = linkedSignal<number | null>(
+    () => this.structures().at(0)?.id ?? null
+  );
   selectedStructure = computed(() =>
     this.structures().find(
       structure => structure.id === this.selectedStructureId()
@@ -155,11 +160,6 @@ export class Step1Component implements OnInit {
 
   ngOnInit() {
     runInInjectionContext(this.injectionContext, () => {
-      this.selectedStructureId = toSignal(
-        this.formGroup().get('structure')!.valueChanges,
-        { initialValue: this.formGroup().get('structure')!.value }
-      );
-
       this.startDateAsSignal = toSignal(
         this.formGroup().get('start_date')!.valueChanges,
         { initialValue: this.formGroup().get('start_date')!.value }

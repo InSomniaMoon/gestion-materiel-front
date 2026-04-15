@@ -12,7 +12,7 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { Select } from 'primeng/select';
 
 @Component({
-  selector: 'app-change-active-group',
+  selector: 'app-change-active-structure',
   imports: [DialogModule, Button, Select, ReactiveFormsModule],
   template: `
     <form class="modal-content" [formGroup]="form">
@@ -23,19 +23,19 @@ import { Select } from 'primeng/select';
       <p-button label="Resoudre" (onClick)="onResolve()" />
     </p-footer>
   `,
-  styleUrl: './changeActiveGroup.component.scss',
+  styleUrl: './changeActiveStructure.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ChangeActiveGroupComponent {
+export class ChangeActiveStructureComponent {
   ref = inject(DynamicDialogRef);
   dialogService = inject(DialogService);
   authService = inject(AuthService);
   fb = inject(FormBuilder);
 
-  selectedGroup = this.authService.selectedStructure;
+  selectedStructure = this.authService.selectedStructure;
 
   form = this.fb.group({
-    structure_id: [this.selectedGroup()?.id],
+    structure_id: [this.selectedStructure()?.id],
   });
 
   opt = computed(() =>

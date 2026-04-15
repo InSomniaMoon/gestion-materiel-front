@@ -28,7 +28,7 @@ export class MyStructureComponent {
   private readonly structuresService = inject(StructuresService);
 
   structureResource = rxResource({
-    stream: () => this.structuresService.getStructures(),
+    stream: () => this.structuresService.getAdminStructures(),
   });
 
   structure = linkedSignal(() => this.structureResource.value()?.structure);

@@ -45,7 +45,7 @@ export class CategoriesListComponent {
   private readonly categoriesService = inject(CategoriesService);
   private readonly dialogRef = inject(DialogService);
   private readonly tableLayoutService = inject(TableLayoutService);
-  private selectedStructure = inject(AuthService).selectedStructure;
+  private readonly selectedStructure = inject(AuthService).selectedStructure;
 
   sortOptions = [{ label: 'Nom', value: 'name' }];
 

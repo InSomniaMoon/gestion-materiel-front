@@ -1,6 +1,6 @@
-@defer (when isGroupResp()) {
+@defer (when isStructureResp()) {
   <app-admin-dashboard />
 }
-@defer (when isGroupChief() || isGroupResp()) {
+@defer (when isStructureChief() || isStructureResp()) {
   <app-user-dashboard />
 }

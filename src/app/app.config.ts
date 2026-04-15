@@ -36,6 +36,7 @@ import { routes } from './app.routes';
 import { init } from './core/init';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { cacheInterceptor } from './core/interceptors/cache.interceptor';
+import { errorsInterceptor } from './core/interceptors/errors.interceptor';
 import { structureInterceptor } from './core/interceptors/structure.interceptor';
 import { AuthService } from './core/services/auth.service';
 import { FRENCH_TRANSLATIONS } from './fr.translation';
@@ -57,6 +58,7 @@ export const appConfig: ApplicationConfig = {
         authInterceptor,
         structureInterceptor,
         cacheInterceptor,
+        errorsInterceptor,
       ])
     ),
     { provide: LOCALE_ID, useValue: 'fr-FR' },

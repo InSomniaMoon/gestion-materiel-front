@@ -14,13 +14,13 @@ import { ItemSelection } from '../../create-edit-event.component';
   selector: 'app-modal-view-taken-items',
   imports: [DialogModule, Button],
   template: ` <div class="content">
-      @for (group of groupedItems(); track group.category) {
-        <h3>{{ group.category }}</h3>
+      @for (structure of structuredItems(); track structure.category) {
+        <h3>{{ structure.category }}</h3>
         <ul>
-          @for (item of group.items; track item.item) {
+          @for (item of structure.items; track item.item) {
             <li>
-              <span
-                >{{ item.item.name }}
+              <span>
+                {{ item.item.name }}
                 @if (!item.item.category?.identified) {
                   (x{{ item.quantity }})
                 }
@@ -38,20 +38,23 @@ import { ItemSelection } from '../../create-edit-event.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ModalViewTakenItemsComponent {
-  private ref = inject(DynamicDialogRef);
+  private readonly ref = inject(DynamicDialogRef);
 
   items = input.required<ItemSelection[]>();
 
-  groupedItems = computed(() => {
-    const grouped: { [key: string]: ItemSelection[] } = {};
+  structuredItems = computed(() => {
+    const structured: { [key: string]: ItemSelection[] } = {};
     this.items().forEach(item => {
       const categoryName = item.item.category?.name || 'Sans catégorie';
-      if (!grouped[categoryName]) {
-        grouped[categoryName] = [];
+      if (!structured[categoryName]) {
+        structured[categoryName] = [];
       }
-      grouped[categoryName].push({ item: item.item, quantity: item.quantity });
+      structured[categoryName].push({
+        item: item.item,
+        quantity: item.quantity,
+      });
     });
-    return Object.entries(grouped).map(([category, items]) => ({
+    return Object.entries(structured).map(([category, items]) => ({
       category,
       items,
     }));

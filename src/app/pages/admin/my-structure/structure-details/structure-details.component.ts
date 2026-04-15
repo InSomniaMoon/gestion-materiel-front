@@ -71,7 +71,7 @@ export class StructureDetailsComponent implements OnInit {
       .uploadStructureImage(file)
       .pipe(
         switchMap(response => {
-          return this.structuresService.updateStructure(this.structure()!.id, {
+          return this.structuresService.updateStructure(this.structure().id, {
             image: response.path,
           });
         })

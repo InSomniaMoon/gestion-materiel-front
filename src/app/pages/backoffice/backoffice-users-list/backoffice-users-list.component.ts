@@ -23,7 +23,7 @@ import { User } from '@core/types/user.type';
 import { TippyDirective } from '@ngneat/helipopper';
 import { buildDialogOptions } from '@utils/constants';
 import { MessageService } from 'primeng/api';
-import { AppAdminUserEditGroupsComponent } from './backoffice-user-edit-groups/backoffice-user-edit-groups.component';
+import { AppAdminUserEditStructuresComponent } from './backoffice-user-edit-structures/backoffice-user-edit-structures.component';
 
 @Component({
   selector: 'app-backoffice-users-list',
@@ -88,9 +88,9 @@ import { AppAdminUserEditGroupsComponent } from './backoffice-user-edit-groups/b
                 icon="pi pi-users"
                 text
                 rounded
-                aria-label="Editer les groupes de l'utilisateur"
-                tp="Editer les groupes de l'utilisateur"
-                (onClick)="openEditGroupsDialog(user)" />
+                aria-label="Editer les structures de l'utilisateur"
+                tp="Editer les structures de l'utilisateur"
+                (onClick)="openEditStructuresDialog(user)" />
             </td>
           </tr>
         </ng-template>
@@ -164,12 +164,12 @@ export class AppAdminUsersListComponent {
       });
   }
 
-  openEditGroupsDialog(user: User) {
+  openEditStructuresDialog(user: User) {
     this.dialogService
       .open(
-        AppAdminUserEditGroupsComponent,
+        AppAdminUserEditStructuresComponent,
         buildDialogOptions({
-          header: `Editer les groupes de ${user.firstname} ${user.lastname}`,
+          header: `Editer les structures de ${user.firstname} ${user.lastname}`,
           width: '50%',
           height: '80%',
           data: { userId: user.id },
@@ -180,7 +180,7 @@ export class AppAdminUsersListComponent {
         this.messageService.add({
           severity: 'success',
           summary: 'Succès',
-          detail: "Groupes de l'utilisateur mis à jour avec succès",
+          detail: "Structures de l'utilisateur mis à jour avec succès",
         });
         this.usersQuery.refetch();
       });
