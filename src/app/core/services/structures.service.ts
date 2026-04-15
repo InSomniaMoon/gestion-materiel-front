@@ -11,17 +11,21 @@ export class StructuresService {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = environment.api_url;
 
-  getStructures() {
+  getAdminStructures() {
     return this.http.get<StructureWithChildren>(
       `${this.baseUrl}/admin/structures`
     );
+  }
+
+  getStructures() {
+    return this.http.get<StructureWithChildren>(`${this.baseUrl}/structures`);
   }
 
   updateStructure(id: number, data: Partial<Structure>) {
     return this.http.patch<{ message: string; structure: Structure }>(
       `${this.baseUrl}/admin/structures/${id}`,
       data,
-      CLEAR_CACHE_CONTEXT_OPTIONS(new Set([`${this.baseUrl}/structures`]))
+      CLEAR_CACHE_CONTEXT_OPTIONS(new Set([`${this.baseUrl}/admin/structures`]))
     );
   }
 
@@ -35,4 +39,12 @@ export class StructuresService {
       CLEAR_CACHE_CONTEXT_OPTIONS()
     );
   };
+
+  addUserToStructure(user: { email: string; role: string }) {
+    return this.http.post(
+      `${this.baseUrl}/admin/structures/users`,
+      user,
+      CLEAR_CACHE_CONTEXT_OPTIONS(new Set([`${this.baseUrl}/admin/users`]))
+    );
+  }
 }

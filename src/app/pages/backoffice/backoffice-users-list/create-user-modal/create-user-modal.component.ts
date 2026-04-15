@@ -32,12 +32,12 @@ import { BackofficeService } from '../../services/backoffice.service';
       <div class="row">
         <p-floatlabel>
           <p-select
-            [options]="groups()"
+            [options]="structures()"
             optionLabel="name"
             optionValue="code"
-            placeholder="Groupe"
+            placeholder="Structuree"
             formControlName="structure_id" />
-          <label for="role">Groupe</label>
+          <label for="role">Structuree</label>
         </p-floatlabel>
         <p-floatlabel>
           <p-select
@@ -100,14 +100,14 @@ export class CreateUserModalComponent {
     { name: 'Administrateur', code: 'admin' },
   ];
 
-  private readonly groupsResource = resource({
-    loader: () => lastValueFrom(this.backofficeService.getGroups()),
+  private readonly structuresResource = resource({
+    loader: () => lastValueFrom(this.backofficeService.getStructures()),
   });
 
-  groups = computed(() =>
-    (this.groupsResource.value() ?? []).map(group => ({
-      name: group.name,
-      code: group.id,
+  structures = computed(() =>
+    (this.structuresResource.value() ?? []).map(structure => ({
+      name: structure.name,
+      code: structure.id,
     }))
   );
 

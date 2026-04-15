@@ -14,10 +14,10 @@ import { ItemSelection } from '../../create-edit-event.component';
   selector: 'app-modal-view-taken-items',
   imports: [DialogModule, Button],
   template: ` <div class="content">
-      @for (group of groupedItems(); track group.category) {
-        <h3>{{ group.category }}</h3>
+      @for (structure of structureedItems(); track structure.category) {
+        <h3>{{ structure.category }}</h3>
         <ul>
-          @for (item of group.items; track item.item) {
+          @for (item of structure.items; track item.item) {
             <li>
               <span
                 >{{ item.item.name }}
@@ -42,16 +42,19 @@ export class ModalViewTakenItemsComponent {
 
   items = input.required<ItemSelection[]>();
 
-  groupedItems = computed(() => {
-    const grouped: { [key: string]: ItemSelection[] } = {};
+  structureedItems = computed(() => {
+    const structureed: { [key: string]: ItemSelection[] } = {};
     this.items().forEach(item => {
       const categoryName = item.item.category?.name || 'Sans catégorie';
-      if (!grouped[categoryName]) {
-        grouped[categoryName] = [];
+      if (!structureed[categoryName]) {
+        structureed[categoryName] = [];
       }
-      grouped[categoryName].push({ item: item.item, quantity: item.quantity });
+      structureed[categoryName].push({
+        item: item.item,
+        quantity: item.quantity,
+      });
     });
-    return Object.entries(grouped).map(([category, items]) => ({
+    return Object.entries(structureed).map(([category, items]) => ({
       category,
       items,
     }));

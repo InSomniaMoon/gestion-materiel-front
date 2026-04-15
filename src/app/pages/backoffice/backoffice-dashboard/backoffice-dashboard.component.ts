@@ -33,9 +33,9 @@ export class AppAdminDashboardComponent {
       link: '/backoffice/users',
     },
     {
-      label: 'Gestion des groupes',
+      label: 'Gestion des structurees',
       icon: 'persons',
-      link: '/backoffice/groups',
+      link: '/backoffice/structures',
     },
   ];
 }

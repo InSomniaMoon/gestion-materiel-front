@@ -9,7 +9,7 @@ import {
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Structure } from '@app/core/types/structure.type';
-import { UserGroup } from '@app/core/types/userStructure.type';
+import { UserStructure } from '@app/core/types/userStructure.type';
 import { Button } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
@@ -17,12 +17,12 @@ import { Select } from 'primeng/select';
 import { BackofficeService } from '../../services/backoffice.service';
 
 @Component({
-  selector: 'app-backoffice-user-edit-groups',
+  selector: 'app-backoffice-user-edit-structures',
   imports: [DialogModule, Button, ReactiveFormsModule, Select, FormsModule],
   template: `
     <div>
       @for (structure of userStructures(); track structure.id) {
-        <div class="group">
+        <div class="structure">
           <span>{{ structure.name }}</span>
           <p-select
             [options]="rolesOptions"
@@ -33,29 +33,29 @@ import { BackofficeService } from '../../services/backoffice.service';
             icon="pi pi-times"
             severity="danger"
             iconPos="right"
-            (onClick)="removeGroup(structure)" />
+            (onClick)="removeStructure(structure)" />
         </div>
       }
-      @if (toggleSelectNewGroup()) {
+      @if (toggleSelectNewStructure()) {
         <p-button
           label="Ajouter"
           severity="info"
           fluid="true"
           icon="pi pi-plus"
-          (onClick)="toggleSelectNewGroup.set(false)" />
+          (onClick)="toggleSelectNewStructure.set(false)" />
       } @else {
         <div class="flex">
           <p-select
             [filter]="true"
             filterBy="name"
-            [options]="groupsWithoutUserGroups()"
+            [options]="structuresWithoutUserStructures()"
             optionLabel="name"
             optionValue="id"
-            #selectNewGroup />
+            #selectNewStructure />
           <p-button
             severity="success"
             icon="pi pi-plus"
-            (onClick)="addGroup(selectNewGroup.value)" />
+            (onClick)="addStructure(selectNewStructure.value)" />
         </div>
       }
     </div>
@@ -64,42 +64,53 @@ import { BackofficeService } from '../../services/backoffice.service';
       <p-button label="Mettre à jour" (onClick)="save()" />
     </p-footer>
   `,
-  styleUrl: './backoffice-user-edit-groups.component.scss',
+  styleUrl: './backoffice-user-edit-structures.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppAdminUserEditGroupsComponent {
+export class AppAdminUserEditStructuresComponent {
   private readonly ref = inject(DynamicDialogRef);
   private readonly backofficeService = inject(BackofficeService);
   private readonly dialogRef = inject(DialogService);
-  private data = this.dialogRef.getInstance(this.ref)!.data;
+  private readonly data = this.dialogRef.getInstance(this.ref)!.data;
 
-  toggleSelectNewGroup = signal(true);
+  toggleSelectNewStructure = signal(true);
 
-  private _userGroups = this.backofficeService.getUserGroups(this.data.userId);
-  userStructures = linkedSignal(() => this._userGroups.value());
+  private readonly _userStructures = this.backofficeService.getUserStructures(
+    this.data.userId
+  );
+  userStructures = linkedSignal(() => this._userStructures.value());
 
-  private _groups = toSignal(this.backofficeService.getGroups(), {
-    initialValue: [],
+  private readonly _structures = toSignal(
+    this.backofficeService.getStructures(),
+    {
+      initialValue: [],
+    }
+  );
+
+  structuresWithoutUserStructures = linkedSignal(() => {
+    const userStructureIds = new Set(this.userStructures().map(g => g.id));
+    return this._structures().filter(
+      structure => !userStructureIds.has(structure.id)
+    );
   });
+  structures = computed<Structure[]>(() => this._structures());
 
-  groupsWithoutUserGroups = linkedSignal(() => {
-    const userGroupIds = this.userStructures().map(g => g.id);
-    return this._groups().filter(group => !userGroupIds.includes(group.id));
-  });
-  groups = computed<Structure[]>(() => this._groups());
-
-  removeGroup(group: Structure) {
-    this.userStructures.update(groups => groups.filter(g => g.id !== group.id));
+  removeStructure(structure: Structure) {
+    this.userStructures.update(structures =>
+      structures.filter(g => g.id !== structure.id)
+    );
   }
 
-  addGroup(groupId: number) {
-    const group = this.groupsWithoutUserGroups().find(g => g.id === groupId);
-    if (group) {
-      this.userStructures.update(groups => [
-        ...groups,
-        { ...group, pivot: { role: 'user' } },
+  addStructure(structureId: number) {
+    const structure = this.structuresWithoutUserStructures().find(
+      g => g.id === structureId
+    );
+    if (structure) {
+      this.userStructures.update(structures => [
+        ...structures,
+        { ...structure, pivot: { role: 'user' } },
       ]);
-      this.toggleSelectNewGroup.set(true);
+      this.toggleSelectNewStructure.set(true);
     }
   }
   close() {
@@ -108,7 +119,7 @@ export class AppAdminUserEditGroupsComponent {
 
   save() {
     this.backofficeService
-      .updateUserGroups(
+      .updateUserStructures(
         this.data.userId,
         this.userStructures().map(
           g =>
@@ -116,7 +127,7 @@ export class AppAdminUserEditGroupsComponent {
               user_id: this.data.userId,
               structure_id: g.id,
               role: g.pivot.role,
-            }) as UserGroup
+            }) as UserStructure
         )
       )
       .subscribe({
@@ -124,7 +135,7 @@ export class AppAdminUserEditGroupsComponent {
           this.ref.close(true);
         },
         error: err => {
-          console.error('Error updating user groups:', err);
+          console.error('Error updating user structures:', err);
         },
       });
   }

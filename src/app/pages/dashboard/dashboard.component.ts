@@ -17,10 +17,10 @@ import { UserDashboardComponent } from './user-dashboard/user-dashboard.componen
 })
 export class DashboardComponent {
   private readonly authService = inject(AuthService);
-  isGroupResp = computed(
+  isStructureResp = computed(
     () => this.authService.selectedStructure()?.pivot.role === 'admin'
   );
-  isGroupChief = computed(
+  isStructureChief = computed(
     () => this.authService.selectedStructure()?.pivot.role === 'user'
   );
 }

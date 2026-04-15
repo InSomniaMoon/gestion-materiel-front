@@ -23,16 +23,19 @@ export class Step4Component {
   event = input.required<any>();
   isUpdate = input.required<boolean>();
 
-  groupedItems = computed(() => {
-    const grouped: { [key: string]: ItemSelection[] } = {};
+  structureedItems = computed(() => {
+    const structureed: { [key: string]: ItemSelection[] } = {};
     this.event().materials.forEach((item: ItemSelection) => {
       const categoryName = item.item.category?.name || 'Sans catégorie';
-      if (!grouped[categoryName]) {
-        grouped[categoryName] = [];
+      if (!structureed[categoryName]) {
+        structureed[categoryName] = [];
       }
-      grouped[categoryName].push({ item: item.item, quantity: item.quantity });
+      structureed[categoryName].push({
+        item: item.item,
+        quantity: item.quantity,
+      });
     });
-    return Object.entries(grouped).map(([category, items]) => ({
+    return Object.entries(structureed).map(([category, items]) => ({
       category,
       items,
     }));

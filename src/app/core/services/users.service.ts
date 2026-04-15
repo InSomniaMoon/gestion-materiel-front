@@ -29,7 +29,7 @@ export class UsersService {
   }
 
   checkUser(email: string) {
-    return this.http.get<{ exists: boolean; already_in_group: boolean }>(
+    return this.http.get<{ exists: boolean; already_in_structure: boolean }>(
       `${this.api_url}/admin/users/exists`,
       {
         ...NO_CACHE_CONTEXT_OPTIONS,
@@ -38,7 +38,7 @@ export class UsersService {
     );
   }
 
-  createUserForGroup(user: Partial<User>) {
+  createUserForStructure(user: Partial<User>) {
     return this.http.post<{ created: boolean }>(
       `${this.api_url}/admin/users`,
       user,

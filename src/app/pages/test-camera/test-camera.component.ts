@@ -28,8 +28,5 @@ export class TestCameraComponent {
   onCamerasFound(devices: MediaDeviceInfo[]) {
     console.log('Devices: ', devices);
     this.devices.set(devices);
-    // if (devices.length > 0) {
-    //   this.desiredDevice.set(devices[0]);
-    // }
   }
 }

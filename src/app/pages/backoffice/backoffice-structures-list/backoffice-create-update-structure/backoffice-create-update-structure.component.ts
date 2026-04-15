@@ -18,7 +18,7 @@ import { InputText } from 'primeng/inputtext';
 import { Textarea } from 'primeng/textarea';
 import { BackofficeService } from '../../services/backoffice.service';
 @Component({
-  selector: 'app-backoffice-create-group',
+  selector: 'app-backoffice-create-structure',
   imports: [
     DialogModule,
     Button,
@@ -31,7 +31,7 @@ import { BackofficeService } from '../../services/backoffice.service';
   template: ` <form [formGroup]="form">
       <p-float-label>
         <input pInputText formControlName="name" />
-        <label>Nom du groupe</label>
+        <label>Nom du structuree</label>
       </p-float-label>
       <p-float-label>
         <textarea
@@ -45,14 +45,14 @@ import { BackofficeService } from '../../services/backoffice.service';
         <img
           [src]="fileUrl()"
           alt="Image"
-          class="group-image"
+          class="structure-image"
           width="128px"
           height="128px" />
         <p>Fichier utilisé : {{ file().name }}</p>
       }
       <app-upload-file
         [maxFileSize]="maxFileSize"
-        [handler]="uploadGroupImage"
+        [handler]="uploadStructureImage"
         (fileUploaded)="setFilePath($event)" />
     </form>
     <p-footer>
@@ -63,10 +63,10 @@ import { BackofficeService } from '../../services/backoffice.service';
         (onClick)="save()"
         [loading]="saveClicked()" />
     </p-footer>`,
-  styleUrl: './backoffice-create-update-group.component.scss',
+  styleUrl: './backoffice-create-update-structure.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CreateUpdateGroupComponent implements OnInit {
+export class CreateUpdateStructureComponent implements OnInit {
   readonly ref = inject(DynamicDialogRef);
   readonly dialogRef = inject(DialogService);
   private readonly fb = inject(FormBuilder);
@@ -75,7 +75,8 @@ export class CreateUpdateGroupComponent implements OnInit {
 
   protected readonly data = this.dialogRef.getInstance(this.ref)!.data;
 
-  protected readonly uploadGroupImage = this.backofficeService.uploadGroupImage;
+  protected readonly uploadStructureImage =
+    this.backofficeService.uploadStructureImage;
 
   baseUrl = environment.api_url + '/storage/';
 
@@ -99,18 +100,18 @@ export class CreateUpdateGroupComponent implements OnInit {
     this.saveClicked.set(true);
 
     (this.data
-      ? this.backofficeService.updateGroup(
-          this.data.group.id,
+      ? this.backofficeService.updateStructure(
+          this.data.structure.id,
           this.form.getRawValue()
         )
-      : this.backofficeService.createGroup(this.form.getRawValue())
+      : this.backofficeService.createStructure(this.form.getRawValue())
     ).subscribe({
       next: () => {
         this.ref.close(true);
         this.toast.add({
           severity: 'success',
-          summary: `Groupe ${this.data ? 'mis à jour' : 'créé'}`,
-          detail: `Le groupe a été ${
+          summary: `Structuree ${this.data ? 'mis à jour' : 'créé'}`,
+          detail: `Le structuree a été ${
             this.data ? 'mis à jour' : 'créé'
           } avec succès`,
         });
@@ -121,7 +122,7 @@ export class CreateUpdateGroupComponent implements OnInit {
           summary: 'Erreur',
           detail: `Une erreur est survenue lors de la ${
             this.data ? 'mise à jour' : 'création'
-          } du groupe`,
+          } du structuree`,
         });
         this.saveClicked.set(false);
       },
@@ -139,12 +140,12 @@ export class CreateUpdateGroupComponent implements OnInit {
   ngOnInit(): void {
     if (this.data) {
       this.form.patchValue({
-        name: this.data.group.name,
-        description: this.data.group.description,
+        name: this.data.structure.name,
+        description: this.data.structure.description,
       });
-      this.file.set(this.data.group.image);
+      this.file.set(this.data.structure.image);
       this.fileUrl.set(
-        `${this.baseUrl}/${this.data.group.image ?? 'default-group.png'}`
+        `${this.baseUrl}/${this.data.structure.image ?? 'default-structure.png'}`
       );
     }
   }

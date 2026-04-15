@@ -5,7 +5,7 @@ import {
   signal,
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { GroupService } from '@services/group.service';
+import { StructuresService } from '@services/structures.service';
 import { UsersService } from '@services/users.service';
 import { MessageService } from 'primeng/api';
 import { Button } from 'primeng/button';
@@ -33,7 +33,7 @@ export class AddUserModalComponent {
   private readonly fb = inject(FormBuilder);
   private readonly dialogRef = inject(DynamicDialogRef);
   private readonly usersService = inject(UsersService);
-  private readonly groupService = inject(GroupService);
+  private readonly structureService = inject(StructuresService);
   private readonly messageService = inject(MessageService);
 
   isUserChecked = signal(false);
@@ -65,8 +65,8 @@ export class AddUserModalComponent {
   save() {
     // Logic to save the user
     if (this.userExists()) {
-      this.groupService
-        .addUserToGroup({
+      this.structureService
+        .addUserToStructure({
           email: this.form.value.email!,
           role: this.form.value.role!,
         })
@@ -74,7 +74,7 @@ export class AddUserModalComponent {
           next: () => {
             this.messageService.add({
               severity: 'success',
-              summary: 'Utilisateur ajouté au groupe',
+              summary: 'Utilisateur ajouté au structuree',
               detail: 'L’utilisateur a été ajouté avec succès.',
             });
             this.dialogRef.close(true);
@@ -88,23 +88,25 @@ export class AddUserModalComponent {
           },
         });
     } else {
-      this.usersService.createUserForGroup(this.form.getRawValue()).subscribe({
-        next: () => {
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Utilisateur créé',
-            detail: 'L’utilisateur a été créé et ajouté avec succès.',
-          });
-          this.dialogRef.close(true);
-        },
-        error: err => {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Erreur',
-            detail: `Une erreur est survenue : ${err.message}`,
-          });
-        },
-      });
+      this.usersService
+        .createUserForStructure(this.form.getRawValue())
+        .subscribe({
+          next: () => {
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Utilisateur créé',
+              detail: 'L’utilisateur a été créé et ajouté avec succès.',
+            });
+            this.dialogRef.close(true);
+          },
+          error: err => {
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Erreur',
+              detail: `Une erreur est survenue : ${err.message}`,
+            });
+          },
+        });
     }
   }
 
@@ -112,10 +114,10 @@ export class AddUserModalComponent {
     this.usersService.checkUser(this.form.value.email!).subscribe(res => {
       this.isUserChecked.set(true);
       this.userExists.set(res.exists);
-      if (res.exists && res.already_in_group) {
+      if (res.exists && res.already_in_structure) {
         this.messageService.add({
           severity: 'info',
-          summary: "L'utilisateur est déjà dans le groupe.",
+          summary: "L'utilisateur est déjà dans le structuree.",
         });
         this.dialogRef.close();
       }

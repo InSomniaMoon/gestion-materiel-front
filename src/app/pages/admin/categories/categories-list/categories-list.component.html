@@ -46,31 +46,29 @@
         (onSort)="orderBy.set($event.field); sortBy.set($event.order)">
         <ng-template #header>
           <tr>
-            <th pSortableColumn="name">Nom <p-sortIcon field="name" /></th>
+            <th pSortableColumn="name" scope="col">
+              Nom <p-sortIcon field="name" />
+            </th>
           </tr>
         </ng-template>
         <ng-template #body let-category>
           <tr
             (click)="openUpdateCategoryModal(category)"
+            (keydown.enter)="openUpdateCategoryModal(category)"
+            (keydown.space)="openUpdateCategoryModal(category)"
             class="cursor-pointer">
             <td>{{ category.name }}</td>
           </tr>
         </ng-template>
       </p-table>
-
-      <!-- @for (item of items; track $index) {
-            <app-list-item
-              (click)="isAdmin() ? openItemUpdate(item) : openItemView(item)"
-              [item]="item" />
-            @if (!$last) {
-              <hr style="margin: 0 1rem;" />
-            }
-          } -->
     </ng-template>
     <ng-template #grid let-items>
       <div class="grid">
         @for (item of items; track $index) {
-          <p-card (click)="openUpdateCategoryModal(item)">
+          <p-card
+            (click)="openUpdateCategoryModal(item)"
+            (keydown.enter)="openUpdateCategoryModal(item)"
+            (keydown.space)="openUpdateCategoryModal(item)">
             <ng-template #header> </ng-template>
             <h3>{{ item.name }}</h3>
             <div>

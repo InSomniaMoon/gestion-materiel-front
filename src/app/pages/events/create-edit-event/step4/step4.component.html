@@ -13,10 +13,10 @@
 
   <h3>Liste du matériel :</h3>
   <div class="content">
-    @for (group of groupedItems(); track group.category) {
-      <h3>{{ group.category }}</h3>
+    @for (structure of structureedItems(); track structure.category) {
+      <h3>{{ structure.category }}</h3>
       <ul>
-        @for (item of group.items; track item.item.id) {
+        @for (item of structure.items; track item.item.id) {
           <li>
             <span
               >{{ item.item.name }}

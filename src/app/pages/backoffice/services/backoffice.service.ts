@@ -1,7 +1,7 @@
 import { HttpClient, httpResource } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Structure, StructureWithPivot } from '@app/core/types/structure.type';
-import { UserGroup } from '@app/core/types/userStructure.type';
+import { UserStructure } from '@app/core/types/userStructure.type';
 import { PaginatedData } from '@core/types/paginatedData.type';
 import { User } from '@core/types/user.type';
 import { environment } from '@env/environment';
@@ -57,7 +57,7 @@ export class BackofficeService {
     );
   }
 
-  getUserGroups(userId: string) {
+  getUserStructures(userId: string) {
     return httpResource<StructureWithPivot[]>(
       () => `${this.apiUrl}/users/${userId}/structures`,
       {
@@ -66,23 +66,23 @@ export class BackofficeService {
     );
   }
 
-  updateUserGroups(userId: string, userGroups: UserGroup[]) {
+  updateUserStructures(userId: string, userStructures: UserStructure[]) {
     return this.http.put(
       `${this.apiUrl}/users/${userId}/structures`,
-      { groups: userGroups },
+      { structures: userStructures },
       CLEAR_CACHE_CONTEXT_OPTIONS()
     );
   }
 
-  getGroups(): Observable<StructureWithPivot[]>;
-  getGroups(params?: {
+  getStructures(): Observable<StructureWithPivot[]>;
+  getStructures(params?: {
     size?: number;
     page?: number;
     orderBy: string;
     sortBy: string;
     q?: string;
   }): Observable<PaginatedData<Structure>>;
-  getGroups(params?: {
+  getStructures(params?: {
     size?: number;
     page?: number;
     orderBy: string;
@@ -93,7 +93,7 @@ export class BackofficeService {
       return this.http.get<Structure[]>(`${this.apiUrl}/structures?all=true`);
     }
 
-    const { size = 25, page = 1, q = '', orderBy, sortBy = 'asc' } = params!;
+    const { size = 25, page = 1, q = '', orderBy, sortBy = 'asc' } = params;
 
     return this.http.get<PaginatedData<Structure>>(
       `${this.apiUrl}/structures`,
@@ -109,35 +109,35 @@ export class BackofficeService {
     );
   }
 
-  createGroup(dto: {
+  createStructure(dto: {
     name: string;
     description: string | null;
     image: string | null;
   }) {
     return this.http.post(
-      `${this.apiUrl}/groups`,
+      `${this.apiUrl}/structures`,
       dto,
       CLEAR_CACHE_CONTEXT_OPTIONS()
     );
   }
 
-  uploadGroupImage = (file: File) => {
+  uploadStructureImage = (file: File) => {
     const formData = new FormData();
     formData.append('image', file);
 
     return this.http.post<{ path: string }>(
-      `${this.apiUrl}/groups/image`,
+      `${this.apiUrl}/structures/image`,
       formData,
       CLEAR_CACHE_CONTEXT_OPTIONS()
     );
   };
 
-  updateGroup(
+  updateStructure(
     id: number,
     dto: { name: string; description: string | null; image: string | null }
   ) {
     return this.http.put(
-      `${this.apiUrl}/groups/${id}`,
+      `${this.apiUrl}/structures/${id}`,
       dto,
       CLEAR_CACHE_CONTEXT_OPTIONS()
     );

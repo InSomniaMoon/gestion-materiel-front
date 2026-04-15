@@ -62,7 +62,7 @@
         </p-select>
       } @else {
         <span class="mr-4" style="color: white">
-          {{ selectedStructure()?.name ?? 'Groupe Actif' }}
+          {{ selectedStructure()?.name ?? 'Structuree Actif' }}
         </span>
       }
       <p-tieredMenu #userMenu [popup]="true" [model]="authItems()">
@@ -91,6 +91,8 @@
       </p-tieredMenu>
       <p-avatar
         (click)="userMenu.toggle($event)"
+        (keydown.enter)="userMenu.toggle($event)"
+        (keydown.space)="userMenu.toggle($event)"
         [label]="lettres()"
         shape="circle"
         size="large" />

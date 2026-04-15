@@ -1,7 +1,7 @@
 import { Structure } from './structure.type';
 import { User } from './user.type';
 
-export type UserGroup = {
+export type UserStructure = {
   user_id: number;
   structure_id: number;
   role: 'string';
