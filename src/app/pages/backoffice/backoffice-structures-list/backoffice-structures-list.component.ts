@@ -60,12 +60,6 @@ import { CreateUpdateStructureComponent } from './backoffice-create-update-struc
                 ngModel
                 placeholder="Rechercher une structure" />
             </p-iconfield>
-            <div class="caption">
-              <p-button
-                label="Ajouter"
-                icon="pi pi-plus"
-                (onClick)="openCreateStructureDialog()" />
-            </div>
             <p-select-button
               [ngModel]="layout()"
               (ngModelChange)="setLayout($event)"
@@ -201,22 +195,6 @@ export class AppAdminStructuresListComponent {
   }));
 
   structures = computed(() => this.structuresQuery.data()?.data || []);
-
-  openCreateStructureDialog() {
-    this.dialogService
-      .open(
-        CreateUpdateStructureComponent,
-        buildDialogOptions({
-          header: 'Créer une structure',
-          width: '70%',
-        })
-      )!
-      .onClose.subscribe(created => {
-        if (created) {
-          this.structuresQuery.refetch();
-        }
-      });
-  }
 
   openUpdateStructureDialog(structure: StructureWithPivot) {
     this.dialogService
