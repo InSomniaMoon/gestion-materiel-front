@@ -68,7 +68,7 @@ export class CreateEditEventComponent implements OnInit {
         ],
       }
     ),
-    materials: this.fb.nonNullable.control<ItemSelection[]>([], {
+    items: this.fb.nonNullable.control<ItemSelection[]>([], {
       validators: [
         // Validators.required,
         // form => (form.value.length === 0 ? { empty: true } : null),
@@ -81,8 +81,8 @@ export class CreateEditEventComponent implements OnInit {
     return this.form.get('informations') as FormGroup;
   }
 
-  get materialsFormControl() {
-    return this.form.get('materials') as FormControl;
+  get itemsFormControl() {
+    return this.form.get('items') as FormControl;
   }
   get commentFormControl() {
     return this.form.get('comment') as FormControl;
@@ -105,7 +105,7 @@ export class CreateEditEventComponent implements OnInit {
         start_date: new Date(this.event()!.start_date),
         end_date: new Date(this.event()!.end_date),
       },
-      materials: this.event()!.event_subscriptions.map(item => ({
+      items: this.event()!.event_subscriptions.map(item => ({
         item: item,
         quantity: item.quantity,
       })),
@@ -121,7 +121,7 @@ export class CreateEditEventComponent implements OnInit {
       structure_id: value.informations.structure!,
       start_date: new Date(value.informations.start_date!),
       end_date: new Date(value.informations.end_date!),
-      materials: value.materials.map((item: any) => ({
+      items: value.items.map(item => ({
         id: item.item.id,
         quantity: item.quantity,
       })),

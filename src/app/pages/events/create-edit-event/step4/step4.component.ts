@@ -25,7 +25,7 @@ export class Step4Component {
 
   structuredItems = computed(() => {
     const structured: { [key: string]: ItemSelection[] } = {};
-    this.event().materials.forEach((item: ItemSelection) => {
+    this.event().items.forEach((item: ItemSelection) => {
       const categoryName = item.item.category?.name || 'Sans catégorie';
       if (!structured[categoryName]) {
         structured[categoryName] = [];
