@@ -8,6 +8,7 @@ import {
   signal,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { AuthService } from '@app/core/services/auth.service';
 import { ItemIssuesService } from '@app/core/services/item-issues.service';
 import { AdminDashboardItemIssue } from '@app/core/types/itemIssue.type';
 import { SortBy } from '@app/core/types/pagination-request.type';
@@ -15,7 +16,7 @@ import { environment } from '@env/environment';
 import { ButtonDirective } from 'primeng/button';
 import { Card } from 'primeng/card';
 import { PaginatorState } from 'primeng/paginator';
-import { lastValueFrom, tap } from 'rxjs';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -25,8 +26,8 @@ import { lastValueFrom, tap } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminDashboardComponent {
-  private itemIssuesService = inject(ItemIssuesService);
-
+  private readonly itemIssuesService = inject(ItemIssuesService);
+  private readonly authService = inject(AuthService);
   baseUrl = environment.api_url + '/storage/';
 
   page = signal(0);
@@ -49,28 +50,30 @@ export class AdminDashboardComponent {
       q: this.searchQuery(),
       order_by: this.orderBy(),
       sort_by: (this.sortBy() === 1 ? 'asc' : 'desc') as SortBy,
+      triggerChange: this.authService.selectedStructure(),
     }),
     loader: ({ params }) =>
       lastValueFrom(
-        this.itemIssuesService.getPaginatedOpenedIssues(params).pipe(
-          tap(issues => {
-            this._issues.update(v => [...v, ...issues.data]);
-          })
-        )
+        this.itemIssuesService.getPaginatedOpenedIssues(params).pipe()
       ),
   });
 
-  private _issues = signal<AdminDashboardItemIssue[]>([]);
+  private readonly _issues = computed(
+    () => this.issuesResource.value()?.data || []
+  );
 
   issues = computed(() => {
     const items: Record<string, AdminDashboardItemIssue[]> = {};
     if (!this._issues()) return [];
     this._issues().forEach(issue => {
-      const key = issue.item!.name;
+      if (!issue.item) {
+        return;
+      }
+
+      const key = issue.item.name;
       if (!items[key]) {
         items[key] = [];
       }
-
       items[key].push(issue);
     });
 

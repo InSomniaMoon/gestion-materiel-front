@@ -55,21 +55,24 @@ export class UserDashboardComponent implements AfterViewInit {
   actualEvents = resource({
     loader: () => lastValueFrom(this.eventsService.getActualEvents()),
     defaultValue: [],
+    params: () => ({
+      structure: this.authService.selectedStructure(),
+    }),
   });
 
   events = resource<EventInput[], any>({
     params: () => ({
-      structureId: this.authService.selectedStructure(),
+      structure: this.authService.selectedStructure(),
       startDate: this.startDate(),
       endDate: this.endDate(),
     }),
     loader: ({ params }) =>
-      this.startDate() === null || this.endDate() === null
+      params.startDate === null || params.endDate === null
         ? Promise.resolve([])
         : lastValueFrom(
             this.eventsService
               .getEventsForStructure(
-                params.structureId!.id,
+                params.structure!.id,
                 params.startDate,
                 params.endDate
               )

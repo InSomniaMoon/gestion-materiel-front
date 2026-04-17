@@ -97,8 +97,10 @@ export class AuthService {
       })
       .subscribe({
         next: result => {
+          this.cache.clearAll();
           this.jwt.set(result.token);
           const structure = this.structures().find(g => g.id == id)!;
+          this._selectedStructure.set(structure);
 
           if (
             this.router.url.includes('/admin') &&
@@ -106,7 +108,6 @@ export class AuthService {
           ) {
             this.router.navigateByUrl('/dashboard');
           }
-          this._selectedStructure.set(structure);
         },
       });
   }
