@@ -1,5 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
+import {
+  BulkImportPreview,
+  BulkImportResult,
+  ImportCategoryResolution,
+} from '@core/types/item-import.type';
 import { Item, ItemCategory, ItemWithQuantity } from '@core/types/item.type';
 import { PaginatedData } from '@core/types/paginatedData.type';
 import { environment } from '@env/environment';
@@ -101,4 +106,31 @@ export class ItemsService {
       CLEAR_CACHE_CONTEXT_OPTIONS()
     );
   };
+
+  previewImport(file: File) {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return this.http.post<BulkImportPreview>(
+      `${this.api_url}/admin/items/import/preview`,
+      formData
+    );
+  }
+
+  importItems(
+    file: File,
+    resolutions: Record<string, ImportCategoryResolution>
+  ) {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('resolutions', JSON.stringify(resolutions));
+
+    return this.http.post<BulkImportResult>(
+      `${this.api_url}/admin/items/import`,
+      formData,
+      CLEAR_CACHE_CONTEXT_OPTIONS(
+        new Set([`${this.api_url}/items`, `${this.api_url}/items/categories`])
+      )
+    );
+  }
 }
