@@ -19,16 +19,14 @@ import { Tag } from 'primeng/tag';
       <p-table [value]="rows()" stripedRows>
         <ng-template #header>
           <tr>
-            <th>Ligne</th>
-            <th>Catégorie</th>
-            <th>Objet</th>
-            <th>Quantité</th>
-            <th>Statut</th>
+            <th scope="col">Catégorie</th>
+            <th scope="col">Objet</th>
+            <th scope="col">Quantité</th>
+            <th scope="col">Statut</th>
           </tr>
         </ng-template>
         <ng-template #body let-row>
           <tr>
-            <td>{{ row.row }}</td>
             <td>{{ row.category_name }}</td>
             <td>{{ row.item_name }}</td>
             <td>{{ row.quantity ?? '-' }}</td>
@@ -37,7 +35,7 @@ import { Tag } from 'primeng/tag';
                 [value]="statusLabel(row.status)"
                 [severity]="statusSeverity(row.status)" />
               @if (row.errors.includes('quantity_required')) {
-                <p-message severity="error" text="Quantité requise" />
+                <p-message severity="error">Quantité requise</p-message>
               }
             </td>
           </tr>

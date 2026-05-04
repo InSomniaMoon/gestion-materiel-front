@@ -98,10 +98,10 @@ import { ToggleSwitch } from 'primeng/toggleswitch';
               resolutionRequiresQuantity(unknownCategory) &&
               categoryRowsMissingQuantity(unknownCategory.name)
             ) {
-              <p-message
-                severity="warn"
-                text="Cette résolution nécessite une quantité sur toutes les lignes de la catégorie."
-                styleClass="w-full" />
+              <p-message severity="warn" class="w-full">
+                Cette résolution nécessite une quantité sur toutes les lignes de
+                la catégorie.
+              </p-message>
             }
           </p-card>
         }

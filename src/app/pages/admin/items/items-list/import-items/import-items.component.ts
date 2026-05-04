@@ -21,6 +21,11 @@ import { Button, ButtonDirective } from 'primeng/button';
 import { Card } from 'primeng/card';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { Fieldset } from 'primeng/fieldset';
+import {
+  FileUpload,
+  FileUploadEvent,
+  FileUploadHandlerEvent,
+} from 'primeng/fileupload';
 import { Message as PrimeMessage } from 'primeng/message';
 import { ImportCategoriesResolutionComponent } from './import-categories-resolution.component';
 import { ImportPreviewTableComponent } from './import-preview-table.component';
@@ -35,6 +40,7 @@ import { ImportPreviewTableComponent } from './import-preview-table.component';
     ImportCategoriesResolutionComponent,
     ImportPreviewTableComponent,
     ButtonDirective,
+    FileUpload,
   ],
   template: `
     <div class="import-items">
@@ -54,17 +60,16 @@ import { ImportPreviewTableComponent } from './import-preview-table.component';
           <br />
           La quantité est obligatoire pour les catégories non identifiées.
         </p>
-        <input
-          type="file"
-          accept=".csv,text/csv"
-          (change)="onFileSelected($event)" />
         <div class="actions">
-          <p-button
-            label="Analyser le fichier"
-            icon="pi pi-search"
-            [disabled]="!selectedFile() || previewLoading()"
-            [loading]="previewLoading()"
-            (onClick)="previewFile()" />
+          <p-fileUpload
+            type="file"
+            mode="basic"
+            accept=".csv,text/csv"
+            chooseLabel="Choisir un fichier"
+            customUpload
+            auto
+            (uploadHandler)="onFileSelected($event)"
+            [disabled]="previewLoading() || importLoading()" />
           @if (selectedFileName()) {
             <span class="file-name">{{ selectedFileName() }}</span>
           }
@@ -88,10 +93,9 @@ import { ImportPreviewTableComponent } from './import-preview-table.component';
         </section>
 
         @if (invalidRows().length > 0) {
-          <p-message
-            severity="warn"
-            styleClass="w-full"
-            text="Corrections requises" />
+          <p-message severity="warn" class="w-full"
+            >Corrections requises
+          </p-message>
           <p class="hint warning-hint">
             Certaines lignes visent une catégorie non identifiée sans quantité.
             Complète le CSV puis relance l'analyse.
@@ -232,13 +236,18 @@ export class ImportItemsComponent {
     );
   });
 
-  onFileSelected(event: Event) {
-    const input = event.target as HTMLInputElement;
-    const file = input.files?.item(0) ?? null;
+  onFileSelected(event: FileUploadEvent | FileUploadHandlerEvent) {
+    const file = event.files?.at(0);
+    console.log(event);
+
+    if (!file) {
+      return;
+    }
 
     this.selectedFile.set(file);
     this.preview.set(null);
     this.resolutions.set({});
+    this.previewFile();
   }
 
   previewFile() {
@@ -307,6 +316,9 @@ export class ImportItemsComponent {
           detail: `${result.imported_count} objet(s) importé(s).`,
         });
         this.ref.close(true);
+      },
+      error: () => {
+        this.importLoading.set(false);
       },
       complete: () => this.importLoading.set(false),
     });
