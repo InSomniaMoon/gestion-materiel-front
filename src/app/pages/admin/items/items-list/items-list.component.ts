@@ -33,6 +33,7 @@ import { SelectButton } from 'primeng/selectbutton';
 import { TableModule } from 'primeng/table';
 import { fromEvent, lastValueFrom, map } from 'rxjs';
 import { CreateUpdateItemComponent } from './create-update-item/create-update-item.component';
+import { ImportItemsComponent } from './import-items/import-items.component';
 import { ItemsReloaderService } from './items-reloader.service';
 @Component({
   selector: 'app-items-list',
@@ -90,10 +91,17 @@ import { ItemsReloaderService } from './items-reloader.service';
         <ng-template #header>
           <div class="flex space-between">
             @if (isAdmin()) {
-              <p-button
-                icon="pi pi-plus"
-                label="Ajouter"
-                (onClick)="openCreateItem()" />
+              <div class="header-actions">
+                <p-button
+                  icon="pi pi-upload"
+                  label="Importer"
+                  severity="secondary"
+                  (onClick)="openImportItems()" />
+                <p-button
+                  icon="pi pi-plus"
+                  label="Ajouter"
+                  (onClick)="openCreateItem()" />
+              </div>
             } @else {
               <div></div>
             }
@@ -354,6 +362,23 @@ export class ItemsListComponent implements OnInit {
       )!
       .onClose.subscribe(created => {
         if (created) {
+          this.items.reload();
+        }
+      });
+  }
+
+  openImportItems() {
+    this.dialogService
+      .open(
+        ImportItemsComponent,
+        buildDialogOptions({
+          header: 'Importer du matériel',
+          width: '75%',
+          height: '85%',
+        })
+      )!
+      .onClose.subscribe(imported => {
+        if (imported) {
           this.items.reload();
         }
       });
