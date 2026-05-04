@@ -128,7 +128,9 @@ export class ItemsService {
     return this.http.post<BulkImportResult>(
       `${this.api_url}/admin/items/import`,
       formData,
-      CLEAR_CACHE_CONTEXT_OPTIONS(new Set([`${this.api_url}/items`]))
+      CLEAR_CACHE_CONTEXT_OPTIONS(
+        new Set([`${this.api_url}/items`, `${this.api_url}/items/categories`])
+      )
     );
   }
 }
