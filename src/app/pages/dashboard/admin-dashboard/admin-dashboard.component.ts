@@ -48,13 +48,21 @@ export class AdminDashboardComponent {
       page: this.page() + 1,
       size: this.size(),
       q: this.searchQuery(),
-      order_by: this.orderBy(),
-      sort_by: (this.sortBy() === 1 ? 'asc' : 'desc') as SortBy,
+      orderBy: this.orderBy(),
+      sortBy: this.sortBy() === 1 ? 'asc' : 'desc',
       triggerChange: this.authService.selectedStructure(),
     }),
     loader: ({ params }) =>
       lastValueFrom(
-        this.itemIssuesService.getPaginatedOpenedIssues(params).pipe()
+        this.itemIssuesService
+          .getPaginatedOpenedIssues({
+            orderBy: params.orderBy,
+            page: params.page,
+            q: params.q,
+            size: params.size,
+            sortBy: params.sortBy as SortBy,
+          })
+          .pipe()
       ),
   });
 

@@ -96,8 +96,8 @@ export class UsersListComponent {
         this.usersService.getPaginatedUsers({
           size: params.size,
           q: params.q,
-          order_by: params.order_by,
-          sort_by: params.sort_by,
+          orderBy: params.orderBy,
+          sortBy: params.sortBy as SortBy,
           page: params.page + 1,
         })
       ),
@@ -105,8 +105,8 @@ export class UsersListComponent {
       page: this.page(),
       size: this.size(),
       q: this.searchQuery(),
-      order_by: this.orderBy(),
-      sort_by: this.sortBy() === 1 ? 'asc' : ('desc' as SortBy),
+      orderBy: this.orderBy(),
+      sortBy: this.sortBy() === 1 ? 'asc' : 'desc',
       selected_structure: this.selectedStructure(),
     }),
   });

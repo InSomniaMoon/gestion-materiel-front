@@ -83,8 +83,8 @@ export class CategoriesListComponent {
           page: this.page() + 1,
           size: this.size(),
           q: this.searchQuery(),
-          order_by: this.orderBy(),
-          sort_by: this.sortBy() === 1 ? 'asc' : 'desc',
+          orderBy: this.orderBy(),
+          sortBy: this.sortBy() === 1 ? 'asc' : 'desc',
         })
       ),
     initialPageParam: { page: 1, pageSize: 10 },

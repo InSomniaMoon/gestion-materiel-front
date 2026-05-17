@@ -102,8 +102,8 @@ export class CreateEditEventComponent implements OnInit {
       informations: {
         name: this.event()!.name,
         structure: this.event()!.structure.id,
-        start_date: new Date(this.event()!.start_date),
-        end_date: new Date(this.event()!.end_date),
+        start_date: new Date(this.event()!.startDate),
+        end_date: new Date(this.event()!.endDate),
       },
       items: this.event()!.event_subscriptions.map(item => ({
         item: item,

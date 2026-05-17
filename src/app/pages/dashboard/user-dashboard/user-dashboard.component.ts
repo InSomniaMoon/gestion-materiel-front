@@ -81,8 +81,8 @@ export class UserDashboardComponent implements AfterViewInit {
                   events.map(
                     event =>
                       ({
-                        start: event.start_date,
-                        end: event.end_date,
+                        start: event.startDate,
+                        end: event.endDate,
                         title: event.name,
                         allDay: false,
                         color: event.structure?.color,

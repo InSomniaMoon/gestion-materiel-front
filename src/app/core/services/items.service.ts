@@ -27,7 +27,7 @@ export class ItemsService {
     );
   }
 
-  getItems(opt?: Partial<PaginationRequest> & { category_id?: number }) {
+  getItems(opt?: Partial<PaginationRequest> & { categoryId?: number }) {
     let url = `${this.api_url}/items`;
     const options = opt ?? { page: 1, size: 25 };
 
@@ -59,7 +59,7 @@ export class ItemsService {
     });
   }
 
-  getAdminItems(opt?: Partial<PaginationRequest> & { category_id?: number }) {
+  getAdminItems(opt?: Partial<PaginationRequest> & { categoryId?: number }) {
     let url = `${this.api_url}/admin/items`;
     const options = opt ?? { page: 1, size: 25 };
 

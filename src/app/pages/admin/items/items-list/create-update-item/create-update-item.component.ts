@@ -167,11 +167,11 @@ export class CreateUpdateItemComponent implements OnInit {
       nonNullable: true,
     }),
     description: this.fb.nonNullable.control(''),
-    category_id: this.fb.nonNullable.control<number | undefined>(undefined, {
+    categoryId: this.fb.nonNullable.control<number | undefined>(undefined, {
       validators: [Validators.required],
     }),
 
-    date_of_buy: this.fb.nonNullable.control<Date | undefined>(undefined, {
+    dateOfBuy: this.fb.nonNullable.control<Date | undefined>(undefined, {
       validators: [],
     }),
     stock: this.fb.nonNullable.control(1, {
@@ -179,8 +179,8 @@ export class CreateUpdateItemComponent implements OnInit {
     }),
   });
 
-  categoryIdValue = toSignal(this.form.get('category_id')!.valueChanges, {
-    initialValue: this.form.value.category_id,
+  categoryIdValue = toSignal(this.form.get('categoryId')!.valueChanges, {
+    initialValue: this.form.value.categoryId,
   });
   selectedCategory = computed(() =>
     this.categories.value()?.data.find(cat => cat.id === this.categoryIdValue())
@@ -191,15 +191,15 @@ export class CreateUpdateItemComponent implements OnInit {
       return;
     }
     this.form.patchValue({
-      category_id: this.categories.value()?.data[0]?.id,
+      categoryId: this.categories.value()?.data[0]?.id,
     });
 
     this.form.patchValue({
       name: this.data.name,
       description: this.data.description,
-      category_id: this.data.category_id,
-      date_of_buy: this.data.date_of_buy
-        ? new Date(this.data.date_of_buy)
+      categoryId: this.data.categoryId,
+      dateOfBuy: this.data.dateOfBuy
+        ? new Date(this.data.dateOfBuy)
         : undefined,
       stock: this.data.stock ?? 1,
     });
@@ -227,8 +227,8 @@ export class CreateUpdateItemComponent implements OnInit {
         usable: true,
         name: value.name,
         description: value.description,
-        category_id: value.category_id!,
-        date_of_buy: value.date_of_buy,
+        categoryId: value.categoryId!,
+        dateOfBuy: value.dateOfBuy,
         structureId: this.authService.selectedStructure()?.id!,
         image: value.image,
         stock: value.stock,

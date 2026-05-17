@@ -5,12 +5,12 @@ export type Item = {
   id: number;
   name: string;
   description?: string;
-  category_id: number;
+  categoryId: number;
+  category?: ItemCategory;
   usable: boolean;
   stock?: number;
-  usable_stock?: number;
-  date_of_buy?: Date;
-  category?: ItemCategory;
+  usableStock?: number;
+  dateOfBuy?: Date;
   options?: ItemOption[];
   image?: string;
   structureId: number;

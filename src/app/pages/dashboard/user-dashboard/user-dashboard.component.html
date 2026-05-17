@@ -3,8 +3,8 @@
   @for (event of actualEvents.value(); track event.id) {
     <div class="event-item">
       <h3>{{ event.name }}</h3>
-      <p>Début : {{ event.start_date | date: 'short' }}</p>
-      <p>Fin : {{ event.end_date | date: 'short' }}</p>
+      <p>Début : {{ event.startDate | date: 'short' }}</p>
+      <p>Fin : {{ event.endDate | date: 'short' }}</p>
     </div>
     <h4>Objets</h4>
     <div class="objets">

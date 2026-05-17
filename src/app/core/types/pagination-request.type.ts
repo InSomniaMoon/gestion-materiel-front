@@ -1,8 +1,8 @@
 export interface PaginationRequest {
   page: number;
   size: number;
-  order_by: string;
-  sort_by: SortBy;
+  orderBy: string;
+  sortBy: SortBy;
   q: string;
 }
 

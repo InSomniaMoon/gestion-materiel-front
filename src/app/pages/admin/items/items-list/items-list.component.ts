@@ -16,6 +16,7 @@ import { PaginatorComponent } from '@app/components/ui/paginator/paginator.compo
 import { AuthService } from '@app/core/services/auth.service';
 import { CategoriesService } from '@app/core/services/categories.service';
 import { TableLayoutService } from '@app/core/services/table-layout.service';
+import { SortBy } from '@app/core/types/pagination-request.type';
 import { ItemDetailsComponent } from '@app/pages/items/item-details/item-details.component';
 import { AppTable } from '@components/ui/table/table.component';
 import { Item } from '@core/types/item.type';
@@ -134,12 +135,12 @@ import { ItemsReloaderService } from './items-reloader.service';
                 </th>
                 <th></th>
                 <th pSortableColumn="name">Nom<p-sortIcon field="name" /></th>
-                <th pSortableColumn="category_id">
-                  Categorie <p-sortIcon field="category_id" />
+                <th pSortableColumn="categoryId">
+                  Categorie <p-sortIcon field="categoryId" />
                 </th>
-                <th pSortableColumn="open_issues_count">
+                <th pSortableColumn="openIssuesCount">
                   Problèmes
-                  <p-sortIcon field="open_issues_count" />
+                  <p-sortIcon field="openIssuesCount" />
                 </th>
                 <th>Stock</th>
               </tr>
@@ -169,12 +170,12 @@ import { ItemsReloaderService } from './items-reloader.service';
                 <td>{{ item.name }}</td>
                 <td style="text-wrap: nowrap;">{{ item.category.name }}</td>
                 <td style="text-wrap: nowrap;text-align: center;">
-                  {{ item.open_issues_count }}
+                  {{ item.openIssuesCount }}
                 </td>
                 <td>
                   {{ item.stock }}
-                  @if (item.stock !== item.usable_stock) {
-                    ({{ item.usable_stock }})
+                  @if (item.stock !== item.usableStock) {
+                    ({{ item.usableStock }})
                   }
                 </td>
               </tr>
@@ -213,13 +214,13 @@ import { ItemsReloaderService } from './items-reloader.service';
                       {{ item.name }}
                     </span>
                     <span>qté : {{ item.stock }}</span>
-                    @if (item.stock !== item.usable_stock) {
-                      <span>({{ item.usable_stock }} utilisables)</span>
+                    @if (item.stock !== item.usableStock) {
+                      <span>({{ item.usableStock }} utilisables)</span>
                     }
-                    @if (item.open_issues_count > 0) {
+                    @if (item.openIssuesCount > 0) {
                       <span class="item-issues">
-                        {{ item.open_issues_count }} problème
-                        {{ item.open_issues_count > 1 ? 's' : '' }}
+                        {{ item.openIssuesCount }} problème
+                        {{ item.openIssuesCount > 1 ? 's' : '' }}
                       </span>
                     }
                     <span></span>
@@ -249,7 +250,7 @@ export class ItemsListComponent implements OnInit {
   private readonly tableLayoutService = inject(TableLayoutService);
   readonly imageBaseUrl = `${environment.api_url}/storage/`;
 
-  readonly sortOptions = [{ label: 'Catégorie', value: 'category_id' }];
+  readonly sortOptions = [{ label: 'Catégorie', value: 'categoryId' }];
 
   switchSortOrder() {
     this.sortBy.set(this.sortBy() === 1 ? -1 : 1);
@@ -258,15 +259,15 @@ export class ItemsListComponent implements OnInit {
     this.categoriesService
       .getCategories({
         size: 50,
-        order_by: 'name',
-        sort_by: 'asc',
+        orderBy: 'name',
+        sortBy: 'asc',
         page: 1,
         q: '',
       })
       .pipe(
         map(categories => [
           { label: 'Toutes les catégories', code: undefined },
-          ...categories.data.map(cat => ({ label: cat.name, code: cat.id })),
+          ...categories.map(cat => ({ label: cat.name, code: cat.id })),
         ])
       ),
     { initialValue: [] }
@@ -314,7 +315,7 @@ export class ItemsListComponent implements OnInit {
   page = signal(0);
   size = signal(100);
   searchQuery = signal('');
-  orderBy = signal('category_id');
+  orderBy = signal('categoryId');
   sortBy = signal<1 | -1>(1);
   first = computed(() => this.page() * this.size());
 
@@ -323,11 +324,11 @@ export class ItemsListComponent implements OnInit {
       return lastValueFrom(
         this.itemService.getItems({
           page: params.page + 1,
-          order_by: params.order_by,
-          sort_by: params.sort_by,
+          orderBy: params.orderBy,
+          sortBy: params.sortBy as SortBy,
           size: params.size,
           q: params.q,
-          category_id: params.category_id,
+          categoryId: params.categoryId,
         })
       );
     },
@@ -335,9 +336,9 @@ export class ItemsListComponent implements OnInit {
       page: this.page(),
       size: this.size(),
       q: this.searchQuery(),
-      order_by: this.orderBy(),
-      sort_by: this.sortBy() === 1 ? 'asc' : ('desc' as 'asc' | 'desc'),
-      category_id: this.selectedCategory(),
+      orderBy: this.orderBy(),
+      sortBy: this.sortBy() === 1 ? 'asc' : 'desc',
+      categoryId: this.selectedCategory(),
       structureId: this.selectedStructure(),
     }),
   });
