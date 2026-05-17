@@ -229,7 +229,7 @@ export class CreateUpdateItemComponent implements OnInit {
         description: value.description,
         category_id: value.category_id!,
         date_of_buy: value.date_of_buy,
-        structure_id: this.authService.selectedStructure()?.id!,
+        structureId: this.authService.selectedStructure()?.id!,
         image: value.image,
         stock: value.stock,
       };

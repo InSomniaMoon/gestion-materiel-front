@@ -21,7 +21,7 @@ export type UnknownImportCategory = {
 };
 
 export type BulkImportPreview = {
-  structure_id: number;
+  structureId: number;
   items_count: number;
   rows: ImportPreviewRow[];
   unknown_categories: UnknownImportCategory[];

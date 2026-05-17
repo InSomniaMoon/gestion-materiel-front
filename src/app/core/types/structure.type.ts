@@ -12,11 +12,8 @@ export type Structure = {
   members?: User[];
 };
 
-export type StructureWithPivot = Structure & {
-  pivot: {
-    structure_id?: number;
-    role: string;
-  };
+export type StructureWithRole = Structure & {
+  role: string;
 };
 
 export type StructureWithChildren = {

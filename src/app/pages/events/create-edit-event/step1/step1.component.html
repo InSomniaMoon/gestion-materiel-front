@@ -13,12 +13,12 @@
         <p-float-label variant="on" style="width: 100%">
           <p-select
             formControlName="structure"
-            id="structure_id"
+            id="structureId"
             [options]="structures()"
             optionLabel="name"
             optionValue="id"
             fluid />
-          <label for="structure_id">Unité empruntante</label>
+          <label for="structureId">Unité empruntante</label>
         </p-float-label>
       } @else {
         <p>Structure empruntante : {{ selectedStructure()?.name }}</p>

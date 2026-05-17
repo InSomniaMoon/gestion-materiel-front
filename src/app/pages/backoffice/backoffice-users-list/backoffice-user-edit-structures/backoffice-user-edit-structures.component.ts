@@ -26,7 +26,7 @@ import { BackofficeService } from '../../services/backoffice.service';
           <span>{{ structure.name }}</span>
           <p-select
             [options]="rolesOptions"
-            [(ngModel)]="structure.pivot.role"
+            [(ngModel)]="structure.role"
             optionLabel="label"
             optionValue="value" />
           <p-button
@@ -125,8 +125,8 @@ export class AppAdminUserEditStructuresComponent {
           g =>
             ({
               user_id: this.data.userId,
-              structure_id: g.id,
-              role: g.pivot.role,
+              structureId: g.id,
+              role: g.role,
             }) as UserStructure
         )
       )

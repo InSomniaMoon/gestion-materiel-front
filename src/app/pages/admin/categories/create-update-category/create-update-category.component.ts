@@ -54,7 +54,7 @@ export class CreateUpdateCategoryComponent implements OnInit {
 
   form = this.fb.nonNullable.group({
     name: ['', [Validators.required]],
-    structure_id: [0, Validators.required],
+    structureId: [0, Validators.required],
     identified: [true, Validators.required],
   });
 
@@ -62,7 +62,7 @@ export class CreateUpdateCategoryComponent implements OnInit {
     if (this.category()) {
       this.form.patchValue({
         name: this.category()!.name,
-        structure_id: this.structureId(),
+        structureId: this.structureId(),
         identified: this.category()!.identified,
       });
     }

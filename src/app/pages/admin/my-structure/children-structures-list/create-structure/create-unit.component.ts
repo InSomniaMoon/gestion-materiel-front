@@ -8,7 +8,7 @@ import {
   signal,
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { StructureWithPivot } from '@app/core/types/structure.type';
+import { StructureWithRole } from '@app/core/types/structure.type';
 import { User } from '@core/types/user.type';
 import { UsersService } from '@services/users.service';
 import { debounceTimeSignal } from '@utils/signals.utils';
@@ -42,7 +42,7 @@ export class CreateUnitComponent implements OnInit {
 
   validateLabel = signal('Créer');
 
-  structure = input<StructureWithPivot>();
+  structure = input<StructureWithRole>();
 
   form = this.fb.nonNullable.group({
     name: ['', [Validators.required]],
@@ -76,7 +76,7 @@ export class CreateUnitComponent implements OnInit {
         chiefs:
           (this.structure()!.members as User[]).map(c => ({
             code: c.id,
-            name: `${c.firstname} ${c.lastname}`,
+            name: `${c.firstName} ${c.lastName}`,
           })) || [],
       });
     }
@@ -115,7 +115,7 @@ export class CreateUnitComponent implements OnInit {
           .pipe(
             map(data =>
               data.data.map(user => ({
-                name: `${user.firstname} ${user.lastname}`,
+                name: `${user.firstName} ${user.lastName}`,
                 code: user.id,
               }))
             )

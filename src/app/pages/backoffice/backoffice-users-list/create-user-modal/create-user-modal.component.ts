@@ -36,7 +36,7 @@ import { BackofficeService } from '../../services/backoffice.service';
             optionLabel="name"
             optionValue="code"
             placeholder="Structure"
-            formControlName="structure_id" />
+            formControlName="structureId" />
           <label for="role">Structure</label>
         </p-floatlabel>
         <p-floatlabel>
@@ -127,7 +127,7 @@ export class CreateUserModalComponent {
     role: this.fb.nonNullable.control<string>('', {
       validators: [Validators.required],
     }),
-    structure_id: this.fb.nonNullable.control('', {
+    structureId: this.fb.nonNullable.control('', {
       validators: [Validators.required],
     }),
     phone: this.fb.control('', {}),

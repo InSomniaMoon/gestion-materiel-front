@@ -9,7 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { PaginatorComponent } from '@app/components/ui/paginator/paginator.component';
 import { AppTable } from '@app/components/ui/table/table.component';
 import { TableLayoutService } from '@app/core/services/table-layout.service';
-import { StructureWithPivot } from '@app/core/types/structure.type';
+import { StructureWithRole } from '@app/core/types/structure.type';
 import { debounceTimeSignal } from '@app/core/utils/signals.utils';
 import { environment } from '@env/environment';
 import { injectQuery } from '@tanstack/angular-query-experimental';
@@ -196,7 +196,7 @@ export class AppAdminStructuresListComponent {
 
   structures = computed(() => this.structuresQuery.data()?.data || []);
 
-  openUpdateStructureDialog(structure: StructureWithPivot) {
+  openUpdateStructureDialog(structure: StructureWithRole) {
     this.dialogService
       .open(
         CreateUpdateStructureComponent,

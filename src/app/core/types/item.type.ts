@@ -13,7 +13,7 @@ export type Item = {
   category?: ItemCategory;
   options?: ItemOption[];
   image?: string;
-  structure_id: number;
+  structureId: number;
   structure?: Structure;
   state?: 'OK' | 'NOK' | 'KO' | 'UNKNOWN';
 };
@@ -23,6 +23,6 @@ export type ItemWithQuantity = Item & { quantity: number; rest: number };
 export type ItemCategory = {
   id: number;
   name: string;
-  structure_id: number;
+  structureId: number;
   identified: boolean;
 };

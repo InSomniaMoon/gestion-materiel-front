@@ -169,7 +169,7 @@ export class AppAdminUsersListComponent {
       .open(
         AppAdminUserEditStructuresComponent,
         buildDialogOptions({
-          header: `Editer les structures de ${user.firstname} ${user.lastname}`,
+          header: `Editer les structures de ${user.firstName} ${user.lastName}`,
           width: '50%',
           height: '80%',
           data: { userId: user.id },

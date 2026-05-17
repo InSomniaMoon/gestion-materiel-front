@@ -118,7 +118,7 @@ export class CreateEditEventComponent implements OnInit {
 
     const data = {
       name: value.informations.name,
-      structure_id: value.informations.structure!,
+      structureId: value.informations.structure!,
       start_date: new Date(value.informations.start_date!),
       end_date: new Date(value.informations.end_date!),
       items: value.items.map(item => ({

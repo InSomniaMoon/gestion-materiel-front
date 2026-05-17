@@ -18,9 +18,9 @@ import { UserDashboardComponent } from './user-dashboard/user-dashboard.componen
 export class DashboardComponent {
   private readonly authService = inject(AuthService);
   isStructureResp = computed(
-    () => this.authService.selectedStructure()?.pivot.role === 'admin'
+    () => this.authService.selectedStructure()?.role === 'admin'
   );
   isStructureChief = computed(
-    () => this.authService.selectedStructure()?.pivot.role === 'user'
+    () => this.authService.selectedStructure()?.role === 'user'
   );
 }

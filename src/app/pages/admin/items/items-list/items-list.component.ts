@@ -338,7 +338,7 @@ export class ItemsListComponent implements OnInit {
       order_by: this.orderBy(),
       sort_by: this.sortBy() === 1 ? 'asc' : ('desc' as 'asc' | 'desc'),
       category_id: this.selectedCategory(),
-      structure_id: this.selectedStructure(),
+      structureId: this.selectedStructure(),
     }),
   });
 

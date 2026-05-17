@@ -9,7 +9,7 @@ export type Event = {
   name: string;
   status: 'active' | 'inactive';
   structure: Structure;
-  structure_id: number;
+  structureId: number;
   items: Item[];
   comment: string | null;
 };

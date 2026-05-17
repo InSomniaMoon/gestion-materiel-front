@@ -5,7 +5,7 @@ import { LoginDTO } from '@core/types/loginDTO.type';
 import { User } from '@core/types/user.type';
 import { environment } from '@env/environment';
 import { catchError, map, of, tap } from 'rxjs';
-import { StructureWithPivot } from '../types/structure.type';
+import { StructureWithRole } from '../types/structure.type';
 import { REFRESH_TOKEN_KEY } from '../utils/constants';
 import { CacheService } from './cache.service';
 
@@ -21,8 +21,8 @@ export class AuthService {
   user = signal<User | null>(null);
   structures = computed(() => this._userStructures());
 
-  private readonly _userStructures = signal<StructureWithPivot[]>([]);
-  private readonly _selectedStructure = signal<StructureWithPivot | null>(null);
+  private readonly _userStructures = signal<StructureWithRole[]>([]);
+  private readonly _selectedStructure = signal<StructureWithRole | null>(null);
 
   selectedStructure = this._selectedStructure.asReadonly();
   isAuth = this._isAuth.asReadonly();
@@ -34,10 +34,10 @@ export class AuthService {
     if (!this.user()) {
       return false;
     }
-    return this.selectedStructure()?.pivot.role == ('admin' as string);
+    return this.selectedStructure()?.role == 'admin';
   });
 
-  private api_url = environment.api_url;
+  private readonly api_url = environment.api_url;
 
   login({ email, password }: { email: string; password: string }) {
     // This is a fake login function, it should be replaced with a real one
@@ -59,12 +59,12 @@ export class AuthService {
   }
 
   load(http: HttpClient) {
-    const refresh_token = this.getCookie(`${REFRESH_TOKEN_KEY}`);
+    const refreshToken = this.getCookie(`${REFRESH_TOKEN_KEY}`);
 
-    if (refresh_token) {
+    if (refreshToken) {
       return http
-        .post<LoginDTO>(`${this.api_url}/auth/whoami`, {
-          refresh_token,
+        .post<LoginDTO>(`${this.api_url}/auth/refresh`, {
+          refreshToken: refreshToken,
         })
         .pipe(
           map(DTO => {
@@ -93,7 +93,7 @@ export class AuthService {
   setSelectStructureById(id: number) {
     this.http
       .post<LoginDTO>(`${this.api_url}/auth/${id}/select-structure`, {
-        refresh_token: this.getCookie(REFRESH_TOKEN_KEY),
+        refreshToken: this.getCookie(REFRESH_TOKEN_KEY),
       })
       .subscribe({
         next: result => {
@@ -104,7 +104,7 @@ export class AuthService {
 
           if (
             this.router.url.includes('/admin') &&
-            structure.pivot.role !== 'admin'
+            structure.role !== 'admin'
           ) {
             this.router.navigateByUrl('/dashboard');
           }
@@ -120,13 +120,13 @@ export class AuthService {
     this.jwt.set(DTO.token);
 
     this.removeCookie(REFRESH_TOKEN_KEY);
-    this.setCookie(REFRESH_TOKEN_KEY, DTO.refresh_token, 14);
+    this.setCookie(REFRESH_TOKEN_KEY, DTO.refreshToken, 14);
   }
 
   private setCookie(c_name: string, value: string, exdays: number) {
-    var exdate = new Date();
+    let exdate = new Date();
     exdate.setDate(exdate.getDate() + exdays);
-    var c_value =
+    let c_value =
       value +
       '; SameSite=Strict; path=/' +
       (exdays == null ? '' : '; expires=' + exdate.toUTCString());
@@ -135,7 +135,7 @@ export class AuthService {
   }
 
   private getCookie(c_name: string) {
-    var i,
+    let i,
       x,
       y,
       ARRcookies = document.cookie.split(';');

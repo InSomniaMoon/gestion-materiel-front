@@ -3,7 +3,7 @@ import { User } from './user.type';
 
 export type UserStructure = {
   user_id: number;
-  structure_id: number;
+  structureId: number;
   role: 'string';
   user?: User;
   structure?: Structure;
