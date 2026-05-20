@@ -39,8 +39,8 @@
         <th scope="col" pSortableColumn="items.name">
           Nom<p-sortIcon field="items.name" />
         </th>
-        <th scope="col" pSortableColumn="category_id">
-          Categorie <p-sortIcon field="category_id" />
+        <th scope="col" pSortableColumn="categoryId">
+          Categorie <p-sortIcon field="categoryId" />
         </th>
         <th scope="col">Restant</th>
       </tr>
@@ -66,7 +66,7 @@
   <app-paginator
     [(page)]="page"
     [(size)]="size"
-    [totalRecords]="itemsResource.value()?.total ?? 0"
+    [totalRecords]="itemsResource.value()?.totalCount ?? 0"
     [options]="options" />
 </matos-table>
 <div class="footer">

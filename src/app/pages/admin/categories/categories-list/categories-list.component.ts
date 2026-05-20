@@ -5,7 +5,6 @@ import {
   signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { PaginatorComponent } from '@app/components/ui/paginator/paginator.component';
 import { AppTable } from '@app/components/ui/table/table.component';
 import { TableLayoutService } from '@app/core/services/table-layout.service';
 import { ItemCategory } from '@core/types/item.type';
@@ -32,7 +31,6 @@ import { CreateUpdateCategoryComponent } from '../create-update-category/create-
     AppTable,
     TableModule,
     FormsModule,
-    PaginatorComponent,
     DataView,
     SelectButton,
     Card,
@@ -84,7 +82,7 @@ export class CategoriesListComponent {
           size: this.size(),
           q: this.searchQuery(),
           orderBy: this.orderBy(),
-          sortBy: this.sortBy() === 1 ? 'asc' : 'desc',
+          orderDir: this.sortBy() === 1 ? 'asc' : 'desc',
         })
       ),
     initialPageParam: { page: 1, pageSize: 10 },
@@ -96,7 +94,7 @@ export class CategoriesListComponent {
     this.size.set(event.rows!);
   }
 
-  openCreateCategroyModal() {
+  openCreateCategoryModal() {
     this.dialogRef
       .open(
         CreateUpdateCategoryComponent,

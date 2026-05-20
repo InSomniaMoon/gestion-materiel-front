@@ -16,7 +16,7 @@ import { PaginatorComponent } from '@app/components/ui/paginator/paginator.compo
 import { AuthService } from '@app/core/services/auth.service';
 import { CategoriesService } from '@app/core/services/categories.service';
 import { TableLayoutService } from '@app/core/services/table-layout.service';
-import { SortBy } from '@app/core/types/pagination-request.type';
+import { OrderDir } from '@app/core/types/pagination-request.type';
 import { ItemDetailsComponent } from '@app/pages/items/item-details/item-details.component';
 import { AppTable } from '@components/ui/table/table.component';
 import { Item } from '@core/types/item.type';
@@ -235,7 +235,7 @@ import { ItemsReloaderService } from './items-reloader.service';
       <app-paginator
         [(page)]="page"
         [(size)]="size"
-        [totalRecords]="items.value()?.total ?? 0"
+        [totalRecords]="items.value()?.totalCount ?? 0"
         [options]="options" />
     </matos-table>
   `,
@@ -260,7 +260,7 @@ export class ItemsListComponent implements OnInit {
       .getCategories({
         size: 50,
         orderBy: 'name',
-        sortBy: 'asc',
+        orderDir: 'asc',
         page: 1,
         q: '',
       })
@@ -305,6 +305,7 @@ export class ItemsListComponent implements OnInit {
     });
   }
   options = [
+    { label: '20', value: 20 },
     { label: '100', value: 100 },
     { label: '200', value: 200 },
     { label: '250', value: 250 },
@@ -325,7 +326,7 @@ export class ItemsListComponent implements OnInit {
         this.itemService.getItems({
           page: params.page + 1,
           orderBy: params.orderBy,
-          sortBy: params.sortBy as SortBy,
+          orderDir: params.sortBy as OrderDir,
           size: params.size,
           q: params.q,
           categoryId: params.categoryId,

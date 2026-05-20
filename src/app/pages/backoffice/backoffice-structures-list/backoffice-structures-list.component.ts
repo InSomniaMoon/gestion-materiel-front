@@ -140,7 +140,7 @@ import { CreateUpdateStructureComponent } from './backoffice-create-update-struc
       <app-paginator
         [(page)]="page"
         [(size)]="size"
-        [totalRecords]="structuresQuery.data()?.total ?? 0" />
+        [totalRecords]="structuresQuery.data()?.totalCount ?? 0" />
     </matos-table>
   `,
 

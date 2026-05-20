@@ -90,7 +90,7 @@ export class ItemsService {
 
   getCategories(search?: string) {
     const url = `${this.api_url}/items/categories`;
-    return this.http.get<PaginatedData<ItemCategory>>(url, {
+    return this.http.get<Array<ItemCategory>>(url, {
       params: queryParams({ q: search }),
     });
   }

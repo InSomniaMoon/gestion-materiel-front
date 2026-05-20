@@ -118,6 +118,6 @@
   <app-paginator
     [(page)]="page"
     [(size)]="size"
-    [totalRecords]="usersResource.value()?.total ?? 0"
+    [totalRecords]="usersResource.value()?.totalCount ?? 0"
     [options]="pageSizeOptions" />
 </matos-table>

@@ -15,7 +15,6 @@ import {
 } from '@app/components/simple-modal/simple-modal.component';
 import { UploadFileComponent } from '@app/components/upload-file/upload-file.component';
 import { AuthService } from '@app/core/services/auth.service';
-import { EMPTY_PAGINATED_DATA } from '@app/core/types/paginatedData.type';
 import { buildDialogOptions } from '@app/core/utils/constants';
 import { debounceTimeSignal } from '@app/core/utils/signals.utils';
 import { Item } from '@core/types/item.type';
@@ -55,12 +54,12 @@ import { ItemsReloaderService } from '../items-reloader.service';
           <p-select
             id="category"
             placeholder="Catégorie"
-            [options]="categories.value().data"
+            [options]="categories.value()"
             optionLabel="name"
             optionValue="id"
             filterBy="name"
             scrollHeight="200px"
-            formControlName="category_id"
+            formControlName="categoryId"
             [loading]="categories.isLoading()"
             [filter]="true"
             (onFilter)="categoryQuery.set($event.filter)" />
@@ -68,8 +67,8 @@ import { ItemsReloaderService } from '../items-reloader.service';
         </p-float-label>
         @if (selectedCategory()?.identified) {
           <p-float-label variant="on">
-            <p-date-picker id="date_of_buy" formControlName="date_of_buy" />
-            <label for="date_of_buy">Date d'achat (optionnel)</label>
+            <p-date-picker id="dateOfBuy" formControlName="dateOfBuy" />
+            <label for="dateOfBuy">Date d'achat (optionnel)</label>
           </p-float-label>
         } @else {
           <p-float-label variant="on">
@@ -153,7 +152,7 @@ export class CreateUpdateItemComponent implements OnInit {
     params: () => ({
       q: this.debouncedCategoryQuery(),
     }),
-    defaultValue: EMPTY_PAGINATED_DATA,
+    defaultValue: [],
   });
 
   fb = inject(FormBuilder);
@@ -183,7 +182,7 @@ export class CreateUpdateItemComponent implements OnInit {
     initialValue: this.form.value.categoryId,
   });
   selectedCategory = computed(() =>
-    this.categories.value()?.data.find(cat => cat.id === this.categoryIdValue())
+    this.categories.value()?.find(cat => cat.id === this.categoryIdValue())
   );
 
   ngOnInit(): void {
@@ -191,7 +190,7 @@ export class CreateUpdateItemComponent implements OnInit {
       return;
     }
     this.form.patchValue({
-      categoryId: this.categories.value()?.data[0]?.id,
+      categoryId: this.categories.value()?.[0]?.id,
     });
 
     this.form.patchValue({

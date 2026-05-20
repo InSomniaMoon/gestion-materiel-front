@@ -2,8 +2,8 @@ export interface PaginationRequest {
   page: number;
   size: number;
   orderBy: string;
-  sortBy: SortBy;
+  orderDir: OrderDir;
   q: string;
 }
 
-export type SortBy = 'asc' | 'desc';
+export type OrderDir = 'asc' | 'desc';

@@ -11,7 +11,7 @@ import { RouterLink } from '@angular/router';
 import { AuthService } from '@app/core/services/auth.service';
 import { ItemIssuesService } from '@app/core/services/item-issues.service';
 import { AdminDashboardItemIssue } from '@app/core/types/itemIssue.type';
-import { SortBy } from '@app/core/types/pagination-request.type';
+import { OrderDir } from '@app/core/types/pagination-request.type';
 import { environment } from '@env/environment';
 import { ButtonDirective } from 'primeng/button';
 import { Card } from 'primeng/card';
@@ -60,7 +60,7 @@ export class AdminDashboardComponent {
             page: params.page,
             q: params.q,
             size: params.size,
-            sortBy: params.sortBy as SortBy,
+            orderDir: params.sortBy as OrderDir,
           })
           .pipe()
       ),

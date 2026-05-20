@@ -36,7 +36,7 @@ export type ImportCategoryResolution =
     }
   | {
       action: 'existing';
-      category_id: number | null;
+      categoryId: number | null;
     };
 
 export type BulkImportResult = {

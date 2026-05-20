@@ -98,7 +98,7 @@ import { AppAdminUserEditStructuresComponent } from './backoffice-user-edit-stru
       <app-paginator
         [(page)]="page"
         [(size)]="size"
-        [totalRecords]="usersQuery.data()?.total ?? 0" />
+        [totalRecords]="usersQuery.data()?.totalCount ?? 0" />
     </matos-table>
   `,
   styleUrl: './backoffice-users-list.component.scss',

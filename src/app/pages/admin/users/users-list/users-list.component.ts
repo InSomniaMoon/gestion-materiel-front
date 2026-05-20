@@ -13,7 +13,7 @@ import { PaginatorComponent } from '@app/components/ui/paginator/paginator.compo
 import { AppTable } from '@app/components/ui/table/table.component';
 import { AuthService } from '@app/core/services/auth.service';
 import { TableLayoutService } from '@app/core/services/table-layout.service';
-import { SortBy } from '@app/core/types/pagination-request.type';
+import { OrderDir } from '@app/core/types/pagination-request.type';
 import { environment } from '@env/environment';
 import { TippyDirective } from '@ngneat/helipopper';
 import { UsersService } from '@services/users.service';
@@ -97,7 +97,7 @@ export class UsersListComponent {
           size: params.size,
           q: params.q,
           orderBy: params.orderBy,
-          sortBy: params.sortBy as SortBy,
+          orderDir: params.sortBy as OrderDir,
           page: params.page + 1,
         })
       ),

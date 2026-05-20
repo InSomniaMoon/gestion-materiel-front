@@ -336,7 +336,7 @@ export class ImportItemsComponent {
     }
 
     return !this.preview()!.existing_categories.find(
-      existingCategory => existingCategory.id === resolution.category_id
+      existingCategory => existingCategory.id === resolution.categoryId
     )?.identified;
   }
 
@@ -377,8 +377,8 @@ export class ImportItemsComponent {
     }
 
     return (
-      resolution.category_id !== null &&
-      resolution.category_id !== undefined &&
+      resolution.categoryId !== null &&
+      resolution.categoryId !== undefined &&
       (!this.resolutionRequiresQuantity(category) ||
         !this.categoryRowsMissingQuantity(category.name))
     );
