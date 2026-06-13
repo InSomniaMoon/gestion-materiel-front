@@ -45,11 +45,11 @@ import { ToggleSwitch } from 'primeng/toggleswitch';
         <p-float-label variant="on">
           <input
             type="number"
-            formControlName="affected_quantity"
-            id="affected_quantity"
+            formControlName="affectedQuantity"
+            id="affectedQuantity"
             max="{{ item().stock }}"
             pInputText />
-          <label for="affected_quantity"
+          <label for="affectedQuantity"
             >Quantité affectée (max. {{ item().stock }})</label
           >
         </p-float-label>
@@ -89,7 +89,7 @@ export class DeclareIssueComponent implements OnInit {
     itemId: this.fb.nonNullable.control<number>(0, {
       validators: [Validators.required],
     }),
-    affected_quantity: this.fb.nonNullable.control<number>(1, {
+    affectedQuantity: this.fb.nonNullable.control<number>(1, {
       validators: [Validators.required, Validators.min(1)],
     }),
   });

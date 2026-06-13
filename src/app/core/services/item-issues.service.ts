@@ -12,7 +12,7 @@ import { CLEAR_CACHE_CONTEXT_OPTIONS } from '../utils/injectionToken';
 })
 export class ItemIssuesService {
   private readonly http = inject(HttpClient);
-  private api_url = environment.api_url;
+  private readonly api_url = environment.api_url;
 
   getItemIssues(itemId: number) {
     const url = `/admin/items/${itemId}/issues`;
@@ -23,8 +23,8 @@ export class ItemIssuesService {
     {
       issue,
       usable,
-      affected_quantity,
-    }: { issue: string; usable: boolean; affected_quantity: number },
+      affectedQuantity,
+    }: { issue: string; usable: boolean; affectedQuantity: number },
     itemId: number
   ) {
     return this.http.post<ItemIssue>(
@@ -32,7 +32,7 @@ export class ItemIssuesService {
       {
         value: issue,
         usable,
-        affected_quantity,
+        affectedQuantity,
       },
       CLEAR_CACHE_CONTEXT_OPTIONS(
         new Set([
