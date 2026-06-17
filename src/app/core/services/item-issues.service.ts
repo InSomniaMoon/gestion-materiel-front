@@ -57,15 +57,15 @@ export class ItemIssuesService {
       .pipe();
   }
 
-  getPaginatedOpenedIssues(
-    opt: Partial<PaginationRequest> = {
+  getPaginatedOpenedIssues(opt: Partial<PaginationRequest> = {}) {
+    const defaultOpt: Partial<PaginationRequest> = {
       page: 1,
       size: 25,
-    }
-  ) {
+    };
+    const finalOpt = { ...defaultOpt, ...opt };
     const url = `${this.api_url}/admin/issues/open`;
     return this.http.get<PaginatedData<AdminDashboardItemIssue>>(url, {
-      params: queryParams(opt),
+      params: queryParams(finalOpt),
     });
   }
 }
