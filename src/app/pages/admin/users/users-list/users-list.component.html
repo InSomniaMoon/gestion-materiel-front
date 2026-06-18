@@ -59,11 +59,11 @@
 
         <ng-template #body let-user>
           <tr>
-            <td>{{ user.lastname }}</td>
-            <td>{{ user.firstname }}</td>
+            <td>{{ user.lastName }}</td>
+            <td>{{ user.firstName }}</td>
             <td>
               <div class="flex">
-                @for (structure of user.user_structures; track $index) {
+                @for (structure of user.structures; track $index) {
                   <div
                     [tp]="structure.name"
                     [style]="
@@ -74,7 +74,7 @@
             </td>
             <td>{{ user.email }}</td>
             <td>
-              {{ user.user_structures[0]?.pivot.role | userRole }}
+              {{ user.structures[0]?.role | userRole }}
             </td>
             <td>
               <!-- Actions can be added here -->
@@ -99,9 +99,9 @@
             <ng-template #header> </ng-template>
             <h3>{{ user.lastname }} {{ user.firstname }}</h3>
             <p>{{ user.email }}</p>
-            <p>{{ user.user_structures[0]?.pivot.role | userRole }}</p>
+            <p>{{ user.structures[0]?.role | userRole }}</p>
             <div class="flex">
-              @for (structure of user.user_structures; track $index) {
+              @for (structure of user.structures; track $index) {
                 <div
                   [tp]="structure.name"
                   [style]="

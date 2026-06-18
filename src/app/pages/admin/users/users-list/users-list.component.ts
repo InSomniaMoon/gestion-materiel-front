@@ -93,13 +93,16 @@ export class UsersListComponent {
   usersResource = resource({
     loader: ({ params }) =>
       lastValueFrom(
-        this.usersService.getPaginatedUsers({
-          size: params.size,
-          q: params.q,
-          orderBy: params.orderBy,
-          orderDir: params.sortBy as OrderDir,
-          page: params.page + 1,
-        })
+        this.usersService.getPaginatedUsersFromStructure(
+          params.selectedStructure!.id,
+          {
+            size: params.size,
+            q: params.q,
+            orderBy: params.orderBy,
+            orderDir: params.sortBy as OrderDir,
+            page: params.page + 1,
+          }
+        )
       ),
     params: () => ({
       page: this.page(),
@@ -107,7 +110,7 @@ export class UsersListComponent {
       q: this.searchQuery(),
       orderBy: this.orderBy(),
       sortBy: this.sortBy() === 1 ? 'asc' : 'desc',
-      selected_structure: this.selectedStructure(),
+      selectedStructure: this.selectedStructure(),
     }),
   });
 

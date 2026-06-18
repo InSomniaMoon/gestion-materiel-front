@@ -13,18 +13,19 @@
   <p-table [value]="structures()" stripedRows>
     <ng-template #header>
       <tr>
-        <th>Nom</th>
-        <th>Couleur</th>
-        <th>
+        <th scope="col">Nom</th>
+        <th scope="col">Couleur</th>
+        <th scope="col">
           <div class="chiefs-th">
             Chefs
             <p-button
               (click)="toggleShowChiefsList()"
+              (keydown.enter)="toggleShowChiefsList()"
               [icon]="`pi ${showChiefsList() ? 'pi-eye-slash' : 'pi-eye'}`"
               [tp]="`${showChiefsList() ? 'Masquer' : 'Afficher'} les chefs`" />
           </div>
         </th>
-        <th></th>
+        <th scope="col"></th>
       </tr>
     </ng-template>
     <ng-template #body let-structure>
@@ -52,7 +53,6 @@
             icon="pi pi-pencil"
             (onClick)="openUpdateUnitDialog(structure)"
             size="small" />
-          <!-- <p-button size="small" icon="pi pi-trash" severity="danger" /> -->
         </td>
       </tr>
     </ng-template>

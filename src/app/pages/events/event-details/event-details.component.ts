@@ -37,8 +37,8 @@ export class EventDetailsComponent {
   readonly canUpdate = computed(
     () =>
       this.authService.isAdmin() ||
-      this.event().structure.code_structure ===
-        this.authService.selectedStructure()?.code_structure
+      this.event().structure.codeStructure ===
+        this.authService.selectedStructure()?.codeStructure
   );
 
   deleteEvent() {

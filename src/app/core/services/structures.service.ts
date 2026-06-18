@@ -17,10 +17,6 @@ export class StructuresService {
     );
   }
 
-  getStructures() {
-    return this.http.get<StructureWithChildren>(`${this.baseUrl}/structures`);
-  }
-
   updateStructure(id: number, data: Partial<Structure>) {
     return this.http.patch<{ message: string; structure: Structure }>(
       `${this.baseUrl}/admin/structures/${id}`,

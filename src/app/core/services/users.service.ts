@@ -3,7 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { environment } from '@env/environment';
 import { PaginatedData } from '../types/paginatedData.type';
 import { PaginationRequest } from '../types/pagination-request.type';
-import { User } from '../types/user.type';
+import { User, UserWithStructures } from '../types/user.type';
 import { queryParams } from '../utils/http.utils';
 import {
   CLEAR_CACHE_CONTEXT_OPTIONS,
@@ -17,15 +17,14 @@ export class UsersService {
   private readonly http = inject(HttpClient);
   private readonly api_url = environment.api_url;
 
-  getPaginatedUsers(
-    opt: Partial<PaginationRequest> = {
-      page: 1,
-      size: 25,
-    }
+  getPaginatedUsersFromStructure(
+    structureId: number,
+    opt: Partial<PaginationRequest>
   ) {
-    return this.http.get<PaginatedData<User>>(`${this.api_url}/admin/users`, {
-      params: queryParams(opt),
-    });
+    return this.http.get<PaginatedData<UserWithStructures>>(
+      `${this.api_url}/admin/structures/${structureId}/users`,
+      { params: queryParams(opt) }
+    );
   }
 
   checkUser(email: string) {

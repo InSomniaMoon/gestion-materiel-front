@@ -13,8 +13,8 @@ import { StructureDetailsComponent } from './structure-details/structure-details
 @Component({
   selector: 'app-my-structure',
   imports: [ChildrenStructuresListComponent, StructureDetailsComponent],
-  template: `<h1>{{ structure()?.nom_structure }}</h1>
-    <h2>{{ structure()?.nom_structure }}</h2>
+  template: `<h1>{{ structure()?.nomStructure }}</h1>
+    <h2>{{ structure()?.nomStructure }}</h2>
     @if (structure()) {
       <app-structure-details [structure]="structure()!" />
     }

@@ -111,7 +111,11 @@ export class CreateUnitComponent implements OnInit {
     loader: ({ params }) =>
       lastValueFrom(
         this.usersService
-          .getPaginatedUsers({ ...params, page: 1, size: 100 })
+          .getPaginatedUsersFromStructure(this.structure()!.id, {
+            ...params,
+            page: 1,
+            size: 100,
+          })
           .pipe(
             map(data =>
               data.data.map(user => ({
