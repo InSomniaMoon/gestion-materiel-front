@@ -92,7 +92,7 @@ export class AuthService {
   private readonly router = inject(Router);
   setSelectStructureById(id: number) {
     this.http
-      .post<LoginDTO>(`${this.api_url}/auth/${id}/select-structure`, {
+      .post<LoginDTO>(`${this.api_url}/auth/select-structure/${id}`, {
         refreshToken: this.getCookie(REFRESH_TOKEN_KEY),
       })
       .subscribe({
