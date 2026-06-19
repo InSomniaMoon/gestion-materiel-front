@@ -79,8 +79,8 @@ import { AppAdminUserEditStructuresComponent } from './backoffice-user-edit-stru
         </ng-template>
         <ng-template #body let-user>
           <tr>
-            <td>{{ user.lastname }}</td>
-            <td>{{ user.firstname }}</td>
+            <td>{{ user.lastName }}</td>
+            <td>{{ user.firstName }}</td>
             <td>{{ user.email }}</td>
             <td>{{ user.role }}</td>
             <td class="actions">

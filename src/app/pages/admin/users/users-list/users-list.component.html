@@ -44,11 +44,11 @@
         (onSort)="orderBy.set($event.field); sortBy.set($event.order)">
         <ng-template #header>
           <tr>
-            <th pSortableColumn="lastname">
-              Nom <p-sortIcon field="lastname" />
+            <th pSortableColumn="lastName">
+              Nom <p-sortIcon field="lastName" />
             </th>
-            <th pSortableColumn="firstname">
-              Prénom <p-sortIcon field="firstname" />
+            <th pSortableColumn="firstName">
+              Prénom <p-sortIcon field="firstName" />
             </th>
             <th>Structures</th>
             <th pSortableColumn="email">Email <p-sortIcon field="email" /></th>
@@ -97,7 +97,7 @@
         @for (user of users; track $index) {
           <p-card>
             <ng-template #header> </ng-template>
-            <h3>{{ user.lastname }} {{ user.firstname }}</h3>
+            <h3>{{ user.lastName }} {{ user.firstName }}</h3>
             <p>{{ user.email }}</p>
             <p>{{ user.structures[0]?.role | userRole }}</p>
             <div class="flex">

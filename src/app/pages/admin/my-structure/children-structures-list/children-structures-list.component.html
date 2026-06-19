@@ -41,7 +41,7 @@
           @if (showChiefsList()) {
             <ul>
               @for (chef of structure.members; track $index) {
-                <li>{{ chef.firstname }} {{ chef.lastname }}</li>
+                <li>{{ chef.firstName }} {{ chef.lastName }}</li>
               }
             </ul>
           } @else {

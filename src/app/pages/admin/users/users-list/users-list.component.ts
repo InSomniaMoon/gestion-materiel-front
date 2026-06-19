@@ -71,7 +71,7 @@ export class UsersListComponent {
   page = signal(0);
   size = signal(100);
   searchQuery = signal('');
-  orderBy = signal<'lastname' | 'firstname' | 'email' | 'role'>('lastname');
+  orderBy = signal<'lastName' | 'firstName' | 'email' | 'role'>('lastName');
   sortBy = signal<1 | -1>(1);
   first = computed(() => this.page() * this.size());
 
@@ -84,8 +84,8 @@ export class UsersListComponent {
     this.tableLayoutService.setLayout(layout);
   }
   sortOptions = [
-    { label: 'Nom', value: 'lastname' },
-    { label: 'Prénom', value: 'firstname' },
+    { label: 'Nom', value: 'lastName' },
+    { label: 'Prénom', value: 'firstName' },
     { label: 'Email', value: 'email' },
     { label: 'Rôle', value: 'role' },
   ];
