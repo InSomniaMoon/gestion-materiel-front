@@ -8,6 +8,7 @@ import {
   signal,
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AuthService } from '@app/core/services/auth.service';
 import { StructureWithRole } from '@app/core/types/structure.type';
 import { User } from '@core/types/user.type';
 import { UsersService } from '@services/users.service';
@@ -39,6 +40,9 @@ export class CreateUnitComponent implements OnInit {
   private readonly ref = inject(DynamicDialogRef);
   private readonly usersService = inject(UsersService);
   private readonly fb = inject(FormBuilder);
+
+  private readonly selectedStructureId =
+    inject(AuthService).selectedStructure()?.id;
 
   validateLabel = signal('Créer');
 
@@ -111,7 +115,7 @@ export class CreateUnitComponent implements OnInit {
     loader: ({ params }) =>
       lastValueFrom(
         this.usersService
-          .getPaginatedUsersFromStructure(this.structure()!.id, {
+          .getPaginatedUsersFromStructure(this.selectedStructureId!, {
             ...params,
             page: 1,
             size: 100,

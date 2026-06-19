@@ -4,20 +4,18 @@ import {
   computed,
   inject,
   linkedSignal,
+  resource,
 } from '@angular/core';
-import { rxResource } from '@angular/core/rxjs-interop';
 import { StructuresService } from '@app/core/services/structures.service';
 import { ChildrenStructuresListComponent } from './children-structures-list/children-structures-list.component';
-import { StructureDetailsComponent } from './structure-details/structure-details.component';
 
+import { lastValueFrom } from 'rxjs/internal/lastValueFrom';
 @Component({
   selector: 'app-my-structure',
-  imports: [ChildrenStructuresListComponent, StructureDetailsComponent],
+  imports: [ChildrenStructuresListComponent],
   template: `<h1>{{ structure()?.nomStructure }}</h1>
-    <h2>{{ structure()?.nomStructure }}</h2>
-    @if (structure()) {
-      <app-structure-details [structure]="structure()!" />
-    }
+    <h2>{{ structure()?.name }}</h2>
+
     <app-children-structures-list
       [structures]="children()"
       (structuresChanged)="structureResource.reload()" /> `,
@@ -27,8 +25,8 @@ import { StructureDetailsComponent } from './structure-details/structure-details
 export class MyStructureComponent {
   private readonly structuresService = inject(StructuresService);
 
-  structureResource = rxResource({
-    stream: () => this.structuresService.getAdminStructures(),
+  structureResource = resource({
+    loader: () => lastValueFrom(this.structuresService.getAdminStructures()),
   });
 
   structure = linkedSignal(() => this.structureResource.value()?.structure);
