@@ -84,12 +84,7 @@ export class CreateUpdateCategoryComponent implements OnInit {
           },
           error: error => {
             console.error('Error updating category:', error);
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Erreur',
-              detail:
-                'Une erreur est survenue lors de la mise à jour de la catégorie.',
-            });
+            this.loading.set(false);
           },
           complete: () => this.loading.set(false),
         });
@@ -106,12 +101,6 @@ export class CreateUpdateCategoryComponent implements OnInit {
       },
       error: error => {
         console.error('Error creating category:', error);
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Erreur',
-          detail:
-            'Une erreur est survenue lors de la création de la catégorie.',
-        });
       },
       complete: () => this.loading.set(false),
     });
@@ -147,13 +136,6 @@ export class CreateUpdateCategoryComponent implements OnInit {
             this.ref.close(true);
           },
           error: error => {
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Erreur',
-              detail:
-                error?.error?.message ||
-                'Une erreur est survenue lors de la suppression de la catégorie.',
-            });
             console.error('Error deleting category:', error);
           },
         });
