@@ -3,6 +3,7 @@ import {
   Component,
   computed,
   inject,
+  input,
   OnInit,
   resource,
   signal,
@@ -94,7 +95,12 @@ import { ItemsReloaderService } from '../items-reloader.service';
         </p-float-label>
         <app-upload-file
           [handler]="fileUploadHandler"
-          (fileUploaded)="setImagePath($event)" />
+          (fileUploaded)="setImagePath($event)"
+          [fileUrl]="
+            form.get('image')?.value
+              ? imageBaseUrl() + form.get('image')?.value!
+              : ''
+          " />
       </div>
     </form>
     <p-footer>
@@ -126,6 +132,8 @@ export class CreateUpdateItemComponent implements OnInit {
   private readonly authService = inject(AuthService);
   private readonly reloadItemService = inject(ItemsReloaderService);
   private readonly messageService = inject(MessageService);
+
+  readonly imageBaseUrl = input.required<string>();
 
   protected data: Item | undefined = this.dialogService.getInstance(
     this.dialogRef
@@ -201,6 +209,7 @@ export class CreateUpdateItemComponent implements OnInit {
         ? new Date(this.data.dateOfBuy)
         : undefined,
       stock: this.data.stock ?? 1,
+      image: this.data.image,
     });
   }
 

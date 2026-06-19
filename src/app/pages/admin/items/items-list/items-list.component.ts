@@ -248,7 +248,7 @@ export class ItemsListComponent implements OnInit {
   private readonly categoriesService = inject(CategoriesService);
   private readonly authService = inject(AuthService);
   private readonly tableLayoutService = inject(TableLayoutService);
-  readonly imageBaseUrl = `${environment.api_url}/storage/`;
+  readonly imageBaseUrl = `${environment.api_url}`;
 
   readonly sortOptions = [{ label: 'Catégorie', value: 'categoryId' }];
 
@@ -360,6 +360,9 @@ export class ItemsListComponent implements OnInit {
           header: 'Créer un objet',
           width: '70%',
           height: '80%',
+          inputValues: {
+            imageBaseUrl: this.imageBaseUrl,
+          },
         })
       )!
       .onClose.subscribe(created => {
@@ -395,6 +398,9 @@ export class ItemsListComponent implements OnInit {
           header: 'Modifier un objet',
           width: '70%',
           height: '80%',
+          inputValues: {
+            imageBaseUrl: this.imageBaseUrl,
+          },
         })
       )!
       .onClose.subscribe(updated => {
@@ -414,6 +420,7 @@ export class ItemsListComponent implements OnInit {
       buildDialogOptions({
         inputValues: {
           itemId: item.id,
+          imageBaseUrl: this.imageBaseUrl,
         },
       })
     );
