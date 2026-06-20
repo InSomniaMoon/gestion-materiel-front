@@ -420,7 +420,6 @@ export class ItemsListComponent implements OnInit {
       buildDialogOptions({
         inputValues: {
           itemId: item.id,
-          imageBaseUrl: this.imageBaseUrl,
         },
       })
     );

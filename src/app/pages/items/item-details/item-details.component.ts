@@ -9,7 +9,6 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { Title } from '@angular/platform-browser';
 import { ItemIssuesService } from '@app/core/services/item-issues.service';
 import { Item } from '@core/types/item.type';
 import { AuthService } from '@services/auth.service';
@@ -43,7 +42,6 @@ export class ItemDetailsComponent implements OnInit {
   private readonly itemService = inject(ItemsService);
   private readonly destroyRef = inject(DestroyRef);
 
-  private readonly titleService = inject(Title);
   private readonly auth$ = inject(AuthService);
   private readonly itemIssuesService = inject(ItemIssuesService);
   private readonly message = inject(MessageService);
@@ -56,7 +54,7 @@ export class ItemDetailsComponent implements OnInit {
   ngOnInit(): void {
     // get itemid from route
     this.itemService
-      .getItem(this.itemId()!)
+      .getItem(this.itemId())
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: item => {
@@ -78,6 +76,6 @@ export class ItemDetailsComponent implements OnInit {
     queryKey: ['issues', this.itemId()],
     enabled: this.itemId() !== undefined && this.userAdmin(),
     queryFn: () =>
-      lastValueFrom(this.itemIssuesService.getItemIssues(this.itemId()!)),
+      lastValueFrom(this.itemIssuesService.getItemIssues(this.itemId())),
   }));
 }
