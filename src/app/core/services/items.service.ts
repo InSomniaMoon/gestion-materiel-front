@@ -54,7 +54,7 @@ export class ItemsService {
         ...options,
         startDate: options.startDate.toISOString(),
         endDate: options.endDate.toISOString(),
-        forEvent: forEvent,
+        forEventId: forEvent,
       }),
     });
   }

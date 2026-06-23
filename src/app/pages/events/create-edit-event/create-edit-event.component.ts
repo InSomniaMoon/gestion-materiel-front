@@ -101,7 +101,7 @@ export class CreateEditEventComponent implements OnInit {
     this.form.setValue({
       informations: {
         name: this.event()!.name,
-        structure: this.event()!.structure.id,
+        structure: this.event()!.structureId,
         startDate: new Date(this.event()!.startDate),
         endDate: new Date(this.event()!.endDate),
       },
