@@ -6,4 +6,4 @@ export interface PaginationRequest {
   q: string;
 }
 
-export type OrderDir = 'asc' | 'desc';
+export type OrderDir = 'asc' | 'desc' | string;

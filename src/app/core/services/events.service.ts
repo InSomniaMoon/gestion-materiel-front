@@ -22,8 +22,8 @@ export class EventsService {
   createEvent(data: {
     name: string;
     structureId: number;
-    start_date: Date | null;
-    end_date: Date | null;
+    startDate: Date | null;
+    endDate: Date | null;
     items: { id: number; quantity: number }[];
     comment: string;
   }) {
@@ -43,8 +43,8 @@ export class EventsService {
     return this.http.get<Event[]>(url, {
       params: queryParams({
         structureId: structureId,
-        start_date: startDate?.toISOString(),
-        end_date: endDate?.toISOString(),
+        startDate: startDate?.toISOString(),
+        endDate: endDate?.toISOString(),
       }),
       ...NO_CACHE_CONTEXT_OPTIONS,
     });

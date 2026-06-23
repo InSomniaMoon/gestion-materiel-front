@@ -37,24 +37,24 @@ export class ItemsService {
   }
 
   getAvailableItems(
-    opt?: Partial<PaginationRequest> & { start_date?: Date; end_date?: Date },
+    opt?: Partial<PaginationRequest> & { startDate?: Date; endDate?: Date },
     forEvent?: number
   ) {
     let url = `${this.api_url}/items/available`;
     const options = {
       page: 1,
       size: 25,
-      start_date: new Date(),
-      end_date: new Date(),
+      startDate: new Date(),
+      endDate: new Date(),
       ...opt,
     };
 
     return this.http.get<PaginatedData<ItemWithQuantity>>(url, {
       params: queryParams({
         ...options,
-        start_date: options.start_date.toISOString(),
-        end_date: options.end_date.toISOString(),
-        for_event: forEvent,
+        startDate: options.startDate.toISOString(),
+        endDate: options.endDate.toISOString(),
+        forEvent: forEvent,
       }),
     });
   }

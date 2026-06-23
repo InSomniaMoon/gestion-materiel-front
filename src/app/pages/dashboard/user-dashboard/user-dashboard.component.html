@@ -8,7 +8,7 @@
     </div>
     <h4>Objets</h4>
     <div class="objets">
-      @for (material of event.event_subscriptions; track material.id) {
+      @for (material of event.items; track material.id) {
         <p-card [header]="material.name">
           <ng-template #footer>
             <div class="flex gap-4 mt-1">
@@ -29,6 +29,7 @@
 <div class="header">
   <h1>Mes prochains événements</h1>
   <a
+    aria-label="Créer un événement"
     pButton
     [routerLink]="['/events/create']"
     icon="pi pi-plus"

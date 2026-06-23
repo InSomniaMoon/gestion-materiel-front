@@ -15,5 +15,5 @@ export type Event = {
 };
 
 export type ActualEvent = Event & {
-  event_subscriptions: ItemWithQuantity[];
+  items: ItemWithQuantity[];
 };

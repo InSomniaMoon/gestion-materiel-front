@@ -31,8 +31,8 @@
     [value]="items()"
     stripedRows
     [sortField]="orderBy()"
-    [sortOrder]="sortBy()"
-    (onSort)="orderBy.set($event.field); sortBy.set($event.order)">
+    [sortOrder]="orderDir()"
+    (onSort)="orderBy.set($event.field); orderDir.set($event.order)">
     <ng-template #header>
       <tr>
         <th scope="col"></th>
