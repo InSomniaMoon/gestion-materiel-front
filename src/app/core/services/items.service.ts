@@ -121,9 +121,15 @@ export class ItemsService {
     file: File,
     resolutions: Record<string, ImportCategoryResolution>
   ) {
+    const resolutionsArray = Object.entries(resolutions).map(
+      ([categoryName, resolution]) => ({
+        ...resolution,
+        name: categoryName,
+      })
+    );
     const formData = new FormData();
     formData.append('file', file);
-    formData.append('resolutions', JSON.stringify(resolutions));
+    formData.append('resolutions', JSON.stringify(resolutionsArray));
 
     return this.http.post<BulkImportResult>(
       `${this.api_url}/admin/items/import`,

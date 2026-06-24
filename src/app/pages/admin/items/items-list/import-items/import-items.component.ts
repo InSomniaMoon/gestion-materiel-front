@@ -251,13 +251,12 @@ export class ImportItemsComponent {
   }
 
   previewFile() {
-    const file = this.selectedFile();
-    if (!file) {
+    if (!this.selectedFile()) {
       return;
     }
 
     this.previewLoading.set(true);
-    this.itemsService.previewImport(file).subscribe({
+    this.itemsService.previewImport(this.selectedFile()!).subscribe({
       next: preview => {
         this.preview.set(preview);
         this.resolutions.set(
@@ -302,26 +301,27 @@ export class ImportItemsComponent {
   }
 
   importFile() {
-    const file = this.selectedFile();
-    if (!file) {
+    if (!this.selectedFile()) {
       return;
     }
 
     this.importLoading.set(true);
-    this.itemsService.importItems(file, this.resolutions()).subscribe({
-      next: result => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Import terminé',
-          detail: `${result.importedCount} objet(s) importé(s).`,
-        });
-        this.ref.close(true);
-      },
-      error: () => {
-        this.importLoading.set(false);
-      },
-      complete: () => this.importLoading.set(false),
-    });
+    this.itemsService
+      .importItems(this.selectedFile()!, this.resolutions())
+      .subscribe({
+        next: result => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Import terminé',
+            detail: `${result.importedCount} objet(s) importé(s).`,
+          });
+          this.ref.close(true);
+        },
+        error: () => {
+          this.importLoading.set(false);
+        },
+        complete: () => this.importLoading.set(false),
+      });
   }
 
   resolutionRequiresQuantity(category: UnknownImportCategory) {
