@@ -6,9 +6,9 @@ export type ImportPreviewRowError = 'quantity_required';
 
 export type ImportPreviewRow = {
   row: number;
-  item_name: string;
+  itemName: string;
   description: string;
-  category_name: string;
+  categoryName: string;
   quantity: number | null;
   status: ImportPreviewRowStatus;
   errors: ImportPreviewRowError[];
@@ -22,10 +22,10 @@ export type UnknownImportCategory = {
 
 export type BulkImportPreview = {
   structureId: number;
-  items_count: number;
+  itemsCount: number;
   rows: ImportPreviewRow[];
-  unknown_categories: UnknownImportCategory[];
-  existing_categories: Pick<ItemCategory, 'id' | 'name' | 'identified'>[];
+  unknownCategories: UnknownImportCategory[];
+  existingCategories: Pick<ItemCategory, 'id' | 'name' | 'identified'>[];
 };
 
 export type ImportCategoryResolution =
@@ -40,6 +40,6 @@ export type ImportCategoryResolution =
     };
 
 export type BulkImportResult = {
-  imported_count: number;
-  created_categories: Pick<ItemCategory, 'id' | 'name' | 'identified'>[];
+  importedCount: number;
+  createdCategories: Pick<ItemCategory, 'id' | 'name' | 'identified'>[];
 };

@@ -273,7 +273,7 @@ export class ImportCategoriesResolutionComponent {
   categoryRowsMissingQuantity(categoryName: string) {
     return this.rows().some(
       row =>
-        row.category_name === categoryName &&
+        row.categoryName === categoryName &&
         (row.quantity === null || row.quantity < 1)
     );
   }

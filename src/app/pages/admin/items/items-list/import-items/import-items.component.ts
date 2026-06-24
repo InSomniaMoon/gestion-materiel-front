@@ -80,11 +80,11 @@ import { ImportPreviewTableComponent } from './import-preview-table.component';
         <section class="summary-grid">
           <p-card>
             <span class="summary-label">Lignes analysées </span>
-            <strong>{{ preview()!.items_count }}</strong>
+            <strong>{{ preview()!.itemsCount }}</strong>
           </p-card>
           <p-card>
             <span class="summary-label">Catégories inconnues </span>
-            <strong>{{ preview()!.unknown_categories.length }}</strong>
+            <strong>{{ preview()!.unknownCategories.length }}</strong>
           </p-card>
           <p-card>
             <span class="summary-label">Lignes bloquantes </span>
@@ -102,10 +102,10 @@ import { ImportPreviewTableComponent } from './import-preview-table.component';
           </p>
         }
 
-        @if (preview()!.unknown_categories.length > 0) {
+        @if (preview()!.unknownCategories.length > 0) {
           <app-import-categories-resolution
-            [unknownCategories]="preview()!.unknown_categories"
-            [existingCategories]="preview()!.existing_categories"
+            [unknownCategories]="preview()!.unknownCategories"
+            [existingCategories]="preview()!.existingCategories"
             [rows]="preview()!.rows"
             [resolutions]="resolutions()"
             (resolutionsChange)="resolutions.set($event)" />
@@ -231,7 +231,7 @@ export class ImportItemsComponent {
       return false;
     }
 
-    return currentPreview.unknown_categories.every(category =>
+    return currentPreview.unknownCategories.every(category =>
       this.isResolutionComplete(category)
     );
   });
@@ -261,7 +261,7 @@ export class ImportItemsComponent {
       next: preview => {
         this.preview.set(preview);
         this.resolutions.set(
-          this.buildDefaultResolutions(preview.unknown_categories)
+          this.buildDefaultResolutions(preview.unknownCategories)
         );
       },
       error: () => {
@@ -313,7 +313,7 @@ export class ImportItemsComponent {
         this.messageService.add({
           severity: 'success',
           summary: 'Import terminé',
-          detail: `${result.imported_count} objet(s) importé(s).`,
+          detail: `${result.importedCount} objet(s) importé(s).`,
         });
         this.ref.close(true);
       },
@@ -335,7 +335,7 @@ export class ImportItemsComponent {
       return !resolution.identified;
     }
 
-    return !this.preview()!.existing_categories.find(
+    return !this.preview()!.existingCategories.find(
       existingCategory => existingCategory.id === resolution.categoryId
     )?.identified;
   }
@@ -343,7 +343,7 @@ export class ImportItemsComponent {
   categoryRowsMissingQuantity(categoryName: string) {
     return this.preview()!.rows.some(
       row =>
-        row.category_name === categoryName &&
+        row.categoryName === categoryName &&
         (row.quantity === null || row.quantity < 1)
     );
   }

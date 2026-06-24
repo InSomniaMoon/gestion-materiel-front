@@ -12,8 +12,13 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   if (isPlatformBrowser(platform)) {
     const token = authService.jwt();
+    const isAuthEndpoint = /\/api\/auth\/(login|refresh|register)(\/|$)/.test(
+      req.url
+    );
+    const looksLikeJwt =
+      typeof token === 'string' && token.split('.').length === 3;
 
-    if (token || !req.withCredentials) {
+    if (!isAuthEndpoint && looksLikeJwt) {
       req = req.clone({
         setHeaders: {
           Authorization: `Bearer ${token}`,
