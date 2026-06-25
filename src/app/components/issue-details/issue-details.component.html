@@ -1,8 +1,8 @@
 <div class="modal-content">
   @for (com of comments(); track $index) {
     <span class="small">
-      {{ com.author.firstname }} {{ com.author.lastname }} | le
-      {{ com.created_at | date }}
+      {{ com.author.firstName }} {{ com.author.lastName }} | le
+      {{ com.createdAt | date }}
     </span>
     <p>{{ com.comment }}</p>
     @if (!$last) {

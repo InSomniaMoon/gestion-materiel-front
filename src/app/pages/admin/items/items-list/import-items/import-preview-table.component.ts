@@ -27,8 +27,8 @@ import { Tag } from 'primeng/tag';
         </ng-template>
         <ng-template #body let-row>
           <tr>
-            <td>{{ row.category_name }}</td>
-            <td>{{ row.item_name }}</td>
+            <td>{{ row.categoryName }}</td>
+            <td>{{ row.itemName }}</td>
             <td>{{ row.quantity ?? '-' }}</td>
             <td>
               <p-tag

@@ -8,7 +8,8 @@ import {
   signal,
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { StructureWithPivot } from '@app/core/types/structure.type';
+import { AuthService } from '@app/core/services/auth.service';
+import { StructureWithRole } from '@app/core/types/structure.type';
 import { User } from '@core/types/user.type';
 import { UsersService } from '@services/users.service';
 import { debounceTimeSignal } from '@utils/signals.utils';
@@ -40,9 +41,12 @@ export class CreateUnitComponent implements OnInit {
   private readonly usersService = inject(UsersService);
   private readonly fb = inject(FormBuilder);
 
+  private readonly selectedStructureId =
+    inject(AuthService).selectedStructure()?.id;
+
   validateLabel = signal('Créer');
 
-  structure = input<StructureWithPivot>();
+  structure = input<StructureWithRole>();
 
   form = this.fb.nonNullable.group({
     name: ['', [Validators.required]],
@@ -76,7 +80,7 @@ export class CreateUnitComponent implements OnInit {
         chiefs:
           (this.structure()!.members as User[]).map(c => ({
             code: c.id,
-            name: `${c.firstname} ${c.lastname}`,
+            name: `${c.firstName} ${c.lastName}`,
           })) || [],
       });
     }
@@ -111,11 +115,15 @@ export class CreateUnitComponent implements OnInit {
     loader: ({ params }) =>
       lastValueFrom(
         this.usersService
-          .getPaginatedUsers({ ...params, page: 1, size: 100 })
+          .getPaginatedUsersFromStructure(this.selectedStructureId!, {
+            ...params,
+            page: 1,
+            size: 100,
+          })
           .pipe(
             map(data =>
               data.data.map(user => ({
-                name: `${user.firstname} ${user.lastname}`,
+                name: `${user.firstName} ${user.lastName}`,
                 code: user.id,
               }))
             )

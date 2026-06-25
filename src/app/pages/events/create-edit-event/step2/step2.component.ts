@@ -19,7 +19,6 @@ import { SearchBarComponent } from '@app/components/search-bar/search-bar.compon
 import { PaginatorComponent } from '@app/components/ui/paginator/paginator.component';
 import { AppTable } from '@app/components/ui/table/table.component';
 import { Event } from '@app/core/types/event.type';
-import { SortBy } from '@app/core/types/pagination-request.type';
 import { ItemWithQuantity } from '@core/types/item.type';
 import { environment } from '@env/environment';
 import { ItemsService } from '@services/items.service';
@@ -83,7 +82,7 @@ export class Step2Component implements OnInit {
   size = signal(100);
   searchQuery = signal('');
   orderBy = signal('items.name');
-  sortBy = signal<1 | -1>(1);
+  orderDir = signal<1 | -1>(1);
   categoryId = signal<number | undefined>(undefined);
   selectedItems!: Signal<ItemSelection[]>;
   selectedItemsCount = computed(() => this.selectedItems().length);
@@ -94,7 +93,7 @@ export class Step2Component implements OnInit {
 
   categories = computed(() => [
     { name: '-- Catégorie --', id: undefined },
-    ...(this.categoriesResource.value()?.data ?? []),
+    ...(this.categoriesResource.value() ?? []),
   ]);
 
   ngOnInit() {
@@ -106,7 +105,7 @@ export class Step2Component implements OnInit {
   }
   itemsResource = resource({
     loader: ({ params }) =>
-      params.end_date > params.start_date
+      params.endDate > params.startDate
         ? lastValueFrom(
             this.itemsService.getAvailableItems(params, this.event()?.id)
           )
@@ -115,11 +114,11 @@ export class Step2Component implements OnInit {
       page: this.page() + 1,
       size: this.size(),
       q: this.searchQuery(),
-      order_by: this.orderBy(),
-      sort_by: (this.sortBy() === 1 ? 'asc' : 'desc') as SortBy,
-      category_id: this.categoryId(),
-      start_date: new Date(this.startDate()),
-      end_date: new Date(this.endDate()),
+      orderBy: this.orderBy(),
+      orderDir: this.orderDir() === 1 ? 'asc' : 'desc',
+      categoryId: this.categoryId(),
+      startDate: new Date(this.startDate()),
+      endDate: new Date(this.endDate()),
     }),
   });
 

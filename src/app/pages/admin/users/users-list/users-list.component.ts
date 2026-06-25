@@ -13,7 +13,7 @@ import { PaginatorComponent } from '@app/components/ui/paginator/paginator.compo
 import { AppTable } from '@app/components/ui/table/table.component';
 import { AuthService } from '@app/core/services/auth.service';
 import { TableLayoutService } from '@app/core/services/table-layout.service';
-import { SortBy } from '@app/core/types/pagination-request.type';
+import { OrderDir } from '@app/core/types/pagination-request.type';
 import { environment } from '@env/environment';
 import { TippyDirective } from '@ngneat/helipopper';
 import { UsersService } from '@services/users.service';
@@ -71,7 +71,7 @@ export class UsersListComponent {
   page = signal(0);
   size = signal(100);
   searchQuery = signal('');
-  orderBy = signal<'lastname' | 'firstname' | 'email' | 'role'>('lastname');
+  orderBy = signal<'lastName' | 'firstName' | 'email' | 'role'>('lastName');
   sortBy = signal<1 | -1>(1);
   first = computed(() => this.page() * this.size());
 
@@ -84,8 +84,8 @@ export class UsersListComponent {
     this.tableLayoutService.setLayout(layout);
   }
   sortOptions = [
-    { label: 'Nom', value: 'lastname' },
-    { label: 'Prénom', value: 'firstname' },
+    { label: 'Nom', value: 'lastName' },
+    { label: 'Prénom', value: 'firstName' },
     { label: 'Email', value: 'email' },
     { label: 'Rôle', value: 'role' },
   ];
@@ -93,21 +93,24 @@ export class UsersListComponent {
   usersResource = resource({
     loader: ({ params }) =>
       lastValueFrom(
-        this.usersService.getPaginatedUsers({
-          size: params.size,
-          q: params.q,
-          order_by: params.order_by,
-          sort_by: params.sort_by,
-          page: params.page + 1,
-        })
+        this.usersService.getPaginatedUsersFromStructure(
+          params.selectedStructure!.id,
+          {
+            size: params.size,
+            q: params.q,
+            orderBy: params.orderBy,
+            orderDir: params.sortBy as OrderDir,
+            page: params.page + 1,
+          }
+        )
       ),
     params: () => ({
       page: this.page(),
       size: this.size(),
       q: this.searchQuery(),
-      order_by: this.orderBy(),
-      sort_by: this.sortBy() === 1 ? 'asc' : ('desc' as SortBy),
-      selected_structure: this.selectedStructure(),
+      orderBy: this.orderBy(),
+      sortBy: this.sortBy() === 1 ? 'asc' : 'desc',
+      selectedStructure: this.selectedStructure(),
     }),
   });
 

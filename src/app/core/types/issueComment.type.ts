@@ -6,7 +6,8 @@
 //   "created_at": "2024-11-07T21:44:03.000000Z",
 //   "author": {
 //       "id": 1,
-//       "name": "Pierre Leroyer"
+//       "firstName": "Pierre",
+//       "lastName": "Leroyer"
 //   }
 
 import { User } from './user.type';
@@ -14,9 +15,9 @@ import { User } from './user.type';
 // }
 export type IssueComment = {
   id: number;
-  item_option_issue_id: number;
+  itemOptionIssueId: number;
   comment: string;
-  user_id: number;
-  created_at: Date;
+  userId: number;
+  createdAt: Date;
   author: Partial<User>;
 };

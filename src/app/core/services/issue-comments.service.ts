@@ -21,7 +21,7 @@ export class IssueCommentsService {
       .pipe(
         map(comments =>
           comments.map(comment => {
-            comment.created_at = new Date(comment.created_at);
+            comment.createdAt = new Date(comment.createdAt);
             return comment;
           })
         )

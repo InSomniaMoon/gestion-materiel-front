@@ -78,17 +78,14 @@ export class UserDashboardComponent implements AfterViewInit {
               )
               .pipe(
                 map(events =>
-                  events.map(
-                    event =>
-                      ({
-                        start: event.start_date,
-                        end: event.end_date,
-                        title: event.name,
-                        allDay: false,
-                        color: event.structure?.color,
-                        id: `${event.id}`,
-                      }) as EventInput
-                  )
+                  events.map(event => ({
+                    start: event.startDate,
+                    end: event.endDate,
+                    title: event.name,
+                    allDay: false,
+                    color: event.structure?.color,
+                    id: `${event.id}`,
+                  }))
                 ),
                 catchError(() => {
                   console.error('Error loading events');

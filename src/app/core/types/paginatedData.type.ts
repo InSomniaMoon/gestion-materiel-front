@@ -11,20 +11,16 @@
 // }
 export type PaginatedData<T> = {
   data: T[];
-  total: number;
-  per_page: number;
-  current_page: number;
-  last_page: number;
-  to: number;
-  from: number;
+  totalCount: number;
+  size: number;
+  page: number;
+  totalPages: number;
 };
 
 export const EMPTY_PAGINATED_DATA: PaginatedData<any> = {
   data: [],
-  total: 0,
-  per_page: 0,
-  current_page: 0,
-  last_page: 0,
-  to: 0,
-  from: 0,
+  totalCount: 0,
+  size: 0,
+  page: 0,
+  totalPages: 0,
 };

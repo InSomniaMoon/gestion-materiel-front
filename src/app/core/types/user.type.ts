@@ -1,8 +1,14 @@
+import { StructureWithRole } from './structure.type';
+
 export type User = {
   id: number;
-  firstname: string;
-  lastname: string;
+  firstName: string;
+  lastName: string;
   email: string;
   phone?: string;
-  role: string | ('admin' | 'user');
+  role: 'admin' | 'user' | string;
+};
+
+export type UserWithStructures = User & {
+  structures: StructureWithRole[];
 };

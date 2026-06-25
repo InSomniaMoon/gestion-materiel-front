@@ -2,7 +2,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   inject,
-  model,
+  input,
+  output,
   signal,
 } from '@angular/core';
 import { AppTable } from '@app/components/ui/table/table.component';
@@ -25,7 +26,8 @@ import { CreateUnitComponent } from './create-structure/create-unit.component';
 export class ChildrenStructuresListComponent {
   private readonly dialogService = inject(DialogService);
 
-  structures = model.required<Structure[]>();
+  structures = input.required<Structure[]>();
+  structuresChanged = output<void>();
   private readonly structuresService = inject(StructuresService);
 
   openCreateUnitDialog() {
@@ -65,8 +67,6 @@ export class ChildrenStructuresListComponent {
         if (!result) {
           return;
         }
-        console.log(result);
-
         this.structuresService
           .updateStructure(unit.id, {
             color: result.color,
@@ -74,12 +74,8 @@ export class ChildrenStructuresListComponent {
             members: result.chiefs,
           })
           .subscribe({
-            next: struct => {
-              this.structures.set([
-                ...this.structures().map(s =>
-                  s.id === unit.id ? struct.structure : s
-                ),
-              ]);
+            next: () => {
+              this.structuresChanged.emit();
             },
             error: error => {
               console.error(

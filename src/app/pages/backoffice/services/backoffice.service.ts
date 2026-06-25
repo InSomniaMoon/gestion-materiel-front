@@ -1,6 +1,6 @@
 import { HttpClient, httpResource } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Structure, StructureWithPivot } from '@app/core/types/structure.type';
+import { Structure, StructureWithRole } from '@app/core/types/structure.type';
 import { UserStructure } from '@app/core/types/userStructure.type';
 import { PaginatedData } from '@core/types/paginatedData.type';
 import { User } from '@core/types/user.type';
@@ -43,12 +43,12 @@ export class BackofficeService {
   }
 
   createUser(createUser: {
-    firstname: string;
-    lastname: string;
+    firstName: string;
+    lastName: string;
     email: string;
     role: string;
     phone: string | null;
-    structure_id: string;
+    structureId: string;
   }) {
     return this.http.post(
       `${this.apiUrl}/users`,
@@ -58,7 +58,7 @@ export class BackofficeService {
   }
 
   getUserStructures(userId: string) {
-    return httpResource<StructureWithPivot[]>(
+    return httpResource<StructureWithRole[]>(
       () => `${this.apiUrl}/users/${userId}/structures`,
       {
         defaultValue: [],
@@ -74,7 +74,7 @@ export class BackofficeService {
     );
   }
 
-  getStructures(): Observable<StructureWithPivot[]>;
+  getStructures(): Observable<StructureWithRole[]>;
   getStructures(params?: {
     size?: number;
     page?: number;

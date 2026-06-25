@@ -3,6 +3,7 @@ import {
   Component,
   computed,
   inject,
+  input,
   OnInit,
   resource,
   signal,
@@ -15,7 +16,6 @@ import {
 } from '@app/components/simple-modal/simple-modal.component';
 import { UploadFileComponent } from '@app/components/upload-file/upload-file.component';
 import { AuthService } from '@app/core/services/auth.service';
-import { EMPTY_PAGINATED_DATA } from '@app/core/types/paginatedData.type';
 import { buildDialogOptions } from '@app/core/utils/constants';
 import { debounceTimeSignal } from '@app/core/utils/signals.utils';
 import { Item } from '@core/types/item.type';
@@ -55,12 +55,12 @@ import { ItemsReloaderService } from '../items-reloader.service';
           <p-select
             id="category"
             placeholder="Catégorie"
-            [options]="categories.value().data"
+            [options]="categories.value()"
             optionLabel="name"
             optionValue="id"
             filterBy="name"
             scrollHeight="200px"
-            formControlName="category_id"
+            formControlName="categoryId"
             [loading]="categories.isLoading()"
             [filter]="true"
             (onFilter)="categoryQuery.set($event.filter)" />
@@ -68,8 +68,8 @@ import { ItemsReloaderService } from '../items-reloader.service';
         </p-float-label>
         @if (selectedCategory()?.identified) {
           <p-float-label variant="on">
-            <p-date-picker id="date_of_buy" formControlName="date_of_buy" />
-            <label for="date_of_buy">Date d'achat (optionnel)</label>
+            <p-date-picker id="dateOfBuy" formControlName="dateOfBuy" />
+            <label for="dateOfBuy">Date d'achat (optionnel)</label>
           </p-float-label>
         } @else {
           <p-float-label variant="on">
@@ -95,7 +95,12 @@ import { ItemsReloaderService } from '../items-reloader.service';
         </p-float-label>
         <app-upload-file
           [handler]="fileUploadHandler"
-          (fileUploaded)="setImagePath($event)" />
+          (fileUploaded)="setImagePath($event)"
+          [fileUrl]="
+            form.get('image')?.value
+              ? imageBaseUrl() + form.get('image')?.value!
+              : ''
+          " />
       </div>
     </form>
     <p-footer>
@@ -128,6 +133,8 @@ export class CreateUpdateItemComponent implements OnInit {
   private readonly reloadItemService = inject(ItemsReloaderService);
   private readonly messageService = inject(MessageService);
 
+  readonly imageBaseUrl = input.required<string>();
+
   protected data: Item | undefined = this.dialogService.getInstance(
     this.dialogRef
   )?.data;
@@ -153,7 +160,7 @@ export class CreateUpdateItemComponent implements OnInit {
     params: () => ({
       q: this.debouncedCategoryQuery(),
     }),
-    defaultValue: EMPTY_PAGINATED_DATA,
+    defaultValue: [],
   });
 
   fb = inject(FormBuilder);
@@ -167,11 +174,11 @@ export class CreateUpdateItemComponent implements OnInit {
       nonNullable: true,
     }),
     description: this.fb.nonNullable.control(''),
-    category_id: this.fb.nonNullable.control<number | undefined>(undefined, {
+    categoryId: this.fb.nonNullable.control<number | undefined>(undefined, {
       validators: [Validators.required],
     }),
 
-    date_of_buy: this.fb.nonNullable.control<Date | undefined>(undefined, {
+    dateOfBuy: this.fb.nonNullable.control<Date | undefined>(undefined, {
       validators: [],
     }),
     stock: this.fb.nonNullable.control(1, {
@@ -179,11 +186,11 @@ export class CreateUpdateItemComponent implements OnInit {
     }),
   });
 
-  categoryIdValue = toSignal(this.form.get('category_id')!.valueChanges, {
-    initialValue: this.form.value.category_id,
+  categoryIdValue = toSignal(this.form.get('categoryId')!.valueChanges, {
+    initialValue: this.form.value.categoryId,
   });
   selectedCategory = computed(() =>
-    this.categories.value()?.data.find(cat => cat.id === this.categoryIdValue())
+    this.categories.value()?.find(cat => cat.id === this.categoryIdValue())
   );
 
   ngOnInit(): void {
@@ -191,17 +198,18 @@ export class CreateUpdateItemComponent implements OnInit {
       return;
     }
     this.form.patchValue({
-      category_id: this.categories.value()?.data[0]?.id,
+      categoryId: this.categories.value()?.[0]?.id,
     });
 
     this.form.patchValue({
       name: this.data.name,
       description: this.data.description,
-      category_id: this.data.category_id,
-      date_of_buy: this.data.date_of_buy
-        ? new Date(this.data.date_of_buy)
+      categoryId: this.data.categoryId,
+      dateOfBuy: this.data.dateOfBuy
+        ? new Date(this.data.dateOfBuy)
         : undefined,
       stock: this.data.stock ?? 1,
+      image: this.data.image,
     });
   }
 
@@ -227,9 +235,9 @@ export class CreateUpdateItemComponent implements OnInit {
         usable: true,
         name: value.name,
         description: value.description,
-        category_id: value.category_id!,
-        date_of_buy: value.date_of_buy,
-        structure_id: this.authService.selectedStructure()?.id!,
+        categoryId: value.categoryId!,
+        dateOfBuy: value.dateOfBuy,
+        structureId: this.authService.selectedStructure()?.id!,
         image: value.image,
         stock: value.stock,
       };

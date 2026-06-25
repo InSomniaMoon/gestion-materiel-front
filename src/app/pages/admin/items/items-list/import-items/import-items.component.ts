@@ -80,11 +80,11 @@ import { ImportPreviewTableComponent } from './import-preview-table.component';
         <section class="summary-grid">
           <p-card>
             <span class="summary-label">Lignes analysées </span>
-            <strong>{{ preview()!.items_count }}</strong>
+            <strong>{{ preview()!.itemsCount }}</strong>
           </p-card>
           <p-card>
             <span class="summary-label">Catégories inconnues </span>
-            <strong>{{ preview()!.unknown_categories.length }}</strong>
+            <strong>{{ preview()!.unknownCategories.length }}</strong>
           </p-card>
           <p-card>
             <span class="summary-label">Lignes bloquantes </span>
@@ -102,10 +102,10 @@ import { ImportPreviewTableComponent } from './import-preview-table.component';
           </p>
         }
 
-        @if (preview()!.unknown_categories.length > 0) {
+        @if (preview()!.unknownCategories.length > 0) {
           <app-import-categories-resolution
-            [unknownCategories]="preview()!.unknown_categories"
-            [existingCategories]="preview()!.existing_categories"
+            [unknownCategories]="preview()!.unknownCategories"
+            [existingCategories]="preview()!.existingCategories"
             [rows]="preview()!.rows"
             [resolutions]="resolutions()"
             (resolutionsChange)="resolutions.set($event)" />
@@ -231,7 +231,7 @@ export class ImportItemsComponent {
       return false;
     }
 
-    return currentPreview.unknown_categories.every(category =>
+    return currentPreview.unknownCategories.every(category =>
       this.isResolutionComplete(category)
     );
   });
@@ -251,17 +251,16 @@ export class ImportItemsComponent {
   }
 
   previewFile() {
-    const file = this.selectedFile();
-    if (!file) {
+    if (!this.selectedFile()) {
       return;
     }
 
     this.previewLoading.set(true);
-    this.itemsService.previewImport(file).subscribe({
+    this.itemsService.previewImport(this.selectedFile()!).subscribe({
       next: preview => {
         this.preview.set(preview);
         this.resolutions.set(
-          this.buildDefaultResolutions(preview.unknown_categories)
+          this.buildDefaultResolutions(preview.unknownCategories)
         );
       },
       error: () => {
@@ -302,26 +301,27 @@ export class ImportItemsComponent {
   }
 
   importFile() {
-    const file = this.selectedFile();
-    if (!file) {
+    if (!this.selectedFile()) {
       return;
     }
 
     this.importLoading.set(true);
-    this.itemsService.importItems(file, this.resolutions()).subscribe({
-      next: result => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Import terminé',
-          detail: `${result.imported_count} objet(s) importé(s).`,
-        });
-        this.ref.close(true);
-      },
-      error: () => {
-        this.importLoading.set(false);
-      },
-      complete: () => this.importLoading.set(false),
-    });
+    this.itemsService
+      .importItems(this.selectedFile()!, this.resolutions())
+      .subscribe({
+        next: result => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Import terminé',
+            detail: `${result.importedCount} objet(s) importé(s).`,
+          });
+          this.ref.close(true);
+        },
+        error: () => {
+          this.importLoading.set(false);
+        },
+        complete: () => this.importLoading.set(false),
+      });
   }
 
   resolutionRequiresQuantity(category: UnknownImportCategory) {
@@ -335,15 +335,15 @@ export class ImportItemsComponent {
       return !resolution.identified;
     }
 
-    return !this.preview()!.existing_categories.find(
-      existingCategory => existingCategory.id === resolution.category_id
+    return !this.preview()!.existingCategories.find(
+      existingCategory => existingCategory.id === resolution.categoryId
     )?.identified;
   }
 
   categoryRowsMissingQuantity(categoryName: string) {
     return this.preview()!.rows.some(
       row =>
-        row.category_name === categoryName &&
+        row.categoryName === categoryName &&
         (row.quantity === null || row.quantity < 1)
     );
   }
@@ -377,8 +377,8 @@ export class ImportItemsComponent {
     }
 
     return (
-      resolution.category_id !== null &&
-      resolution.category_id !== undefined &&
+      resolution.categoryId !== null &&
+      resolution.categoryId !== undefined &&
       (!this.resolutionRequiresQuantity(category) ||
         !this.categoryRowsMissingQuantity(category.name))
     );

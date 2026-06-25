@@ -12,15 +12,15 @@
   }
 </div>
 
-{{ event().start_date | date: 'short' }} -
-{{ event().end_date | date: 'short' }}
+{{ event().startDate | date: 'short' }} -
+{{ event().endDate | date: 'short' }}
 
 <h2>Commentaire</h2>
 <pre>{{ event().comment }}</pre>
 
 <h2>Matériel emprunté</h2>
 <div class="material">
-  @for (item of event().event_subscriptions; track item.id) {
+  @for (item of event().items; track item.id) {
     <p-card
       [header]="
         `${item.name} ${item?.category?.identified ? '' : `(x${item.quantity})`}`

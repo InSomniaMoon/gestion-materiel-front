@@ -21,9 +21,9 @@ export class EventsService {
 
   createEvent(data: {
     name: string;
-    structure_id: number;
-    start_date: Date | null;
-    end_date: Date | null;
+    structureId: number;
+    startDate: Date | null;
+    endDate: Date | null;
     items: { id: number; quantity: number }[];
     comment: string;
   }) {
@@ -42,9 +42,9 @@ export class EventsService {
     // This method should return an observable of the structure events
     return this.http.get<Event[]>(url, {
       params: queryParams({
-        structure_id: structureId,
-        start_date: startDate?.toISOString(),
-        end_date: endDate?.toISOString(),
+        structureId: structureId,
+        startDate: startDate?.toISOString(),
+        endDate: endDate?.toISOString(),
       }),
       ...NO_CACHE_CONTEXT_OPTIONS,
     });

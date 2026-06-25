@@ -36,7 +36,7 @@ import { BackofficeService } from '../../services/backoffice.service';
             optionLabel="name"
             optionValue="code"
             placeholder="Structure"
-            formControlName="structure_id" />
+            formControlName="structureId" />
           <label for="role">Structure</label>
         </p-floatlabel>
         <p-floatlabel>
@@ -51,12 +51,12 @@ import { BackofficeService } from '../../services/backoffice.service';
       </div>
       <div class="row">
         <p-floatlabel>
-          <input id="firstname" pInputText formControlName="firstname" />
-          <label for="firstname">Prénom</label>
+          <input id="firstName" pInputText formControlName="firstName" />
+          <label for="firstName">Prénom</label>
         </p-floatlabel>
         <p-floatlabel>
-          <input id="lastname" pInputText formControlName="lastname" />
-          <label for="lastname">Nom</label>
+          <input id="lastName" pInputText formControlName="lastName" />
+          <label for="lastName">Nom</label>
         </p-floatlabel>
       </div>
       <p-floatlabel>
@@ -112,10 +112,10 @@ export class CreateUserModalComponent {
   );
 
   form = this.fb.nonNullable.group({
-    firstname: this.fb.nonNullable.control('', {
+    firstName: this.fb.nonNullable.control('', {
       validators: [Validators.required],
     }),
-    lastname: this.fb.nonNullable.control('', {
+    lastName: this.fb.nonNullable.control('', {
       validators: [Validators.required],
     }),
     email: this.fb.nonNullable.control('', {
@@ -127,7 +127,7 @@ export class CreateUserModalComponent {
     role: this.fb.nonNullable.control<string>('', {
       validators: [Validators.required],
     }),
-    structure_id: this.fb.nonNullable.control('', {
+    structureId: this.fb.nonNullable.control('', {
       validators: [Validators.required],
     }),
     phone: this.fb.control('', {}),

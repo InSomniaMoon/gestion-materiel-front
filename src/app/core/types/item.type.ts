@@ -5,15 +5,15 @@ export type Item = {
   id: number;
   name: string;
   description?: string;
-  category_id: number;
+  categoryId: number;
+  category?: ItemCategory;
   usable: boolean;
   stock?: number;
-  usable_stock?: number;
-  date_of_buy?: Date;
-  category?: ItemCategory;
+  usableStock?: number;
+  dateOfBuy?: Date;
   options?: ItemOption[];
   image?: string;
-  structure_id: number;
+  structureId: number;
   structure?: Structure;
   state?: 'OK' | 'NOK' | 'KO' | 'UNKNOWN';
 };
@@ -23,6 +23,6 @@ export type ItemWithQuantity = Item & { quantity: number; rest: number };
 export type ItemCategory = {
   id: number;
   name: string;
-  structure_id: number;
+  structureId: number;
   identified: boolean;
 };

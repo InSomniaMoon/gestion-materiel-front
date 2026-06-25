@@ -27,7 +27,7 @@ export class ItemsService {
     );
   }
 
-  getItems(opt?: Partial<PaginationRequest> & { category_id?: number }) {
+  getItems(opt?: Partial<PaginationRequest> & { categoryId?: number }) {
     let url = `${this.api_url}/items`;
     const options = opt ?? { page: 1, size: 25 };
 
@@ -37,29 +37,29 @@ export class ItemsService {
   }
 
   getAvailableItems(
-    opt?: Partial<PaginationRequest> & { start_date?: Date; end_date?: Date },
+    opt?: Partial<PaginationRequest> & { startDate?: Date; endDate?: Date },
     forEvent?: number
   ) {
     let url = `${this.api_url}/items/available`;
     const options = {
       page: 1,
       size: 25,
-      start_date: new Date(),
-      end_date: new Date(),
+      startDate: new Date(),
+      endDate: new Date(),
       ...opt,
     };
 
     return this.http.get<PaginatedData<ItemWithQuantity>>(url, {
       params: queryParams({
         ...options,
-        start_date: options.start_date.toISOString(),
-        end_date: options.end_date.toISOString(),
-        for_event: forEvent,
+        startDate: options.startDate.toISOString(),
+        endDate: options.endDate.toISOString(),
+        forEventId: forEvent,
       }),
     });
   }
 
-  getAdminItems(opt?: Partial<PaginationRequest> & { category_id?: number }) {
+  getAdminItems(opt?: Partial<PaginationRequest> & { categoryId?: number }) {
     let url = `${this.api_url}/admin/items`;
     const options = opt ?? { page: 1, size: 25 };
 
@@ -90,7 +90,7 @@ export class ItemsService {
 
   getCategories(search?: string) {
     const url = `${this.api_url}/items/categories`;
-    return this.http.get<PaginatedData<ItemCategory>>(url, {
+    return this.http.get<Array<ItemCategory>>(url, {
       params: queryParams({ q: search }),
     });
   }
@@ -121,9 +121,15 @@ export class ItemsService {
     file: File,
     resolutions: Record<string, ImportCategoryResolution>
   ) {
+    const resolutionsArray = Object.entries(resolutions).map(
+      ([categoryName, resolution]) => ({
+        ...resolution,
+        name: categoryName,
+      })
+    );
     const formData = new FormData();
     formData.append('file', file);
-    formData.append('resolutions', JSON.stringify(resolutions));
+    formData.append('resolutions', JSON.stringify(resolutionsArray));
 
     return this.http.post<BulkImportResult>(
       `${this.api_url}/admin/items/import`,

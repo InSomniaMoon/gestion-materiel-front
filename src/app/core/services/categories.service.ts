@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '@env/environment';
 import { ItemCategory } from '../types/item.type';
-import { PaginatedData } from '../types/paginatedData.type';
 import { PaginationRequest } from '../types/pagination-request.type';
 import { CLEAR_CACHE_CONTEXT_OPTIONS } from '../utils/injectionToken';
 
@@ -20,7 +19,7 @@ export class CategoriesService {
   ]);
 
   getCategories(pagination: Partial<PaginationRequest>) {
-    return this.http.get<PaginatedData<ItemCategory>>(
+    return this.http.get<Array<ItemCategory>>(
       `${this.baseUrl}/items/categories`,
       {
         params: pagination,

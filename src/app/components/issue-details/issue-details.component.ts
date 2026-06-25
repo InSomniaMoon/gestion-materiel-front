@@ -64,7 +64,7 @@ export class IssueDetailsComponent implements OnInit {
     () =>
       this.commentsQuery
         .data()
-        ?.sort((a, b) => b.created_at.getTime() - a.created_at.getTime()) ?? []
+        ?.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()) ?? []
   );
 
   newComment = signal<string>('');

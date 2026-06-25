@@ -79,8 +79,8 @@ import { AppAdminUserEditStructuresComponent } from './backoffice-user-edit-stru
         </ng-template>
         <ng-template #body let-user>
           <tr>
-            <td>{{ user.lastname }}</td>
-            <td>{{ user.firstname }}</td>
+            <td>{{ user.lastName }}</td>
+            <td>{{ user.firstName }}</td>
             <td>{{ user.email }}</td>
             <td>{{ user.role }}</td>
             <td class="actions">
@@ -98,7 +98,7 @@ import { AppAdminUserEditStructuresComponent } from './backoffice-user-edit-stru
       <app-paginator
         [(page)]="page"
         [(size)]="size"
-        [totalRecords]="usersQuery.data()?.total ?? 0" />
+        [totalRecords]="usersQuery.data()?.totalCount ?? 0" />
     </matos-table>
   `,
   styleUrl: './backoffice-users-list.component.scss',
@@ -169,7 +169,7 @@ export class AppAdminUsersListComponent {
       .open(
         AppAdminUserEditStructuresComponent,
         buildDialogOptions({
-          header: `Editer les structures de ${user.firstname} ${user.lastname}`,
+          header: `Editer les structures de ${user.firstName} ${user.lastName}`,
           width: '50%',
           height: '80%',
           data: { userId: user.id },

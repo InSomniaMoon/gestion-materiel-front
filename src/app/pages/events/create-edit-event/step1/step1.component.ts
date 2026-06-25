@@ -116,11 +116,11 @@ export class Step1Component implements OnInit {
   });
 
   get startDateFormControl() {
-    return this.formGroup().get('start_date')!;
+    return this.formGroup().get('startDate')!;
   }
 
   get endDateFormControl() {
-    return this.formGroup().get('end_date')!;
+    return this.formGroup().get('endDate')!;
   }
 
   constructor() {
@@ -149,8 +149,8 @@ export class Step1Component implements OnInit {
     const [start, end] = dates;
 
     this.formGroup().patchValue({
-      start_date: start,
-      end_date: end,
+      startDate: start,
+      endDate: end,
     });
 
     this.doubleDates.set(dates);
@@ -161,30 +161,30 @@ export class Step1Component implements OnInit {
   ngOnInit() {
     runInInjectionContext(this.injectionContext, () => {
       this.startDateAsSignal = toSignal(
-        this.formGroup().get('start_date')!.valueChanges,
-        { initialValue: this.formGroup().get('start_date')!.value }
+        this.formGroup().get('startDate')!.valueChanges,
+        { initialValue: this.formGroup().get('startDate')!.value }
       );
       this.endDateAsSignal = toSignal(
-        this.formGroup().get('end_date')!.valueChanges,
-        { initialValue: this.formGroup().get('end_date')!.value }
+        this.formGroup().get('endDate')!.valueChanges,
+        { initialValue: this.formGroup().get('endDate')!.value }
       );
     });
     this.formGroup()
-      .get('end_date')
+      .get('endDate')
       ?.valueChanges.subscribe((date: Date) => {
         if (date) {
           date = new Date(date);
           date.setSeconds(0);
           this.formGroup().patchValue(
             {
-              end_date: date,
+              endDate: date,
             },
             { emitEvent: false }
           );
         }
       });
     this.formGroup()
-      .get('start_date')
+      .get('startDate')
       ?.valueChanges.subscribe(() => {
         // move the end date if it's before the start date at the same distance as before
         const startDate = this.startDateAsSignal();
@@ -196,7 +196,7 @@ export class Step1Component implements OnInit {
             const diff = start.getTime() - end.getTime();
             const newEnd = new Date(start.getTime() + diff);
             this.formGroup().patchValue({
-              end_date: newEnd,
+              endDate: newEnd,
             });
           }
         }
@@ -215,7 +215,7 @@ export class Step1Component implements OnInit {
     this.endTime.set(
       `${endHours > 10 ? endHours : '0' + endHours}:${endMinutes > 10 ? endMinutes : '0' + endMinutes}`
     );
-    if (!this.formGroup().get('start_date')?.value) {
+    if (!this.formGroup().get('startDate')?.value) {
       this.formGroup().patchValue({
         structure: this.structures()[0] ?? null,
       });

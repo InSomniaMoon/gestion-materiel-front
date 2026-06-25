@@ -17,10 +17,10 @@
   <p-button
     icon="pi pi-plus"
     label="Ajouter"
-    (onClick)="openCreateCategroyModal()" />
+    (onClick)="openCreateCategoryModal()" />
 </div>
 <matos-table [status]="categoriesQuery.status()">
-  <p-data-view [value]="categoriesQuery.data()?.data ?? []" [layout]="layout()">
+  <p-data-view [value]="categoriesQuery.data() ?? []" [layout]="layout()">
     <ng-template #header>
       <div class="flex justify-end">
         <p-select-button
@@ -40,7 +40,7 @@
     </ng-template>
     <ng-template #list let-items>
       <p-table
-        [value]="categoriesQuery.data()?.data ?? []"
+        [value]="categoriesQuery.data() ?? []"
         stripedRows
         [sortField]="orderBy()"
         (onSort)="orderBy.set($event.field); sortBy.set($event.order)">
@@ -82,9 +82,4 @@
       </div>
     </ng-template>
   </p-data-view>
-
-  <app-paginator
-    [(page)]="page"
-    [(size)]="size"
-    [totalRecords]="categoriesQuery.data()?.total ?? 0" />
 </matos-table>

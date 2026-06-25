@@ -197,7 +197,7 @@ export class ImportCategoriesResolutionComponent {
 
   existingResolutionCategoryId(categoryName: string) {
     const resolution = this.resolutions()[categoryName];
-    return resolution?.action === 'existing' ? resolution.category_id : null;
+    return resolution?.action === 'existing' ? resolution.categoryId : null;
   }
 
   setResolutionMode(categoryName: string, mode: 'create' | 'existing') {
@@ -212,7 +212,7 @@ export class ImportCategoriesResolutionComponent {
             }
           : {
               action: 'existing' as const,
-              category_id: this.findMatchingCategoryId(categoryName),
+              categoryId: this.findMatchingCategoryId(categoryName),
             },
     };
 
@@ -249,7 +249,7 @@ export class ImportCategoriesResolutionComponent {
       ...this.resolutions(),
       [categoryName]: {
         action: 'existing',
-        category_id: categoryId,
+        categoryId: categoryId,
       },
     });
   }
@@ -266,14 +266,14 @@ export class ImportCategoriesResolutionComponent {
     }
 
     return !this.existingCategories().find(
-      existingCategory => existingCategory.id === resolution.category_id
+      existingCategory => existingCategory.id === resolution.categoryId
     )?.identified;
   }
 
   categoryRowsMissingQuantity(categoryName: string) {
     return this.rows().some(
       row =>
-        row.category_name === categoryName &&
+        row.categoryName === categoryName &&
         (row.quantity === null || row.quantity < 1)
     );
   }

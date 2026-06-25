@@ -49,7 +49,7 @@ export class HeaderComponent {
 
   lettres = computed(() =>
     this.user()
-      ? `${this.user()?.firstname[0].toUpperCase()}${this.user()?.lastname[0].toUpperCase()}`
+      ? `${this.user()?.firstName[0].toUpperCase()}${this.user()?.lastName[0].toUpperCase()}`
       : ''
   );
 

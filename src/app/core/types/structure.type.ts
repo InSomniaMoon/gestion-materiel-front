@@ -2,8 +2,8 @@ import { User } from './user.type';
 
 export type Structure = {
   id: number;
-  code_structure: string;
-  nom_structure: string;
+  codeStructure: string;
+  nomStructure: string;
   type: 'NATIONAL' | 'TERRITOIRE' | 'GROUPE' | 'UNITE';
   name: string;
   description?: string;
@@ -12,11 +12,8 @@ export type Structure = {
   members?: User[];
 };
 
-export type StructureWithPivot = Structure & {
-  pivot: {
-    structure_id?: number;
-    role: string;
-  };
+export type StructureWithRole = Structure & {
+  role: string;
 };
 
 export type StructureWithChildren = {

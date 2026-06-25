@@ -50,17 +50,17 @@ export class CreateEditEventComponent implements OnInit {
         structure: this.fb.nonNullable.control<number | null>(null, [
           Validators.required,
         ]),
-        start_date: this.fb.nonNullable.control<Date | null>(null, [
+        startDate: this.fb.nonNullable.control<Date | null>(null, [
           Validators.required,
         ]),
-        end_date: this.fb.nonNullable.control<Date | null>(null, [
+        endDate: this.fb.nonNullable.control<Date | null>(null, [
           Validators.required,
         ]),
       },
       {
         validators: [
           form => {
-            if (form.get('start_date')?.value >= form.get('end_date')?.value) {
+            if (form.get('startDate')?.value >= form.get('endDate')?.value) {
               return { invalidDate: true };
             }
             return null;
@@ -101,11 +101,11 @@ export class CreateEditEventComponent implements OnInit {
     this.form.setValue({
       informations: {
         name: this.event()!.name,
-        structure: this.event()!.structure.id,
-        start_date: new Date(this.event()!.start_date),
-        end_date: new Date(this.event()!.end_date),
+        structure: this.event()!.structureId,
+        startDate: new Date(this.event()!.startDate),
+        endDate: new Date(this.event()!.endDate),
       },
-      items: this.event()!.event_subscriptions.map(item => ({
+      items: this.event()!.items.map((item: ItemWithQuantity) => ({
         item: item,
         quantity: item.quantity,
       })),
@@ -118,9 +118,9 @@ export class CreateEditEventComponent implements OnInit {
 
     const data = {
       name: value.informations.name,
-      structure_id: value.informations.structure!,
-      start_date: new Date(value.informations.start_date!),
-      end_date: new Date(value.informations.end_date!),
+      structureId: value.informations.structure!,
+      startDate: new Date(value.informations.startDate!),
+      endDate: new Date(value.informations.endDate!),
       items: value.items.map(item => ({
         id: item.item.id,
         quantity: item.quantity,
