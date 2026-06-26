@@ -1,14 +1,6 @@
-import { definePreset, palette } from '@primeng/themes';
-import ThemeBase from '@primeng/themes/lara';
+import { definePreset, palette } from '@primeuix/themes';
+import ThemeBase from '@primeuix/themes/lara';
 import { LaraBaseTokenSections } from '@primeuix/themes/lara/base';
-import { ButtonDesignTokens } from '@primeuix/themes/types/button';
-import { DataTableDesignTokens } from '@primeuix/themes/types/datatable';
-import { DataViewDesignTokens } from '@primeuix/themes/types/dataview';
-import { DatePickerDesignTokens } from '@primeuix/themes/types/datepicker';
-import { MenubarDesignTokens } from '@primeuix/themes/types/menubar';
-import { ProgressSpinnerDesignTokens } from '@primeuix/themes/types/progressspinner';
-import { StepperDesignTokens } from '@primeuix/themes/types/stepper';
-import { TieredMenuDesignTokens } from '@primeuix/themes/types/tieredmenu';
 
 type Palette = {
   50?: string;
@@ -149,7 +141,7 @@ export const SgdfPresetTheme = definePreset(ThemeBase, {
           },
         },
       },
-    } as MenubarDesignTokens,
+    },
     button: {
       colorScheme: {
         light: {
@@ -167,7 +159,7 @@ export const SgdfPresetTheme = definePreset(ThemeBase, {
           },
         },
       },
-    } as ButtonDesignTokens,
+    },
     datatable: {
       root: {
         borderColor: '{surface.200}',
@@ -204,22 +196,23 @@ export const SgdfPresetTheme = definePreset(ThemeBase, {
           },
         },
       },
-    } as DataTableDesignTokens,
+    },
     tieredmenu: {
       css: 'margin-top: 0rem;',
-    } as TieredMenuDesignTokens,
+    },
     progressspinner: {
       colorScheme: {
         light: {
           root: {
-            'color.1': '{primary.500}',
-            'color.2': '{primary.500}',
-            'color.3': '{primary.500}',
-            'color.4': '{primary.500}',
+            colorOne: '{primary.500}',
+
+            colorTwo: '{primary.500}',
+            colorThree: '{primary.500}',
+            colorFour: '{primary.500}',
           },
         },
       },
-    } as ProgressSpinnerDesignTokens,
+    },
     stepper: {
       root: {
         transitionDuration: '{transition.duration}',
@@ -227,7 +220,7 @@ export const SgdfPresetTheme = definePreset(ThemeBase, {
       steppanel: {
         padding: '0',
       },
-    } as StepperDesignTokens,
+    },
     datepicker: {
       date: {
         padding: '0px',
@@ -235,12 +228,12 @@ export const SgdfPresetTheme = definePreset(ThemeBase, {
       panel: {
         padding: '0px',
       },
-    } as DatePickerDesignTokens,
+    },
     dataview: {
       header: {
         padding: '0.25rem 1rem',
         background: 'white',
       },
-    } as DataViewDesignTokens,
+    },
   },
 });
