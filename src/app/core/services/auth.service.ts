@@ -27,7 +27,11 @@ export class AuthService {
   selectedStructure = this._selectedStructure.asReadonly();
   isAuth = this._isAuth.asReadonly();
   isAppAdmin = computed(() => {
-    const jwt = JSON.parse(this.jwt()?.split('.')[1] || '{}');
+    const stringjwt = this.jwt()?.split('.')[1];
+    if (!stringjwt) {
+      return false;
+    }
+    const jwt = JSON.parse(atob(stringjwt) || '{}');
     console.log('jwt', jwt);
     return (
       jwt['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] ==
