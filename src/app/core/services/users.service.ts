@@ -47,7 +47,7 @@ export class UsersService {
 
   sendPasswordReset(email: string) {
     return this.http.post(
-      `${this.api_url}/users/send-reset-password`,
+      `${this.api_url}/auth/forgot-password`,
       { email },
       NO_CACHE_CONTEXT_OPTIONS
     );

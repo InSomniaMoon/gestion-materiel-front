@@ -36,20 +36,21 @@ import { Password } from 'primeng/password';
       <p-float-label>
         <p-password
           [toggleMask]="true"
+          [feedback]="false"
           id="password"
           formControlName="password"
           type="password"
-          autocomplete="new-password" />
+          autocomplete="password" />
         <label for="password">Mot de passe (min. 8 caractères)</label>
       </p-float-label>
       <p-float-label>
         <p-password
-          id="password_confirmation"
-          formControlName="password_confirmation"
+          id="passwordConfirmation"
+          formControlName="passwordConfirmation"
           [toggleMask]="true"
           [feedback]="false"
           autocomplete="confirm-password" />
-        <label for="password_confirmation">Confirm Password</label>
+        <label for="passwordConfirmation">Confirm Password</label>
       </p-float-label>
       <button pButton [disabled]="!form.valid" type="submit">
         Reset Password
@@ -67,7 +68,7 @@ export class ResetPasswordComponent {
   private readonly destroyRef = inject(DestroyRef);
 
   passwordMatchValidator: ValidatorFn = (form: AbstractControl) =>
-    form.get('password')?.value === form.get('password_confirmation')?.value
+    form.get('password')?.value === form.get('passwordConfirmation')?.value
       ? null
       : { passwordMismatch: true };
 
@@ -78,7 +79,7 @@ export class ResetPasswordComponent {
         '',
         { validators: [Validators.required, Validators.minLength(8)] },
       ],
-      password_confirmation: [
+      passwordConfirmation: [
         '',
         { validators: [Validators.required, this.passwordMatchValidator] },
       ],

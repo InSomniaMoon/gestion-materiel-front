@@ -90,7 +90,7 @@ export class AuthService {
   resetPassword(dto: {
     password: string;
     token: string;
-    password_confirmation: string;
+    passwordConfirmation: string;
   }) {
     return this.http.post(`${this.api_url}/auth/reset-password`, dto);
   }
