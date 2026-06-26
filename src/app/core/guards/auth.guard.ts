@@ -1,5 +1,5 @@
 import { inject } from '@angular/core';
-import { ActivatedRoute, CanMatchFn, Router } from '@angular/router';
+import { CanMatchFn, Router } from '@angular/router';
 import { AuthService } from '@services/auth.service';
 
 export const authGuard: CanMatchFn = (route, segments) => {
@@ -13,8 +13,6 @@ export const authGuard: CanMatchFn = (route, segments) => {
 
 export const navigateAuth = () => {
   const router = inject(Router);
-  const route = inject(ActivatedRoute);
-  console.log(route.snapshot.url);
 
   router.navigate(['/auth', 'login'], {
     queryParams: { redirect: router.url },

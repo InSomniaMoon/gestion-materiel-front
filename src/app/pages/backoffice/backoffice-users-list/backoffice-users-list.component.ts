@@ -19,6 +19,7 @@ import { CreateUserModalComponent } from './create-user-modal/create-user-modal.
 
 import { PaginatorComponent } from '@app/components/ui/paginator/paginator.component';
 import { AppTable } from '@app/components/ui/table/table.component';
+import { debounceTimeSignal } from '@app/core/utils/signals.utils';
 import { User } from '@core/types/user.type';
 import { TippyDirective } from '@ngneat/helipopper';
 import { buildDialogOptions } from '@utils/constants';
@@ -70,11 +71,11 @@ import { AppAdminUserEditStructuresComponent } from './backoffice-user-edit-stru
         </ng-template>
         <ng-template #header>
           <tr>
-            <th>Nom</th>
-            <th>Prénom</th>
-            <th>Mail</th>
-            <th>Role</th>
-            <th></th>
+            <th scope="col">Nom</th>
+            <th scope="col">Prénom</th>
+            <th scope="col">Mail</th>
+            <th scope="col">Role</th>
+            <th scope="col"></th>
           </tr>
         </ng-template>
         <ng-template #body let-user>
@@ -101,7 +102,7 @@ import { AppAdminUserEditStructuresComponent } from './backoffice-user-edit-stru
         [totalRecords]="usersQuery.data()?.totalCount ?? 0" />
     </matos-table>
   `,
-  styleUrl: './backoffice-users-list.component.scss',
+  styleUrls: ['./backoffice-users-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppAdminUsersListComponent {
@@ -111,17 +112,19 @@ export class AppAdminUsersListComponent {
 
   page = signal(0);
   size = signal(25);
-  orderBy = signal('name');
+  orderBy = signal('LastName');
   sortBy = signal('asc');
   sortOrder = computed(() => (this.sortBy() === 'asc' ? 1 : -1));
   q = signal('');
+
+  debouncedQ = debounceTimeSignal(this.q, 500);
 
   usersQuery = injectQuery(() => ({
     queryKey: [
       'users',
       {
         page: this.page(),
-        q: this.q(),
+        q: this.debouncedQ(),
         size: this.size(),
         orderBy: this.orderBy(),
         sortBy: this.sortBy(),
@@ -142,7 +145,6 @@ export class AppAdminUsersListComponent {
   users = computed(() => this.usersQuery.data()?.data || []);
 
   pageChange(event: TablePageEvent) {
-    console.log(event);
     this.size.set(event.rows);
 
     this.page.set(Math.floor(event.first / event.rows) + 1);

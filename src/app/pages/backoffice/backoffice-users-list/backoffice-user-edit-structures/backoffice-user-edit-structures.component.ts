@@ -4,9 +4,9 @@ import {
   computed,
   inject,
   linkedSignal,
+  resource,
   signal,
 } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Structure } from '@app/core/types/structure.type';
 import { UserStructure } from '@app/core/types/userStructure.type';
@@ -16,6 +16,8 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { Select } from 'primeng/select';
 import { BackofficeService } from '../../services/backoffice.service';
 
+import { debounceTimeSignal } from '@app/core/utils/signals.utils';
+import { lastValueFrom } from 'rxjs/internal/lastValueFrom';
 @Component({
   selector: 'app-backoffice-user-edit-structures',
   imports: [DialogModule, Button, ReactiveFormsModule, Select, FormsModule],
@@ -48,6 +50,7 @@ import { BackofficeService } from '../../services/backoffice.service';
           <p-select
             [filter]="true"
             filterBy="name"
+            (onFilter)="q.set($event.filter)"
             [options]="structuresWithoutUserStructures()"
             optionLabel="name"
             optionValue="id"
@@ -80,11 +83,27 @@ export class AppAdminUserEditStructuresComponent {
   );
   userStructures = linkedSignal(() => this._userStructures.value());
 
-  private readonly _structures = toSignal(
-    this.backofficeService.getStructures(),
-    {
-      initialValue: [],
-    }
+  q = signal('');
+  debouncedQ = debounceTimeSignal(this.q, 500);
+
+  private readonly _structuresResource = resource({
+    loader: ({ params }) =>
+      lastValueFrom(
+        this.backofficeService.getStructures({
+          size: 25,
+          page: 1,
+          orderBy: 'name',
+          sortBy: 'asc',
+          q: params.q,
+        })
+      ),
+    params: () => ({
+      q: this.debouncedQ(),
+    }),
+  });
+
+  private readonly _structures = computed<Structure[]>(
+    () => this._structuresResource.value()?.data ?? []
   );
 
   structuresWithoutUserStructures = linkedSignal(() => {
@@ -108,10 +127,11 @@ export class AppAdminUserEditStructuresComponent {
     if (structure) {
       this.userStructures.update(structures => [
         ...structures,
-        { ...structure, pivot: { role: 'user' } },
+        { ...structure, role: 'user' },
       ]);
       this.toggleSelectNewStructure.set(true);
     }
+    this.q.set('');
   }
   close() {
     this.ref.close();

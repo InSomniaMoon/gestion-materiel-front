@@ -74,25 +74,13 @@ export class BackofficeService {
     );
   }
 
-  getStructures(): Observable<StructureWithRole[]>;
-  getStructures(params?: {
+  getStructures(params: {
     size?: number;
     page?: number;
     orderBy: string;
     sortBy: string;
     q?: string;
-  }): Observable<PaginatedData<Structure>>;
-  getStructures(params?: {
-    size?: number;
-    page?: number;
-    orderBy: string;
-    sortBy?: string;
-    q?: string;
-  }): Observable<Structure[] | PaginatedData<Structure>> {
-    if (!params) {
-      return this.http.get<Structure[]>(`${this.apiUrl}/structures?all=true`);
-    }
-
+  }): Observable<PaginatedData<Structure>> {
     const { size = 25, page = 1, q = '', orderBy, sortBy = 'asc' } = params;
 
     return this.http.get<PaginatedData<Structure>>(

@@ -5,9 +5,11 @@ import {
   DestroyRef,
   inject,
   resource,
+  signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { debounceTimeSignal } from '@app/core/utils/signals.utils';
 import { MessageService } from 'primeng/api';
 import { Button } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
@@ -35,6 +37,8 @@ import { BackofficeService } from '../../services/backoffice.service';
             [options]="structures()"
             optionLabel="name"
             optionValue="code"
+            [filter]="true"
+            (onFilter)="q.set($event.filter)"
             placeholder="Structure"
             formControlName="structureId" />
           <label for="role">Structure</label>
@@ -100,13 +104,28 @@ export class CreateUserModalComponent {
     { name: 'Administrateur', code: 'admin' },
   ];
 
+  q = signal('');
+  debouncedQ = debounceTimeSignal(this.q, 500);
+
   private readonly structuresResource = resource({
-    loader: () => lastValueFrom(this.backofficeService.getStructures()),
+    loader: ({ params }) =>
+      lastValueFrom(
+        this.backofficeService.getStructures({
+          size: 25,
+          page: 1,
+          orderBy: 'name',
+          sortBy: 'asc',
+          q: params.q,
+        })
+      ),
+    params: () => ({
+      q: this.debouncedQ(),
+    }),
   });
 
   structures = computed(() =>
-    (this.structuresResource.value() ?? []).map(structure => ({
-      name: structure.name,
+    (this.structuresResource.value()?.data ?? []).map(structure => ({
+      name: structure.nomStructure,
       code: structure.id,
     }))
   );
