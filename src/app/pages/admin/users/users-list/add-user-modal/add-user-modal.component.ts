@@ -1,7 +1,9 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   inject,
+  resource,
   signal,
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -14,6 +16,7 @@ import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { FloatLabel } from 'primeng/floatlabel';
 import { InputText } from 'primeng/inputtext';
 import { Select } from 'primeng/select';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-add-user-modal',
@@ -46,7 +49,9 @@ export class AddUserModalComponent {
 
   form = this.fb.nonNullable.group(
     {
-      name: [''],
+      firstName: [''],
+      lastName: [''],
+      structureId: [0, [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
       role: ['', [Validators.required]],
       phone: [''],
@@ -56,6 +61,14 @@ export class AddUserModalComponent {
         form => (this.isUserChecked() ? null : { userNotChecked: true }),
       ],
     }
+  );
+
+  private readonly structuresResource = resource({
+    loader: () => lastValueFrom(this.structureService.getAdminStructures()),
+  });
+
+  readonly structures = computed(
+    () => this.structuresResource.value()?.children
   );
 
   close() {
@@ -122,9 +135,10 @@ export class AddUserModalComponent {
         this.dialogRef.close();
       }
       if (!res.exists) {
-        this.form.get('name')?.addValidators([Validators.required]);
-        this.form.get('name')?.updateValueAndValidity();
-        console.log(this.form.get('name')?.validator);
+        this.form.get('firstName')?.addValidators([Validators.required]);
+        this.form.get('lastName')?.addValidators([Validators.required]);
+        this.form.get('firstName')?.updateValueAndValidity();
+        this.form.get('lastName')?.updateValueAndValidity();
       }
     });
   }

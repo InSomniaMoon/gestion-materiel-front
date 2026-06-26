@@ -17,10 +17,24 @@
       [disabled]="form.get('email')?.invalid"
       (onClick)="checkUser()" />
   } @else {
-    <p-float-label variant="on">
-      <p-select id="role" formControlName="role" [options]="roles" />
-      <label for="role">Rôle</label>
-    </p-float-label>
+    <div class="flex">
+      <p-float-label variant="on">
+        <p-select
+          id="structure"
+          filter
+          formControlName="structureId"
+          [options]="structures()"
+          optionLabel="name"
+          optionValue="id" />
+        <label for="structure">Structure</label>
+      </p-float-label>
+
+      <p-float-label variant="on">
+        <p-select id="role" formControlName="role" [options]="roles" />
+        <label for="role">Rôle</label>
+      </p-float-label>
+    </div>
+
     @if (userExists()) {
       <small
         >L'utilisateur existe, Veuillez assigner une mission pour le
@@ -30,15 +44,22 @@
       <small class="text-danger"
         >L'utilisateur n'existe pas, veuillez le créer</small
       >
-      <p-floatlabel variant="on">
-        <input id="username" pInputText formControlName="name" />
-        <label for="username">Prénom et nom</label>
-      </p-floatlabel>
+      <div class="flex">
+        <p-float-label variant="on">
+          <input id="lastName" pInputText formControlName="lastName" />
+          <label for="lastName">Nom</label>
+        </p-float-label>
 
-      <p-floatlabel variant="on">
+        <p-float-label variant="on">
+          <input id="firstName" pInputText formControlName="firstName" />
+          <label for="firstName">Prénom</label>
+        </p-float-label>
+      </div>
+
+      <p-float-label variant="on">
         <input id="phone" type="tel" pInputText formControlName="phone" />
         <label for="phone">Télephone <small>(optionnel)</small></label>
-      </p-floatlabel>
+      </p-float-label>
     }
   }
 </form>
