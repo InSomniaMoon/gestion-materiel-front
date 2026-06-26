@@ -30,7 +30,7 @@ export class StructuresService {
     formData.append('image', file);
 
     return this.http.post<{ path: string }>(
-      `${this.baseUrl}/admin/structures/image`,
+      `${this.baseUrl}/admin/structures/images`,
       formData,
       CLEAR_CACHE_CONTEXT_OPTIONS()
     );

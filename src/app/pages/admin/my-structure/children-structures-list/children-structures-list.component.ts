@@ -9,12 +9,13 @@ import {
 import { AppTable } from '@app/components/ui/table/table.component';
 import { StructuresService } from '@app/core/services/structures.service';
 import { Structure } from '@app/core/types/structure.type';
+import { environment } from '@env/environment';
 import { TippyDirective } from '@ngneat/helipopper';
 import { buildDialogOptions } from '@utils/constants';
 import { Button } from 'primeng/button';
 import { DialogService } from 'primeng/dynamicdialog';
 import { TableModule } from 'primeng/table';
-import { CreateUnitComponent } from './create-structure/create-unit.component';
+import { CreateStructureComponent } from './create-structure/create-structure.component';
 
 @Component({
   selector: 'app-children-structures-list',
@@ -25,7 +26,7 @@ import { CreateUnitComponent } from './create-structure/create-unit.component';
 })
 export class ChildrenStructuresListComponent {
   private readonly dialogService = inject(DialogService);
-
+  readonly baseUrl = environment.api_url;
   structures = input.required<Structure[]>();
   structuresChanged = output<void>();
   private readonly structuresService = inject(StructuresService);
@@ -33,7 +34,7 @@ export class ChildrenStructuresListComponent {
   openCreateUnitDialog() {
     this.dialogService
       .open(
-        CreateUnitComponent,
+        CreateStructureComponent,
         buildDialogOptions({
           header: 'Créer une unité',
           width: '50%',
@@ -52,7 +53,7 @@ export class ChildrenStructuresListComponent {
   openUpdateUnitDialog(unit: any) {
     this.dialogService
       .open(
-        CreateUnitComponent,
+        CreateStructureComponent,
         buildDialogOptions({
           header: "Modifier l'unité",
           width: '50%',
@@ -70,7 +71,9 @@ export class ChildrenStructuresListComponent {
         this.structuresService
           .updateStructure(unit.id, {
             color: result.color,
-            name: result.name,
+            name: result.details.name,
+            image: result.details.image,
+            description: result.details.description,
             members: result.chiefs,
           })
           .subscribe({

@@ -1,0 +1,52 @@
+<form class="modal-content" [formRoot]="myForm">
+  <app-structure-details [field]="myForm.details" />
+  <div class="row">
+    <input
+      style="width: 45px; border: none; padding: 0"
+      type="color"
+      [formField]="myForm.color"
+      list="presetColors"
+      id="color" />
+    <datalist id="presetColors">
+      <option>#61bd98</option>
+      <option>#ee7f00</option>
+      <option>#1779ba</option>
+      <option>#c22e16</option>
+      <option>#006d3e</option>
+      <option>#003a5d</option>
+      <option>#6f74a6</option>
+    </datalist>
+    <label for="color">Couleur</label>
+
+    <input id="color-text" pInputText [formField]="myForm.color" />
+  </div>
+
+  <p-float-label variant="on">
+    <p-multiselect
+      [options]="chiefs.value()"
+      [filter]="true"
+      (onFilter)="chiefsFilter.set($event.filter)"
+      [style]="{ width: '100%' }"
+      [showToggleAll]="false"
+      display="chip"
+      [formField]="myForm.chiefs"
+      optionLabel="name" />
+    <label for="users">Chef•taine•s de l'unité</label>
+  </p-float-label>
+  @if (chiefsControl().length === 0) {
+    <small>Aucun chef ou cheftaine sélectionné. Pensez à en ajouter.</small>
+  }
+
+  <ul>
+    @for (chef of chiefsControl(); track $index) {
+      <li>{{ chef.name }}</li>
+    }
+  </ul>
+</form>
+<p-footer>
+  <p-button label="Annuler" severity="secondary" (onClick)="closeCancel()" />
+  <p-button
+    [label]="validateLabel()"
+    [disabled]="myForm().invalid()"
+    (onClick)="closeConfirm()" />
+</p-footer>

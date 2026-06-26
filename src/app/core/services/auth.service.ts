@@ -27,7 +27,10 @@ export class AuthService {
   selectedStructure = this._selectedStructure.asReadonly();
   isAuth = this._isAuth.asReadonly();
   isAppAdmin = computed(
-    () => JSON.parse(atob(this.jwt()?.split('.')[1] || '{}')).role == 'admin'
+    () =>
+      JSON.parse(atob(this.jwt()?.split('.')[1] || '{}'))[
+        'http://schemas.microsoft.com/ws/2008/06/identity/claims/role'
+      ] == 'admin'
   );
 
   isAdmin = computed(() => {

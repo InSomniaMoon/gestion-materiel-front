@@ -1,0 +1,20 @@
+<app-upload-file
+  [handler]="fileUploadHandler"
+  [fileUrl]="image()"
+  (fileUploaded)="setImagePath($event)"
+  [maxFileSize]="1024 * 1024 * 2" />
+<div class="flex wrap">
+  <p-float-label variant="on">
+    <input pInputText id="name" [formField]="field().name" />
+    <label for="name">Nom de la structure</label>
+  </p-float-label>
+  <p-floatlabel variant="on">
+    <textarea
+      rows="5"
+      cols="30"
+      pTextarea
+      id="description"
+      [formField]="field().description"></textarea>
+    <label for="description">Description</label>
+  </p-floatlabel>
+</div>

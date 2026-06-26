@@ -61,9 +61,23 @@
           </ng-template>
         </p-select>
       } @else {
-        <span class="mr-4" style="color: white">
-          {{ selectedStructure()?.name ?? 'Structure Active' }}
-        </span>
+        <div class="flex items-center mr-4">
+          @if (selectedStructure()?.image) {
+            <img
+              [src]="imgBaseUrl + selectedStructure()?.image"
+              alt=""
+              width="24px"
+              height="24px" />
+          } @else if (selectedStructure()?.color) {
+            <p-badge
+              size="small"
+              value=" "
+              [style]="{ 'background-color': selectedStructure()?.color }" />
+          }
+          <span style="color: white">
+            {{ selectedStructure()?.name ?? 'Structure Active' }}
+          </span>
+        </div>
       }
       <p-tieredMenu #userMenu [popup]="true" [model]="authItems()">
         <ng-template #item let-item let-hasSubmenu="hasSubmenu">
