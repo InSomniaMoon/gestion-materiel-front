@@ -88,7 +88,6 @@ export class HeaderComponent {
       routerLink: '/dashboard',
       icon: 'pi pi-home',
     },
-    { label: 'test camera', routerLink: '/test-camera', icon: 'pi pi-camera' },
     { label: 'Matériel', routerLink: '/items', icon: 'pi pi-box' },
     {
       label: 'Administration',
