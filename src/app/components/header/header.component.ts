@@ -45,7 +45,7 @@ export class HeaderComponent {
   readonly selectedStructure = this.auth$.selectedStructure;
   private readonly router = inject(Router);
 
-  protected readonly imgBaseUrl = environment.api_url + '/storage/';
+  protected readonly imgBaseUrl = environment.api_url;
 
   lettres = computed(() =>
     this.user()
