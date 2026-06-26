@@ -26,12 +26,14 @@ export class AuthService {
 
   selectedStructure = this._selectedStructure.asReadonly();
   isAuth = this._isAuth.asReadonly();
-  isAppAdmin = computed(
-    () =>
-      JSON.parse(atob(this.jwt()?.split('.')[1] || '{}'))[
-        'http://schemas.microsoft.com/ws/2008/06/identity/claims/role'
-      ] == 'admin'
-  );
+  isAppAdmin = computed(() => {
+    const jwt = JSON.parse(this.jwt()?.split('.')[1] || '{}');
+    console.log('jwt', jwt);
+    return (
+      jwt['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] ==
+      'admin'
+    );
+  });
 
   isAdmin = computed(() => {
     if (!this.user()) {
@@ -123,7 +125,9 @@ export class AuthService {
     this.jwt.set(DTO.token);
 
     this.removeCookie(REFRESH_TOKEN_KEY);
-    this.setCookie(REFRESH_TOKEN_KEY, DTO.refreshToken, 14);
+    this.setCookie(REFRESH_TOKEN_KEY, DTO.refreshToken, 7);
+
+    console.log(DTO.user);
   }
 
   private setCookie(c_name: string, value: string, exdays: number) {
