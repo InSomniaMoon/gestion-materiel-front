@@ -99,15 +99,17 @@ export class Step1Component implements OnInit {
   selectedStructureId = linkedSignal<number | null>(
     () => this.structures().at(0)?.id ?? null
   );
-  selectedStructure = computed(() =>
-    this.structures().find(
+  selectedStructure = computed(() => ({
+    ...this.structures().find(
       structure => structure.id === this.selectedStructureId()
-    )
-  );
+    ),
+  }));
 
-  private startDateAsSignal!: Signal<Date | null>;
+  startDateAsSignal!: Signal<Date | null>;
 
-  private endDateAsSignal!: Signal<Date | null>;
+  endDateAsSignal!: Signal<Date | null>;
+
+  readonly now = new Date();
 
   doubleDates = linkedSignal(() => {
     return this.startDateAsSignal() && this.endDateAsSignal()
@@ -200,6 +202,12 @@ export class Step1Component implements OnInit {
             });
           }
         }
+      });
+
+    this.formGroup()
+      .get('structure')
+      ?.valueChanges.subscribe((structure: Structure) => {
+        this.selectedStructureId.set(structure?.id ?? null);
       });
 
     if (this.formGroup().touched) {

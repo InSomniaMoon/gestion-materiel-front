@@ -6,9 +6,7 @@
     </p-float-label>
     <div class="flex flex-1" style="width: 100%">
       <span
-        [style]="
-          `display:block; width: 40px; height: 28px; border-radius: 4px; background-color: ${selectedStructure()?.color ?? 'black'}; `
-        "></span>
+        [style]="`display:block; width: 40px; height: 28px; border-radius: 4px; background-color: ${selectedStructure().color ?? 'black'}; `"></span>
       @if (structures().length > 1) {
         <p-float-label variant="on" style="width: 100%">
           <p-select
@@ -21,7 +19,7 @@
           <label for="structureId">Unité empruntante</label>
         </p-float-label>
       } @else {
-        <p>Structure empruntante : {{ selectedStructure()?.name }}</p>
+        <p>Structure empruntante : {{ selectedStructure().name }}</p>
       }
     </div>
   </div>
@@ -49,6 +47,8 @@
           formControlName="endDate"
           fluid
           [readonlyInput]="true"
+          [defaultDate]="startDateAsSignal() ?? now"
+          [minDate]="startDateAsSignal() ?? now"
           showIcon
           appendTo="body"
           iconDisplay="input"
