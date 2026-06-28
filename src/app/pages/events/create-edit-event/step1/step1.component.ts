@@ -96,9 +96,7 @@ export class Step1Component implements OnInit {
   nextStep = output();
   protected readonly dateFormat = 'dd/mm/yy';
   formGroup = input.required<FormGroup>();
-  selectedStructureId = linkedSignal<number | null>(
-    () => this.structures().at(0)?.id ?? null
-  );
+  selectedStructureId = signal<number | null>(null);
   selectedStructure = computed(() => ({
     ...this.structures().find(
       structure => structure.id === this.selectedStructureId()
@@ -204,10 +202,15 @@ export class Step1Component implements OnInit {
         }
       });
 
+    console.log(this.formGroup().get('structure')?.value);
+    this.selectedStructureId.set(
+      this.formGroup().get('structure')?.value ?? null
+    );
+
     this.formGroup()
       .get('structure')
-      ?.valueChanges.subscribe((structure: Structure) => {
-        this.selectedStructureId.set(structure?.id ?? null);
+      ?.valueChanges.subscribe((structureId: number | null) => {
+        this.selectedStructureId.set(structureId ?? null);
       });
 
     if (this.formGroup().touched) {
