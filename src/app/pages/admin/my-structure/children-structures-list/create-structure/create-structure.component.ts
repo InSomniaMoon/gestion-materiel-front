@@ -78,7 +78,7 @@ export class CreateStructureComponent implements OnInit {
   structure = input<StructureWithRole>();
 
   private readonly model = signal<CreateStructureModel>({
-    details: { name: '', description: '', image: '' },
+    details: { name: '', image: '' },
     color: '#000000',
     chiefs: [],
     responsible: null,
@@ -101,7 +101,6 @@ export class CreateStructureComponent implements OnInit {
       this.model.set({
         details: {
           name: structure.name || '',
-          description: structure.description || '',
           image: structure.image || '',
         },
         color: structure.color || '#000000',

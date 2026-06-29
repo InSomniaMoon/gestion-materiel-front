@@ -73,7 +73,6 @@ export class ChildrenStructuresListComponent {
             color: result.color,
             name: result.details.name,
             image: result.details.image,
-            description: result.details.description,
             members: result.chiefs,
           })
           .subscribe({

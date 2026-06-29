@@ -6,7 +6,6 @@ export type Structure = {
   nomStructure: string;
   type: 'NATIONAL' | 'TERRITOIRE' | 'GROUPE' | 'UNITE';
   name: string;
-  description?: string;
   image?: string;
   color?: string;
   members?: User[];

@@ -16,7 +16,6 @@ import { tap } from 'rxjs';
 
 export interface StructureDetailsModel {
   name: string;
-  description: string;
   image: string;
 }
 
