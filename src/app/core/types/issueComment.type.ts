@@ -3,7 +3,7 @@
 //   "item_option_issue_id": 1,
 //   "comment": "pied command\u00e9",
 //   "user_id": 1,
-//   "created_at": "2024-11-07T21:44:03.000000Z",
+//   "createdAt": "2024-11-07T21:44:03.000000Z",
 //   "author": {
 //       "id": 1,
 //       "firstName": "Pierre",
