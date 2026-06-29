@@ -16,14 +16,13 @@ import { PaginatorComponent } from '@app/components/ui/paginator/paginator.compo
 import { AuthService } from '@app/core/services/auth.service';
 import { CategoriesService } from '@app/core/services/categories.service';
 import { TableLayoutService } from '@app/core/services/table-layout.service';
-import { OrderDir } from '@app/core/types/pagination-request.type';
+import { ItemBadgeComponent } from '@app/item-badge/item-badge.component';
 import { ItemDetailsComponent } from '@app/pages/items/item-details/item-details.component';
 import { AppTable } from '@components/ui/table/table.component';
 import { Item } from '@core/types/item.type';
 import { environment } from '@env/environment';
 import { ItemsService } from '@services/items.service';
 import { buildDialogOptions } from '@utils/constants';
-import { Badge } from 'primeng/badge';
 import { Button } from 'primeng/button';
 import { Card } from 'primeng/card';
 import { DataView } from 'primeng/dataview';
@@ -49,9 +48,9 @@ import { ItemsReloaderService } from './items-reloader.service';
     PaginatorComponent,
     DataView,
     FormsModule,
-    Badge,
     SelectButton,
     Card,
+    ItemBadgeComponent,
   ],
   providers: [ItemsReloaderService],
   template: `
@@ -149,18 +148,7 @@ import { ItemsReloaderService } from './items-reloader.service';
               <tr
                 (click)="isAdmin() ? openItemUpdate(item) : openItemView(item)">
                 <td class="image">
-                  <p-badge
-                    size="small"
-                    value=" "
-                    [severity]="
-                      item.state === 'OK'
-                        ? 'success'
-                        : item.state === 'NOK'
-                          ? 'warn'
-                          : item.state === 'KO'
-                            ? 'danger'
-                            : 'info'
-                    " />
+                  <app-item-badge [state]="item.state" />
                 </td>
                 <td class="image">
                   @if (item.image) {
@@ -188,18 +176,7 @@ import { ItemsReloaderService } from './items-reloader.service';
               <p-card
                 (click)="isAdmin() ? openItemUpdate(item) : openItemView(item)">
                 <div class="flex" style="height: 100%;">
-                  <p-badge
-                    size="small"
-                    value=" "
-                    [severity]="
-                      item.state === 'OK'
-                        ? 'success'
-                        : item.state === 'NOK'
-                          ? 'warn'
-                          : item.state === 'KO'
-                            ? 'danger'
-                            : 'info'
-                    " />
+                  <app-item-badge [state]="item.state" />
                   @if (item.image) {
                     <img
                       [src]="imageBaseUrl + item.image"
@@ -326,7 +303,7 @@ export class ItemsListComponent implements OnInit {
         this.itemService.getItems({
           page: params.page + 1,
           orderBy: params.orderBy,
-          orderDir: params.sortBy as OrderDir,
+          orderDir: params.sortBy,
           size: params.size,
           q: params.q,
           categoryId: params.categoryId,

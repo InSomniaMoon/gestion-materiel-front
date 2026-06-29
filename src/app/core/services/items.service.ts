@@ -19,7 +19,7 @@ export class ItemsService {
   private readonly http = inject(HttpClient);
   private readonly api_url = environment.api_url;
 
-  createItem(item: Item) {
+  createItem(item: Partial<Item>) {
     return this.http.post<Item>(
       `${this.api_url}/admin/items`,
       item,
@@ -74,7 +74,7 @@ export class ItemsService {
     return this.http.get<Item>(url);
   }
 
-  updateItem(item: Item) {
+  updateItem(item: Partial<Item>) {
     return this.http.put<Item>(
       `${this.api_url}/admin/items/${item.id}`,
       item,

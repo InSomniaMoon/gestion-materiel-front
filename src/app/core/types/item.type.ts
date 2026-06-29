@@ -15,7 +15,7 @@ export type Item = {
   image?: string;
   structureId: number;
   structure?: Structure;
-  state?: 'OK' | 'NOK' | 'KO' | 'UNKNOWN';
+  state: 'OK' | 'NOK' | 'KO' | 'UNKNOWN';
 };
 
 export type ItemWithQuantity = Item & { quantity: number; rest: number };

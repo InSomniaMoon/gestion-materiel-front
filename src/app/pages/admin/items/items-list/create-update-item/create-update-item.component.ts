@@ -230,9 +230,9 @@ export class CreateUpdateItemComponent implements OnInit {
   onSubmit() {
     if (this.form.valid) {
       const value = this.form.getRawValue();
-      const item: Item = {
-        id: this.data?.id ?? 0,
-        usable: true,
+      const item: Partial<Item> = {
+        id: this.data?.id ?? undefined,
+        usable: this.data?.usable ?? true,
         name: value.name,
         description: value.description,
         categoryId: value.categoryId!,

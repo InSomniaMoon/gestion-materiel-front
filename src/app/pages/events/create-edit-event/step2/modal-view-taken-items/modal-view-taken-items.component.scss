@@ -23,3 +23,15 @@ p-footer {
 h3 {
   margin: 0.5rem 0;
 }
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  li {
+    margin: 0.5rem 0;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+}

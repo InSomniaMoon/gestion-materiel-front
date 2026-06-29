@@ -19,6 +19,7 @@ import { SearchBarComponent } from '@app/components/search-bar/search-bar.compon
 import { PaginatorComponent } from '@app/components/ui/paginator/paginator.component';
 import { AppTable } from '@app/components/ui/table/table.component';
 import { Event } from '@app/core/types/event.type';
+import { ItemBadgeComponent } from '@app/item-badge/item-badge.component';
 import { ItemWithQuantity } from '@core/types/item.type';
 import { environment } from '@env/environment';
 import { ItemsService } from '@services/items.service';
@@ -54,6 +55,7 @@ import { SelectQuantityItemsComponent } from './select-quantity-items/select-qua
     ButtonDirective,
     ButtonLabel,
     ButtonIcon,
+    ItemBadgeComponent,
   ],
   templateUrl: './step2.component.html',
   styleUrl: './step2.component.scss',
@@ -165,7 +167,7 @@ export class Step2Component implements OnInit {
   private readonly dialogService = inject(DialogService);
 
   viewTakenItems() {
-    this.dialogService.open(
+    const ref = this.dialogService.open<ModalViewTakenItemsComponent>(
       ModalViewTakenItemsComponent,
       buildDialogOptions({
         header: 'Objets pris',
@@ -176,6 +178,15 @@ export class Step2Component implements OnInit {
         },
       })
     );
+    ref?.onChildComponentLoaded.subscribe(childComponent => {
+      childComponent.itemChange.subscribe((item: ItemSelection) => {
+        this.formGroup().setValue(
+          this.selectedItems().filter(
+            (i: ItemSelection) => i.item.id !== item.item.id
+          )
+        );
+      });
+    });
   }
 
   onCategoryChange() {
