@@ -11,10 +11,10 @@ import { environment } from '@env/environment';
 import { AuthService } from '@services/auth.service';
 import { MenuItem } from 'primeng/api';
 import { AvatarModule } from 'primeng/avatar';
-import { Badge } from 'primeng/badge';
 import { MenubarModule } from 'primeng/menubar';
 import { Select } from 'primeng/select';
 import { TieredMenuModule } from 'primeng/tieredmenu';
+import { StructureBadgeComponent } from '../structure-badge/structure-badge.component';
 
 export type MenuItemWithImage = MenuItem & {
   img?: string;
@@ -28,9 +28,9 @@ export type MenuItemWithImage = MenuItem & {
     TieredMenuModule,
     MenubarModule,
     RouterLink,
-    Badge,
     Select,
     FormsModule,
+    StructureBadgeComponent,
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',

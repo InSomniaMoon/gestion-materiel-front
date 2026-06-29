@@ -43,11 +43,13 @@ import { DeclareIssueComponent } from '../declare-issue/declare-issue.component'
         ">
         <p>{{ issue.value }}</p>
         <ng-template pTemplate="footer">
-          <p-button
-            label="Voir les details"
-            severity="secondary"
-            outlined="true"
-            (onClick)="openIssueDetailsModal(issue)" />
+          @if (userAdmin()) {
+            <p-button
+              label="Voir les détails"
+              severity="secondary"
+              outlined="true"
+              (onClick)="openIssueDetailsModal(issue)" />
+          }
         </ng-template>
       </p-card>
 

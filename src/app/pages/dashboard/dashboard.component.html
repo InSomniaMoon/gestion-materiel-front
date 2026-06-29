@@ -1,5 +1,7 @@
 @defer (when isStructureResp()) {
-  <app-admin-dashboard />
+  @if (isStructureResp()) {
+    <app-admin-dashboard />
+  }
 }
 @defer (when isStructureChief() || isStructureResp()) {
   <app-user-dashboard />

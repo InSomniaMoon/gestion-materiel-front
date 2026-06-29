@@ -12,7 +12,7 @@ export class ItemIssuesService {
   private readonly api_url = environment.api_url;
 
   getItemIssues(itemId: number) {
-    const url = `/admin/items/${itemId}/issues`;
+    const url = `/items/${itemId}/issues`;
     return this.http.get<ItemIssue[]>(this.api_url + url);
   }
 
@@ -33,7 +33,7 @@ export class ItemIssuesService {
       },
       CLEAR_CACHE_CONTEXT_OPTIONS(
         new Set([
-          `${this.api_url}/admin/items/${itemId}/issues`,
+          `${this.api_url}/items/${itemId}/issues`,
           `${this.api_url}/items/${itemId}`,
           `${this.api_url}/items`,
         ])

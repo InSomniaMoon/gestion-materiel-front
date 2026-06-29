@@ -5,6 +5,7 @@ import {
   inject,
   input,
   OnInit,
+  resource,
   signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -13,7 +14,6 @@ import { ItemIssuesService } from '@app/core/services/item-issues.service';
 import { Item } from '@core/types/item.type';
 import { AuthService } from '@services/auth.service';
 import { ItemsService } from '@services/items.service';
-import { injectQuery } from '@tanstack/angular-query-experimental';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
@@ -72,10 +72,11 @@ export class ItemDetailsComponent implements OnInit {
       });
   }
 
-  issuesQuery = injectQuery(() => ({
-    queryKey: ['issues', this.itemId()],
-    enabled: this.itemId() !== undefined && this.userAdmin(),
-    queryFn: () =>
-      lastValueFrom(this.itemIssuesService.getItemIssues(this.itemId())),
-  }));
+  issuesQuery = resource({
+    loader: ({ params }) =>
+      lastValueFrom(this.itemIssuesService.getItemIssues(params.itemId)),
+    params: () => ({
+      itemId: this.itemId(),
+    }),
+  });
 }

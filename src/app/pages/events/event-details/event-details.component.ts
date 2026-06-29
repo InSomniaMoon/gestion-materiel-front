@@ -11,6 +11,7 @@ import {
   SimpleModalComponent,
   SimpleModalData,
 } from '@app/components/simple-modal/simple-modal.component';
+import { StructureBadgeComponent } from '@app/components/structure-badge/structure-badge.component';
 import { AuthService } from '@app/core/services/auth.service';
 import { EventsService } from '@app/core/services/events.service';
 import { buildDialogOptions } from '@app/core/utils/constants';
@@ -21,7 +22,13 @@ import { DialogService } from 'primeng/dynamicdialog';
 
 @Component({
   selector: 'app-event-details',
-  imports: [DatePipe, Card, RouterLink, ButtonDirective],
+  imports: [
+    DatePipe,
+    Card,
+    RouterLink,
+    ButtonDirective,
+    StructureBadgeComponent,
+  ],
   templateUrl: './event-details.component.html',
   styleUrl: './event-details.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

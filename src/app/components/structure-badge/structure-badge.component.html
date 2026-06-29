@@ -1,0 +1,12 @@
+@if (structure().image) {
+  <img
+    [src]="imgBaseUrl + structure().image"
+    alt=""
+    width="24px"
+    height="24px" />
+} @else if (structure().color) {
+  <p-badge
+    size="small"
+    value=" "
+    [style]="{ 'background-color': structure().color }" />
+}

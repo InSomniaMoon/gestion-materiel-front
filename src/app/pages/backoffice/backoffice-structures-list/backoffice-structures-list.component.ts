@@ -6,6 +6,7 @@ import {
   signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { StructureBadgeComponent } from '@app/components/structure-badge/structure-badge.component';
 import { PaginatorComponent } from '@app/components/ui/paginator/paginator.component';
 import { AppTable } from '@app/components/ui/table/table.component';
 import { TableLayoutService } from '@app/core/services/table-layout.service';
@@ -14,7 +15,6 @@ import { debounceTimeSignal } from '@app/core/utils/signals.utils';
 import { environment } from '@env/environment';
 import { injectQuery } from '@tanstack/angular-query-experimental';
 import { buildDialogOptions } from '@utils/constants';
-import { Badge } from 'primeng/badge';
 import { Button } from 'primeng/button';
 import { Card } from 'primeng/card';
 import { DataView } from 'primeng/dataview';
@@ -43,7 +43,7 @@ import { BackofficeImportStructuresComponent } from './backoffice-import-structu
     SelectButton,
     PaginatorComponent,
     Card,
-    Badge,
+    StructureBadgeComponent,
   ],
   template: `
     <matos-table [status]="structuresQuery.status()">
@@ -127,10 +127,7 @@ import { BackofficeImportStructuresComponent } from './backoffice-import-structu
                 tabindex="0">
                 <ng-template #header>
                   <div class="flex">
-                    <p-badge
-                      badgeSize="small"
-                      value=" "
-                      [style]="{ 'background-color': structure.color }" />
+                    <app-structure-badge [structure]="structure" />
                     <h3>{{ structure.name }}</h3>
                   </div>
                 </ng-template>

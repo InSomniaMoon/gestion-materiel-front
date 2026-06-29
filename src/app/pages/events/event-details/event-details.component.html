@@ -1,5 +1,6 @@
 <div class="header">
   <h1>{{ event().name }}</h1>
+
   @if (canUpdate()) {
     <div class="flex">
       <a pButton severity="info" [routerLink]="['/events', event().id, 'edit']">
@@ -12,6 +13,11 @@
   }
 </div>
 
+<h2 class="flex">
+  <app-structure-badge [structure]="event().structure" />
+  {{ event().structure.name }}
+</h2>
+
 {{ event().startDate | date: 'short' }} -
 {{ event().endDate | date: 'short' }}
 
@@ -22,9 +28,7 @@
 <div class="material">
   @for (item of event().items; track item.id) {
     <p-card
-      [header]="
-        `${item.name} ${item?.category?.identified ? '' : `(x${item.quantity})`}`
-      ">
+      [header]="`${item.name} ${item?.category?.identified ? '' : `(x${item.quantity})`}`">
       <div>
         {{ item.category?.name }}
         <!-- {{ item | json }} -->

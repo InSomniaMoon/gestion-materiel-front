@@ -19,7 +19,7 @@ import { Textarea } from 'primeng/textarea';
 import { ToggleSwitch } from 'primeng/toggleswitch';
 
 @Component({
-  selector: 'app-declare-option-issue',
+  selector: 'app-declare-issue',
   imports: [
     DialogModule,
     Button,
