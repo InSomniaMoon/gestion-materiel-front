@@ -27,6 +27,7 @@ import { TableModule, TablePageEvent } from 'primeng/table';
 import { lastValueFrom } from 'rxjs';
 import { BackofficeService } from '../services/backoffice.service';
 import { CreateUpdateStructureComponent } from './backoffice-create-update-structure/backoffice-create-update-structure.component';
+import { BackofficeImportStructuresComponent } from './backoffice-import-structures/backoffice-import-structures.component';
 
 @Component({
   selector: 'app-backoffice-structures-list',
@@ -60,6 +61,11 @@ import { CreateUpdateStructureComponent } from './backoffice-create-update-struc
                 ngModel
                 placeholder="Rechercher une structure" />
             </p-iconfield>
+            <p-button
+              icon="pi pi-upload"
+              label="Importer"
+              severity="secondary"
+              (onClick)="openImportStructuresDialog()" />
             <p-select-button
               [ngModel]="layout()"
               (ngModelChange)="setLayout($event)"
@@ -216,5 +222,21 @@ export class AppAdminStructuresListComponent {
   pageChange(event: TablePageEvent) {
     this.size.set(event.rows);
     this.page.set(Math.floor(event.first / event.rows));
+  }
+
+  openImportStructuresDialog() {
+    this.dialogService
+      .open(
+        BackofficeImportStructuresComponent,
+        buildDialogOptions({
+          header: 'Importer des structures',
+          width: '70%',
+        })
+      )!
+      .onClose.subscribe(imported => {
+        if (imported) {
+          this.structuresQuery.refetch();
+        }
+      });
   }
 }

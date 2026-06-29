@@ -1,5 +1,6 @@
 import { HttpClient, httpResource } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
+import { ImportStructuresResult } from '@app/core/types/structure-import.type';
 import { Structure, StructureWithRole } from '@app/core/types/structure.type';
 import { UserStructure } from '@app/core/types/userStructure.type';
 import { PaginatedData } from '@core/types/paginatedData.type';
@@ -128,6 +129,17 @@ export class BackofficeService {
       `${this.apiUrl}/structures/${id}`,
       dto,
       CLEAR_CACHE_CONTEXT_OPTIONS()
+    );
+  }
+
+  importStructures(file: File) {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return this.http.post<ImportStructuresResult>(
+      `${this.apiUrl}/structures/import`,
+      formData,
+      CLEAR_CACHE_CONTEXT_OPTIONS(new Set([`${this.apiUrl}/structures`]))
     );
   }
 }
