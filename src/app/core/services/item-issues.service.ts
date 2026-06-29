@@ -2,9 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '@env/environment';
 import { AdminDashboardItemIssue, ItemIssue } from '../types/itemIssue.type';
-import { PaginatedData } from '../types/paginatedData.type';
-import { PaginationRequest } from '../types/pagination-request.type';
-import { queryParams } from '../utils/http.utils';
 import { CLEAR_CACHE_CONTEXT_OPTIONS } from '../utils/injectionToken';
 
 @Injectable({
@@ -47,25 +44,22 @@ export class ItemIssuesService {
   resolve(itemId: number, issue: ItemIssue) {
     return this.http
       .patch<ItemIssue>(
-        `${this.api_url}/admin/items/${itemId}/issues/${issue.id}/resolve`,
+        `${this.api_url}/admin/issues/${issue.id}/resolve`,
         {},
 
         CLEAR_CACHE_CONTEXT_OPTIONS(
-          new Set([`${this.api_url}/admin/items/${itemId}/issues`])
+          new Set([
+            `${this.api_url}/admin/items/${itemId}/issues`,
+            `${this.api_url}/admin/items`,
+            `${this.api_url}/items`,
+          ])
         )
       )
       .pipe();
   }
 
-  getPaginatedOpenedIssues(opt: Partial<PaginationRequest> = {}) {
-    const defaultOpt: Partial<PaginationRequest> = {
-      page: 1,
-      size: 25,
-    };
-    const finalOpt = { ...defaultOpt, ...opt };
+  getOpenedIssues() {
     const url = `${this.api_url}/admin/issues/open`;
-    return this.http.get<PaginatedData<AdminDashboardItemIssue>>(url, {
-      params: queryParams(finalOpt),
-    });
+    return this.http.get<AdminDashboardItemIssue[]>(url);
   }
 }

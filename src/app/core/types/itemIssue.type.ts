@@ -7,13 +7,15 @@
 //  }
 
 import { Item } from './item.type';
+import { User } from './user.type';
 
 export type ItemIssue = {
   id: number;
-  item_id: number;
+  itemId: number;
   value: string;
-  created_at: Date;
+  createdAt: Date;
   status: string;
+  reportedBy?: User;
 };
 
 export type AdminDashboardItemIssue = ItemIssue & {

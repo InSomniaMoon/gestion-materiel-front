@@ -15,9 +15,7 @@ export class IssueCommentsService {
 
   getComments(itemId: number, issueId: number) {
     return this.http
-      .get<
-        IssueComment[]
-      >(`${this.api_url}/admin/items/${itemId}/issues/${issueId}/comments`)
+      .get<IssueComment[]>(`${this.api_url}/admin/issues/${issueId}/comments`)
       .pipe(
         map(comments =>
           comments.map(comment => {
@@ -30,12 +28,15 @@ export class IssueCommentsService {
 
   addComment(itemId: number, issueId: number, comment: string) {
     return this.http.post<IssueComment>(
-      `${this.api_url}/admin/items/${itemId}/issues/${issueId}/comments`,
+      `${this.api_url}/admin/issues/${issueId}/comments`,
       {
         comment,
       },
       CLEAR_CACHE_CONTEXT_OPTIONS(
-        new Set([`${this.api_url}/admin/items/${itemId}/issues/${issueId}`])
+        new Set([
+          `${this.api_url}/admin/items/${itemId}/issues/${issueId}`,
+          `${this.api_url}/admin/issues/${issueId}/comments`,
+        ])
       )
     );
   }

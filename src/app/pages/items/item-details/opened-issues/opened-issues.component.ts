@@ -32,7 +32,15 @@ import { DeclareIssueComponent } from '../declare-issue/declare-issue.component'
     </div>
 
     @for (issue of issues(); track $index) {
-      <p-card [subheader]="'délcarée le ' + (issue.created_at | date)">
+      <p-card
+        [subheader]="
+          'Declarée le ' +
+          (issue.createdAt | date) +
+          ' par ' +
+          issue.reportedBy?.firstName +
+          ' ' +
+          issue.reportedBy?.lastName
+        ">
         <p>{{ issue.value }}</p>
         <ng-template pTemplate="footer">
           <p-button

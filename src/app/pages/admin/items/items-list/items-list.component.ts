@@ -415,13 +415,17 @@ export class ItemsListComponent implements OnInit {
   }
 
   openItemView(item: Item) {
-    this.dialogService.open(
-      ItemDetailsComponent,
-      buildDialogOptions({
-        inputValues: {
-          itemId: item.id,
-        },
-      })
-    );
+    this.dialogService
+      .open(
+        ItemDetailsComponent,
+        buildDialogOptions({
+          inputValues: {
+            itemId: item.id,
+          },
+        })
+      )
+      ?.onClose.subscribe(() => {
+        this.items.reload();
+      });
   }
 }

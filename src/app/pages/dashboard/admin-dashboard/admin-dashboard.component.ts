@@ -11,7 +11,6 @@ import { RouterLink } from '@angular/router';
 import { AuthService } from '@app/core/services/auth.service';
 import { ItemIssuesService } from '@app/core/services/item-issues.service';
 import { AdminDashboardItemIssue } from '@app/core/types/itemIssue.type';
-import { OrderDir } from '@app/core/types/pagination-request.type';
 import { environment } from '@env/environment';
 import { ButtonDirective } from 'primeng/button';
 import { Card } from 'primeng/card';
@@ -45,30 +44,12 @@ export class AdminDashboardComponent {
   }
   issuesResource = resource({
     params: () => ({
-      page: this.page() + 1,
-      size: this.size(),
-      q: this.searchQuery(),
-      orderBy: this.orderBy(),
-      sortBy: this.sortBy() === 1 ? 'asc' : 'desc',
       triggerChange: this.authService.selectedStructure(),
     }),
-    loader: ({ params }) =>
-      lastValueFrom(
-        this.itemIssuesService
-          .getPaginatedOpenedIssues({
-            orderBy: params.orderBy,
-            page: params.page,
-            q: params.q,
-            size: params.size,
-            orderDir: params.sortBy as OrderDir,
-          })
-          .pipe()
-      ),
+    loader: () => lastValueFrom(this.itemIssuesService.getOpenedIssues()),
   });
 
-  private readonly _issues = computed(
-    () => this.issuesResource.value()?.data || []
-  );
+  private readonly _issues = computed(() => this.issuesResource.value() || []);
 
   issues = computed(() => {
     const items: Record<string, AdminDashboardItemIssue[]> = {};
