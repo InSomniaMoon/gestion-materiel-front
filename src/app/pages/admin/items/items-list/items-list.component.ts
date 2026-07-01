@@ -13,6 +13,8 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { SearchBarComponent } from '@app/components/search-bar/search-bar.component';
 import { PaginatorComponent } from '@app/components/ui/paginator/paginator.component';
+import { EllipsisPipe } from '@app/core/pipes/ellipsis.pipe';
+import { FirstLinePipe } from '@app/core/pipes/first-line.pipe';
 import { AuthService } from '@app/core/services/auth.service';
 import { CategoriesService } from '@app/core/services/categories.service';
 import { TableLayoutService } from '@app/core/services/table-layout.service';
@@ -51,6 +53,8 @@ import { ItemsReloaderService } from './items-reloader.service';
     SelectButton,
     Card,
     ItemBadgeComponent,
+    EllipsisPipe,
+    FirstLinePipe,
   ],
   providers: [ItemsReloaderService],
   template: `
@@ -134,6 +138,7 @@ import { ItemsReloaderService } from './items-reloader.service';
                 </th>
                 <th></th>
                 <th pSortableColumn="name">Nom<p-sortIcon field="name" /></th>
+                <th scope="col">Description</th>
                 <th pSortableColumn="categoryId">
                   Categorie <p-sortIcon field="categoryId" />
                 </th>
@@ -156,6 +161,9 @@ import { ItemsReloaderService } from './items-reloader.service';
                   }
                 </td>
                 <td>{{ item.name }}</td>
+                <td style="text-wrap: nowrap;">
+                  {{ item.description | firstLine | ellipsis: 100 }}
+                </td>
                 <td style="text-wrap: nowrap;">{{ item.category.name }}</td>
                 <td style="text-wrap: nowrap;text-align: center;">
                   {{ item.openIssuesCount }}
@@ -227,7 +235,10 @@ export class ItemsListComponent implements OnInit {
   private readonly tableLayoutService = inject(TableLayoutService);
   readonly imageBaseUrl = `${environment.api_url}`;
 
-  readonly sortOptions = [{ label: 'Catégorie', value: 'categoryId' }];
+  readonly sortOptions = [
+    { label: 'Catégorie', value: 'categoryId' },
+    { label: 'Nom', value: 'name' },
+  ];
 
   switchSortOrder() {
     this.sortBy.set(this.sortBy() === 1 ? -1 : 1);
