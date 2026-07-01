@@ -204,7 +204,7 @@ export class CreateUpdateItemComponent implements OnInit {
     this.form.patchValue({
       name: this.data.name,
       description: this.data.description,
-      categoryId: this.data.categoryId,
+      categoryId: this.data.category?.id,
       dateOfBuy: this.data.dateOfBuy
         ? new Date(this.data.dateOfBuy)
         : undefined,
