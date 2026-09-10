@@ -1,3 +1,9 @@
+<h2>
+  {{ event()?.name }}
+  ({{ event()?.startDate | date: 'shortDate' }} -
+  {{ event()?.endDate | date: 'shortDate' }})
+</h2>
+
 <div class="content">
   <matos-table [status]="itemsResource.status()">
     <div header class="header">

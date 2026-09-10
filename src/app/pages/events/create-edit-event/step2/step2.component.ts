@@ -14,6 +14,7 @@ import {
 } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
+import { DatePipe } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { SearchBarComponent } from '@app/components/search-bar/search-bar.component';
 import { PaginatorComponent } from '@app/components/ui/paginator/paginator.component';
@@ -56,6 +57,7 @@ import { SelectQuantityItemsComponent } from './select-quantity-items/select-qua
     ButtonLabel,
     ButtonIcon,
     ItemBadgeComponent,
+    DatePipe,
   ],
   templateUrl: './step2.component.html',
   styleUrl: './step2.component.scss',

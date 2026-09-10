@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -11,7 +12,7 @@ import { Textarea } from 'primeng/textarea';
 
 @Component({
   selector: 'app-step3',
-  imports: [Button, FloatLabel, Textarea, ReactiveFormsModule],
+  imports: [Button, FloatLabel, Textarea, ReactiveFormsModule, DatePipe],
   templateUrl: './step3.component.html',
   styleUrl: './step3.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
