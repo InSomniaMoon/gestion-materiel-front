@@ -1,4 +1,3 @@
-import { DatePipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -35,7 +34,6 @@ export type ItemSelection = {
     Step2Component,
     Step3Component,
     Step4Component,
-    DatePipe,
   ],
   templateUrl: './create-edit-event.component.html',
   styleUrl: './create-edit-event.component.scss',

@@ -66,6 +66,7 @@ import { SelectQuantityItemsComponent } from './select-quantity-items/select-qua
 export class Step2Component implements OnInit {
   private readonly itemsService = inject(ItemsService);
   private readonly injectionContext = inject(Injector);
+
   nextStep = output();
   previousStep = output();
   startDate = input.required<Date>();

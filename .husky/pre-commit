@@ -9,6 +9,8 @@ if [ -s "/opt/homebrew/opt/nvm/nvm.sh" ]; then . "/opt/homebrew/opt/nvm/nvm.sh";
 if git diff --cached --quiet --diff-filter=ACMR; then
   exit 0
 fi
+# test to build ng app
+npx --yes ng build --configuration production
 
 # Prettify only known text files; Prettier will skip unknown with --ignore-unknown
 git diff --cached --name-only -z --diff-filter=ACMR \

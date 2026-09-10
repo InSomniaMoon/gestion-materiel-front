@@ -6,6 +6,7 @@ import {
   output,
 } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { ActualEvent } from '@app/core/types/event.type';
 import { Button } from 'primeng/button';
 import { FloatLabel } from 'primeng/floatlabel';
 import { Textarea } from 'primeng/textarea';
@@ -20,6 +21,7 @@ import { Textarea } from 'primeng/textarea';
 export class Step3Component {
   nextStep = output();
   previousStep = output();
+  event = input.required<ActualEvent | null>();
 
   formGroup = input.required<FormControl>();
 }

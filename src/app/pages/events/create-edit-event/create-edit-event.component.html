@@ -27,6 +27,7 @@
     <p-step-panel [value]="3">
       <ng-template #content let-activateCallback="activateCallback">
         <app-step3
+          [event]="event()"
           (nextStep)="activateCallback(4)"
           (previousStep)="activateCallback(2)"
           [formGroup]="commentFormControl" />
