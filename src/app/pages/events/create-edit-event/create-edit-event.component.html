@@ -15,6 +15,11 @@
     </p-step-panel>
     <p-step-panel [value]="2">
       <ng-template #content let-activateCallback="activateCallback">
+        <h2>
+          {{ event()?.name }}
+          ({{ event()?.startDate | date: 'shortDate' }} -
+          {{ event()?.endDate | date: 'shortDate' }})
+        </h2>
         <app-step2
           (nextStep)="activateCallback(3)"
           (previousStep)="activateCallback(1)"
@@ -25,6 +30,11 @@
       </ng-template>
     </p-step-panel>
     <p-step-panel [value]="3">
+      <h2>
+        {{ event()?.name }}
+        ({{ event()?.startDate | date: 'shortDate' }} -
+        {{ event()?.endDate | date: 'shortDate' }})
+      </h2>
       <ng-template #content let-activateCallback="activateCallback">
         <app-step3
           (nextStep)="activateCallback(4)"
