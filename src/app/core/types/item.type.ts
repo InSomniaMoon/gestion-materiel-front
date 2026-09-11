@@ -1,4 +1,3 @@
-import { ItemOption } from './itemOption.type';
 import { Structure } from './structure.type';
 
 export type Item = {
@@ -11,7 +10,6 @@ export type Item = {
   stock?: number;
   usableStock?: number;
   dateOfBuy?: Date;
-  options?: ItemOption[];
   image?: string;
   structureId: number;
   structure?: Structure;
